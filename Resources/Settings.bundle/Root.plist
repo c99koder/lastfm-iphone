@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Player Settings</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>Key</key>
+			<string>discovery</string>
+			<key>Title</key>
+			<string>Discovery mode</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>scrobbling</string>
+			<key>Title</key>
+			<string>Scrobble Radio</string>
+		</dict>
+	</array>
+	<key>Title</key>
+	<string>MobileLastFM</string>
+</dict>
+</plist>

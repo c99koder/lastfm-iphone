@@ -1,0 +1,216 @@
+﻿/* Charts List Title */
+"%@'s Charts" = "%@'s Charts";
+
+/* Friends view title */
+"%@'s Friends" = "%@'s Friends";
+
+/* Tags view title */
+"%@'s Tags" = "%@'s Tags";
+
+/* Yesterday date format string */
+"'Yesterday'" = "'Yesterday'";
+
+/* Ban Confirmation */
+"Are you sure you want to mark this song as banned?" = "Are you sure you want to mark this song as banned?";
+
+/* Love Confirmation */
+"Are you sure you want to mark this song as loved?" = "Are you sure you want to mark this song as loved?";
+
+/* Ban Track */
+"Ban" = "Ban";
+
+/* Ban Track (long) */
+"Ban Track" = "Ban Track";
+
+/* Cancel */
+"Cancel" = "Cancel";
+
+/* Show User Charts */
+"Charts" = "Charts";
+
+/* Share to Address Book */
+"Contacts" = "Contacts";
+
+/* Continue */
+"Continue" = "Continue";
+
+/* Country name */
+"country" = "country";
+
+/* Tag search placeholder text */
+"Enter a tag" = "Enter a tag";
+
+/* User search placeholder text */
+"Enter a username and press 'Search'" = "Enter a username and press 'Search'";
+
+/* Artist search placeholder text */
+"Enter an artist name" = "Enter an artist name";
+
+/* Authentication error */
+"ERROR_AUTH" = "Unable to login to Last.fm.  Please check your username and password and try again.";
+
+/* Authentication error title */
+"ERROR_AUTH_TITLE" = "Incorrect username or password";
+
+/* Empty chart error */
+"ERROR_CHART_EMPTY" = "This chart hasn't been generated yet.  Keep listening to music, and try again in a few days.";
+
+/* Empty chart error title */
+"ERROR_CHART_EMPTY_TITLE" = "Chart Not Available";
+
+/* Not enough content error */
+"ERROR_INSUFFICIENT_CONTENT" = "There is not enough content available to play this station.  Please try another station.";
+
+/* Not enough content error title */
+"ERROR_INSUFFICIENT_CONTENT_TITLE" = "Insufficient Content";
+
+/* Not enough fans error */
+"ERROR_INSUFFICIENT_FANS" = "There are not enough fans of this artist to play this station.  Please try another artist.";
+
+/* Not enough members error */
+"ERROR_INSUFFICIENT_MEMBERS" = "There are not enough members in this group to play this station.  Please try another group.";
+
+/* Not enough neighbours error */
+"ERROR_INSUFFICIENT_NEIGHBOURS" = "Your musical neighbourhood hasn't been calculated yet.  Try listening to more music and try again in a few days.";
+
+/* Missing username or password */
+"ERROR_MISSINGINFO" = "You must have a valid Last.fm username and password.  If you don't have an account, click the Sign Up button.";
+
+/* Missing username or password title */
+"ERROR_MISSINGINFO_TITLE" = "Missing Information";
+
+/* No network available */
+"ERROR_NONETWORK" = "This feature requires a connection to the internet.  Please connect to the internet and try again.";
+
+/* No network available title */
+"ERROR_NONETWORK_TITLE" = "No Network Connection";
+
+/* Playback failure error */
+"ERROR_PLAYBACK_FAILED" = "An error occured while trying to play this track.  Please try again shortly.";
+
+/* Playback failed error title */
+"ERROR_PLAYBACK_FAILED_TITLE" = "Playback Failed";
+
+/* Servers are temporarily unavailable */
+"ERROR_SERVER_UNAVAILABLE" = "There was a problem communicating with the Last.fm servers.  Please try again shortly.";
+
+/* Servers are temporarily unavailable title */
+"ERROR_SERVER_UNAVAILABLE_TITLE" = "Server Communication Error";
+
+/* Invalid session error */
+"ERROR_SESSION" = "This application is no longer linked with your Last.fm account.  Please log in again.";
+
+/* Invalid session error title */
+"ERROR_SESSION_TITLE" = "Invalid Session";
+
+/* Unable to select station title */
+"ERROR_STATION_TITLE" = "Station Not Available";
+
+/* Subscription required */
+"ERROR_SUBSCRIPTION" = "Please check your subscription status at the Last.fm website.";
+
+/* Subscription required title */
+"ERROR_SUBSCRIPTION_TITLE" = "Subscriber-Only Feature";
+
+/* Upgrade required */
+"ERROR_UPGRADE" = "An upgrade is required to continue using this software.  Please upgrade your software and try again.";
+
+/* Upgrade required title */
+"ERROR_UPGRADE_TITLE" = "Upgrade Required";
+
+/* Show User Events */
+"Events" = "Events";
+
+/* External link title */
+"EXTERNAL_LINK_TITLE" = "Radio Is Playing";
+
+/* External link */
+"EXTERNAL_LINK" = "Following this link will cause the radio to stop playing.";
+
+/* Browse Friends */
+"Friends" = "Friends";
+
+/* Friends empty */
+"FRIENDS_EMPTY" = "You haven't made any friends yet.  Visit the last.fm website to find friends.";
+
+/* Friends empty title */
+"FRIENDS_EMPTY_TITLE" = "No Friends";
+
+/* Share to Last.fm friend */
+"Last.fm Friends" = "Last.fm Friends";
+
+/* Logout */
+"Logout" = "Logout";
+
+/* Logout confirmation */
+"LOGOUT_BODY" = "Are you sure you want to log out of Last.fm?";
+
+/* Logout confirmation title */
+"LOGOUT_TITLE" = "Logout of Last.fm";
+
+/* Love Track */
+"Love" = "Love";
+
+/* Love Track (long) */
+"Love Track" = "Love Track";
+
+/* Listen to Loved Tracks */
+"Loved Tracks Radio" = "Loved Tracks Radio";
+
+/* Playlist Radio */
+"My Playlist" = "My Playlist";
+
+/* Listen to My Neighborhood */
+"Neighbour Radio" = "Neighbour Radio";
+
+/* Wiki text empty */
+"No artist description available." = "No artist description available.";
+
+/* No events available */
+"No upcoming events" = "No upcoming events";
+
+/* OK */
+"OK" = "OK";
+
+/* Listen to Personal Radio */
+"Personal Radio" = "Personal Radio";
+
+/* Recent Radio Stations chart title */
+"Recent Stations" = "Recent Stations";
+
+/* Recently Banned Tracks chart title */
+"Recently Banned" = "Recently Banned";
+
+/* Recently Loved Tracks chart title */
+"Recently Loved" = "Recently Loved";
+
+/* Recently Played Tracks chart title */
+"Recently Played" = "Recently Played";
+
+/* Listen to Recommendation Radio */
+"Recommended Radio" = "Recommended Radio";
+
+/* Share successful */
+"SHARE_SUCCESSFUL" = "This track was successfully sent.";
+
+/* Share successful title */
+"SHARE_SUCCESSFUL_TITLE" = "Track Shared";
+
+/* Start a new station */
+"Start a new station" = "Start a new station";
+
+/* Show User Tags */
+"Tags" = "Tags";
+
+/* Top Albums chart title */
+"Top Albums" = "Top Albums";
+
+/* Top Artists chart title */
+"Top Artists" = "Top Artists";
+
+/* Top Tracks chart title */
+"Top Tracks" = "Top Tracks";
+
+/* Share sheet title */
+"Who would you like to share this track with?" = "Who would you like to share this track with?";
+
