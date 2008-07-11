@@ -312,9 +312,6 @@
 - (void)_fetchArtwork:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDictionary *albumData = [[LastFMService sharedInstance] metadataForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-	if([LastFMService sharedInstance].error && [LastFMService sharedInstance].error.code != 8) {
-		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-	}
 	NSString *artwork = nil;
 	UIImage *artworkImage;
 	
