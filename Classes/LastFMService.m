@@ -97,7 +97,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		theResponseData = [NSData dataWithContentsOfFile:CACHE_FILE([signature md5sum])];
 	} else {
 		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", API_URL]] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
-		[theRequest setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
+		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 		[theRequest setHTTPMethod:@"POST"];
 		[theRequest setHTTPBody:[[NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]] dataUsingEncoding:NSUTF8StringEncoding]];
 		

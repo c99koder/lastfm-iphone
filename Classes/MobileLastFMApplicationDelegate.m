@@ -23,6 +23,8 @@
 #import "PlaybackViewController.h"
 #include "version.h"
 
+NSString *kUserAgent;
+
 @implementation MobileLastFMApplicationDelegate
 
 @synthesize window;
@@ -60,7 +62,8 @@
 }
 - (id)init {
 	if (self = [super init]) {
-		NSLog(@"%@", USER_AGENT);
+		kUserAgent = [[NSString alloc] initWithFormat:@"MobileLastFM/%@ (%@; %@; %@ %@)", VERSION, [UIDevice currentDevice].model, [[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0], [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion];
+		NSLog(@"%@", kUserAgent);
 		[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 																														 [NSNumber numberWithFloat: 0.8], @"volume",
 																														 [NSNumber numberWithInt:0], @"discovery",
@@ -254,7 +257,7 @@
 }
 -(NSURLRequest *)requestWithURL:(NSURL *)url { 
 	NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url]; 
-	[req setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
+	[req setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 	[req setTimeoutInterval:[self hasWiFiConnection]?40:60];
 	return req; 
 } 

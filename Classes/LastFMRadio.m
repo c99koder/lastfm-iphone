@@ -335,7 +335,7 @@ void propCallback(void *in,
 
 	NSURL *trackURL = [NSURL URLWithString:[[_playlist objectAtIndex:0] objectForKey:@"location"]];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:trackURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
-	[theRequest setValue:USER_AGENT forHTTPHeaderField:@"User-Agent"];
+	[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 	NSLog(@"Streaming: %@\n", trackURL);
 	if(_connection) [_connection release];
 	_connection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];

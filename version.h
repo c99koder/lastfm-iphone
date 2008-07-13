@@ -20,5 +20,6 @@
 #define SCROBBLER_ID @"aip"
 #define SCROBBLER_VERSION @"2.0"
 #define VERSION_STRING @"Mobile Last.fm 1.0.0"
-#define USER_AGENT [NSString stringWithFormat:@"MobileLastFM/1.0.0 (%@; %@ %@)", [UIDevice currentDevice].model, [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion]
 #define VERSION @"1.0.0"
+
+extern NSString *kUserAgent;
