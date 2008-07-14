@@ -25,7 +25,11 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 
-/*@interface SystemNowPlayingController : NSObject
+@interface UIApplication (OMGHAX)
+-(void)setUsesBackgroundNetwork:(BOOL)hax;
+@end
+
+@interface SystemNowPlayingController : NSObject
 {
 	int _disableHUDCount;
 	BOOL _notifyEnableSystemHUDLastPostedState;
@@ -43,7 +47,7 @@
 - (void)postNowPlayingInfoForMovieWithTitle:(id)fp8 artist:(id)fp12 album:(id)fp16 isPlaying:(BOOL)fp20 playingToTVOut:(BOOL)fp24;
 - (void)postNowPlayingInfoForSongWithPath:(id)fp8 title:(id)fp12 artist:(id)fp16 album:(id)fp20 isPlaying:(BOOL)fp24 hasImageData:(BOOL)fp28 additionalInfo:(id)fp32;
 
-@end*/
+@end
 
 void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	if(inInterruptionState == kAudioSessionBeginInterruption) {
@@ -369,13 +373,14 @@ void propCallback(void *in,
 		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [_station capitalizedString], nil];
 		[_db close];
 		[[NSNotificationCenter defaultCenter] postNotificationName:kLastFMRadio_TrackDidChange object:self userInfo:[_playlist objectAtIndex:0]];
-		/*[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
+		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
 																																						 title:[[_playlist objectAtIndex:0] objectForKey:@"title"]
 																																						artist:[[_playlist objectAtIndex:0] objectForKey:@"creator"]
 																																						 album:[[_playlist objectAtIndex:0] objectForKey:@"album"]
 																																				 isPlaying:YES
 																																			hasImageData:NO
-																																		additionalInfo:nil];*/
+																																		additionalInfo:nil];
+		[[SystemNowPlayingController sharedInstance] disableMediaHUD];
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		return TRUE;
 	} else {
@@ -412,13 +417,13 @@ void propCallback(void *in,
 		[_receivedData release];
 		_receivedData = nil;
 	}
-	/*[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
+	[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
 																																					 title:nil
 																																					artist:nil
 																																					 album:nil
 																																			 isPlaying:NO
 																																		hasImageData:NO
-																																	additionalInfo:nil];*/
+																																	additionalInfo:nil];
 	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
 	NSLog(@"Playback stopped");
 	[_busyLock unlock];
