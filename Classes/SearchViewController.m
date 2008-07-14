@@ -31,6 +31,8 @@
 			((UITextField *)view).autocorrectionType = UITextAutocorrectionTypeNo;
 		}
 	}
+	_searchBar.placeholder = NSLocalizedString(@"Enter an artist name", @"Artist search placeholder text");
+	_searchType.selectedSegmentIndex = 0;
 }
 - (IBAction)backButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).navController popViewControllerAnimated:YES];
@@ -115,17 +117,11 @@
 																			 selector:@selector(_search:)
 																			 userInfo:searchText
 																				repeats:NO] retain];
-		} else {
-			[_data release];
-			_data = nil;
-			[_table reloadData];
 		}
 	}
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	_searchBar.placeholder = NSLocalizedString(@"Enter an artist name", @"Artist search placeholder text");
-	_searchType.selectedSegmentIndex = 0;
 	[_searchBar becomeFirstResponder];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	_table.frame = CGRectMake(0,44,320,156);
@@ -134,8 +130,6 @@
 - (void)viewWillDisappear:(BOOL)animated {
 	_searchBar.text = @"";
 	[_searchBar resignFirstResponder];
-	[_data release];
-	_data = nil;
 	_table.frame = CGRectMake(0,44,320,372);
 	[_table reloadData];
 }
