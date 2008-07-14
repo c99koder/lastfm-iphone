@@ -34,7 +34,6 @@
 	NSURLConnection *_connection;
 	NSMutableData *_receivedData;
 	int _state;
-	int _bufferDistance;
 	FMDatabase *_db;
 	NSLock *_busyLock;
 	BOOL playbackWasInterrupted;

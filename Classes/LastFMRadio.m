@@ -199,7 +199,7 @@ void propCallback(void *in,
 }
 -(float)bufferProgress {
 	if(_state == RADIO_BUFFERING)
-		return ((float)[_receivedData length]) / (float)(16384 * _bufferDistance);
+		return ((float)[_receivedData length]) / 196608.0f;
 	else
 		return 1;
 }
@@ -306,7 +306,6 @@ void propCallback(void *in,
 		_playlist = nil;
 		[_stationURL release];
 		_stationURL = [station retain];
-		_bufferDistance = [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasWiFiConnection] ? 16 : 64;
 		[_station release];
 		_station = [[tune objectForKey:@"name"] retain];
 		_errorSkipCounter = 0;
@@ -457,8 +456,7 @@ void propCallback(void *in,
 		if(_audioBufferCount < 1 && !_fileDidFinishLoading) {
 			_state = RADIO_BUFFERING;
 			[self pause];
-			_bufferDistance += 8;
-			NSLog(@"Buffer underrun detected, increased buffer distance to: %i. Peak buffers this cycle was %i.\n", _bufferDistance, _peakBufferCount);
+			NSLog(@"Buffer underrun detected, peak buffers this cycle was %i.\n", _peakBufferCount);
 			_peakBufferCount = 0;
 		}
 	}
@@ -508,7 +506,7 @@ void propCallback(void *in,
 }
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	[_receivedData appendData:data];
-	if([_receivedData length] > (16384 * _bufferDistance) || _state == RADIO_PLAYING) {
+	if([_receivedData length] > 196608 || _state == RADIO_PLAYING) {
 		OSStatus error = AudioFileStreamParseBytes(in.parser, [_receivedData length], [_receivedData bytes], 0);
 		if(error) {
 			NSLog(@"Got an error pushing the data! :(");
