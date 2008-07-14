@@ -19,8 +19,6 @@
 
 #import <UIKit/UIKit.h>
 #include <SystemConfiguration/SCNetworkReachability.h>
-#import <IOKit/pwr_mgt/IOPMLib.h>
-#import <IOKit/IOMessage.h>
 #import "LastFMRadio.h"
 #import "Scrobbler.h"
 #import "FirstRunViewController.h"
@@ -37,8 +35,6 @@
 	UIView *_mainView;
 	IBOutlet UIView *_loadingView;
 	NSString *_launchURL;
-	io_connect_t root_port;
-	io_object_t notifier;
 }
 
 @property (nonatomic, retain) UIWindow *window;
