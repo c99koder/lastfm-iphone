@@ -137,7 +137,7 @@
 	NSString *authURL = [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=%@&v=%@&u=%@&t=%@&a=%@&api_key=%s&sk=%@",
 											 SCROBBLER_ID,
 											 SCROBBLER_VERSION,
-											 [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped],
+											 [[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] lowercaseString] URLEscaped],
 											 timestamp,
 											 auth,
 											 API_KEY,

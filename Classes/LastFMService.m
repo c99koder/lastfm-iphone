@@ -251,8 +251,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 #pragma mark User methods
 
 - (NSDictionary *)getMobileSessionForUser:(NSString *)username password:(NSString *)password {
-	NSString *authToken = [[NSString stringWithFormat:@"%@%@", username, [password md5sum]] md5sum];
-	NSArray *nodes = [self doMethod:@"auth.getMobileSession" maxCacheAge:0 XPath:@"./session" withParameters:[NSString stringWithFormat:@"username=%@", [username URLEscaped]], [NSString stringWithFormat:@"authToken=%@", [authToken URLEscaped]], nil];
+	NSString *authToken = [[NSString stringWithFormat:@"%@%@", [username lowercaseString], [password md5sum]] md5sum];
+	NSArray *nodes = [self doMethod:@"auth.getMobileSession" maxCacheAge:0 XPath:@"./session" withParameters:[NSString stringWithFormat:@"username=%@", [[username lowercaseString] URLEscaped]], [NSString stringWithFormat:@"authToken=%@", [authToken URLEscaped]], nil];
 	if([nodes count])
 		return [self _convertNode:[nodes objectAtIndex:0]
 			 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./key", @"./subscriber", nil]
