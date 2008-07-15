@@ -405,11 +405,6 @@
 - (id)init {
 	if(self = [super initWithTitle:NSLocalizedString(@"Recent Stations", @"Recent Radio Stations chart title")]) {
 		_data = [[NSMutableArray arrayWithArray:[[LastFMRadio sharedInstance] recentURLs]] retain];
-		if([LastFMService sharedInstance].error) {
-			[_data release];
-			_data = nil;
-			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-		}
 	}
 	return self;
 }
