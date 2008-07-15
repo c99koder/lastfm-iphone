@@ -103,7 +103,12 @@
 											nil]];
 		
 		NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
-		if([playlists count]) {
+		if([playlists count] == 1) {
+			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"My Playlist", @"Listen to My Playlist"), @"title",
+												@"station", @"type", 
+												[NSString stringWithFormat:@"lastfm://user/%@/playlist",[_username URLEscaped]], @"url",
+												nil]];
+		} else if([playlists count] > 1) {
 			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Playlists", @"Show User Playlists"), @"title",
 												@"playlists", @"type",
 												nil]];
