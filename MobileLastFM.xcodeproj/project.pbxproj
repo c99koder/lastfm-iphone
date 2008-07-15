@@ -29,6 +29,7 @@
 		221185DC0E1676620093BFED /* date.png in Resources */ = {isa = PBXBuildFile; fileRef = 221185DB0E1676620093BFED /* date.png */; };
 		221185DE0E167A090093BFED /* EventDetailsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 221185DD0E167A090093BFED /* EventDetailsView.xib */; };
 		2213D1B40D9F113100914A50 /* FriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2213D1B30D9F113100914A50 /* FriendsViewController.m */; };
+		2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */; };
 		221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */ = {isa = PBXBuildFile; fileRef = 221E6B030DC2BD300006E74C /* Scrobbler.m */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
 		222340CC0D8DA75D0040486A /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 222340C70D8DA75D0040486A /* FMDatabase.m */; };
@@ -114,6 +115,8 @@
 		221185DD0E167A090093BFED /* EventDetailsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventDetailsView.xib; sourceTree = "<group>"; };
 		2213D1B20D9F113100914A50 /* FriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsViewController.h; sourceTree = "<group>"; };
 		2213D1B30D9F113100914A50 /* FriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsViewController.m; sourceTree = "<group>"; };
+		2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistsViewController.m; sourceTree = "<group>"; };
+		2219DEC40E2CF70C009EE6E4 /* PlaylistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistsViewController.h; sourceTree = "<group>"; };
 		221E6B020DC2BD300006E74C /* Scrobbler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrobbler.h; sourceTree = "<group>"; };
 		221E6B030DC2BD300006E74C /* Scrobbler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scrobbler.m; sourceTree = "<group>"; };
 		22233F640D8D86410040486A /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
@@ -230,6 +233,8 @@
 				22F452FC0DD50EBD0060DF02 /* NSString+URLEscaped.m */,
 				222342880D8DE8FC0040486A /* PlaybackViewController.h */,
 				222342890D8DE8FC0040486A /* PlaybackViewController.m */,
+				2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */,
+				2219DEC40E2CF70C009EE6E4 /* PlaylistsViewController.h */,
 				22233F640D8D86410040486A /* ProfileViewController.h */,
 				22233F650D8D86410040486A /* ProfileViewController.m */,
 				221E6B020DC2BD300006E74C /* Scrobbler.h */,
@@ -504,6 +509,7 @@
 				22C54F750DEEF9A30087322B /* TagRadioViewController.m in Sources */,
 				223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */,
 				228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */,
+				2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

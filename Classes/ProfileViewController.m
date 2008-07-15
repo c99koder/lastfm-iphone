@@ -22,6 +22,7 @@
 #import "ChartsViewController.h"
 #import "SearchViewController.h"
 #import "TagRadioViewController.h"
+#import "PlaylistsViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
@@ -103,18 +104,10 @@
 		
 		NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
 		if([playlists count]) {
-			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"My Playlist", @"Playlist Radio"), @"title",
-												@"station", @"type", 
-												[NSString stringWithFormat:@"lastfm://user/%@/playlist",[_username URLEscaped]], @"url",
+			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Playlists", @"Show User Playlists"), @"title",
+												@"playlists", @"type",
 												nil]];
 		}
-		/*for(NSDictionary *playlist in playlists) {
-			if([[playlist objectForKey:@"size"] intValue] >= 5)
-				[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys:[playlist objectForKey:@"title"], @"title",
-													@"station", @"type", 
-													[NSString stringWithFormat:@"lastfm://playlist/%@",[playlist objectForKey:@"id"]], @"url",
-													nil]];
-		}*/
 		if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
 			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Recent Stations", @"Recent Radio Stations chart title"), @"title",
 												@"recent", @"type",
@@ -185,6 +178,8 @@
 		controller = [[TagRadioViewController alloc] initWithUsername:_username];
 	} else if([[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"type"] isEqualToString:@"events"]) {
 		controller = [[EventsListViewController alloc] initWithUsername:_username];
+	} else if([[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"type"] isEqualToString:@"playlists"]) {
+		controller = [[PlaylistsViewController alloc] initWithUsername:_username];
 	}
 	if(controller) {
 		[self.navigationController pushViewController:controller animated:YES];
