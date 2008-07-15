@@ -127,5 +127,3 @@
 -(void)stopButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
 @end
-
-#define kMobileLastFM_ArtworkDidBecomeAvailable @"MobileLastFM_ArtworkDidBecomeAvailable"

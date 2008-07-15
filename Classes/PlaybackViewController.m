@@ -30,10 +30,12 @@
 
 @implementation PlaybackSubview
 - (void)enableLoveButton:(BOOL)enabled {
-	_loveButton.enabled = enabled;
+	_loveButton.alpha = 1;
+	_loveButton.opaque = YES;
 }
 - (void)enableBanButton:(BOOL)enabled {
-	_banButton.enabled = enabled;
+	_banButton.alpha = 1;
+	_banButton.opaque = YES;
 }
 - (void)backButtonPressed:(id)sender {
 	if(self.navigationController == self.tabBarController.moreNavigationController)
@@ -927,96 +929,20 @@
 		[(PlaybackSubview *)(self.moreNavigationController.topViewController) enableBanButton:YES];
 	[self.moreNavigationController popToRootViewControllerAnimated:NO];
 }
--(void)_love:(NSTimer *)timer {
-	[[LastFMService sharedInstance] loveTrack:[[timer userInfo] objectForKey:@"title"] byArtist:[[timer userInfo] objectForKey:@"creator"]];
-	if([LastFMService sharedInstance].error) {
-		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-		for(UINavigationController *controller in self.tabBarController.viewControllers)
-			if([controller.topViewController respondsToSelector:@selector(enableLoveButton:)])
-				[(PlaybackSubview *)(controller.topViewController) enableLoveButton:YES];
-		if([self.moreNavigationController.topViewController respondsToSelector:@selector(enableLoveButton:)])
-			[(PlaybackSubview *)(self.moreNavigationController.topViewController) enableLoveButton:YES];
-	}
-}
--(void)_ban:(NSTimer *)timer {
-	[[LastFMService sharedInstance] banTrack:[[timer userInfo] objectForKey:@"title"] byArtist:[[timer userInfo] objectForKey:@"creator"]];
-	if([LastFMService sharedInstance].error) {
-		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-		for(UINavigationController *controller in self.tabBarController.viewControllers)
-			if([controller.topViewController respondsToSelector:@selector(enableLoveButton:)])
-				[(PlaybackSubview *)(controller.topViewController) enableBanButton:YES];
-		if([self.moreNavigationController.topViewController respondsToSelector:@selector(enableBanButton:)])
-			[(PlaybackSubview *)(self.moreNavigationController.topViewController) enableBanButton:YES];
-	} else {
-		[[LastFMRadio sharedInstance] skip];
-	}
-}
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Love", @"Love Track")]) {
-		//Hack to make the loading throbber appear before we block
-		[NSTimer scheduledTimerWithTimeInterval:0.1
-																		 target:self
-																	 selector:@selector(_love:)
-																	 userInfo:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate trackInfo]
-																		repeats:NO];
-		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate loveButtonPressed];
-		for(UINavigationController *controller in self.tabBarController.viewControllers)
-			if([controller.topViewController respondsToSelector:@selector(enableLoveButton:)])
-				[(PlaybackSubview *)(controller.topViewController) enableLoveButton:NO];
-		if([self.moreNavigationController.topViewController respondsToSelector:@selector(enableLoveButton:)])
-			[(PlaybackSubview *)(self.moreNavigationController.topViewController) enableLoveButton:NO];
-	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Ban", @"Ban Track")]) {
-		//Hack to make the loading throbber appear before we block
-		[NSTimer scheduledTimerWithTimeInterval:0.1
-																		 target:self
-																	 selector:@selector(_ban:)
-																	 userInfo:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate trackInfo]
-																		repeats:NO];
-		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate banButtonPressed];
-		for(UINavigationController *controller in self.tabBarController.viewControllers)
-			if([controller.topViewController respondsToSelector:@selector(enableLoveButton:)])
-				[(PlaybackSubview *)(controller.topViewController) enableBanButton:NO];
-		if([self.moreNavigationController.topViewController respondsToSelector:@selector(enableBanButton:)])
-			[(PlaybackSubview *)(self.moreNavigationController.topViewController) enableBanButton:NO];
-	}
-}
--(void)loveButtonPressed:(id)sender {
-	if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_NONETWORK", @"No network available") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE", @"No network available title")];
-	} else {
-		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to mark this song as loved?", @"Love Confirmation")
-																														 delegate:self
-																										cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-																							 destructiveButtonTitle:nil
-																										otherButtonTitles:NSLocalizedString(@"Love", @"Love Track"), nil];
-		actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-		[actionSheet showInView:self.view];
-		[actionSheet release];
-	}
-}
--(void)banButtonPressed:(id)sender {
-	if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_NONETWORK", @"No network available") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE", @"No network available title")];
-	} else {
-		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to mark this song as banned?", @"Ban Confirmation")
-																														 delegate:self
-																										cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-																							 destructiveButtonTitle:NSLocalizedString(@"Ban", @"Ban Track")
-																										otherButtonTitles:nil];
-		actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
-		[actionSheet showInView:self.view];
-		[actionSheet release];
-	}
-}
--(void)skipButtonPressed:(id)sender {
-	[((MobileLastFMApplicationDelegate*)([UIApplication sharedApplication].delegate)) skipButtonPressed:sender];
-}
--(void)stopButtonPressed:(id)sender {
-	[[LastFMRadio sharedInstance] stop];
-	[((MobileLastFMApplicationDelegate*)([UIApplication sharedApplication].delegate)) hidePlaybackView];
-}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+-(void)loveButtonPressed:(id)sender {
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) loveButtonPressed:sender];	
+}
+-(void)banButtonPressed:(id)sender {
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) banButtonPressed:sender];	
+}
+-(void)stopButtonPressed:(id)sender {
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) stopButtonPressed:sender];	
+}
+-(void)skipButtonPressed:(id)sender {
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) skipButtonPressed:sender];	
 }
 - (void)dealloc {
 	[super dealloc];

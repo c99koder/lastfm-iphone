@@ -285,6 +285,12 @@
 								i, i
 								];
 		[postData appendData:[trackStr dataUsingEncoding:NSUTF8StringEncoding]];
+		if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
+			[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+		}
+		if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
+			[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+		}
 		i++;
 	}
 	_submissionCount = i;

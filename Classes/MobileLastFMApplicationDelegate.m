@@ -67,7 +67,6 @@ NSString *kUserAgent;
 		[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 																														 [NSNumber numberWithFloat: 0.8], @"volume",
 																														 [NSNumber numberWithInt:0], @"discovery",
-																														 [NSNumber numberWithInt:1], @"scrobbling",
 																														 nil]];
 		[NSThread detachNewThreadSelector:@selector(_cleanCache) toTarget:self withObject:nil];
 	}
@@ -109,7 +108,7 @@ NSString *kUserAgent;
 	[self.navController release];
 	self.navController = [[UINavigationController alloc] initWithRootViewController: profile];
 	[profile release];
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] intValue] && !_scrobbler) {
+	if(!_scrobbler) {
 		_scrobbler = [[Scrobbler alloc] init];
 	}
 	
@@ -170,27 +169,37 @@ NSString *kUserAgent;
 		_loadingView.frame = [UIScreen mainScreen].applicationFrame;
 		[_mainView addSubview:_loadingView];
 		[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(_loadProfile) userInfo:nil repeats:NO];
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] intValue]) {
-			_scrobbler = [[Scrobbler alloc] init];
-		}
+		_scrobbler = [[Scrobbler alloc] init];
 	} else {
 		[self showFirstRunView:NO];
 	}
 	[window makeKeyAndVisible];
 }
-- (void)loveButtonPressed {
+- (IBAction)loveButtonPressed:(UIButton *)sender {
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
-		[_scrobbler rateTrack:[track objectForKey:@"title"]
-								 byArtist:[track objectForKey:@"creator"]
-									onAlbum:[track objectForKey:@"album"]
-						withStartTime:[[track objectForKey:@"startTime"] intValue]
-						 withDuration:[[track objectForKey:@"duration"] intValue]
-							 fromSource:[track objectForKey:@"source"]
-									 rating:@"L"];
+		if(sender.alpha == 1) {
+			[_scrobbler rateTrack:[track objectForKey:@"title"]
+									 byArtist:[track objectForKey:@"creator"]
+										onAlbum:[track objectForKey:@"album"]
+							withStartTime:[[track objectForKey:@"startTime"] intValue]
+							 withDuration:[[track objectForKey:@"duration"] intValue]
+								 fromSource:[track objectForKey:@"source"]
+										 rating:@"L"];
+			sender.alpha = 0.4;
+		} else {
+			[_scrobbler rateTrack:[track objectForKey:@"title"]
+									 byArtist:[track objectForKey:@"creator"]
+										onAlbum:[track objectForKey:@"album"]
+							withStartTime:[[track objectForKey:@"startTime"] intValue]
+							 withDuration:[[track objectForKey:@"duration"] intValue]
+								 fromSource:[track objectForKey:@"source"]
+										 rating:@""];
+			sender.alpha = 1;
+		}
 	}
 }
-- (void)banButtonPressed {
+- (IBAction)banButtonPressed:(UIButton *)sender {
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
 		[_scrobbler rateTrack:[track objectForKey:@"title"]
@@ -200,9 +209,11 @@ NSString *kUserAgent;
 						 withDuration:[[track objectForKey:@"duration"] intValue]
 							 fromSource:[track objectForKey:@"source"]
 									 rating:@"B"];
+		sender.alpha = 0.4;
 	}
+	[[LastFMRadio sharedInstance] skip];
 }
-- (void)skipButtonPressed:(id)sender {
+- (IBAction)skipButtonPressed:(id)sender {
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
 		[_scrobbler rateTrack:[track objectForKey:@"title"]
@@ -214,6 +225,10 @@ NSString *kUserAgent;
 									 rating:@"S"];
 	}
 	[[LastFMRadio sharedInstance] skip];
+}
+-(IBAction)stopButtonPressed:(id)sender {
+	[[LastFMRadio sharedInstance] stop];
+	[self hidePlaybackView];
 }
 -(BOOL)isPlaying {
 	return [[LastFMRadio sharedInstance] state] != RADIO_IDLE;

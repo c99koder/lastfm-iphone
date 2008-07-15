@@ -20,16 +20,6 @@
 			<key>Title</key>
 			<string>Discovery mode</string>
 		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>DefaultValue</key>
-			<true/>
-			<key>Key</key>
-			<string>scrobbling</string>
-			<key>Title</key>
-			<string>Scrobble Radio</string>
-		</dict>
 	</array>
 	<key>Title</key>
 	<string>MobileLastFM</string>

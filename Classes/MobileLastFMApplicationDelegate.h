@@ -50,9 +50,10 @@
 -(BOOL)isPlaying;
 -(NSDictionary *)trackInfo;
 -(int)trackPosition;
--(void)loveButtonPressed;
--(void)banButtonPressed;
--(void)skipButtonPressed:(id)sender;
+-(IBAction)loveButtonPressed:(UIButton *)sender;
+-(IBAction)banButtonPressed:(UIButton *)sender;
+-(IBAction)skipButtonPressed:(id)sender;
+-(IBAction)stopButtonPressed:(id)sender;
 -(NSURLRequest *)requestWithURL:(NSURL *)url;
 -(void)showPlaybackView;
 -(void)hidePlaybackView;
