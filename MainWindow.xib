@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.02">
 	<data>
 		<int key="IBDocument.SystemTarget">512</int>
-		<string key="IBDocument.SystemVersion">9D34</string>
+		<string key="IBDocument.SystemVersion">9E17</string>
 		<string key="IBDocument.InterfaceBuilderVersion">670</string>
 		<string key="IBDocument.AppKitVersion">949.33</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
@@ -54,20 +54,6 @@
 								<reference key="IBUINavigationBar" ref="408830698"/>
 								<string key="IBUITitle"/>
 							</object>
-						</object>
-					</object>
-					<object class="IBUIImageView" id="660411389">
-						<reference key="NSNextResponder" ref="695788471"/>
-						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{-1, 95}, {320, 365}}</string>
-						<reference key="NSSuperview" ref="695788471"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClipsSubviews">YES</bool>
-						<int key="IBUIContentMode">4</int>
-						<bool key="IBUIMultipleTouchEnabled">YES</bool>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">lastfmbg.png</string>
 						</object>
 					</object>
 					<object class="IBUILabel" id="388716579">
@@ -178,7 +164,6 @@
 							<reference ref="408830698"/>
 							<reference ref="388716579"/>
 							<reference ref="396725509"/>
-							<reference ref="660411389"/>
 						</object>
 						<reference key="parent" ref="957960031"/>
 					</object>
@@ -204,11 +189,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">574</int>
 						<reference key="object" ref="396725509"/>
-						<reference key="parent" ref="695788471"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">576</int>
-						<reference key="object" ref="660411389"/>
 						<reference key="parent" ref="695788471"/>
 					</object>
 				</object>
@@ -287,8 +267,21 @@
 					<string key="className">MobileLastFMApplicationDelegate</string>
 					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">skipButtonPressed:</string>
-						<string key="NS.object.0">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>banButtonPressed:</string>
+							<string>loveButtonPressed:</string>
+							<string>skipButtonPressed:</string>
+							<string>stopButtonPressed:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>UIButton</string>
+							<string>UIButton</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>

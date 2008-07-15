@@ -3,9 +3,8 @@
 
 @interface FirstRunViewController : UIViewController {
 	IBOutlet UINavigationBar *_navBar;
-	IBOutlet UITextField *_username;
-	IBOutlet UITextField *_password;
+	IBOutlet UITableView *_table;
+	UITextField *_username;
+	UITextField *_password;
 }
--(IBAction)registerButtonPressed:(id)sender;
--(IBAction)loginButtonPressed:(id)sender;
 @end

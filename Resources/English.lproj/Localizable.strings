@@ -142,6 +142,9 @@
 /* Share to Last.fm friend */
 "Last.fm Friends" = "Last.fm Friends";
 
+/* Login Button */
+"Login" = "Login";
+
 /* Logout */
 "Logout" = "Logout";
 
@@ -175,6 +178,9 @@
 /* OK */
 "OK" = "OK";
 
+/* Password */
+"Password" = "Password";
+
 /* Listen to Personal Radio */
 "Personal Radio" = "Personal Radio";
 
@@ -202,6 +208,9 @@
 /* Share successful title */
 "SHARE_SUCCESSFUL_TITLE" = "Track Shared";
 
+/* Sign Up Button */
+"Sign Up" = "Sign Up";
+
 /* Start a new station */
 "Start a new station" = "Start a new station";
 
@@ -216,6 +225,9 @@
 
 /* Top Tracks chart title */
 "Top Tracks" = "Top Tracks";
+
+/* Username */
+"Username" = "Username";
 
 /* Share sheet title */
 "Who would you like to share this track with?" = "Who would you like to share this track with?";

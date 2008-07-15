@@ -53,7 +53,6 @@
 		225934E70DA85DA60035A1AA /* skip.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934D70DA85DA60035A1AA /* skip.png */; };
 		225934EA0DA85DA60035A1AA /* ban.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DA0DA85DA60035A1AA /* ban.png */; };
 		225934EB0DA85DA60035A1AA /* love.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DB0DA85DA60035A1AA /* love.png */; };
-		225934EC0DA85DA60035A1AA /* lastfmbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DC0DA85DA60035A1AA /* lastfmbg.png */; };
 		225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225ECD430DFF882600323F42 /* MediaPlayer.framework */; };
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
@@ -150,7 +149,6 @@
 		225934D70DA85DA60035A1AA /* skip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = skip.png; path = Resources/skip.png; sourceTree = "<group>"; };
 		225934DA0DA85DA60035A1AA /* ban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ban.png; path = Resources/ban.png; sourceTree = "<group>"; };
 		225934DB0DA85DA60035A1AA /* love.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = love.png; path = Resources/love.png; sourceTree = "<group>"; };
-		225934DC0DA85DA60035A1AA /* lastfmbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lastfmbg.png; path = Resources/lastfmbg.png; sourceTree = "<group>"; };
 		225934F20DA85DBE0035A1AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		225ECD430DFF882600323F42 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		227F6F420DB26F4900C11B22 /* ArtworkCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtworkCell.h; sourceTree = "<group>"; };
@@ -326,7 +324,6 @@
 				225934D70DA85DA60035A1AA /* skip.png */,
 				225934DA0DA85DA60035A1AA /* ban.png */,
 				225934DB0DA85DA60035A1AA /* love.png */,
-				225934DC0DA85DA60035A1AA /* lastfmbg.png */,
 				22362B9A0E13E4600034F91A /* btn.png */,
 				22117E3D0E153AC50093BFED /* now_playing_header.png */,
 				22117E3E0E153AC50093BFED /* streaming.png */,
@@ -448,7 +445,6 @@
 				225934E70DA85DA60035A1AA /* skip.png in Resources */,
 				225934EA0DA85DA60035A1AA /* ban.png in Resources */,
 				225934EB0DA85DA60035A1AA /* love.png in Resources */,
-				225934EC0DA85DA60035A1AA /* lastfmbg.png in Resources */,
 				22BA0DDF0DC3731100DBE5BD /* stop.png in Resources */,
 				223128F70DFF1ECB00EC3BF0 /* MainWindow.xib in Resources */,
 				225157980E09A67B00943078 /* backBtn.png in Resources */,

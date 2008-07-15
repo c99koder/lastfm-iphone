@@ -27,20 +27,6 @@
 				<int key="NSvFlags">274</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="IBUIImageView" id="423252090">
-						<reference key="NSNextResponder" ref="325394143"/>
-						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{0, -121}, {320, 365}}</string>
-						<reference key="NSSuperview" ref="325394143"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClipsSubviews">YES</bool>
-						<int key="IBUIContentMode">4</int>
-						<bool key="IBUIMultipleTouchEnabled">YES</bool>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">lastfmbg.png</string>
-						</object>
-					</object>
 					<object class="IBUILabel" id="835469513">
 						<reference key="NSNextResponder" ref="325394143"/>
 						<int key="NSvFlags">292</int>
@@ -403,7 +389,6 @@
 							<reference ref="906403206"/>
 							<reference ref="1002761569"/>
 							<reference ref="455762255"/>
-							<reference ref="423252090"/>
 							<reference ref="835469513"/>
 							<reference ref="571957203"/>
 							<reference ref="411769604"/>
@@ -428,11 +413,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">14</int>
 						<reference key="object" ref="44980602"/>
-						<reference key="parent" ref="325394143"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">13</int>
-						<reference key="object" ref="423252090"/>
 						<reference key="parent" ref="325394143"/>
 					</object>
 					<object class="IBObjectRecord">
