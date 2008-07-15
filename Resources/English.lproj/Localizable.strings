@@ -55,6 +55,12 @@
 /* Authentication error title */
 "ERROR_AUTH_TITLE" = "Incorrect username or password";
 
+/* System clock error */
+"ERROR_BADTIME" = "The time difference between your clock and the Last.fm server is too large.  Please check your time and time zone settings and try again.";
+
+/* System clock error title */
+"ERROR_BADTIME_TITLE" = "Incorrect Time or Timezone";
+
 /* Empty chart error */
 "ERROR_CHART_EMPTY" = "This chart hasn't been generated yet.  Keep listening to music, and try again in a few days.";
 
