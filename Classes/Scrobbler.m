@@ -285,12 +285,6 @@
 								i, i
 								];
 		[postData appendData:[trackStr dataUsingEncoding:NSUTF8StringEncoding]];
-		if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
-			[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-		}
-		if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
-			[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-		}
 		i++;
 	}
 	_submissionCount = i;
@@ -344,11 +338,6 @@
 				[_scrobbleURL release];
 				_scrobbleURL = nil;
 				_scrobblerState = SCROBBLER_OFFLINE;
-				if([_scrobblerResult isEqualToString:@"BANNED"]) {
-					[(APP_CLASS *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_UPGRADE", @"Upgrade required") withTitle:NSLocalizedString(@"ERROR_UPGRADE_TITLE",@"Upgrade required title")];
-				} else if([_scrobblerResult isEqualToString:@"BADTIME"]) {
-					[(APP_CLASS *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_BADTIME", @"System clock error") withTitle:NSLocalizedString(@"ERROR_BADTIME_TITLE", @"System clock error title")];
-				}
 			}
 			break;
 		case SCROBBLER_SCROBBLING:
@@ -356,6 +345,13 @@
 				NSLog(@"Scrobble succeeded!\n");
 				_queueTimerInterval = 5;
 				for(i=0; [_queue count] > 0 && i < _submissionCount; i++) {
+					NSDictionary *track = [_queue objectAtIndex: 0];
+					if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
+						[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+					}
+					if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
+						[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+					}
 					[_queue removeObjectAtIndex:0];
 					_totalScrobbled++;
 				}
