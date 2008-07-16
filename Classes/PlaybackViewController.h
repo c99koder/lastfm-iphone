@@ -27,9 +27,12 @@
 	IBOutlet UINavigationBar *_bar;
 	IBOutlet UIButton *_loveButton;
 	IBOutlet UIButton *_banButton;
+	IBOutlet UIView *_loadingView;
 }
 - (void)backButtonPressed:(id)sender;
 - (void)volumeButtonPressed:(id)sender;
+- (void)showLoadingView;
+- (void)hideLoadingView;
 @end
 
 @interface SimilarArtistsViewController : PlaybackSubview<UITableViewDelegate, UITableViewDataSource> {
@@ -63,7 +66,6 @@
 	IBOutlet UILabel *_elapsed;
 	IBOutlet UILabel *_remaining;
 	IBOutlet UIProgressView *_progress;
-	IBOutlet UIView *_bufferingView;
 	IBOutlet UILabel *_bufferPercentage;
 	IBOutlet UILabel *_station;
 }

@@ -46,6 +46,18 @@
 - (void)volumeButtonPressed:(id)sender {
 	MPVolumeSettingsAlertShow();
 }
+- (void)showLoadingView {
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.5];
+	_loadingView.alpha = 1;
+	[UIView commitAnimations];
+}
+- (void)hideLoadingView {
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.5];
+	_loadingView.alpha = 0;
+	[UIView commitAnimations];
+}
 @end
 
 @implementation SimilarArtistsViewController
@@ -64,6 +76,7 @@
 - (void)_fetchSimilarArtists:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[_lock lock];
+	[self showLoadingView];
 	[_data release];
 	[_cells removeAllObjects];
 	_data = [[LastFMService sharedInstance] artistsSimilarTo:[trackInfo objectForKey:@"creator"]];
@@ -80,6 +93,7 @@
 	[_table reloadData];
 	[_table scrollRectToVisible:[_table frame] animated:YES];
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[pool release];
 }
@@ -136,11 +150,13 @@
 - (void)_fetchTags:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[_lock lock];
+	[self showLoadingView];
 	[_data release];
 	_data = [[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
 	_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
 	[_table reloadData];
 	[_table scrollRectToVisible:[_table frame] animated:YES];
+	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[pool release];
 }
@@ -209,6 +225,7 @@
 - (void)_fetchFans:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[_lock lock];
+	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_data release];
 	[_cells removeAllObjects];
 	_data = [[LastFMService sharedInstance] fansOfTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
@@ -223,6 +240,7 @@
 	[_table reloadData];
 	[_table scrollRectToVisible:[_table frame] animated:YES];
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[pool release];
 }
@@ -291,23 +309,23 @@
 		_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:duration-elapsed]];
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
 	}
-	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _bufferingView.alpha < 1) {
+	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _loadingView.alpha < 1) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.5];
-		_bufferingView.alpha = 1;
+		_loadingView.alpha = 1;
 		[UIView commitAnimations];
 	}
-	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _bufferingView.alpha == 1 && _bufferPercentage.alpha < 1) {
+	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:10];
 		_bufferPercentage.alpha = 1;
 		[UIView commitAnimations];
 	}
-	if([[LastFMRadio sharedInstance] state] != RADIO_BUFFERING && _bufferingView.alpha == 1) {
+	if([[LastFMRadio sharedInstance] state] != RADIO_BUFFERING && _loadingView.alpha == 1) {
 		_bufferPercentage.alpha = 0;
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.5];
-		_bufferingView.alpha = 0;
+		_loadingView.alpha = 0;
 		[UIView commitAnimations];
 	}
 }
@@ -459,6 +477,7 @@
 - (void)_fetchBio:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[_lock lock];
+	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_bio release];
 	NSString *bio = [[[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]] objectForKey:@"bio"];
 	if(![bio length]) {
@@ -470,6 +489,7 @@
 
 	_bio = [[bio stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"] retain];
 	[self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[pool release];
 }
@@ -637,6 +657,7 @@
 - (void)_fetchEvents:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[_lock lock];
+	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_attendingEvents release];
 	_attendingEvents = [[NSMutableArray alloc] init];
 	NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
@@ -644,6 +665,7 @@
 		[_attendingEvents addObject:[event objectForKey:@"id"]];
 	}
 	[self performSelectorOnMainThread:@selector(_processEvents:) withObject:[[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]] waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[pool release];
 }
