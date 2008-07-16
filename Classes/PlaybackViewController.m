@@ -460,7 +460,6 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[_lock lock];
 	[_bio release];
-	_bar.topItem.title = [trackInfo objectForKey:@"creator"];
 	NSString *bio = [[[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]] objectForKey:@"bio"];
 	if(![bio length]) {
 		bio = [[[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:@"en"] objectForKey:@"bio"];
@@ -479,6 +478,7 @@
 										<body style=\"margin:0; padding:0; color:black; background: white; font-family: 'Lucida Grande', Arial; line-height: 1.2em;\">\
 										<div style=\"padding:12px; margin:0; top:0px; left:0px; width:260px; position:absolute;\">\
 										%@</div></body></html>", _bio];
+	_bar.topItem.title = [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"];
 	[_webView loadHTMLString:html baseURL:nil];
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
