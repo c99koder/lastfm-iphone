@@ -169,6 +169,9 @@
 /* Listen to Loved Tracks */
 "Loved Tracks Radio" = "Loved Tracks Radio";
 
+/* Listen to Library Radio */
+"My Library" = "My Library";
+
 /* Listen to My Playlist */
 "My Playlist" = "My Playlist";
 
@@ -186,9 +189,6 @@
 
 /* Password */
 "Password" = "Password";
-
-/* Listen to Personal Radio */
-"Personal Radio" = "Personal Radio";
 
 /* Show user Playlists */
 "Playlists" = "Playlists";
