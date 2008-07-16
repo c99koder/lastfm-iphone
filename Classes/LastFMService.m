@@ -88,7 +88,6 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	error = nil;
 	
 	NSArray *sortedParams = [[params arrayByAddingObjectsFromArray:[NSArray arrayWithObjects:[NSString stringWithFormat:@"method=%@",method],session?[NSString stringWithFormat:@"sk=%@",session]:nil,nil]] sortedArrayUsingSelector:@selector(compare:)];
-	NSLog(@"%@", sortedParams);
 	NSMutableString *signature = [[NSMutableString alloc] init];
 	for(NSString *param in sortedParams) {
 		[signature appendString:[[param stringByReplacingOccurrencesOfString:@"=" withString:@""] unURLEscape]];
