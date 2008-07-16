@@ -88,6 +88,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	error = nil;
 	
 	NSArray *sortedParams = [[params arrayByAddingObjectsFromArray:[NSArray arrayWithObjects:[NSString stringWithFormat:@"method=%@",method],session?[NSString stringWithFormat:@"sk=%@",session]:nil,nil]] sortedArrayUsingSelector:@selector(compare:)];
+	NSLog(@"%@", sortedParams);
 	NSMutableString *signature = [[NSMutableString alloc] init];
 	for(NSString *param in sortedParams) {
 		[signature appendString:[[param stringByReplacingOccurrencesOfString:@"=" withString:@""] unURLEscape]];
@@ -342,7 +343,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 }
 - (NSDictionary *)getPlaylist {
 	NSMutableArray *playlist = nil;
-	NSArray *nodes = [[[[[self doMethod:@"radio.getPlaylist" maxCacheAge:0 XPath:@"." withParameters:nil] objectAtIndex:0] children] objectAtIndex:1] children];
+	NSArray *nodes = [[[[[self doMethod:@"radio.getPlaylist" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"mobile_net=%@",[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?@"wifi":@"wwan"], nil] objectAtIndex:0] children] objectAtIndex:1] children];
 	NSString *title = nil;
 	
 	for(CXMLNode *node in nodes) {
