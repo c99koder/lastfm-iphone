@@ -82,16 +82,10 @@
 												@"search", @"type",
 												nil]];
 		}
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
-			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Personal Radio", @"Listen to Personal Radio"), @"title",
+		[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"My Library", @"Listen to Library Radio"), @"title",
 												@"station", @"type",
 												[NSString stringWithFormat:@"lastfm://user/%@/personal",[_username URLEscaped]], @"url",
 												nil]];
-		[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: 
-											NSLocalizedString(@"Recommended Radio", @"Listen to Recommendation Radio"), @"title",
-											@"station", @"type",
-											[NSString stringWithFormat:@"lastfm://user/%@/recommended/100",[_username URLEscaped]], @"url",
-											nil]];
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
 			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Loved Tracks Radio", @"Listen to Loved Tracks"), @"title",
 											@"station", @"type", 
@@ -101,17 +95,24 @@
 											@"station", @"type", 
 											[NSString stringWithFormat:@"lastfm://user/%@/neighbours",[_username URLEscaped]], @"url",
 											nil]];
+		[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: 
+											NSLocalizedString(@"Recommended Radio", @"Listen to Recommendation Radio"), @"title",
+											@"station", @"type",
+											[NSString stringWithFormat:@"lastfm://user/%@/recommended",[_username URLEscaped]], @"url",
+											nil]];
 		
-		NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
-		if([playlists count] == 1) {
-			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"My Playlist", @"Listen to My Playlist"), @"title",
-												@"station", @"type", 
-												[NSString stringWithFormat:@"lastfm://user/%@/playlist",[_username URLEscaped]], @"url",
-												nil]];
-		} else if([playlists count] > 1) {
-			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Playlists", @"Show User Playlists"), @"title",
-												@"playlists", @"type",
-												nil]];
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+			NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
+			if([playlists count] == 1) {
+				[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"My Playlist", @"Listen to My Playlist"), @"title",
+													@"station", @"type", 
+													[NSString stringWithFormat:@"lastfm://user/%@/playlist",[_username URLEscaped]], @"url",
+													nil]];
+			} else if([playlists count] > 1) {
+				[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Playlists", @"Show User Playlists"), @"title",
+													@"playlists", @"type",
+													nil]];
+			}
 		}
 		if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
 			[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Recent Stations", @"Recent Radio Stations chart title"), @"title",
