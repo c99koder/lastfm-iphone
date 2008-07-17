@@ -80,7 +80,7 @@
 	
 	if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasWiFiConnection]) {
 		networkType = 2;
-	} else if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection:([_queue count] > 0)]) {
+	} else if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
 		networkType = 1;
 	} else {
 		networkType = 0;

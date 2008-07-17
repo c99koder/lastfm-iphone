@@ -43,7 +43,6 @@
 @property (nonatomic, retain) PlaybackViewController *playbackViewController;
 
 -(BOOL)hasNetworkConnection;
--(BOOL)hasNetworkConnection:(BOOL)bringUpConnection;
 -(BOOL)hasWiFiConnection;
 -(BOOL)playRadioStation:(NSString *)station animated:(BOOL)animated;
 -(void)displayError:(NSString *)error withTitle:(NSString *)title;

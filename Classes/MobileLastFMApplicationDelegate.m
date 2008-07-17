@@ -258,11 +258,7 @@ NSString *kUserAgent;
 	if(!_reach)	_reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
 	SCNetworkConnectionFlags flags;
 	SCNetworkReachabilityGetFlags(_reach, &flags);
-	return (kSCNetworkFlagsReachable & flags);
-}
--(BOOL)hasNetworkConnection:(BOOL)bringUpConnection {
-	//TODO: Should we bring up EDGE?
-	return [self hasNetworkConnection];
+	return (kSCNetworkFlagsReachable & flags) || (kSCNetworkFlagsConnectionRequired & flags);
 }
 -(BOOL)hasWiFiConnection {
 	if(!_reach)	_reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
