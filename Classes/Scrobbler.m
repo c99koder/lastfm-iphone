@@ -32,6 +32,10 @@
 #endif
 
 @implementation Scrobbler
+- (void)_trackDidChange {
+	if(_queueTimer == nil)
+		[self doQueueTimer];
+}
 - (id)init {
 	self = [super init];
 	_sess = nil;
@@ -54,7 +58,7 @@
 																					selector:@selector(update:)
 																					userInfo:NULL
 																					 repeats:NO];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushQueue:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange) name:kLastFMRadio_TrackDidChange object:nil];
 	return self;
 }
 - (void)loadQueue {
@@ -245,6 +249,11 @@
 	int i=0;
 	id track;
 	
+	if(_queueTimer != nil) {
+		[_queueTimer invalidate];
+		_queueTimer = nil;
+	}
+	
 	if([_queue count] < 1)
 		return;
 	
@@ -254,11 +263,6 @@
 		return;
 	}	
 	
-	if(_queueTimer != nil) {
-		[_queueTimer invalidate];
-		_queueTimer = nil;
-	}
-
 	if(_sess == nil) {
 		[self handshake];
 		return;
