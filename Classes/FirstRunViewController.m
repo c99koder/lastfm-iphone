@@ -25,82 +25,30 @@
 	}
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 3;
+-(void)viewWillAppear:(BOOL)animated {
+	_username.text = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_user"];
 }
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return (section == 0)?2:1;
+-(IBAction)registerButtonPressed:(id)sender {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/join/iphone"]];
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	switch([newIndexPath section]) {
-		case 0:
-			switch([newIndexPath row]) {
-				case 0:
-					[_username becomeFirstResponder];
-					break;
-				case 1:
-					[_password becomeFirstResponder];
-					break;
-			}
-			break;
-		case 1:
-			if([_username.text length] && [_password.text length]) {
-				[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-				_username.enabled = NO;
-				_password.enabled = NO;
-				[NSTimer scheduledTimerWithTimeInterval:0.1
-																				 target:self
-																			 selector:@selector(_authenticateUser:)
-																			 userInfo:nil
-																				repeats:NO];
-			} else {
-				[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"ERROR_MISSINGINFO", @"Missing info") withTitle:NSLocalizedString(@"ERROR_MISSINGINFO_TITLE", @"Missing info title")];
-			}
-			break;
-		case 2:
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/join/iphone"]];
-			break;
+-(IBAction)loginButtonPressed:(id)sender {
+	if([_username.text length] && [_password.text length]) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		_username.enabled = NO;
+		_password.enabled = NO;
+		[NSTimer scheduledTimerWithTimeInterval:0.1
+																		 target:self
+																	 selector:@selector(_authenticateUser:)
+																	 userInfo:nil
+																		repeats:NO];
+	} else {
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"ERROR_MISSINGINFO", @"Missing info") withTitle:NSLocalizedString(@"ERROR_MISSINGINFO_TITLE", @"Missing info title")];
 	}
 }
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"basiccell"];
-	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] init] autorelease];
-	}
-	switch([indexPath section]) {
-		case 0:
-			switch([indexPath row]) {
-				case 0:
-					cell.text = NSLocalizedString(@"Username", @"Username");
-					if(!_username) {
-						_username = [[UITextField alloc] initWithFrame:CGRectMake(0,0,190,22)];
-						_username.autocorrectionType = UITextAutocorrectionTypeNo;
-					}
-					cell.accessoryView = _username;
-					_username.text = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_user"];
-					cell.selectionStyle = UITableViewCellSelectionStyleNone;
-					break;
-				case 1:
-					cell.text = NSLocalizedString(@"Password", @"Password");
-					if(!_password) {
-						_password = [[UITextField alloc] initWithFrame:CGRectMake(0,0,190,22)];
-						_password.secureTextEntry = YES;
-					}
-					cell.accessoryView = _password;
-					cell.selectionStyle = UITableViewCellSelectionStyleNone;
-					break;
-			}
-			break;
-		case 1:
-			cell.text = NSLocalizedString(@"Login", @"Login Button");
-			cell.textAlignment = UITextAlignmentCenter;
-			break;
-		case 2:
-			cell.text = NSLocalizedString(@"Sign Up", @"Sign Up Button");
-			cell.textAlignment = UITextAlignmentCenter;
-			break;
-	}
-	return cell;
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	if(textField == _username && [_username.text length] > 0)
+		[_password becomeFirstResponder];
+	if(textField == _password && [_password.text length] > 0)
+		[self loginButtonPressed:textField];
 }
 @end

@@ -98,6 +98,7 @@ NSString *kUserAgent;
 		[self performSelectorOnMainThread:@selector(_logout) withObject:nil waitUntilDone:YES];
 }
 - (void)showProfileView:(BOOL)animated {
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
 																																	 style:UIBarButtonItemStylePlain 
 																																	target:self
@@ -132,6 +133,7 @@ NSString *kUserAgent;
 	}
 }
 -(void)showFirstRunView:(BOOL)animated {
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	if(!firstRunView) {
 		firstRunView = [[FirstRunViewController alloc] initWithNibName:@"FirstRunView" bundle:nil];
 		firstRunView.view.frame = [UIScreen mainScreen].applicationFrame;
