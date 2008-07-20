@@ -220,11 +220,11 @@
 	NSMutableData *postData=[[NSMutableData alloc] init];
 	[postData appendData:[[NSString stringWithFormat:@"s=%@",_sess] dataUsingEncoding:NSUTF8StringEncoding]];
 	[postData appendData:[[NSString stringWithFormat:@"&a=%@&t=%@&b=%@&l=%i&n=&m=",
-								[artist URLEscaped],
-								[title URLEscaped],
-								[album URLEscaped],
-								(duration/1000)
-								] dataUsingEncoding:NSUTF8StringEncoding]];
+												 [artist URLEscapedWithAmpersandHax:NO],
+												 [title URLEscapedWithAmpersandHax:NO],
+												 [album URLEscapedWithAmpersandHax:NO],
+												 (duration/1000)
+												 ] dataUsingEncoding:NSUTF8StringEncoding]];
 
 	NSLog(@"Sending currently playing track to %@", _nowPlayingURL);
 
@@ -279,13 +279,13 @@
 	
 	while((track = [enumerator nextObject]) && i < _maxSubmissionCount) {
 		trackStr = [NSString stringWithFormat:@"&a[%i]=%@&t[%i]=%@&i[%i]=%@&o[%i]=%@&r[%i]=%@&l[%i]=%@&b[%i]=%@&n[%i]=&m[%i]=",
-								i, [[track objectForKey:@"artist"] URLEscaped],
-								i, [[track objectForKey:@"title"] URLEscaped],
+								i, [[track objectForKey:@"artist"] URLEscapedWithAmpersandHax:NO],
+								i, [[track objectForKey:@"title"] URLEscapedWithAmpersandHax:NO],
 								i, [track objectForKey:@"startTime"],
 								i, [track objectForKey:@"source"] ? [track objectForKey:@"source"] : @"P",
 								i, [track objectForKey:@"rating"] ? [track objectForKey:@"rating"] : @"",
 								i, [track objectForKey:@"duration"],
-								i, [[track objectForKey:@"album"] URLEscaped],
+								i, [[track objectForKey:@"album"] URLEscapedWithAmpersandHax:NO],
 								i, i
 								];
 		[postData appendData:[trackStr dataUsingEncoding:NSUTF8StringEncoding]];

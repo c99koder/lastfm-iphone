@@ -21,8 +21,15 @@
 
 @implementation NSString (URLEscaped)
 - (NSString *)URLEscaped {
+	return [self URLEscapedWithAmpersandHax:YES];
+}
+- (NSString *)URLEscapedWithAmpersandHax:(BOOL)hax {
 	CFStringRef escaped = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"&+/?", kCFStringEncodingUTF8);
-	NSString *out = [(NSString *)escaped stringByReplacingOccurrencesOfString:@"%26" withString:@"%2526"];
+	NSString *out;
+	if(hax)
+		out = [(NSString *)escaped stringByReplacingOccurrencesOfString:@"%26" withString:@"%2526"];
+	else
+		out = [NSString stringWithString:(NSString *)escaped];
 	CFRelease(escaped);
 	return [[out copy] autorelease];
 }
