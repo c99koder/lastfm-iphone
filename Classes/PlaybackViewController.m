@@ -85,7 +85,7 @@
 		ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
 		cell.title.text = [artist objectForKey:@"name"];
 		cell.barWidth = [[artist objectForKey:@"match"] floatValue] / 100.0f;
-		cell.imageURL = [artist objectForKey:@"image_small"];
+		cell.imageURL = [artist objectForKey:@"image"];
 		[cell addStreamIcon];
 		[_cells addObject:cell];
 		[cell release];
