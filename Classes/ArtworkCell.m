@@ -126,7 +126,10 @@
 }
 -(void)fetchImage {
 	if(!_imageLoaded)
-		[NSThread detachNewThreadSelector:@selector(_fetchImage) toTarget:self withObject:nil];
+		if([imageURL length])
+			[NSThread detachNewThreadSelector:@selector(_fetchImage) toTarget:self withObject:nil];
+		else
+			_artwork.alpha = 1;
 }
 - (void)addStreamIcon {
 	UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
