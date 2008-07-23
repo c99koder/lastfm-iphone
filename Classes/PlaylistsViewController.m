@@ -31,7 +31,12 @@
 	if (self = [super init]) {
 		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Playlists", @"Playlists view title"), username];
 		_username = username;
-		_data = [[[LastFMService sharedInstance] playlistsForUser:_username] retain];
+		NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
+		_data = [[NSMutableArray alloc] init];
+		for(NSDictionary *playlist in playlists) {
+			if(![[playlist objectForKey:@"streamable"] isEqualToString:@"0"])
+				[_data addObject:playlist];
+		}
 	}
 	
 	if(![_data count]) {
