@@ -45,6 +45,8 @@
 }
 @end
 
+UIImage *avatarPlaceholder = nil;
+
 @implementation ArtworkCell
 
 @synthesize title, subtitle, barWidth, imageURL, shouldCacheArtwork;
@@ -54,7 +56,12 @@
 		_bar = [[UIView alloc] init];
 		[self.contentView addSubview:_bar];
 		
-		_artwork = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"avatarplaceholder.png"]];
+		if(!avatarPlaceholder)
+			avatarPlaceholder = [UIImage imageNamed:@"avatarplaceholder.png"];
+		
+		_artwork = [[UIImageView alloc] initWithImage:avatarPlaceholder];
+		_artwork.contentMode = UIViewContentModeScaleAspectFill;
+		_artwork.clipsToBounds = YES;
 		_artwork.opaque = NO;
 		_artwork.alpha = 0.4;
 		[self.contentView addSubview:_artwork];
@@ -84,7 +91,7 @@
 	
 	CGRect frame = [self.contentView bounds];
 	if(imageURL)
-	_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
+		_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
 	if([subtitle.text length]) {
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 6, frame.size.width - _artwork.frame.size.width - 6, 20);
 		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 26, frame.size.width - _artwork.frame.size.width - 6, 20);
