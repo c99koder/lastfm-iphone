@@ -272,7 +272,8 @@ void propCallback(void *in,
 }
 -(NSArray *)recentURLs {
 	NSMutableArray *URLs = [[NSMutableArray alloc] init];
-	CFDateFormatterRef dateFormatter = CFDateFormatterCreate(NULL, CFLocaleCopyCurrent(), kCFDateFormatterShortStyle, kCFDateFormatterNoStyle);
+	CFLocaleRef locale = CFLocaleCopyCurrent();
+	CFDateFormatterRef dateFormatter = CFDateFormatterCreate(NULL, locale, kCFDateFormatterShortStyle, kCFDateFormatterNoStyle);
 	CFDateFormatterSetFormat(dateFormatter, (CFStringRef)@"dd MMM yyyy, HH:mm");
 	[_db open];
 	FMResultSet *rs = [_db executeQuery:@"select * from recent_radio order by timestamp desc",  nil];
@@ -292,6 +293,7 @@ void propCallback(void *in,
 	}
 	[_db close];
 	CFRelease(dateFormatter);
+	CFRelease(locale);
 	return [URLs autorelease];
 }
 -(BOOL)selectStation:(NSString *)station {

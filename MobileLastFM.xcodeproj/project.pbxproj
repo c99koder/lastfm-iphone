@@ -586,7 +586,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "F800CAEB-E3DA-4EE6-8AF0-1A04002F1F72";
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphonesimulator2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Distribution;
@@ -635,7 +635,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = DefaultProfileUuid;
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphonesimulator2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Debug;
@@ -664,7 +664,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = DefaultProfileUuid;
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphonesimulator2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Release;
@@ -680,7 +680,7 @@
 				223AB58D0E2000EC002E06F2 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MobileLastFM" */ = {
 			isa = XCConfigurationList;
@@ -690,7 +690,7 @@
 				223AB58C0E2000EC002E06F2 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

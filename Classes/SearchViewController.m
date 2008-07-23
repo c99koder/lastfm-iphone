@@ -135,7 +135,7 @@
 }
 -(IBAction)searchBarSearchButtonClicked:(id)sender {
 	if(_searchType.selectedSegmentIndex == 2) {
-		ProfileViewController *profileViewController = [[ProfileViewController alloc] initWithUsername:[NSString stringWithString:_searchBar.text]];
+		ProfileViewController *profileViewController = [[ProfileViewController alloc] initWithUsername:[NSString stringWithFormat:@"%@", _searchBar.text]];
 		[self.navigationController pushViewController:profileViewController animated:YES];
 		//[profileViewController release];
 	} else {
