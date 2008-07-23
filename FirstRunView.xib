@@ -35,7 +35,7 @@
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string type="base64-UTF8" key="IBUIText">TGFzdC5mbSBmb3IgaVBob25lIC8gaVBvZCBUb3VjaCB2ZXJzaW9uIDEuMC4yCsKpIDIwMDggTGFzdC5m
+						<string type="base64-UTF8" key="IBUIText">TGFzdC5mbSBmb3IgaVBob25lIC8gaVBvZCBUb3VjaCB2ZXJzaW9uIDEuMC4xCsKpIDIwMDggTGFzdC5m
 bSwgTHRkLg</string>
 						<object class="NSFont" key="IBUIFont">
 							<string key="NSName">Helvetica</string>
