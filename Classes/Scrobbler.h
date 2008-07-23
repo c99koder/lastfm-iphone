@@ -37,8 +37,6 @@
 	NSMutableArray *_queue;
 	NSTimer *_queueTimer;
 	int _queueTimerInterval;
-	int _totalScrobbled;
-	NSString *_scrobblerResult;
 	int _submissionCount;
 	int _maxSubmissionCount;
 	NSTimer *_timer;

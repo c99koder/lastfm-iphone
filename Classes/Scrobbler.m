@@ -44,9 +44,7 @@
 	_queue = [[NSMutableArray alloc] initWithCapacity:250];
 	_queueTimer = nil;
 	_scrobblerState = SCROBBLER_OFFLINE;
-	_scrobblerResult = NSLocalizedString(@"Offline", @"Offline");
 	_queueTimerInterval = 60;
-	_totalScrobbled = [[NSUserDefaults standardUserDefaults] integerForKey:@"totalScrobbled"];
 	_maxSubmissionCount = 50;
 	_connection = nil;
 	_submitted = NO;
@@ -318,13 +316,12 @@
 	[_receivedData release];
 	_receivedData = nil;
 	
-	[_scrobblerResult release];	
-	_scrobblerResult = [[list objectAtIndex: 0] retain];
-	NSLog(@"Server response: %@\n", _scrobblerResult);
+	NSString *scrobblerResult = [[list objectAtIndex: 0] retain];
+	NSLog(@"Server response: %@\n", scrobblerResult);
 	
 	switch(_scrobblerState) {
 		case SCROBBLER_AUTHENTICATING:
-			if([_scrobblerResult isEqualToString:@"OK"]) {
+			if([scrobblerResult isEqualToString:@"OK"]) {
 				[_sess release];
 				_sess = [[list objectAtIndex: 1] retain];
 				[_nowPlayingURL release];
@@ -345,7 +342,7 @@
 			}
 			break;
 		case SCROBBLER_SCROBBLING:
-			if([_scrobblerResult isEqualToString:@"OK"]) {
+			if([scrobblerResult isEqualToString:@"OK"]) {
 				NSLog(@"Scrobble succeeded!\n");
 				_queueTimerInterval = 5;
 				for(i=0; [_queue count] > 0 && i < _submissionCount; i++) {
@@ -357,12 +354,11 @@
 						[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
 					}
 					[_queue removeObjectAtIndex:0];
-					_totalScrobbled++;
 				}
 				_maxSubmissionCount = 50;
 			} else {
-				NSLog(@"Error: \"%@\"\n", _scrobblerResult);
-				if([_scrobblerResult isEqualToString:@"BADSESSION"]) {
+				NSLog(@"Error: \"%@\"\n", scrobblerResult);
+				if([scrobblerResult isEqualToString:@"BADSESSION"]) {
 					[self handshake];
 				} else {
 					_maxSubmissionCount /= 4;
@@ -402,8 +398,6 @@
 				[error localizedDescription],
 				[[error userInfo] objectForKey:NSErrorFailingURLStringKey]);
 	
-	_scrobblerResult = [error localizedDescription];
-	
 	if(_scrobblerState == SCROBBLER_SCROBBLING) {
 		_scrobblerState = SCROBBLER_READY;
 	} else {
@@ -424,7 +418,6 @@
 	[_receivedData release];
 	[_queue release];
 	[_queueTimer release];
-	[_scrobblerResult release];
 	[super dealloc];
 }
 @end
