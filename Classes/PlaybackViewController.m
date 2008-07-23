@@ -135,6 +135,15 @@
 }
 @end
 
+int tagSort(id tag1, id tag2, void *context) {
+	if([[tag1 objectForKey:@"count"] intValue] < [[tag2 objectForKey:@"count"] intValue])
+		return NSOrderedDescending;
+	else if([[tag1 objectForKey:@"count"] intValue] > [[tag2 objectForKey:@"count"] intValue])
+		return NSOrderedAscending;
+	else
+		return NSOrderedSame;
+}
+
 @implementation TagsViewController
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -152,7 +161,7 @@
 	[_lock lock];
 	[self showLoadingView];
 	[_data release];
-	_data = [[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
+	_data = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 	_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
 	[_table reloadData];
 	[_table scrollRectToVisible:[_table frame] animated:YES];
@@ -192,7 +201,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil] autorelease];
 	cell.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
-	float width = [[[_data objectAtIndex:[indexPath row]] objectForKey:@"count"] floatValue] / 100.0f;
+	float width = [[[_data objectAtIndex:[indexPath row]] objectForKey:@"count"] floatValue] / [[[_data objectAtIndex:0] objectForKey:@"count"] floatValue];
 	UIView *bar = [[UIView alloc] initWithFrame:CGRectMake(0,0,width * [cell frame].size.width,48)];
 	bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
 	[cell.contentView addSubview:bar];
