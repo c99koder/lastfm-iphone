@@ -29,23 +29,6 @@
 #import "NSString+MD5.h"
 
 @implementation PlaybackSubview
-- (void)enableLoveButton:(BOOL)enabled {
-	_loveButton.alpha = 1;
-	_loveButton.opaque = YES;
-}
-- (void)enableBanButton:(BOOL)enabled {
-	_banButton.alpha = 1;
-	_banButton.opaque = YES;
-}
-- (void)backButtonPressed:(id)sender {
-	if(self.navigationController == self.tabBarController.moreNavigationController)
-		[self.tabBarController.moreNavigationController popViewControllerAnimated:YES];
-	else
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hidePlaybackView];
-}
-- (void)volumeButtonPressed:(id)sender {
-	MPVolumeSettingsAlertShow();
-}
 - (void)showLoadingView {
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.5];
@@ -288,6 +271,8 @@ int tagSort(id tag1, id tag2, void *context) {
 @end
 
 @implementation TrackViewController
+@synthesize artwork;
+
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
@@ -296,6 +281,7 @@ int tagSort(id tag1, id tag2, void *context) {
 																 selector:@selector(_updateProgress:)
 																 userInfo:nil
 																	repeats:YES];
+	_reflectedArtworkView.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 }
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
@@ -319,10 +305,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
 	}
 	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _loadingView.alpha < 1) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.5];
 		_loadingView.alpha = 1;
-		[UIView commitAnimations];
 	}
 	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
 		[UIView beginAnimations:nil context:nil];
@@ -341,33 +324,35 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_fetchArtwork:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDictionary *albumData = [[LastFMService sharedInstance] metadataForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-	NSString *artwork = nil;
+	NSString *artworkURL = nil;
 	UIImage *artworkImage;
 	
 	if([[albumData objectForKey:@"image"] length]) {
-		artwork = [NSString stringWithString:[albumData objectForKey:@"image"]];
+		artworkURL = [NSString stringWithString:[albumData objectForKey:@"image"]];
 	} else if([[trackInfo objectForKey:@"image"] length]) {
-			artwork = [NSString stringWithString:[trackInfo objectForKey:@"image"]];
+			artworkURL = [NSString stringWithString:[trackInfo objectForKey:@"image"]];
 	}
 
-	if(!artwork || [artwork isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] || [artwork isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
+	if(!artworkURL || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
 		NSDictionary *artistData = [[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
 		if([artistData objectForKey:@"image"])
-			artwork = [NSString stringWithString:[artistData objectForKey:@"image"]];
+			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
 	}
 	
-	NSLog(@"Loading artwork: %@\n", artwork);
-	if(artwork && ![artwork isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artwork isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
-		NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString: artwork]];
+	NSLog(@"Loading artwork: %@\n", artworkURL);
+	if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
+		NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString: artworkURL]];
 		artworkImage = [[UIImage alloc] initWithData:imageData];
 		[imageData release];
 	} else {
-		artwork = [NSString stringWithFormat:@"file:///%@/noartplaceholder.png", [[NSBundle mainBundle] bundlePath]];
+		artworkURL = [NSString stringWithFormat:@"file:///%@/noartplaceholder.png", [[NSBundle mainBundle] bundlePath]];
 		artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
 	}
 
 	_artworkView.image = artworkImage;
-	[artworkImage release];
+	_reflectedArtworkView.image = artworkImage;
+	[artwork release];
+	artwork = artworkImage;
 	[pool release];
 }
 - (void)_trackDidChange:(NSNotification *)notification {
@@ -375,99 +360,41 @@ int tagSort(id tag1, id tag2, void *context) {
 	
 	_trackTitle.text = [trackInfo objectForKey:@"title"];
 	_artist.text = [trackInfo objectForKey:@"creator"];
-	_album.text = [trackInfo objectForKey:@"album"];
 	_elapsed.text = @"0:00";
 	_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:([[trackInfo objectForKey:@"duration"] floatValue] / 1000.0f)]];
 	_progress.progress = 0;
-	_artworkView.image = [UIImage imageNamed:@"noartplaceholder.png"];
-
-	_station.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+	[artwork release];
+	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
+	_artworkView.image = artwork;
+	_reflectedArtworkView.image = artwork;
 	[self _updateProgress:nil];
 
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:[notification userInfo]];
 }
-- (void)buyButtonPressed:(id)sender {
-	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"itms://ax.phobos.apple.com.edgesuite.net/WebObjects/MZSearch.woa/wa/search?term=%@+%@", 
-																							[_artist.text URLEscaped],
-																							[_trackTitle.text URLEscaped]
-																							]]];
-}
-- (void)shareToAddressBook {
-	ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
-	peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
-	peoplePicker.peoplePickerDelegate = self;
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController presentModalViewController:peoplePicker animated:YES];
-	[peoplePicker release];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-}
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person {
-	return YES;
-}
-- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
-	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(ABRecordCopyValue(person, property), ABMultiValueGetIndexForIdentifier(ABRecordCopyValue(person, property), identifier));
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
-	
-	[[LastFMService sharedInstance] recommendTrack:_trackTitle.text
-																				byArtist:_artist.text
-																	toEmailAddress:email];
-	
-	if([LastFMService sharedInstance].error)
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
-	else
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-	return NO;
-}
-- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
-}
-- (void)shareToFriend {
-	FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-	if(friends) {
-		friends.delegate = self;
-		friends.title = @"Choose A Friend";
-		UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:friends];
-		[friends release];
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController presentModalViewController:nav animated:YES];
-		[nav release];
-		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+-(IBAction)artworkButtonPressed:(id)sender {
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.2];
+	if(_artworkView.frame.size.width == 320) {
+		_reflectionGradientView.frame = CGRectMake(0,210,320,194);
+		_reflectedArtworkView.frame = CGRectMake(65,210,190,190);
+		_artworkView.frame = CGRectMake(65,20,190,190);
+		_trackTitle.alpha = 1;
+		_artist.alpha = 1;
+		_progress.alpha = 1;
+		_elapsed.alpha = 1;
+		_remaining.alpha = 1;
+	} else {
+		_reflectionGradientView.frame = CGRectMake(0,320,320,320);
+		_reflectedArtworkView.frame = CGRectMake(0,320,320,320);
+		_artworkView.frame = CGRectMake(0,0,320,320);
+		_trackTitle.alpha = 0;
+		_artist.alpha = 0;
+		_progress.alpha = 0;
+		_elapsed.alpha = 0;
+		_remaining.alpha = 0;
+		_artworkView.image = artwork;
 	}
-}
-- (void)friendsViewController:(FriendsViewController *)friends didSelectFriend:(NSString *)username {
-	[[LastFMService sharedInstance] recommendTrack:_trackTitle.text
-																				byArtist:_artist.text
-																	toEmailAddress:username];
-	if([LastFMService sharedInstance].error)
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
-	else
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
-	
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
-}
-- (void)friendsViewControllerDidCancel:(FriendsViewController *)friends {
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
-}
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	switch(buttonIndex) {
-		case 0:
-			[self shareToAddressBook];
-			break;
-		case 1:
-			[self shareToFriend];
-			break;
-	}
-}
-- (void)shareButtonPressed:(id)sender {
-	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
-																										 delegate:self
-																						cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-																			 destructiveButtonTitle:nil
-																						otherButtonTitles:NSLocalizedString(@"Contacts", @"Share to Address Book"), NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
-	[sheet showInView:self.tabBarController.view];
-	[sheet release];	
+	[UIView commitAnimations];
 }
 @end
 
@@ -507,7 +434,7 @@ int tagSort(id tag1, id tag2, void *context) {
 										<body style=\"margin:0; padding:0; color:black; background: white; font-family: 'Lucida Grande', Arial; line-height: 1.2em;\">\
 										<div style=\"padding:12px; margin:0; top:0px; left:0px; width:260px; position:absolute;\">\
 										%@</div></body></html>", _bio];
-	_bar.topItem.title = [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"];
+	self.navigationItem.title = [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"];
 	[_webView loadHTMLString:html baseURL:nil];
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -935,33 +862,200 @@ int tagSort(id tag1, id tag2, void *context) {
 @implementation PlaybackViewController
 - (void)viewDidLoad {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
-	self.moreNavigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-	UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 42, 30)];
-	[btn setBackgroundImage:[UIImage imageNamed:@"backBtn.png"] forState:UIControlStateNormal];
-	btn.adjustsImageWhenHighlighted = YES;
-	[btn addTarget:[UIApplication sharedApplication].delegate action:@selector(hidePlaybackView) forControlEvents:UIControlEventTouchUpInside];
-	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
-	self.tabBarController.moreNavigationController.topViewController.navigationItem.leftBarButtonItem = item;
-	[item release];
-	[btn release];
-	self.tabBarController.customizableViewControllers = nil;
+	trackView.view.frame = CGRectMake(0,0,320,320);
+	[contentView addSubview:trackView.view];
+	[contentView sendSubviewToBack:trackView.view];
+	
+	artistBio.view.frame = CGRectMake(0,0,320,268);
+	tags.view.frame = CGRectMake(0,0,320,268);
+	similarArtists.view.frame = CGRectMake(0,0,320,268);
+	fans.view.frame = CGRectMake(0,0,320,268);
+	events.view.frame = CGRectMake(0,0,320,268);
+	
+	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:volumeView.frame];
+	[volumeView removeFromSuperview];
+	volumeView = v;
+	[self.view addSubview: volumeView];
+}
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
 }
 - (void)_trackDidChange:(NSNotification *)notification {
-	self.selectedIndex = 0;
-	for(UINavigationController *controller in self.tabBarController.viewControllers) {
-		if([controller.topViewController respondsToSelector:@selector(enableLoveButton:)])
-			[(PlaybackSubview *)(controller.topViewController) enableLoveButton:YES];
-		if([controller.topViewController respondsToSelector:@selector(enableBanButton:)])
-			[(PlaybackSubview *)(controller.topViewController) enableBanButton:YES];
-	}
-	if([self.moreNavigationController.topViewController respondsToSelector:@selector(enableLoveButton:)])
-		[(PlaybackSubview *)(self.moreNavigationController.topViewController) enableLoveButton:YES];
-	if([self.moreNavigationController.topViewController respondsToSelector:@selector(enableBanButton:)])
-		[(PlaybackSubview *)(self.moreNavigationController.topViewController) enableBanButton:YES];
-	[self.moreNavigationController popToRootViewControllerAnimated:NO];
+	if([[detailView subviews] count])
+		[self detailsButtonPressed:nil];
+	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+	loveBtn.alpha = 1;
+	banBtn.alpha = 1;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+- (void)backButtonPressed:(id)sender {
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hidePlaybackView];
+}
+- (void)detailsButtonPressed:(id)sender {
+	if([[detailView subviews] count]) {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.75];
+		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:detailsBtnContainer cache:YES];
+		[detailsBtn setBackgroundImage:[UIImage imageNamed:@"info_button.png"] forState:UIControlStateNormal];
+		[UIView commitAnimations];
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.75];
+		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:contentView cache:YES];
+		[[contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+		[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+		[contentView addSubview: trackView.view];
+		[UIView commitAnimations];
+		_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+	} else {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.75];
+		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:detailsBtnContainer cache:YES];
+		[detailsBtn setBackgroundImage:trackView.artwork forState:UIControlStateNormal];
+		[UIView commitAnimations];
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.75];
+		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:contentView cache:YES];
+		[[contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+		[contentView addSubview: detailsViewContainer];
+		detailType.selectedSegmentIndex = 0;
+		[self detailTypeChanged:nil];
+		[UIView commitAnimations];
+	}
+}
+- (void)detailTypeChanged:(id)sender {
+	[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+
+	switch(detailType.selectedSegmentIndex) {
+		case 0:
+			[detailView addSubview:artistBio.view];
+			_titleLabel.text = @"Artist Bio";
+			break;
+		case 1:
+			[detailView addSubview:tags.view];
+			_titleLabel.text = @"Tags";
+			break;
+		case 2:
+			[detailView addSubview:similarArtists.view];
+			_titleLabel.text = @"Similar Artists";
+			break;
+		case 3:
+			[detailView addSubview:events.view];
+			_titleLabel.text = @"Events";
+			break;
+		case 4:
+			[detailView addSubview:fans.view];
+			_titleLabel.text = @"Top Listeners";
+			break;
+	}
+}
+- (void)shareToAddressBook {
+	ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
+	peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
+	peoplePicker.peoplePickerDelegate = self;
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController presentModalViewController:peoplePicker animated:YES];
+	[peoplePicker release];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person {
+	return YES;
+}
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
+	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
+	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(ABRecordCopyValue(person, property), ABMultiValueGetIndexForIdentifier(ABRecordCopyValue(person, property), identifier));
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
+	
+	[[LastFMService sharedInstance] recommendTrack:[trackInfo objectForKey:@"title"]
+																				byArtist:[trackInfo objectForKey:@"creator"]
+																	toEmailAddress:email];
+	
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	else
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	return NO;
+}
+- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
+}
+- (void)shareToFriend {
+	FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	if(friends) {
+		friends.delegate = self;
+		friends.title = @"Choose A Friend";
+		UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:friends];
+		[friends release];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController presentModalViewController:nav animated:YES];
+		[nav release];
+		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	}
+}
+- (void)friendsViewController:(FriendsViewController *)friends didSelectFriend:(NSString *)username {
+	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
+	[[LastFMService sharedInstance] recommendTrack:[trackInfo objectForKey:@"title"]
+																				byArtist:[trackInfo objectForKey:@"creator"]
+																	toEmailAddress:username];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	else
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
+	
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
+}
+- (void)friendsViewControllerDidCancel:(FriendsViewController *)friends {
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
+}
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
+
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Share"]) {
+		UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
+																											 delegate:self
+																							cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+																				 destructiveButtonTitle:nil
+																							otherButtonTitles:NSLocalizedString(@"Contacts", @"Share to Address Book"), NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
+		[sheet showInView:self.view];
+		[sheet release];	
+	}
+	
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Buy on iTunes"])
+		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"itms://ax.phobos.apple.com.edgesuite.net/WebObjects/MZSearch.woa/wa/search?term=%@+%@", 
+																																								[[trackInfo objectForKey:@"creator"] URLEscaped],
+																																								[[trackInfo objectForKey:@"title"] URLEscaped]
+																																								]]];
+	
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")]) {
+		[self shareToAddressBook];
+	}
+
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend")]) {
+		[self shareToFriend];
+	}
+}
+- (void)actionButtonPressed:(id)sender {
+	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
+																										 delegate:self
+																						cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+																			 destructiveButtonTitle:nil
+																						otherButtonTitles:@"Tag",
+													@"Add to Playlist",
+													@"Share",
+													@"Buy on iTunes",
+													nil];
+	sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+	[sheet showInView:self.view];
+	[sheet release];
 }
 -(void)loveButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) loveButtonPressed:sender];	

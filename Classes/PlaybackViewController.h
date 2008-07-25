@@ -22,15 +22,11 @@
 #import "LastFMService.h"
 #import "ArtworkCell.h"
 #import "FriendsViewController.h"
+#import "EventsViewController.h"
 
 @interface PlaybackSubview : UIViewController {
-	IBOutlet UINavigationBar *_bar;
-	IBOutlet UIButton *_loveButton;
-	IBOutlet UIButton *_banButton;
 	IBOutlet UIView *_loadingView;
 }
-- (void)backButtonPressed:(id)sender;
-- (void)volumeButtonPressed:(id)sender;
 - (void)showLoadingView;
 - (void)hideLoadingView;
 @end
@@ -58,19 +54,20 @@
 }
 @end
 
-@interface TrackViewController : PlaybackSubview<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate> {
+@interface TrackViewController : PlaybackSubview {
 	IBOutlet UIImageView *_artworkView;
+	IBOutlet UIImageView *_reflectedArtworkView;
+	IBOutlet UIImageView *_reflectionGradientView;
 	IBOutlet UILabel *_trackTitle;
 	IBOutlet UILabel *_artist;
-	IBOutlet UILabel *_album;
 	IBOutlet UILabel *_elapsed;
 	IBOutlet UILabel *_remaining;
 	IBOutlet UIProgressView *_progress;
 	IBOutlet UILabel *_bufferPercentage;
-	IBOutlet UILabel *_station;
+	UIImage *artwork;
 }
-- (void)buyButtonPressed:(id)sender;
-- (void)shareButtonPressed:(id)sender;
+-(IBAction)artworkButtonPressed:(id)sender;
+@property (nonatomic, readonly) UIImage *artwork;
 @end
 
 @interface ArtistBioView : PlaybackSubview {
@@ -122,10 +119,31 @@
 - (void)setAttendance:(int)status;
 @end
 
-@interface PlaybackViewController : UITabBarController<UIActionSheetDelegate> {
+@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate> {
+	IBOutlet UILabel *_titleLabel;
+	IBOutlet UIToolbar *toolbar;
+	IBOutlet UIView *contentView;
+	IBOutlet UIView *detailsViewContainer;
+	IBOutlet UIView *detailView;
+	IBOutlet UISegmentedControl *detailType;
+	IBOutlet TrackViewController *trackView;
+	IBOutlet ArtistBioView *artistBio;
+	IBOutlet SimilarArtistsViewController *similarArtists;
+	IBOutlet EventsViewController *events;
+	IBOutlet TagsViewController *tags;
+	IBOutlet FansViewController *fans;
+	IBOutlet UIView *volumeView;
+	IBOutlet UIView *detailsBtnContainer;
+	IBOutlet UIButton *detailsBtn;
+	IBOutlet UIButton *loveBtn;
+	IBOutlet UIButton *banBtn;
 }
+-(void)backButtonPressed:(id)sender;
+-(void)detailsButtonPressed:(id)sender;
+-(void)actionButtonPressed:(id)sender;
 -(void)loveButtonPressed:(id)sender;
 -(void)banButtonPressed:(id)sender;
 -(void)stopButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
+-(void)detailTypeChanged:(id)sender;
 @end

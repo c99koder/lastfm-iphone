@@ -32,8 +32,49 @@
 @implementation ProfileViewController
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super init]) {
-		_username = [[NSString alloc] initWithString:username];
-		self.title = [NSString stringWithString:_username];
+		self.title = username;
+		_username = [username retain];
+		/*NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
+		if(profile) {
+			NSMutableString *url = [NSMutableString stringWithString:[profile objectForKey:@"avatar"]];
+			[url replaceOccurrencesOfString:@"/160/" withString:@"/50/" options:NSLiteralSearch range:NSMakeRange(0, [url length])];
+			NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:url]
+																								cachePolicy:NSURLRequestUseProtocolCachePolicy
+																						timeoutInterval:30.0];
+			
+			NSData *theResponseData;
+			NSURLResponse *theResponse = NULL;
+			NSError *theError = NULL;
+			
+			if([(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection] && !shouldUseCache(CACHE_FILE(@"Profiles",([NSString stringWithFormat:@"%@.jpg", _username])), 3600)) {
+				theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
+				[theResponseData writeToFile:CACHE_FILE(@"Profiles",([NSString stringWithFormat:@"%@.jpg", _username])) atomically: YES];
+			}
+			
+			int usernameWidth = [_username sizeWithFont:[UIFont boldSystemFontOfSize: 18]].width;
+			if(usernameWidth > 200) usernameWidth = 200;
+			
+			UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0,0,usernameWidth + 36, 32)];
+			header.backgroundColor = [UIColor clearColor];
+			
+			UIImageView *avatar = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:CACHE_FILE(@"Profiles",([NSString stringWithFormat:@"%@.jpg", _username]))]];
+			[avatar setFrame:CGRectMake(0, 0, 32, 32)];
+			[header addSubview:avatar];
+			[avatar release];
+			
+			UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(36,0,usernameWidth,32)];
+			name.font = [UIFont boldSystemFontOfSize: 18];
+			name.textColor = [UIColor whiteColor];
+			name.backgroundColor = [UIColor clearColor];
+			name.textAlignment = UITextAlignmentCenter;
+			name.text = _username;
+			name.adjustsFontSizeToFitWidth = YES;
+			name.minimumFontSize = 12;
+			[header addSubview: name];
+			[name release];
+			self.navigationItem.titleView = header;
+			[header release];*/
+		
 		_data = [[NSMutableArray alloc] init];
 			
 		if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
@@ -91,6 +132,13 @@
 												@"tags", @"type",
 												nil]];
 		}
+		/*for(NSDictionary *tag in tags) {
+			if([[tag objectForKey:@"count"] intValue] >= 5)
+				[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%@ tag radio", [tag objectForKey:@"name"]], @"title",
+													@"station", @"type", 
+													[NSString stringWithFormat:@"lastfm://usertags/%@/%@",[_username URLEscaped],[[tag objectForKey:@"name"] URLEscaped]], @"url",
+													nil]];
+		}*/
 		[_data addObject:[NSDictionary dictionaryWithObjectsAndKeys: NSLocalizedString(@"Friends", @"Browse Friends"), @"title",
 											@"friends", @"type",
 											nil]];
@@ -127,7 +175,7 @@
 	} else if([[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"type"] isEqualToString:@"friends"]) {
 		controller = [[FriendsViewController alloc] initWithUsername:_username];
 	} else if([[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"type"] isEqualToString:@"search"]) {
-		controller = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
+		controller = [[[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil] retain];
 	} else if([[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"type"] isEqualToString:@"charts"]) {
 		controller = [[ChartsListViewController alloc] initWithUsername:_username];
 	} else if([[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"type"] isEqualToString:@"recent"]) {
@@ -188,7 +236,7 @@
 }
 - (void)dealloc {
 	[super dealloc];
-	[_data release];
 	[_username release];
+	[_data release];
 }
 @end

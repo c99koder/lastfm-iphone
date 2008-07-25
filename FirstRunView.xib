@@ -8,7 +8,6 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="3"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -32,10 +31,11 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 423}, {280, 37}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string type="base64-UTF8" key="IBUIText">TGFzdC5mbSBmb3IgaVBob25lIC8gaVBvZCBUb3VjaCB2ZXJzaW9uIDEuMC4xCsKpIDIwMDggTGFzdC5m
+						<string type="base64-UTF8" key="IBUIText">TGFzdC5mbSBmb3IgaVBob25lIC8gaVBvZCBUb3VjaCB2ZXJzaW9uIDEuMS4wCsKpIDIwMDggTGFzdC5m
 bSwgTHRkLg</string>
 						<object class="NSFont" key="IBUIFont">
 							<string key="NSName">Helvetica</string>
@@ -58,6 +58,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{87, 20}, {146, 38}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -72,6 +73,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{8, 123}, {302, 45}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -86,6 +88,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{8, 78}, {302, 45}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -100,6 +103,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{87, 188}, {146, 37}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -121,9 +125,9 @@ bSwgTHRkLg</string>
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="1043294242">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">red_button.png</string>
+							<string key="NSResourceName">transparent_grey_button.png</string>
 						</object>
 					</object>
 					<object class="IBUIButton" id="689278323">
@@ -131,6 +135,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{87, 378}, {146, 37}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -142,16 +147,14 @@ bSwgTHRkLg</string>
 						<string key="IBUINormalTitle">Sign up</string>
 						<reference key="IBUIHighlightedTitleColor" ref="649291039"/>
 						<reference key="IBUINormalTitleColor" ref="583470059"/>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">transparent_grey_button.png</string>
-						</object>
+						<reference key="IBUINormalBackgroundImage" ref="1043294242"/>
 					</object>
 					<object class="IBUILabel" id="401370767">
 						<reference key="NSNextResponder" ref="692418406"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{54, 349}, {211, 21}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -172,6 +175,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 90}, {79, 21}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -194,6 +198,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 135}, {75, 21}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -209,6 +214,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 85}, {193, 31}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -238,6 +244,7 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 130}, {193, 31}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
+						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -260,6 +267,7 @@ bSwgTHRkLg</string>
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="IBUIBackgroundColor" ref="222555467"/>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 			</object>

@@ -332,35 +332,12 @@ NSString *kUserAgent;
 	return TRUE;
 }
 -(void)showPlaybackView {
-	CGRect frame = [UIScreen mainScreen].applicationFrame;
-	frame.origin.x = 320;
-	playbackViewController.view.frame = frame;
-	[_mainView addSubview: playbackViewController.view];
-	playbackViewController.tabBarController.selectedIndex = 0;
-		
-	[self.navController.topViewController viewWillDisappear:YES];
-	[UIView beginAnimations:nil context:nil];
-	
-	frame = [self.navController view].frame;
-	frame.origin.x = -320;
-	[self.navController view].frame = frame;		
-	frame = [self.playbackViewController view].frame;
-	frame.origin.x = 0;
-	[self.playbackViewController view].frame = frame;
-	[UIView commitAnimations];
+	[self.navController pushViewController:playbackViewController animated:YES];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 -(void)hidePlaybackView {
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-	[self.navController.topViewController viewWillAppear:YES];
-	[UIView beginAnimations:nil context:nil];
-	CGRect frame = [self.playbackViewController view].frame;
-	frame.origin.x = 320;
-	[self.playbackViewController view].frame = frame;		
-	frame = [self.navController view].frame;
-	frame.origin.x = 0;
-	[self.navController view].frame = frame;
-	[UIView commitAnimations];
+	[self.navController popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
