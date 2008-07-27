@@ -261,19 +261,19 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 }
 - (NSArray *)topArtistsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getTopArtists" maxCacheAge:1*DAYS XPath:@"./topartists/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"user.getTopArtists" maxCacheAge:5*MINUTES XPath:@"./topartists/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"medium\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
 }
 - (NSArray *)topAlbumsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getTopAlbums" maxCacheAge:1*DAYS XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"user.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 - (NSArray *)topTracksForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getTopTracks" maxCacheAge:1*DAYS XPath:@"./toptracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"user.getTopTracks" maxCacheAge:5*MINUTES XPath:@"./toptracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
