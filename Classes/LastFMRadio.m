@@ -384,6 +384,7 @@ void propCallback(void *in,
 																																		additionalInfo:nil];
 		[[SystemNowPlayingController sharedInstance] disableMediaHUD];
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
+		[UIApplication sharedApplication].idleTimerDisabled = YES;
 		return TRUE;
 	} else {
 		_state = RADIO_IDLE;
@@ -427,6 +428,7 @@ void propCallback(void *in,
 																																		hasImageData:NO
 																																	additionalInfo:nil];
 	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
+	[UIApplication sharedApplication].idleTimerDisabled = NO;
 	NSLog(@"Playback stopped");
 	[_busyLock unlock];
 }
