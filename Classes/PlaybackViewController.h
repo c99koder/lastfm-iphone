@@ -22,7 +22,7 @@
 #import "LastFMService.h"
 #import "ArtworkCell.h"
 #import "FriendsViewController.h"
-#import "EventsViewController.h"
+#import "CalendarViewController.h"
 
 @interface PlaybackSubview : UIViewController {
 	IBOutlet UIView *_loadingView;
@@ -117,6 +117,14 @@
 - (IBAction)mapsButtonPressed:(id)sender;
 - (int)attendance;
 - (void)setAttendance:(int)status;
+@end
+
+@interface EventsViewController : PlaybackSubview<CalendarViewControllerDelegate> {
+	IBOutlet CalendarViewController *_calendar;
+	NSArray *_events;
+	NSMutableArray *_eventDates;
+	NSMutableArray *_attendingEvents;
+}
 @end
 
 @interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate> {

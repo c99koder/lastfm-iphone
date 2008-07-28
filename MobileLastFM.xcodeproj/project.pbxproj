@@ -46,8 +46,10 @@
 		2244DAFD0E3A55C700C4F40B /* info_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAF90E3A55C700C4F40B /* info_button.png */; };
 		2244DAFE0E3A55C700C4F40B /* reflectionmask.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFA0E3A55C700C4F40B /* reflectionmask.png */; };
 		2244DAFF0E3A55C700C4F40B /* cog_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFB0E3A55C700C4F40B /* cog_button.png */; };
-		2244DB0C0E3A563800C4F40B /* EventsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2244DB0B0E3A563800C4F40B /* EventsView.xib */; };
-		2244DB0F0E3A569700C4F40B /* EventsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244DB0E0E3A569700C4F40B /* EventsViewController.m */; };
+		2244DB0C0E3A563800C4F40B /* CalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2244DB0B0E3A563800C4F40B /* CalendarView.xib */; };
+		2244DB0F0E3A569700C4F40B /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244DB0E0E3A569700C4F40B /* CalendarViewController.m */; };
+		224EFDAF0E3E2FAC007F293F /* calendarday.png in Resources */ = {isa = PBXBuildFile; fileRef = 224EFDAD0E3E2FAC007F293F /* calendarday.png */; };
+		224EFDB00E3E2FAC007F293F /* calendardayred.png in Resources */ = {isa = PBXBuildFile; fileRef = 224EFDAE0E3E2FAC007F293F /* calendardayred.png */; };
 		225157980E09A67B00943078 /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 225157970E09A67B00943078 /* backBtn.png */; };
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
 		2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349C0DA85CD30035A1AA /* LastFMRadio.m */; };
@@ -148,9 +150,11 @@
 		2244DAF90E3A55C700C4F40B /* info_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_button.png; sourceTree = "<group>"; };
 		2244DAFA0E3A55C700C4F40B /* reflectionmask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reflectionmask.png; sourceTree = "<group>"; };
 		2244DAFB0E3A55C700C4F40B /* cog_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cog_button.png; sourceTree = "<group>"; };
-		2244DB0B0E3A563800C4F40B /* EventsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventsView.xib; sourceTree = "<group>"; };
-		2244DB0D0E3A569700C4F40B /* EventsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsViewController.h; sourceTree = "<group>"; };
-		2244DB0E0E3A569700C4F40B /* EventsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsViewController.m; sourceTree = "<group>"; };
+		2244DB0B0E3A563800C4F40B /* CalendarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CalendarView.xib; sourceTree = "<group>"; };
+		2244DB0D0E3A569700C4F40B /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
+		2244DB0E0E3A569700C4F40B /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
+		224EFDAD0E3E2FAC007F293F /* calendarday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarday.png; sourceTree = "<group>"; };
+		224EFDAE0E3E2FAC007F293F /* calendardayred.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendardayred.png; sourceTree = "<group>"; };
 		225157970E09A67B00943078 /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
 		2259349A0DA85CD30035A1AA /* LastFMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMService.m; sourceTree = "<group>"; };
 		2259349B0DA85CD30035A1AA /* LastFMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMService.h; sourceTree = "<group>"; };
@@ -232,8 +236,8 @@
 				227F6F430DB26F4900C11B22 /* ArtworkCell.m */,
 				22ABB3010DAE68FB00D2871E /* ChartsViewController.h */,
 				22ABB3020DAE68FC00D2871E /* ChartsViewController.m */,
-				2244DB0D0E3A569700C4F40B /* EventsViewController.h */,
-				2244DB0E0E3A569700C4F40B /* EventsViewController.m */,
+				2244DB0D0E3A569700C4F40B /* CalendarViewController.h */,
+				2244DB0E0E3A569700C4F40B /* CalendarViewController.m */,
 				223129310DFF21A500EC3BF0 /* FirstRunViewController.h */,
 				223129320DFF21A500EC3BF0 /* FirstRunViewController.m */,
 				2213D1B20D9F113100914A50 /* FriendsViewController.h */,
@@ -337,6 +341,8 @@
 				229130CD0E1C153F007F5E63 /* blueBackBtn.png */,
 				2244DAF80E3A55C700C4F40B /* bottom_panel.png */,
 				22362B9A0E13E4600034F91A /* btn.png */,
+				224EFDAD0E3E2FAC007F293F /* calendarday.png */,
+				224EFDAE0E3E2FAC007F293F /* calendardayred.png */,
 				2244DAFB0E3A55C700C4F40B /* cog_button.png */,
 				221185DB0E1676620093BFED /* date.png */,
 				2291317E0E1C2441007F5E63 /* Default.png */,
@@ -388,7 +394,7 @@
 				22117E880E1545050093BFED /* PlaybackView.xib */,
 				22117E8A0E1545110093BFED /* FirstRunView.xib */,
 				221185DD0E167A090093BFED /* EventDetailsView.xib */,
-				2244DB0B0E3A563800C4F40B /* EventsView.xib */,
+				2244DB0B0E3A563800C4F40B /* CalendarView.xib */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				225934CA0DA85D8E0035A1AA /* Resources */,
@@ -499,7 +505,9 @@
 				2244DAFD0E3A55C700C4F40B /* info_button.png in Resources */,
 				2244DAFE0E3A55C700C4F40B /* reflectionmask.png in Resources */,
 				2244DAFF0E3A55C700C4F40B /* cog_button.png in Resources */,
-				2244DB0C0E3A563800C4F40B /* EventsView.xib in Resources */,
+				2244DB0C0E3A563800C4F40B /* CalendarView.xib in Resources */,
+				224EFDAF0E3E2FAC007F293F /* calendarday.png in Resources */,
+				224EFDB00E3E2FAC007F293F /* calendardayred.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,7 +546,7 @@
 				223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */,
 				228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */,
 				2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */,
-				2244DB0F0E3A569700C4F40B /* EventsViewController.m in Sources */,
+				2244DB0F0E3A569700C4F40B /* CalendarViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

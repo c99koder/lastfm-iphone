@@ -1,11 +1,14 @@
-#import "EventsViewController.h"
+#import "CalendarViewController.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "NSString+MD5.h"
 #import "NSString+URLEscaped.h"
 #import "version.h"
 
-@implementation EventsViewController
-@synthesize events;
+UIImage *calendarDay;
+UIImage *calendarDayRed;
+
+@implementation CalendarViewController
+@synthesize delegate;
 - (void)_buildCalendar {
 	NSInteger x=0, y=0, day=0;
 	[[_days subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -25,10 +28,29 @@
 
 	int dayWidth = _days.frame.size.width / 7;
 	int dayHeight = _days.frame.size.height / ((x + daysInMonth)/7 + 1);
+
+	components = [[NSCalendar currentCalendar] components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:date];
 	
 	for(day=0; day<daysInMonth; day++) {
-		UIButton *b = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
 		b.frame = CGRectMake(x*dayWidth,y*dayHeight,dayWidth,dayHeight);
+		[components setDay:day+1];
+		BOOL found=NO;
+		if(eventDates) {
+			for(NSDate *d in eventDates) {
+				if([d isEqualToDate:[[NSCalendar currentCalendar] dateFromComponents:components]]) {
+					found=YES;
+					break;
+				}
+			}
+		}
+		if(found) {
+			[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+			[b setBackgroundImage:calendarDayRed forState:UIControlStateNormal];
+		} else {
+			[b setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+			[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
+		}
 		[b setTitle:[NSString stringWithFormat:@"%i", day+1] forState:UIControlStateNormal];
 		[_days addSubview: b];
 		x++;
@@ -44,6 +66,10 @@
 	[formatter release];
 }
 - (void)viewDidLoad {
+	if(!calendarDay)
+		calendarDay = [[[UIImage imageNamed:@"calendarday.png"] stretchableImageWithLeftCapWidth:16 topCapHeight:16] retain];
+	if(!calendarDayRed)
+		calendarDayRed = [[[UIImage imageNamed:@"calendardayred.png"] stretchableImageWithLeftCapWidth:16 topCapHeight:16] retain];
 	date = [[NSDate date] retain];
 	[self _buildCalendar];
 }
@@ -65,12 +91,20 @@
 	[components release];
 	[self _buildCalendar];
 }
+- (NSArray *)eventDates {
+	return eventDates;
+}
+- (void)setEventDates:(NSArray *)e {
+	[eventDates release];
+	eventDates = [e retain];
+	[self _buildCalendar];
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 - (void)dealloc {
 	[super dealloc];
-	[events release];
+	[eventDates release];
 	[date release];
 }
 @end

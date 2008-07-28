@@ -848,6 +848,62 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 @end
 
+@implementation EventsViewController
+- (void)viewDidLoad {
+	_calendar = [[CalendarViewController alloc] initWithNibName:@"CalendarView" bundle:nil];
+	_calendar.delegate = self;
+	[self.view addSubview: _calendar.view];
+	[self.view sendSubviewToBack: _calendar.view];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+}
+- (void)_trackDidChange:(NSNotification*)notification {
+	[NSThread detachNewThreadSelector:@selector(_fetchEvents:) toTarget:self withObject:[notification userInfo]];
+}
+- (BOOL)isAttendingEvent:(NSString *)event_id {
+	for(NSString *event in _attendingEvents) {
+		if([event isEqualToString:event_id]) {
+			return YES;
+		}
+	}
+	return NO;
+}
+- (void)_fetchEvents:(NSDictionary *)trackInfo {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
+	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
+	[_events release];
+	[_eventDates release];
+	
+	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
+	_events = [events retain];
+	_eventDates = [[NSMutableArray alloc] init];
+	
+	if([_events count]) {
+		NSDate *date, *lastDate = [formatter dateFromString:[[_events objectAtIndex:0] objectForKey:@"startDate"]];
+		
+		for(NSDictionary *event in _events) {
+			date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+			if(![lastDate isEqualToDate:date]) {
+				[_eventDates addObject:date];
+				lastDate = date;
+			}
+		}
+		[_eventDates addObject:lastDate];
+	}
+	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
+	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
+- (void)calendarViewController:(CalendarViewController *)c didSelectDate:(NSDate *)d {
+}
+- (void)dealloc {
+	[_events release];
+	[_eventDates release];
+	[super dealloc];
+}
+@end
+
 @implementation PlaybackViewController
 - (void)viewDidLoad {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
