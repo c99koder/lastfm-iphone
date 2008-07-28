@@ -218,27 +218,29 @@
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 }
 - (NSString *)formatDate:(NSString *)input {
-	CFDateFormatterRef inputDateFormatter = CFDateFormatterCreate(NULL, CFLocaleCopyCurrent(), kCFDateFormatterMediumStyle, kCFDateFormatterNoStyle);
-	CFDateFormatterSetFormat(inputDateFormatter, (CFStringRef)@"dd MMM yyyy, HH:mm zzz");
-	CFDateRef date = CFDateFormatterCreateDateFromString(kCFAllocatorDefault, inputDateFormatter, (CFStringRef)[input stringByAppendingString:@" GMT"], NULL);
-	CFDateFormatterRef outputDateFormatter = CFDateFormatterCreate(NULL, CFLocaleCopyCurrent(), kCFDateFormatterShortStyle, kCFDateFormatterNoStyle);
-	CFDateRef now = CFDateCreate(NULL,CFAbsoluteTimeGetCurrent());
-	CFTimeInterval seconds = CFDateGetTimeIntervalSinceDate(now, date);
-
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat:@"dd MMM yyyy, HH:mm zzz"];
+	NSDate *date = [formatter dateFromString:[input stringByAppendingString:@" GMT"]];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:[NSDate date]];
+	[components setHour: 23];
+	[components setMinute: 59];
+	[components setSecond:59];
+	NSDate *today = [[NSCalendar currentCalendar] dateFromComponents:components];
+	NSTimeInterval seconds = [today timeIntervalSinceDate:date];
+	
 	if(seconds/HOURS < 24) {
-		CFDateFormatterSetFormat(outputDateFormatter, (CFStringRef)@"h:mm a");
+		[formatter setDateFormat:@"h:mm a"];
 	} else if(seconds/DAYS < 2) {
-		CFDateFormatterSetFormat(outputDateFormatter, (CFStringRef)NSLocalizedString(@"'Yesterday'", @"Yesterday date format string"));
+		[formatter setDateFormat:NSLocalizedString(@"'Yesterday'", @"Yesterday date format string")];
 	} else if(seconds/DAYS < 7) {
-		CFDateFormatterSetFormat(outputDateFormatter, (CFStringRef)@"EEEE");
+		[formatter setDateFormat:@"EEEE"];
+	} else {
+		[formatter setDateStyle:NSDateFormatterShortStyle];
 	}
 	
-	NSString *output = (NSString *)CFDateFormatterCreateStringWithDate(NULL, outputDateFormatter, date);
-	CFRelease(inputDateFormatter);
-	CFRelease(outputDateFormatter);
-	CFRelease(date);
-	CFRelease(now);
-	return [output autorelease];
+	NSString *output = [formatter stringFromDate:date];
+	[formatter release];
+	return output;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	TrackCell *cell = (TrackCell *)[tableView dequeueReusableCellWithIdentifier:@"trackcell"];

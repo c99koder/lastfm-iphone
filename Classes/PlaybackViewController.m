@@ -606,17 +606,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	[pool release];
 }
 - (NSString *)formatDate:(NSString *)input {
-	CFDateFormatterRef inputDateFormatter = CFDateFormatterCreate(NULL, CFLocaleCopyCurrent(), kCFDateFormatterMediumStyle, kCFDateFormatterNoStyle);
-	CFDateFormatterSetFormat(inputDateFormatter, (CFStringRef)@"EEE, dd MMM yyyy");
-	CFDateRef date = CFDateFormatterCreateDateFromString(kCFAllocatorDefault, inputDateFormatter, (CFStringRef)[NSString stringWithString:input], NULL);
-	CFDateFormatterRef outputDateFormatter = CFDateFormatterCreate(NULL, CFLocaleCopyCurrent(), kCFDateFormatterShortStyle, kCFDateFormatterNoStyle);
-	
-	CFStringRef str = CFDateFormatterCreateStringWithDate(NULL, outputDateFormatter, date);
-	NSString *output = [NSString stringWithString:(NSString *)str];
-	CFRelease(inputDateFormatter);
-	CFRelease(outputDateFormatter);
-	CFRelease(str);
-	CFRelease(date);
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
+	NSDate *date = [formatter dateFromString:input];
+	[formatter setDateStyle:NSDateFormatterShortStyle];
+
+	NSString *output = [formatter stringFromDate:date];
+	[formatter release];
 	return output;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -734,25 +730,18 @@ int tagSort(id tag1, id tag2, void *context) {
 	[pool release];
 }
 - (void)viewDidLoad {
-	CFDateFormatterRef inputDateFormatter = CFDateFormatterCreate(NULL, CFLocaleCopyCurrent(), kCFDateFormatterMediumStyle, kCFDateFormatterNoStyle);
-	CFDateFormatterSetFormat(inputDateFormatter, (CFStringRef)@"EEE, dd MMM yyyy");
-	CFDateRef date = CFDateFormatterCreateDateFromString(kCFAllocatorDefault, inputDateFormatter, (CFStringRef)[event objectForKey:@"startDate"], NULL);
-	CFDateFormatterRef outputDateFormatter = CFDateFormatterCreate(NULL, CFLocaleCopyCurrent(), kCFDateFormatterShortStyle, kCFDateFormatterNoStyle);
-	
-	CFDateFormatterSetFormat(outputDateFormatter, (CFStringRef)@"MMM");
-	NSString *month = (NSString *)CFDateFormatterCreateStringWithDate(NULL, outputDateFormatter, date);
-	_month.text = month;
-	[month release];
-	
-	CFDateFormatterSetFormat(outputDateFormatter, (CFStringRef)@"d");
-	NSString *day = (NSString *)CFDateFormatterCreateStringWithDate(NULL, outputDateFormatter, date);
-	_day.text = day;
-	[day release];
-	
-	CFRelease(outputDateFormatter);
-	CFRelease(inputDateFormatter);
-	CFRelease(date);
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
+	NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
 
+	[formatter setDateFormat:@"MMM"];
+	_month.text = [formatter stringFromDate:date];
+	
+	[formatter setDateFormat:@"d"];
+	_day.text = [formatter stringFromDate:date];
+	
+	[formatter release];
+	
 	_eventTitle.text = [event objectForKey:@"title"];
 	NSMutableString *artists = [[NSMutableString alloc] initWithString:[event objectForKey:@"headliner"]];
 	if([[event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[event objectForKey:@"artists"] count] > 0) {

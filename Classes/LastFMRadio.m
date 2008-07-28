@@ -272,28 +272,20 @@ void propCallback(void *in,
 }
 -(NSArray *)recentURLs {
 	NSMutableArray *URLs = [[NSMutableArray alloc] init];
-	CFLocaleRef locale = CFLocaleCopyCurrent();
-	CFDateFormatterRef dateFormatter = CFDateFormatterCreate(NULL, locale, kCFDateFormatterShortStyle, kCFDateFormatterNoStyle);
-	CFDateFormatterSetFormat(dateFormatter, (CFStringRef)@"dd MMM yyyy, HH:mm");
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat:@"dd MMM yyyy, HH:mm"];
 	[_db open];
 	FMResultSet *rs = [_db executeQuery:@"select * from recent_radio order by timestamp desc",  nil];
 	
 	while([rs next]) {
-		CFDateRef d = CFDateCreate(NULL,[rs doubleForColumn:@"timestamp"]);
-		NSString *date = (NSString *)CFDateFormatterCreateStringWithDate(NULL, dateFormatter, d);
-		
 		[URLs addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 										 [rs stringForColumn:@"url"], @"url",
 										 [rs stringForColumn:@"name"], @"name",
-										 date, @"date",
+										 [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[rs doubleForColumn:@"timestamp"]]], @"date",
 										 nil]];
-		
-		CFRelease(date);
-		CFRelease(d);
 	}
 	[_db close];
-	CFRelease(dateFormatter);
-	CFRelease(locale);
+	[formatter release];
 	return [URLs autorelease];
 }
 -(BOOL)selectStation:(NSString *)station {
