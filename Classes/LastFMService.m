@@ -288,7 +288,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	NSArray *nodes = [self doMethod:@"user.getPlaylists" maxCacheAge:5*MINUTES XPath:@"./playlists/playlist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./title", @"./size", @"./streamable", nil]
-										 forKeys:[NSArray arrayWithObjects:@"id", @"title", @"size", @"./streamable", nil]];
+										 forKeys:[NSArray arrayWithObjects:@"id", @"title", @"size", @"streamable", nil]];
 }
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
