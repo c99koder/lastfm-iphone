@@ -229,7 +229,8 @@
 	NSTimeInterval seconds = [today timeIntervalSinceDate:date];
 	
 	if(seconds/HOURS < 24) {
-		[formatter setDateFormat:@"h:mm a"];
+		[formatter setTimeStyle:NSDateFormatterShortStyle];
+		[formatter setDateStyle:NSDateFormatterNoStyle];
 	} else if(seconds/DAYS < 2) {
 		[formatter setDateFormat:NSLocalizedString(@"'Yesterday'", @"Yesterday date format string")];
 	} else if(seconds/DAYS < 7) {
