@@ -126,7 +126,6 @@
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
 		2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349C0DA85CD30035A1AA /* LastFMRadio.m */; };
 		225934DE0DA85DA60035A1AA /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934CC0DA85DA60035A1AA /* icon.png */; };
-		225934E50DA85DA60035A1AA /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 225934D50DA85DA60035A1AA /* Settings.bundle */; };
 		225934E70DA85DA60035A1AA /* skip.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934D70DA85DA60035A1AA /* skip.png */; };
 		225934EA0DA85DA60035A1AA /* ban.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DA0DA85DA60035A1AA /* ban.png */; };
 		225934EB0DA85DA60035A1AA /* love.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DB0DA85DA60035A1AA /* love.png */; };
@@ -306,7 +305,6 @@
 		2259349C0DA85CD30035A1AA /* LastFMRadio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMRadio.m; sourceTree = "<group>"; };
 		2259349D0DA85CD30035A1AA /* LastFMRadio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMRadio.h; sourceTree = "<group>"; };
 		225934CC0DA85DA60035A1AA /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		225934D50DA85DA60035A1AA /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		225934D70DA85DA60035A1AA /* skip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skip.png; sourceTree = "<group>"; };
 		225934DA0DA85DA60035A1AA /* ban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ban.png; sourceTree = "<group>"; };
 		225934DB0DA85DA60035A1AA /* love.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love.png; sourceTree = "<group>"; };
@@ -582,7 +580,6 @@
 				2212D6C90E41233E0099DB03 /* rounded_table_cell_button.png */,
 				2212D6C80E41233E0099DB03 /* rounded_table_cell_header.png */,
 				22F2FE080E31046D000DDCDC /* rounded_table_cell_top.png */,
-				225934D50DA85DA60035A1AA /* Settings.bundle */,
 				225934D70DA85DA60035A1AA /* skip.png */,
 				22BA0DDE0DC3731100DBE5BD /* stop.png */,
 				22117E3E0E153AC50093BFED /* streaming.png */,
@@ -695,7 +692,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				225934DE0DA85DA60035A1AA /* icon.png in Resources */,
-				225934E50DA85DA60035A1AA /* Settings.bundle in Resources */,
 				225934E70DA85DA60035A1AA /* skip.png in Resources */,
 				225934EA0DA85DA60035A1AA /* ban.png in Resources */,
 				225934EB0DA85DA60035A1AA /* love.png in Resources */,
