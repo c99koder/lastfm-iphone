@@ -91,16 +91,16 @@ UIImage *avatarPlaceholder = nil;
 	
 	CGRect frame = [self.contentView bounds];
 	if(imageURL)
-		_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
+		_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	if([subtitle.text length]) {
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 6, frame.size.width - _artwork.frame.size.width - 6, 20);
 		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 26, frame.size.width - _artwork.frame.size.width - 6, 20);
 	} else {
 		title.font = [UIFont boldSystemFontOfSize:18];
-		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, _artwork.frame.size.height / 2 - 10, frame.size.width - _artwork.frame.size.width - 6, 20);
+		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.size.height / 2 - 10, frame.size.width - _artwork.frame.size.width - 6, 20);
 	}
 	if(barWidth > 0) {
-		_bar.frame = CGRectMake(_artwork.frame.size.width,0,barWidth*([self frame].size.width - _artwork.frame.size.width),[self frame].size.height);
+		_bar.frame = CGRectMake(0,0,barWidth*([self frame].size.width - 20),[self frame].size.height);
 		_bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
 	}
 }

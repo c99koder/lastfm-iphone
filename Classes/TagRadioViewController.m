@@ -30,7 +30,7 @@
 	int i;
 	if (self = [super init]) {
 		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Tags", @"Tags view title"), username];
-		_username = username;
+		_username = [username retain];
 		NSArray *tags = [[LastFMService sharedInstance] tagsForUser:_username];
 		_data = [[NSMutableArray alloc] init];
 		for(i=0; i<[tags count]; i++) {

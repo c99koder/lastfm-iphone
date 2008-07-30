@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.02">
 	<data>
 		<int key="IBDocument.SystemTarget">512</int>
-		<string key="IBDocument.SystemVersion">9D34</string>
+		<string key="IBDocument.SystemVersion">9E17</string>
 		<string key="IBDocument.InterfaceBuilderVersion">670</string>
 		<string key="IBDocument.AppKitVersion">949.33</string>
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
@@ -34,6 +34,7 @@
 						<reference key="NSSuperview" ref="493843908"/>
 						<int key="IBUIContentMode">3</int>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
+						<int key="IBBarStyle">1</int>
 						<string key="IBText"/>
 						<string key="IBPrompt"/>
 						<string key="IBPlaceholder"/>
@@ -142,7 +143,7 @@
 					</object>
 					<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 						<string key="NSClassName">NSImage</string>
-						<string key="NSResourceName">blueBackBtn.png</string>
+						<string key="NSResourceName">backBtn.png</string>
 					</object>
 				</object>
 			</object>
@@ -348,7 +349,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{245, 505}, {320, 416}}</string>
+					<string>{{400, 163}, {320, 416}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>{{0, 928}, {207, 30}}</string>

@@ -95,7 +95,7 @@
 
 @implementation TopChartViewController
 - (id)initWithTitle:(NSString *)title {
-	if (self = [super init]) {
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		self.title = title;
 	}
 	return self;
@@ -443,12 +443,12 @@
 
 @implementation ChartsListViewController
 - (id)initWithUsername:(NSString *)username {
-	if (self = [super init]) {
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Charts", @"Charts List Title"), username];
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Charts", @"Charts back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
 		[backBarButtonItem release];
-		_username = username;
+		_username = [username retain];
 	}
 	return self;
 }

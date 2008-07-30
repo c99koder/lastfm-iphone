@@ -8,6 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="3"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -26,12 +27,25 @@
 				<int key="NSvFlags">292</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
+					<object class="IBUIImageView" id="888703465">
+						<reference key="NSNextResponder" ref="692418406"/>
+						<int key="NSvFlags">256</int>
+						<string key="NSFrameSize">{320, 460}</string>
+						<reference key="NSSuperview" ref="692418406"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<bool key="IBUIClipsSubviews">YES</bool>
+						<int key="IBUIContentMode">4</int>
+						<bool key="IBUIMultipleTouchEnabled">YES</bool>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">dark_bkg_gradient.png</string>
+						</object>
+					</object>
 					<object class="IBUILabel" id="132562557">
 						<reference key="NSNextResponder" ref="692418406"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 423}, {280, 37}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -58,7 +72,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{87, 20}, {146, 38}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -73,7 +86,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{8, 123}, {302, 45}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -88,7 +100,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{8, 78}, {302, 45}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -103,7 +114,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{87, 188}, {146, 37}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -135,7 +145,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{87, 378}, {146, 37}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -154,7 +163,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{54, 349}, {211, 21}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -175,7 +183,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 90}, {79, 21}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -198,7 +205,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 135}, {75, 21}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -214,7 +220,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 85}, {193, 31}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -244,7 +249,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 130}, {193, 31}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -267,7 +271,6 @@ bSwgTHRkLg</string>
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="IBUIBackgroundColor" ref="222555467"/>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 			</object>
@@ -372,6 +375,7 @@ bSwgTHRkLg</string>
 							<reference ref="503091549"/>
 							<reference ref="193937685"/>
 							<reference ref="109653770"/>
+							<reference ref="888703465"/>
 						</object>
 						<reference key="parent" ref="360949347"/>
 					</object>
@@ -428,6 +432,11 @@ bSwgTHRkLg</string>
 					<object class="IBObjectRecord">
 						<int key="objectID">43</int>
 						<reference key="object" ref="109653770"/>
+						<reference key="parent" ref="692418406"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">51</int>
+						<reference key="object" ref="888703465"/>
 						<reference key="parent" ref="692418406"/>
 					</object>
 				</object>
@@ -489,7 +498,7 @@ bSwgTHRkLg</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">50</int>
+			<int key="maxID">51</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

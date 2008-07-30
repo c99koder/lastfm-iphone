@@ -33,9 +33,11 @@
 	}
 	_searchBar.placeholder = NSLocalizedString(@"Enter an artist name", @"Artist search placeholder text");
 	_searchType.selectedSegmentIndex = 0;
+	_searchType.tintColor = [UIColor blackColor];
+	self.hidesBottomBarWhenPushed = YES;
 }
 - (IBAction)backButtonPressed:(id)sender {
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).navController popViewControllerAnimated:YES];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 - (void)_searchThread:(NSString *)text {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -124,7 +126,7 @@
 	[super viewWillAppear:animated];
 	[_searchBar becomeFirstResponder];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	_table.frame = CGRectMake(0,44,320,156);
+	_table.frame = CGRectMake(0,44,320,205);
 	[_table reloadData];
 }
 - (void)viewWillDisappear:(BOOL)animated {
@@ -135,9 +137,9 @@
 }
 -(IBAction)searchBarSearchButtonClicked:(id)sender {
 	if(_searchType.selectedSegmentIndex == 2) {
-		ProfileViewController *profileViewController = [[ProfileViewController alloc] initWithUsername:[NSString stringWithFormat:@"%@", _searchBar.text]];
+		ProfileViewController *profileViewController = [[ProfileViewController alloc] initWithUsername:_searchBar.text];
 		[self.navigationController pushViewController:profileViewController animated:YES];
-		//[profileViewController release];
+		[profileViewController release];
 	} else {
 		[self searchBar:_searchBar textDidChange:_searchBar.text];
 	}

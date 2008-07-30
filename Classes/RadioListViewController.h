@@ -1,4 +1,4 @@
-/* ProfileViewController.h - Display a Last.fm profile
+/* RadioListViewController.h - Display a Last.fm radio list
  * Copyright (C) 2008 Sam Steele
  *
  * This file is part of MobileLastFM.
@@ -20,8 +20,11 @@
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
 
-@interface ProfileViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSString *_username;
+	NSMutableArray *_playlists;
+	NSArray *_recent;
+	NSThread *_loadingThread;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

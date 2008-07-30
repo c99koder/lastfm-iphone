@@ -25,10 +25,18 @@
 
 NSString *kUserAgent;
 
+@implementation UIColor (UIColorSystemColors)
++ (UIColor *)pinStripeColor {
+	return [UIColor blackColor];
+}
++ (UIColor *)groupTableViewBackgroundColor {
+	return [UIColor blackColor];
+}
+@end
+
 @implementation MobileLastFMApplicationDelegate
 
 @synthesize window;
-@synthesize navController;
 @synthesize firstRunView;
 @synthesize playbackViewController;
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -98,17 +106,7 @@ NSString *kUserAgent;
 		[self performSelectorOnMainThread:@selector(_logout) withObject:nil waitUntilDone:YES];
 }
 - (void)showProfileView:(BOOL)animated {
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-	UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
-																																	 style:UIBarButtonItemStylePlain 
-																																	target:self
-																																	action:@selector(logoutButtonPressed:)];
-	ProfileViewController *profile = [[ProfileViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_user"]];
-	profile.navigationItem.leftBarButtonItem = logoutButton;
-	[logoutButton release];
-	[self.navController release];
-	self.navController = [[UINavigationController alloc] initWithRootViewController: profile];
-	[profile release];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	if(!_scrobbler) {
 		_scrobbler = [[Scrobbler alloc] init];
 	}
@@ -119,7 +117,7 @@ NSString *kUserAgent;
 		[UIView setAnimationDuration:0.75];
 	}
 	[[_mainView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	[_mainView addSubview:[self.navController view]];
+	[_mainView addSubview:[_tabBar view]];
 	if(animated)
 		[UIView commitAnimations];
 
@@ -168,9 +166,17 @@ NSString *kUserAgent;
 	}	
 	
 	if([[[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"] length] > 0) {
+		NSMutableArray *frames = [[NSMutableArray alloc] init];
+		int i;
+		for(i=1; i<=68; i++) {
+			NSString *filename = [NSString stringWithFormat:@"logo_animation_cropped%04i.png", i];
+			[frames addObject:[UIImage imageNamed:filename]];
+		}
+		_loadingViewLogo.animationImages = frames;
+		[_loadingViewLogo startAnimating];
 		_loadingView.frame = [UIScreen mainScreen].applicationFrame;
 		[_mainView addSubview:_loadingView];
-		[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(_loadProfile) userInfo:nil repeats:NO];
+		[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(_loadProfile) userInfo:nil repeats:NO];
 		_scrobbler = [[Scrobbler alloc] init];
 	} else {
 		[self showFirstRunView:NO];
@@ -332,12 +338,10 @@ NSString *kUserAgent;
 	return TRUE;
 }
 -(void)showPlaybackView {
-	[self.navController pushViewController:playbackViewController animated:YES];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[(UINavigationController *)(_tabBar.selectedViewController) pushViewController:playbackViewController animated:YES];
 }
 -(void)hidePlaybackView {
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-	[self.navController popViewControllerAnimated:YES];
+	[(UINavigationController *)(_tabBar.selectedViewController) popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
@@ -365,7 +369,6 @@ NSString *kUserAgent;
 	}
 }
 - (void)dealloc {
-	[navController release];
 	[window release];
 	[super dealloc];
 }

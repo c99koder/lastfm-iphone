@@ -38,7 +38,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (id)initWithUsername:(NSString *)username {
 	UInt32 reverseSort = NO;
 	
-	if (self = [super init]) {
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_data = [[[[LastFMService sharedInstance] friendsOfUser:username] sortedArrayUsingFunction:usernameSort context:&reverseSort] retain];
 		if([LastFMService sharedInstance].error) {
 			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
@@ -54,7 +54,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Friends", @"Friends back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
 		[backBarButtonItem release];
-		_username = username;
+		_username = [username retain];
 	}
 	return self;
 }

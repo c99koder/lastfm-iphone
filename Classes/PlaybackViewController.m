@@ -247,7 +247,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 -(void)_showProfile:(NSTimer *)timer {
 	ProfileViewController *profileViewController = [[ProfileViewController alloc] initWithUsername:[timer userInfo]];
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).navController pushViewController:profileViewController animated:NO];
+	//[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).navController pushViewController:profileViewController animated:NO];
 	[profileViewController release];
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hidePlaybackView];
 	[_table reloadData];
@@ -921,15 +921,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	[volumeView removeFromSuperview];
 	volumeView = v;
 	[self.view addSubview: volumeView];
+	self.hidesBottomBarWhenPushed = YES;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
-}
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-	self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	if([[detailView subviews] count])

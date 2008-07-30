@@ -27,18 +27,18 @@
 
 @interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate> {
   IBOutlet UIWindow *window;
-  UINavigationController *navController;
 	SCNetworkReachabilityRef _reach;
 	Scrobbler *_scrobbler;
 	FirstRunViewController *firstRunView;
 	PlaybackViewController *playbackViewController;
 	UIView *_mainView;
 	IBOutlet UIView *_loadingView;
+	IBOutlet UIImageView *_loadingViewLogo;
 	NSString *_launchURL;
+	IBOutlet UITabBarController *_tabBar;
 }
 
 @property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, retain) UINavigationController *navController;
 @property (nonatomic, retain) FirstRunViewController *firstRunView;
 @property (nonatomic, retain) PlaybackViewController *playbackViewController;
 
@@ -59,4 +59,5 @@
 -(void)showProfileView:(BOOL)animated;
 -(void)showFirstRunView:(BOOL)animated;
 -(void)reportError:(NSError *)error;
+-(IBAction)logoutButtonPressed:(id)sender;
 @end
