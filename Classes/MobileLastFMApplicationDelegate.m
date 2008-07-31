@@ -101,9 +101,21 @@ NSString *kUserAgent;
 																				 otherButtonTitles:NSLocalizedString(@"Logout", @"Logout"), nil] autorelease];
 	[alert show];
 }
+- (void)applicationWillResignActive:(UIApplication *)application {
+	_locked = YES;
+}
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+	_locked = NO;
+	if(_pendingAlert)
+		[_pendingAlert show];
+}
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Logout", @"Logout")])
 		[self performSelectorOnMainThread:@selector(_logout) withObject:nil waitUntilDone:YES];
+	if(_pendingAlert) {
+		[_pendingAlert release];
+		_pendingAlert = nil;
+	}
 }
 - (void)showProfileView:(BOOL)animated {
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
@@ -345,8 +357,9 @@ NSString *kUserAgent;
 	[_scrobbler flushQueue:nil];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
-	UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
-	[alert show];
+	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
+	if(!_locked)
+		[_pendingAlert show];
 }
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
 	if([url.scheme isEqualToString:@"lastfm"]) {

@@ -36,6 +36,8 @@
 	IBOutlet UIImageView *_loadingViewLogo;
 	NSString *_launchURL;
 	IBOutlet UITabBarController *_tabBar;
+	UIAlertView *_pendingAlert;
+	BOOL _locked;
 }
 
 @property (nonatomic, retain) UIWindow *window;
