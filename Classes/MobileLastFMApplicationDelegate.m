@@ -25,7 +25,7 @@
 
 NSString *kUserAgent;
 
-@implementation UIColor (UIColorSystemColors)
+@implementation UIColor (TableHax)
 + (UIColor *)pinStripeColor {
 	return [UIColor blackColor];
 }
