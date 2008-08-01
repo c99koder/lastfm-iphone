@@ -12,6 +12,7 @@
 	IBOutlet UIView *_days;
 	NSArray *eventDates;
 	NSDate *date;
+	NSDate *selectedDate;
 	id<CalendarViewControllerDelegate> delegate;
 }
 @property (nonatomic, retain) NSArray *eventDates;

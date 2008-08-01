@@ -375,9 +375,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.2];
 	if(_artworkView.frame.size.width == 320) {
-		_reflectionGradientView.frame = CGRectMake(0,210,320,194);
-		_reflectedArtworkView.frame = CGRectMake(65,210,190,190);
-		_artworkView.frame = CGRectMake(65,20,190,190);
+		_reflectionGradientView.frame = CGRectMake(0,230,320,186);
+		_reflectedArtworkView.frame = CGRectMake(55,230,210,210);
+		_artworkView.frame = CGRectMake(55,20,210,210);
 		_trackTitle.alpha = 1;
 		_artist.alpha = 1;
 		_progress.alpha = 1;
@@ -897,6 +897,21 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)calendarViewController:(CalendarViewController *)c didSelectDate:(NSDate *)d {
 }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return 0;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 32;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return nil;
+}
 - (void)dealloc {
 	[_events release];
 	[_eventDates release];
@@ -907,20 +922,20 @@ int tagSort(id tag1, id tag2, void *context) {
 @implementation PlaybackViewController
 - (void)viewDidLoad {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
-	trackView.view.frame = CGRectMake(0,0,320,320);
+	trackView.view.frame = CGRectMake(0,0,320,416);
 	[contentView addSubview:trackView.view];
 	[contentView sendSubviewToBack:trackView.view];
 	
-	artistBio.view.frame = CGRectMake(0,0,320,268);
-	tags.view.frame = CGRectMake(0,0,320,268);
-	similarArtists.view.frame = CGRectMake(0,0,320,268);
-	fans.view.frame = CGRectMake(0,0,320,268);
-	events.view.frame = CGRectMake(0,0,320,268);
+	artistBio.view.frame = CGRectMake(0,0,320,369);
+	tags.view.frame = CGRectMake(0,0,320,369);
+	similarArtists.view.frame = CGRectMake(0,0,320,369);
+	fans.view.frame = CGRectMake(0,0,320,369);
+	events.view.frame = CGRectMake(0,0,320,369);
 	
 	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:volumeView.frame];
 	[volumeView removeFromSuperview];
 	volumeView = v;
-	[self.view addSubview: volumeView];
+	[trackView.view addSubview: volumeView];
 	self.hidesBottomBarWhenPushed = YES;
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -974,22 +989,32 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)detailTypeChanged:(id)sender {
 	[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
+	[detailType setImage:[UIImage imageNamed:@"bio.png"] forSegmentAtIndex:0];
+	[detailType setImage:[UIImage imageNamed:@"tags.png"] forSegmentAtIndex:1];
+	[detailType setImage:[UIImage imageNamed:@"similar_artists.png"] forSegmentAtIndex:2];
+	[detailType setImage:[UIImage imageNamed:@"events.png"] forSegmentAtIndex:3];
+	[detailType setImage:[UIImage imageNamed:@"top_listeners.png"] forSegmentAtIndex:4];
+	
 	switch(detailType.selectedSegmentIndex) {
 		case 0:
 			[detailView addSubview:artistBio.view];
 			_titleLabel.text = @"Artist Bio";
+			[detailType setImage:[UIImage imageNamed:@"bio_selected.png"] forSegmentAtIndex:0];
 			break;
 		case 1:
 			[detailView addSubview:tags.view];
 			_titleLabel.text = @"Tags";
+			[detailType setImage:[UIImage imageNamed:@"tags_selected.png"] forSegmentAtIndex:1];
 			break;
 		case 2:
 			[detailView addSubview:similarArtists.view];
 			_titleLabel.text = @"Similar Artists";
+			[detailType setImage:[UIImage imageNamed:@"similar_artists_selected.png"] forSegmentAtIndex:2];
 			break;
 		case 3:
 			[detailView addSubview:events.view];
 			_titleLabel.text = @"Events";
+			[detailType setImage:[UIImage imageNamed:@"events_selected.png"] forSegmentAtIndex:3];
 			break;
 		case 4:
 			[detailView addSubview:fans.view];

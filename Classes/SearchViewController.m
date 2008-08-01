@@ -29,6 +29,7 @@
 	for(UIView *view in [_searchBar subviews]) {
 		if([view isKindOfClass:[UITextField class]]) {
 			((UITextField *)view).autocorrectionType = UITextAutocorrectionTypeNo;
+			((UITextField *)view).keyboardAppearance = UIKeyboardAppearanceAlert;
 		}
 	}
 	_searchBar.placeholder = NSLocalizedString(@"Enter an artist name", @"Artist search placeholder text");

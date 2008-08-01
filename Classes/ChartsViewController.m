@@ -100,6 +100,9 @@
 	}
 	return self;
 }
+- (void)viewDidLoad {
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
@@ -189,6 +192,9 @@
 		if([self canDeleteRows]) self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	}
 	return self;
+}
+- (void)viewDidLoad {
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 }
 - (BOOL)canDeleteRows {
 	return NO;
@@ -451,6 +457,9 @@
 		_username = [username retain];
 	}
 	return self;
+}
+- (void)viewDidLoad {
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];

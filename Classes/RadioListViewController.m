@@ -44,6 +44,9 @@
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView reloadData];
 }
+- (void)viewDidLoad {
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	int sections = 2;
 	if(!_playlists) {
@@ -76,7 +79,7 @@
 	if([indexPath section] == 0 || [indexPath row] > 0)
 		return 46;
 	else
-		return 24;
+		return 29;
 }
 -(void)playRadioStation:(NSString *)url {
 	if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
@@ -120,7 +123,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	if([newIndexPath row] > 0) {
+	if([newIndexPath row] > 0 || [newIndexPath section] == 0) {
 		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	}
 	//Hack to make the loading throbber appear before we block
@@ -134,6 +137,9 @@
 	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
 	UIImageView *v;
 	UILabel *l;
+	UIImageView *img;
+
+	[cell showProgress: NO];
 
 	switch([indexPath section]) {
 		case 0:
@@ -150,6 +156,10 @@
 			l.text = @"Start a New Station";
 			[cell.contentView addSubview:l];
 			[l release];
+			img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"radio_icon_starter.png"]];
+			img.opaque = YES;
+			cell.accessoryView = img;
+			[img release];
 			break;
 		case 1:
 			switch([indexPath row]) {
@@ -218,9 +228,8 @@
 			}
 			break;
 	}
-	[cell showProgress: NO];
 	if([indexPath row] > 0) {
-		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
+		img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
 		img.opaque = YES;
 		cell.accessoryView = img;
 		[img release];

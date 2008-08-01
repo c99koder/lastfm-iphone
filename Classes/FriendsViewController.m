@@ -61,6 +61,9 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (void)cancelButtonPressed:(id)sender {
 	[delegate friendsViewControllerDidCancel:self];
 }
+- (void)viewDidLoad {
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if(delegate) {

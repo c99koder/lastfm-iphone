@@ -8,8 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="623"/>
 			<integer value="569"/>
+			<integer value="610"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -102,15 +102,21 @@
 			</object>
 			<object class="IBUITabBarController" id="377742311">
 				<object class="IBUISimulatedTabBarMetrics" key="IBUISimulatedBottomBarMetrics"/>
-				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-				<object class="IBUINavigationController" key="IBUISelectedViewController" id="880071316">
-					<object class="IBUITabBarItem" key="IBUITabBarItem" id="791407633">
-						<string key="IBUITitle">Radio</string>
+				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
+					<int key="IBUIStatusBarStyle">2</int>
+				</object>
+				<object class="IBUINavigationController" key="IBUISelectedViewController" id="145776315">
+					<object class="IBUITabBarItem" key="IBUITabBarItem" id="527786323">
+						<string key="IBUITitle">Profile</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">profile_icon_tab.png</string>
+						</object>
 						<reference key="IBUITabBar"/>
 					</object>
 					<reference key="IBUIParentViewController" ref="377742311"/>
 					<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-					<object class="IBUINavigationBar" key="IBUINavigationBar" id="354075149">
+					<object class="IBUINavigationBar" key="IBUINavigationBar" id="204406594">
 						<nil key="NSNextResponder"/>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrameSize">{0, 0}</string>
@@ -121,44 +127,46 @@
 					</object>
 					<object class="NSMutableArray" key="IBUIViewControllers">
 						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="IBUITableViewController" id="749697568">
-							<object class="IBUITableView" key="IBUIView" id="216787726">
+						<object class="IBUITableViewController" id="968828992">
+							<object class="IBUITableView" key="IBUIView" id="73651610">
 								<reference key="NSNextResponder"/>
 								<int key="NSvFlags">274</int>
 								<string key="NSFrameSize">{320, 367}</string>
 								<reference key="NSSuperview"/>
+								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 								<int key="IBUIStyle">1</int>
 								<int key="IBUISeparatorStyle">1</int>
 								<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
+								<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
 								<float key="IBUIRowHeight">4.400000e+01</float>
-								<float key="IBUISectionHeaderHeight">1.600000e+01</float>
+								<float key="IBUISectionHeaderHeight">2.700000e+01</float>
+								<float key="IBUISectionFooterHeight">2.700000e+01</float>
 							</object>
-							<object class="IBUINavigationItem" key="IBUINavigationItem" id="556694811">
+							<object class="IBUINavigationItem" key="IBUINavigationItem" id="915421188">
 								<reference key="IBUINavigationBar"/>
-								<string key="IBUITitle">Radio</string>
-								<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="710555174">
-									<string key="IBUITitle">Logout</string>
-									<int key="IBUIStyle">1</int>
-								</object>
+								<string key="IBUITitle">Profile</string>
 							</object>
-							<reference key="IBUIParentViewController" ref="880071316"/>
+							<reference key="IBUIParentViewController" ref="145776315"/>
 							<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 						</object>
 					</object>
 				</object>
 				<object class="NSMutableArray" key="IBUIViewControllers">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<reference ref="880071316"/>
-					<object class="IBUINavigationController" id="145776315">
-						<object class="IBUITabBarItem" key="IBUITabBarItem" id="527786323">
-							<string key="IBUITitle">Profile</string>
+					<object class="IBUINavigationController" id="880071316">
+						<object class="IBUITabBarItem" key="IBUITabBarItem" id="791407633">
+							<string key="IBUITitle">Radio</string>
+							<object class="NSCustomResource" key="IBUIImage">
+								<string key="NSClassName">NSImage</string>
+								<string key="NSResourceName">radio_icon_tab.png</string>
+							</object>
 							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="377742311"/>
 						<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-						<object class="IBUINavigationBar" key="IBUINavigationBar" id="204406594">
+						<object class="IBUINavigationBar" key="IBUINavigationBar" id="354075149">
 							<nil key="NSNextResponder"/>
 							<int key="NSvFlags">256</int>
 							<string key="NSFrameSize">{0, 0}</string>
@@ -169,30 +177,32 @@
 						</object>
 						<object class="NSMutableArray" key="IBUIViewControllers">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBUITableViewController" id="968828992">
-								<object class="IBUITableView" key="IBUIView" id="73651610">
+							<object class="IBUITableViewController" id="749697568">
+								<object class="IBUITableView" key="IBUIView" id="216787726">
 									<nil key="NSNextResponder"/>
 									<int key="NSvFlags">274</int>
 									<string key="NSFrameSize">{320, 367}</string>
-									<bool key="IBUIOpaque">NO</bool>
 									<bool key="IBUIClipsSubviews">YES</bool>
 									<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 									<int key="IBUIStyle">1</int>
 									<int key="IBUISeparatorStyle">1</int>
 									<int key="IBUISectionIndexMinimumDisplayRowCount">0</int>
-									<bool key="IBUIShowsSelectionImmediatelyOnTouchBegin">YES</bool>
 									<float key="IBUIRowHeight">4.400000e+01</float>
-									<float key="IBUISectionHeaderHeight">2.700000e+01</float>
-									<float key="IBUISectionFooterHeight">2.700000e+01</float>
+									<float key="IBUISectionHeaderHeight">1.600000e+01</float>
 								</object>
-								<object class="IBUINavigationItem" key="IBUINavigationItem" id="915421188">
-									<string key="IBUITitle">Profile</string>
+								<object class="IBUINavigationItem" key="IBUINavigationItem" id="556694811">
+									<string key="IBUITitle">Radio</string>
+									<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="710555174">
+										<string key="IBUITitle">Logout</string>
+										<int key="IBUIStyle">1</int>
+									</object>
 								</object>
-								<reference key="IBUIParentViewController" ref="145776315"/>
+								<reference key="IBUIParentViewController" ref="880071316"/>
 								<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 							</object>
 						</object>
 					</object>
+					<reference ref="145776315"/>
 				</object>
 				<object class="IBUITabBar" key="IBUITabBar" id="632209354">
 					<nil key="NSNextResponder"/>

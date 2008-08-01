@@ -43,6 +43,9 @@
 	}
 	return self;
 }
+- (void)viewDidLoad {
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
