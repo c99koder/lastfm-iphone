@@ -79,7 +79,6 @@
 @end
 
 @interface EventCell : UITableViewCell {
-	UILabel *_title;
 	UILabel *_venue;
 	UILabel *_location;
 }
@@ -99,6 +98,18 @@
 - (void)doneButtonPressed:(id)sender;
 @end
 
+@interface EventsViewController : PlaybackSubview<CalendarViewControllerDelegate> {
+	IBOutlet CalendarViewController *_calendar;
+	IBOutlet UITableView *_table;
+	IBOutlet UIImageView *_badge;
+	NSArray *_events;
+	NSMutableArray *_eventDates;
+	NSMutableArray *_attendingEvents;
+	NSMutableArray *_data;
+}
+- (void)doneButtonPressed:(id)sender;
+@end
+
 @interface EventDetailViewController : UIViewController<UIPickerViewDelegate, UIPickerViewDataSource> {
 	NSDictionary *event;
 	IBOutlet UILabel *_eventTitle;
@@ -109,22 +120,14 @@
 	IBOutlet UILabel *_address;
 	IBOutlet UIImageView *_image;
 	IBOutlet UIPickerView *_attendance;
-	EventsListViewController *delegate;
+	EventsViewController *delegate;
 }
 @property (nonatomic, retain) NSDictionary *event;
-@property (nonatomic, retain) EventsListViewController *delegate;
+@property (nonatomic, retain) EventsViewController *delegate;
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)mapsButtonPressed:(id)sender;
 - (int)attendance;
 - (void)setAttendance:(int)status;
-@end
-
-@interface EventsViewController : PlaybackSubview<CalendarViewControllerDelegate> {
-	IBOutlet CalendarViewController *_calendar;
-	NSArray *_events;
-	NSMutableArray *_eventDates;
-	NSMutableArray *_attendingEvents;
-}
 @end
 
 @interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate> {

@@ -26,15 +26,9 @@
 #import "NSString+URLEscaped.h"
 
 @implementation RadioListViewController
-- (id)initWithCoder:(NSCoder *)decoder {
-	if (self = [super initWithCoder:decoder]) {
-		_username = [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] retain];
-	}
-	return self;
-}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		self.title = username;
+		self.title = @"Radio";
 		_username = [username retain];
 	}
 	return self;
@@ -113,6 +107,7 @@
 					[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username] waitUntilDone:YES];
 					break;
 			}
+			break;
 		case 2:
 			[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[[_recent objectAtIndex:[newIndexPath row]-1] objectForKey:@"url"] waitUntilDone:YES];
 			break;
@@ -120,6 +115,7 @@
 			[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[NSString stringWithFormat:@"lastfm://playlist/%@/shuffle", [[_playlists objectAtIndex:[newIndexPath row]-1] objectForKey:@"id"]] waitUntilDone:YES];
 			break;
 	}
+	[self.tableView reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];

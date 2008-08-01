@@ -451,37 +451,28 @@ int tagSort(id tag1, id tag2, void *context) {
 @implementation EventCell
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
-		_title = [[UILabel alloc] init];
-		_title.textColor = [UIColor blackColor];
-		_title.highlightedTextColor = [UIColor whiteColor];
-		_title.backgroundColor = [UIColor clearColor];
-		_title.font = [UIFont boldSystemFontOfSize:18];
-		[self.contentView addSubview:_title];
-
 		_venue = [[UILabel alloc] init];
 		_venue.textColor = [UIColor blackColor];
 		_venue.highlightedTextColor = [UIColor whiteColor];
 		_venue.backgroundColor = [UIColor clearColor];
-		_venue.font = [UIFont systemFontOfSize:16];
+		_venue.font = [UIFont boldSystemFontOfSize:14];
 		[self.contentView addSubview:_venue];
 
 		_location = [[UILabel alloc] init];
 		_location.textColor = [UIColor blackColor];
 		_location.highlightedTextColor = [UIColor whiteColor];
 		_location.backgroundColor = [UIColor clearColor];
-		_location.font = [UIFont systemFontOfSize:16];
+		_location.font = [UIFont systemFontOfSize:14];
 		[self.contentView addSubview:_location];
 	}
 	return self;
 }
 - (void)setEvent:(NSDictionary *)event {
-	_title.text = [event objectForKey:@"title"];
 	_venue.text = [event objectForKey:@"venue"];
 	_location.text = [NSString stringWithFormat:@"%@, %@", [event objectForKey:@"city"], NSLocalizedString([event objectForKey:@"country"], @"Country name")];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
-	_title.highlighted = selected;
 	_venue.highlighted = selected;
 	_location.highlighted = selected;
 }
@@ -493,18 +484,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	frame.origin.y += 4;
 	frame.size.width -= 16;
 	
-	frame.size.height = 22;
-	[_title setFrame: frame];
-	
-	frame.origin.y += 27;
-	frame.size.height = 18;
+	frame.size.height = 16;
 	[_venue setFrame: frame];
 	
-	frame.origin.y += 22;
+	frame.origin.y += 16;
 	[_location setFrame: frame];
 }
 -(void)dealloc {
-	[_title release];
 	[_venue release];
 	[_location release];
 	[super dealloc];
@@ -663,7 +649,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
 	e.event = [_events objectAtIndex:offset + [newIndexPath row]];
-	e.delegate = self;
+	//e.delegate = self;
 	[self.navigationController presentModalViewController:e animated:YES];
 	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
 		[e setAttendance:eventStatusAttending];
@@ -855,6 +841,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.view addSubview: _calendar.view];
 	[self.view sendSubviewToBack: _calendar.view];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	if(_badge) {
+		_badge.image = [[UIImage imageNamed:@"events_red_circle.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:0];
+	}
 }
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchEvents:) toTarget:self withObject:[notification userInfo]];
@@ -890,27 +879,97 @@ int tagSort(id tag1, id tag2, void *context) {
 			}
 		}
 		[_eventDates addObject:lastDate];
+		if(_badge) {
+			_badge.alpha = 1;
+			[[_badge subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+			CGRect frame = _badge.frame;
+			frame.size.width = [[NSString stringWithFormat:@"%i", [_events count]] sizeWithFont:[UIFont boldSystemFontOfSize:12]].width + 20;
+			_badge.frame = frame;
+			UILabel *l = [[UILabel alloc] init];
+			l.frame = CGRectMake(0,0,frame.size.width,frame.size.height);
+			l.text = [NSString stringWithFormat:@"%i", [_events count]];
+			l.font = [UIFont boldSystemFontOfSize: 12];
+			l.textAlignment = UITextAlignmentCenter;
+			l.textColor = [UIColor whiteColor];
+			l.backgroundColor = [UIColor clearColor];
+			[_badge addSubview: l];
+			[l release];
+		}
+	} else {
+		if(_badge)
+			_badge.alpha = 0;
 	}
 	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[pool release];
 }
 - (void)calendarViewController:(CalendarViewController *)c didSelectDate:(NSDate *)d {
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
+	[_data release];
+	_data = [[NSMutableArray alloc] init];
+	
+	for(NSDictionary *event in _events) {
+		if([[event objectForKey:@"startDate"] isEqualToString:[formatter stringFromDate:d]])
+			[_data addObject:event];
+	}
+	if(![_data count]) {
+		[_data release];
+		_data = nil;
+	}
+	[_table reloadData];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 0;
+	if(_data)
+		return [_data count];
+	else
+		return 0;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 32;
+	return 42;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
+	e.event = [_data objectAtIndex:[newIndexPath row]];
+	e.delegate = self;
+	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).tabBarController presentModalViewController:e animated:YES];
+	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
+		[e setAttendance:eventStatusAttending];
+	} else {
+		[e setAttendance:eventStatusNotAttending];
+	}
+	[e release];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return nil;
+	EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
+	if(!cell)
+		cell = [[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"];
+	[cell setEvent:[_data objectAtIndex:[indexPath row]]];
+	return cell;
+}
+- (void)doneButtonPressed:(id)sender {
+	EventDetailViewController *e = (EventDetailViewController *)sender;
+	if([e attendance] == eventStatusNotAttending) {
+		[_attendingEvents removeObject:[e.event objectForKey:@"id"]];
+		/*if(_username) {
+			NSMutableArray *events = [[NSMutableArray alloc] init];
+			for(NSDictionary *event in _events) {
+				if(![[event objectForKey:@"id"] isEqualToString:[e.event objectForKey:@"id"]])
+					[events addObject:event];
+			}
+			[self _processEvents:events];
+			[events release];
+		}*/
+	} else {
+		[_attendingEvents addObject:[e.event objectForKey:@"id"]];
+	}
+	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).tabBarController dismissModalViewControllerAnimated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 - (void)dealloc {
 	[_events release];
@@ -994,6 +1053,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	[detailType setImage:[UIImage imageNamed:@"similar_artists.png"] forSegmentAtIndex:2];
 	[detailType setImage:[UIImage imageNamed:@"events.png"] forSegmentAtIndex:3];
 	[detailType setImage:[UIImage imageNamed:@"top_listeners.png"] forSegmentAtIndex:4];
+	
+	
 	
 	switch(detailType.selectedSegmentIndex) {
 		case 0:

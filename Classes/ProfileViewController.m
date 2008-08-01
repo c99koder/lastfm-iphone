@@ -30,12 +30,6 @@
 #import "NSString+URLEscaped.h"
 
 @implementation ProfileViewController
-- (id)initWithCoder:(NSCoder *)decoder {
-	if (self = [super initWithCoder:decoder]) {
-		_username = [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] retain];
-	}
-	return self;
-}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];

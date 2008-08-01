@@ -35,7 +35,7 @@
 	IBOutlet UIView *_loadingView;
 	IBOutlet UIImageView *_loadingViewLogo;
 	NSString *_launchURL;
-	IBOutlet UITabBarController *_tabBar;
+	IBOutlet UITabBarController *tabBarController;
 	UIAlertView *_pendingAlert;
 	BOOL _locked;
 }
@@ -43,6 +43,7 @@
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) FirstRunViewController *firstRunView;
 @property (nonatomic, retain) PlaybackViewController *playbackViewController;
+@property (nonatomic, retain) UITabBarController *tabBarController;
 
 -(BOOL)hasNetworkConnection;
 -(BOOL)hasWiFiConnection;
