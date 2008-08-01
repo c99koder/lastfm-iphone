@@ -241,6 +241,7 @@ bSwgTHRkLg</string>
 						<float key="IBUIMinimumFontSize">2.400000e+01</float>
 						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 							<int key="IBUIAutocorrectionType">1</int>
+							<int key="IBUIKeyboardAppearance">1</int>
 							<int key="IBUIReturnKeyType">4</int>
 						</object>
 					</object>
@@ -264,6 +265,7 @@ bSwgTHRkLg</string>
 						<float key="IBUIMinimumFontSize">2.400000e+01</float>
 						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 							<int key="IBUIAutocorrectionType">1</int>
+							<int key="IBUIKeyboardAppearance">1</int>
 							<int key="IBUIReturnKeyType">1</int>
 							<bool key="IBUISecureTextEntry">YES</bool>
 						</object>
