@@ -1040,42 +1040,44 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:contentView cache:YES];
 		[[contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 		[contentView addSubview: detailsViewContainer];
-		detailType.selectedSegmentIndex = 0;
-		[self detailTypeChanged:nil];
+		tabBar.selectedItem = [tabBar.items objectAtIndex:0];
+		[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
+		//detailType.selectedSegmentIndex = 0;
+		//[self detailTypeChanged:nil];
 		[UIView commitAnimations];
 	}
 }
-- (void)detailTypeChanged:(id)sender {
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
-	[detailType setImage:[UIImage imageNamed:@"bio.png"] forSegmentAtIndex:0];
+	/*[detailType setImage:[UIImage imageNamed:@"bio.png"] forSegmentAtIndex:0];
 	[detailType setImage:[UIImage imageNamed:@"tags.png"] forSegmentAtIndex:1];
 	[detailType setImage:[UIImage imageNamed:@"similar_artists.png"] forSegmentAtIndex:2];
 	[detailType setImage:[UIImage imageNamed:@"events.png"] forSegmentAtIndex:3];
-	[detailType setImage:[UIImage imageNamed:@"top_listeners.png"] forSegmentAtIndex:4];
+	[detailType setImage:[UIImage imageNamed:@"top_listeners.png"] forSegmentAtIndex:4];*/
 	
 	
 	
-	switch(detailType.selectedSegmentIndex) {
+	switch(item.tag) {
 		case 0:
 			[detailView addSubview:artistBio.view];
 			_titleLabel.text = @"Artist Bio";
-			[detailType setImage:[UIImage imageNamed:@"bio_selected.png"] forSegmentAtIndex:0];
+			//[detailType setImage:[UIImage imageNamed:@"bio_selected.png"] forSegmentAtIndex:0];
 			break;
 		case 1:
 			[detailView addSubview:tags.view];
 			_titleLabel.text = @"Tags";
-			[detailType setImage:[UIImage imageNamed:@"tags_selected.png"] forSegmentAtIndex:1];
+			//[detailType setImage:[UIImage imageNamed:@"tags_selected.png"] forSegmentAtIndex:1];
 			break;
 		case 2:
 			[detailView addSubview:similarArtists.view];
 			_titleLabel.text = @"Similar Artists";
-			[detailType setImage:[UIImage imageNamed:@"similar_artists_selected.png"] forSegmentAtIndex:2];
+			//[detailType setImage:[UIImage imageNamed:@"similar_artists_selected.png"] forSegmentAtIndex:2];
 			break;
 		case 3:
 			[detailView addSubview:events.view];
 			_titleLabel.text = @"Events";
-			[detailType setImage:[UIImage imageNamed:@"events_selected.png"] forSegmentAtIndex:3];
+			//[detailType setImage:[UIImage imageNamed:@"events_selected.png"] forSegmentAtIndex:3];
 			break;
 		case 4:
 			[detailView addSubview:fans.view];

@@ -148,6 +148,7 @@
 	IBOutlet UIButton *detailsBtn;
 	IBOutlet UIButton *loveBtn;
 	IBOutlet UIButton *banBtn;
+	IBOutlet UITabBar *tabBar;
 }
 -(void)backButtonPressed:(id)sender;
 -(void)detailsButtonPressed:(id)sender;

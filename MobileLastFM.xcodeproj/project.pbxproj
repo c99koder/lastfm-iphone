@@ -98,6 +98,8 @@
 		2214D0640E4350D000FC3F3D /* eventmarker-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 2214D0620E4350D000FC3F3D /* eventmarker-selected.png */; };
 		2214D0650E4350D000FC3F3D /* eventmarker-disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 2214D0630E4350D000FC3F3D /* eventmarker-disabled.png */; };
 		2214D0940E43590F00FC3F3D /* events_red_circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 2214D0930E43590F00FC3F3D /* events_red_circle.png */; };
+		221744640E44D5FA0058C0C3 /* volume-min.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744620E44D5FA0058C0C3 /* volume-min.png */; };
+		221744650E44D5FA0058C0C3 /* volume-max.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744630E44D5FA0058C0C3 /* volume-max.png */; };
 		2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */; };
 		221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */ = {isa = PBXBuildFile; fileRef = 221E6B030DC2BD300006E74C /* Scrobbler.m */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
@@ -277,6 +279,8 @@
 		2214D0620E4350D000FC3F3D /* eventmarker-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eventmarker-selected.png"; sourceTree = "<group>"; };
 		2214D0630E4350D000FC3F3D /* eventmarker-disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "eventmarker-disabled.png"; sourceTree = "<group>"; };
 		2214D0930E43590F00FC3F3D /* events_red_circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = events_red_circle.png; sourceTree = "<group>"; };
+		221744620E44D5FA0058C0C3 /* volume-min.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "volume-min.png"; sourceTree = "<group>"; };
+		221744630E44D5FA0058C0C3 /* volume-max.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "volume-max.png"; sourceTree = "<group>"; };
 		2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistsViewController.m; sourceTree = "<group>"; };
 		2219DEC40E2CF70C009EE6E4 /* PlaylistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistsViewController.h; sourceTree = "<group>"; };
 		221E6B020DC2BD300006E74C /* Scrobbler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrobbler.h; sourceTree = "<group>"; };
@@ -612,6 +616,8 @@
 				22DB15390E423C77002D66BE /* top_listeners.png */,
 				22DB15540E424418002D66BE /* top_listeners_selected.png */,
 				22F2FE0A0E31046D000DDCDC /* transparent_grey_button.png */,
+				221744620E44D5FA0058C0C3 /* volume-min.png */,
+				221744630E44D5FA0058C0C3 /* volume-max.png */,
 				22F2FE090E31046D000DDCDC /* white_lfm_logo.png */,
 			);
 			path = Resources;
@@ -841,6 +847,8 @@
 				2214D0640E4350D000FC3F3D /* eventmarker-selected.png in Resources */,
 				2214D0650E4350D000FC3F3D /* eventmarker-disabled.png in Resources */,
 				2214D0940E43590F00FC3F3D /* events_red_circle.png in Resources */,
+				221744640E44D5FA0058C0C3 /* volume-min.png in Resources */,
+				221744650E44D5FA0058C0C3 /* volume-max.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
