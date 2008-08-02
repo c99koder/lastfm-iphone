@@ -337,6 +337,18 @@
 								<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
 							</object>
 						</object>
+						<object class="IBUISlider" id="445910046">
+							<reference key="NSNextResponder" ref="609645942"/>
+							<int key="NSvFlags">292</int>
+							<string key="NSFrame">{{29, 364}, {256, 23}}</string>
+							<reference key="NSSuperview" ref="609645942"/>
+							<bool key="IBUIOpaque">NO</bool>
+							<bool key="IBUIClipsSubviews">YES</bool>
+							<bool key="IBUIMultipleTouchEnabled">YES</bool>
+							<int key="IBUIContentHorizontalAlignment">0</int>
+							<int key="IBUIContentVerticalAlignment">0</int>
+							<float key="IBUIValue">5.000000e-01</float>
+						</object>
 						<object class="IBUIView" id="609475281">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
@@ -407,22 +419,10 @@
 							<int key="NSvFlags">292</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="IBUISlider" id="445910046">
-									<reference key="NSNextResponder" ref="275770404"/>
-									<int key="NSvFlags">292</int>
-									<string key="NSFrame">{{31, 9}, {252, 23}}</string>
-									<reference key="NSSuperview" ref="275770404"/>
-									<bool key="IBUIOpaque">NO</bool>
-									<bool key="IBUIClipsSubviews">YES</bool>
-									<bool key="IBUIMultipleTouchEnabled">YES</bool>
-									<int key="IBUIContentHorizontalAlignment">0</int>
-									<int key="IBUIContentVerticalAlignment">0</int>
-									<float key="IBUIValue">5.000000e-01</float>
-								</object>
-								<object class="IBUIImageView" id="58291782">
+								<object class="IBUIImageView" id="978880283">
 									<reference key="NSNextResponder" ref="275770404"/>
 									<int key="NSvFlags">256</int>
-									<string key="NSFrame">{{289, 8}, {24, 24}}</string>
+									<string key="NSFrame">{{290, 0}, {24, 24}}</string>
 									<reference key="NSSuperview" ref="275770404"/>
 									<bool key="IBUIOpaque">NO</bool>
 									<bool key="IBUIClipsSubviews">YES</bool>
@@ -433,10 +433,10 @@
 										<string key="NSResourceName">volume-max.png</string>
 									</object>
 								</object>
-								<object class="IBUIImageView" id="469042152">
+								<object class="IBUIImageView" id="520277152">
 									<reference key="NSNextResponder" ref="275770404"/>
 									<int key="NSvFlags">256</int>
-									<string key="NSFrame">{{9, 12}, {16, 16}}</string>
+									<string key="NSFrame">{{8, 4}, {16, 16}}</string>
 									<reference key="NSSuperview" ref="275770404"/>
 									<bool key="IBUIOpaque">NO</bool>
 									<bool key="IBUIClipsSubviews">YES</bool>
@@ -1952,6 +1952,7 @@
 							<reference ref="8006225"/>
 							<reference ref="321003824"/>
 							<reference ref="609475281"/>
+							<reference ref="445910046"/>
 						</object>
 						<reference key="parent" ref="586853498"/>
 					</object>
@@ -2119,9 +2120,8 @@
 						<reference key="object" ref="275770404"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="445910046"/>
-							<reference ref="58291782"/>
-							<reference ref="469042152"/>
+							<reference ref="978880283"/>
+							<reference ref="520277152"/>
 						</object>
 						<reference key="parent" ref="609645942"/>
 					</object>
@@ -2205,19 +2205,19 @@
 						<reference key="parent" ref="563717480"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">714</int>
-						<reference key="object" ref="445910046"/>
-						<reference key="parent" ref="275770404"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">821</int>
-						<reference key="object" ref="58291782"/>
+						<reference key="object" ref="978880283"/>
 						<reference key="parent" ref="275770404"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">822</int>
-						<reference key="object" ref="469042152"/>
+						<reference key="object" ref="520277152"/>
 						<reference key="parent" ref="275770404"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">714</int>
+						<reference key="object" ref="445910046"/>
+						<reference key="parent" ref="609645942"/>
 					</object>
 				</object>
 			</object>
