@@ -102,6 +102,7 @@
 		221744650E44D5FA0058C0C3 /* volume-max.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744630E44D5FA0058C0C3 /* volume-max.png */; };
 		221746FB0E48A9710058C0C3 /* NSData+Compress.m in Sources */ = {isa = PBXBuildFile; fileRef = 221746FA0E48A9710058C0C3 /* NSData+Compress.m */; };
 		221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 221747140E48B6930058C0C3 /* IOKit.framework */; };
+		221748130E48BDED0058C0C3 /* IOKIT_README in Resources */ = {isa = PBXBuildFile; fileRef = 221748120E48BDED0058C0C3 /* IOKIT_README */; };
 		2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */; };
 		221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */ = {isa = PBXBuildFile; fileRef = 221E6B030DC2BD300006E74C /* Scrobbler.m */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
@@ -286,6 +287,7 @@
 		221746F90E48A9710058C0C3 /* NSData+Compress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compress.h"; sourceTree = "<group>"; };
 		221746FA0E48A9710058C0C3 /* NSData+Compress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compress.m"; sourceTree = "<group>"; };
 		221747140E48B6930058C0C3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		221748120E48BDED0058C0C3 /* IOKIT_README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = IOKIT_README; sourceTree = "<group>"; };
 		2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistsViewController.m; sourceTree = "<group>"; };
 		2219DEC40E2CF70C009EE6E4 /* PlaylistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistsViewController.h; sourceTree = "<group>"; };
 		221E6B020DC2BD300006E74C /* Scrobbler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrobbler.h; sourceTree = "<group>"; };
@@ -654,6 +656,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				221748120E48BDED0058C0C3 /* IOKIT_README */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
 				223128F60DFF1ECB00EC3BF0 /* MainWindow.xib */,
 				22117E860E1544F50093BFED /* SearchView.xib */,
@@ -858,6 +861,7 @@
 				2214D0940E43590F00FC3F3D /* events_red_circle.png in Resources */,
 				221744640E44D5FA0058C0C3 /* volume-min.png in Resources */,
 				221744650E44D5FA0058C0C3 /* volume-max.png in Resources */,
+				221748130E48BDED0058C0C3 /* IOKIT_README in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

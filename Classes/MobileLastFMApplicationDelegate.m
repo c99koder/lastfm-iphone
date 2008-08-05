@@ -219,6 +219,7 @@ NSString *kUserAgent;
 	[[UIApplication sharedApplication] showNetworkPromptsIfNecessary:YES];
 	IONotificationPortRef notificationPort;
   root_port = IORegisterForSystemPower(self, &notificationPort, powerCallback, &notifier);
+  CFRunLoopAddSource(CFRunLoopGetCurrent(),IONotificationPortGetRunLoopSource(notificationPort),kCFRunLoopCommonModes);
 	_mainView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	[window addSubview:_mainView];
 

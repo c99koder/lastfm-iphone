@@ -157,5 +157,5 @@
 -(void)banButtonPressed:(id)sender;
 -(void)stopButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
--(void)detailTypeChanged:(id)sender;
+-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
 @end

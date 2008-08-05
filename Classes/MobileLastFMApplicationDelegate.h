@@ -27,6 +27,11 @@
 #import "PlaybackViewController.h"
 #import "SearchViewController.h"
 
+@interface UIApplication (Undocumented)
+-(void)showNetworkPromptsIfNecessary:(BOOL)fp8;
+-(void)setUsesBackgroundNetwork:(BOOL)fp8;
+@end
+
 @interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate> {
   IBOutlet UIWindow *window;
 	SCNetworkReachabilityRef _reach;
