@@ -1,0 +1,5 @@
+The iPhone SDK includes an IOKit framework, however it is missing the headers.
+To correct this, copy the folder /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/Headers
+to /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/Headers
+
+MobileLastFM will now build for both iPhoneOS and iPhoneSimulator
