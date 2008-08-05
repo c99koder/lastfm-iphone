@@ -19,6 +19,8 @@
 
 #import <UIKit/UIKit.h>
 #include <SystemConfiguration/SCNetworkReachability.h>
+#import <IOKit/pwr_mgt/IOPMLib.h>
+#import <IOKit/IOMessage.h>
 #import "LastFMRadio.h"
 #import "Scrobbler.h"
 #import "FirstRunViewController.h"
@@ -38,6 +40,8 @@
 	IBOutlet UITabBarController *tabBarController;
 	UIAlertView *_pendingAlert;
 	BOOL _locked;
+	io_connect_t root_port;
+	io_object_t notifier;
 }
 
 @property (nonatomic, retain) UIWindow *window;
@@ -45,6 +49,7 @@
 @property (nonatomic, retain) PlaybackViewController *playbackViewController;
 @property (nonatomic, retain) UITabBarController *tabBarController;
 
+-(void)powerMessageReceived:(natural_t)messageType withArgument:(void *) messageArgument;
 -(BOOL)hasNetworkConnection;
 -(BOOL)hasWiFiConnection;
 -(BOOL)playRadioStation:(NSString *)station animated:(BOOL)animated;

@@ -330,7 +330,7 @@ void propCallback(void *in,
 		}
 	}
 
-	NSURL *trackURL = [NSURL URLWithString:[[_playlist objectAtIndex:0] objectForKey:@"location"]];
+	NSURL *trackURL = [NSURL URLWithString:/*[[_playlist objectAtIndex:0] objectForKey:@"location"]*/@"http://66.225.205.8:80/"];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:trackURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
 	[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 	NSLog(@"Streaming: %@\n", trackURL);

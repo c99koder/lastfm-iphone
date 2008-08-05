@@ -24,6 +24,10 @@
 #import "PlaybackViewController.h"
 #include "version.h"
 
+void powerCallback(void *refCon, io_service_t service, natural_t messageType, void *messageArgument) {	
+	[(MobileLastFMApplicationDelegate *)refCon powerMessageReceived: messageType withArgument: messageArgument];
+}
+
 NSString *kUserAgent;
 
 @implementation UIColor (TableHax)
@@ -42,6 +46,21 @@ NSString *kUserAgent;
 @synthesize playbackViewController;
 @synthesize tabBarController;
 
+-(void)powerMessageReceived:(natural_t)messageType withArgument:(void *)messageArgument {
+	switch (messageType) {
+		case kIOMessageSystemWillSleep:
+			IOAllowPowerChange(root_port, (long)messageArgument);  
+			break;
+		case kIOMessageCanSystemSleep:
+			if([[LastFMRadio sharedInstance] state] != RADIO_IDLE)
+				IOCancelPowerChange(root_port, (long)messageArgument);
+			else
+				IOAllowPowerChange(root_port, (long)messageArgument);  
+			break; 
+		case kIOMessageSystemHasPoweredOn:
+			break;
+	}
+}
 - (void)applicationWillTerminate:(UIApplication *)application {
 	
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE)
@@ -197,6 +216,8 @@ NSString *kUserAgent;
 	[_loadingView removeFromSuperview];
 }
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
+	IONotificationPortRef notificationPort;
+  root_port = IORegisterForSystemPower(self, &notificationPort, powerCallback, &notifier);
 	_mainView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	[window addSubview:_mainView];
 

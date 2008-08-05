@@ -994,6 +994,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:volumeView.frame];
 	[volumeView removeFromSuperview];
 	volumeView = v;
+	[volumeView sizeToFit];
 	[trackView.view addSubview: volumeView];
 	self.hidesBottomBarWhenPushed = YES;
 }
