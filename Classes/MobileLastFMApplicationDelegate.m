@@ -216,6 +216,7 @@ NSString *kUserAgent;
 	[_loadingView removeFromSuperview];
 }
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
+	[[UIApplication sharedApplication] showNetworkPromptsIfNecessary:YES];
 	IONotificationPortRef notificationPort;
   root_port = IORegisterForSystemPower(self, &notificationPort, powerCallback, &notifier);
 	_mainView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
