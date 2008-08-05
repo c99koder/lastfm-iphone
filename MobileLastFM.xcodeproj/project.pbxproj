@@ -100,6 +100,8 @@
 		2214D0940E43590F00FC3F3D /* events_red_circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 2214D0930E43590F00FC3F3D /* events_red_circle.png */; };
 		221744640E44D5FA0058C0C3 /* volume-min.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744620E44D5FA0058C0C3 /* volume-min.png */; };
 		221744650E44D5FA0058C0C3 /* volume-max.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744630E44D5FA0058C0C3 /* volume-max.png */; };
+		221746FB0E48A9710058C0C3 /* NSData+Compress.m in Sources */ = {isa = PBXBuildFile; fileRef = 221746FA0E48A9710058C0C3 /* NSData+Compress.m */; };
+		221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 221747140E48B6930058C0C3 /* IOKit.framework */; };
 		2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */; };
 		221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */ = {isa = PBXBuildFile; fileRef = 221E6B030DC2BD300006E74C /* Scrobbler.m */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
@@ -281,6 +283,9 @@
 		2214D0930E43590F00FC3F3D /* events_red_circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = events_red_circle.png; sourceTree = "<group>"; };
 		221744620E44D5FA0058C0C3 /* volume-min.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "volume-min.png"; sourceTree = "<group>"; };
 		221744630E44D5FA0058C0C3 /* volume-max.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "volume-max.png"; sourceTree = "<group>"; };
+		221746F90E48A9710058C0C3 /* NSData+Compress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compress.h"; sourceTree = "<group>"; };
+		221746FA0E48A9710058C0C3 /* NSData+Compress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compress.m"; sourceTree = "<group>"; };
+		221747140E48B6930058C0C3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistsViewController.m; sourceTree = "<group>"; };
 		2219DEC40E2CF70C009EE6E4 /* PlaylistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistsViewController.h; sourceTree = "<group>"; };
 		221E6B020DC2BD300006E74C /* Scrobbler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrobbler.h; sourceTree = "<group>"; };
@@ -394,6 +399,7 @@
 				22CBDFAF0DCE0AA300AE5DE0 /* AddressBookUI.framework in Frameworks */,
 				22CBDFBE0DCE0BCE00AE5DE0 /* AddressBook.framework in Frameworks */,
 				225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */,
+				221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +425,8 @@
 				2259349A0DA85CD30035A1AA /* LastFMService.m */,
 				1D3623240D0F684500981E51 /* MobileLastFMApplicationDelegate.h */,
 				1D3623250D0F684500981E51 /* MobileLastFMApplicationDelegate.m */,
+				221746F90E48A9710058C0C3 /* NSData+Compress.h */,
+				221746FA0E48A9710058C0C3 /* NSData+Compress.m */,
 				22CBE1340DCE3C9B00AE5DE0 /* NSString+MD5.h */,
 				22CBE1350DCE3C9B00AE5DE0 /* NSString+MD5.m */,
 				22F452FB0DD50EBD0060DF02 /* NSString+URLEscaped.h */,
@@ -450,6 +458,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				221747140E48B6930058C0C3 /* IOKit.framework */,
 				225ECD430DFF882600323F42 /* MediaPlayer.framework */,
 				22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */,
 				22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */,
@@ -889,6 +898,7 @@
 				2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */,
 				2244DB0F0E3A569700C4F40B /* CalendarViewController.m in Sources */,
 				2212D23C0E40B36B0099DB03 /* RadioListViewController.m in Sources */,
+				221746FB0E48A9710058C0C3 /* NSData+Compress.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -960,6 +970,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
 				OTHER_LDFLAGS = (
+					"-lz",
 					"-lxml2",
 					"-lsqlite3",
 				);
@@ -1009,6 +1020,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
+					"-lz",
 					"-lxml2",
 					"-lsqlite3",
 				);
@@ -1037,6 +1049,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
 				OTHER_LDFLAGS = (
+					"-lz",
 					"-lxml2",
 					"-lsqlite3",
 				);
