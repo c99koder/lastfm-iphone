@@ -113,4 +113,8 @@ enum eventStatus {
 
 - (void)attendEvent:(int)event status:(int)status;
 
+#pragma mark Playlist methods
+
+- (void)addTrack:(NSString *)track byArtist:(NSString *)artist toPlaylist:(int)playlist;
+
 @end

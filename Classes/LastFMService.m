@@ -383,4 +383,10 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	[self doMethod:@"event.attend" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"event=%i", event], [NSString stringWithFormat:@"status=%i", status], nil];
 }
 
+#pragma mark Playlist methods
+
+- (void)addTrack:(NSString *)track byArtist:(NSString *)artist toPlaylist:(int)playlist {
+	[self doMethod:@"playlist.addTrack" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", track], [NSString stringWithFormat:@"artist=%@", artist], [NSString stringWithFormat:@"playlistID=%i", playlist], nil];
+}
+
 @end
