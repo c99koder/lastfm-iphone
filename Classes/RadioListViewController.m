@@ -42,20 +42,16 @@
 	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	int sections = 2;
-	if(!_playlists) {
-		_playlists = [[NSMutableArray alloc] init];
-		NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
-		for(NSDictionary *playlist in playlists) {
-			if(![[playlist objectForKey:@"streamable"] isEqualToString:@"0"])
-				[_playlists addObject:playlist];
-		}
+	[_playlists release];
+	_playlists = [[NSMutableArray alloc] init];
+	NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
+	for(NSDictionary *playlist in playlists) {
+		if(![[playlist objectForKey:@"streamable"] isEqualToString:@"0"])
+			[_playlists addObject:playlist];
 	}
-	if([_playlists count]) sections++;
 	[_recent release];
 	_recent = [[[LastFMRadio sharedInstance] recentURLs] retain];
-	if([_recent count]) sections++;
-	return sections;
+	return 4;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch(section) {
@@ -64,7 +60,7 @@
 		case 1:
 			return 4;
 		case 2:
-			return [_recent count]+1;
+			return [_recent count]?[_recent count]+1:0;
 		case 3:
 			return [_playlists count]+1;
 	}
