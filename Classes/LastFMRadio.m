@@ -25,10 +25,6 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 
-@interface UIApplication (OMGHAX)
--(void)setUsesBackgroundNetwork:(BOOL)hax;
-@end
-
 @interface SystemNowPlayingController : NSObject
 {
 	int _disableHUDCount;
@@ -217,7 +213,7 @@ void propCallback(void *in,
 	return _state;
 }
 -(NSString *)station {
-	return _station;
+	return [_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
 }
 -(NSString *)stationURL {
 	return _stationURL;
@@ -364,7 +360,7 @@ void propCallback(void *in,
 		[self removeRecentURL: _stationURL];
 		[_db open];
 		[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
-		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [_station capitalizedString], nil];
+		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [[_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] capitalizedString], nil];
 		[_db close];
 		[[NSNotificationCenter defaultCenter] postNotificationName:kLastFMRadio_TrackDidChange object:self userInfo:[_playlist objectAtIndex:0]];
 		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil

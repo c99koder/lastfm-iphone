@@ -20,7 +20,6 @@
 #import <Foundation/Foundation.h>
 
 @interface NSString (URLEscaped)
-- (NSString *)URLEscapedWithAmpersandHax:(BOOL)hax;
 - (NSString *)URLEscaped;
 - (NSString *)unURLEscape;
 @end
