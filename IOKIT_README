@@ -1,9 +1,30 @@
 The iPhone SDK includes an IOKit framework, however it is missing the headers.
-To correct this, delete the alias /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework/Headers,
-then copy the folder /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/Headers
-to /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework.
+To correct this, delete the alias:
 
-Finally, copy /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
-to /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework so the linker can find it.
+/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework/Headers
 
-MobileLastFM will now build for both iPhoneOS and iPhoneSimulator
+Then copy the folder:
+
+/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/Headers
+
+to:
+
+/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework
+
+Finally, copy:
+
+/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+
+to:
+
+/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework
+
+so the linker can find it. MobileLastFM will now build for both iPhoneOS and
+iPhoneSimulator.
+--------------------------------------------------------------------------------
+
+For the brave:
+
+sudo rm /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework/Headers
+sudo cp -R /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/Headers /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework
+sudo cp -R /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/IOKit.framework
