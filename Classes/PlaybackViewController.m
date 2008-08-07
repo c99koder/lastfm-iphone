@@ -285,14 +285,14 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
-		return @"0:00";
+		return @"00:00";
 	int h = seconds / 3600;
 	int m = (seconds%3600) / 60;
 	int s = seconds%60;
 	if(h)
-		return [NSString stringWithFormat:@"%i:%02i:%02i", h, m, s];
+		return [NSString stringWithFormat:@"%02i:%02i:%02i", h, m, s];
 	else
-		return [NSString stringWithFormat:@"%i:%02i", m, s];
+		return [NSString stringWithFormat:@"%02i:%02i", m, s];
 }
 - (void)_updateProgress:(NSTimer *)timer {
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
@@ -375,9 +375,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.2];
 	if(_artworkView.frame.size.width == 320) {
-		_reflectionGradientView.frame = CGRectMake(0,230,320,186);
-		_reflectedArtworkView.frame = CGRectMake(55,230,210,210);
-		_artworkView.frame = CGRectMake(55,20,210,210);
+		_reflectionGradientView.frame = CGRectMake(0,246,320,170);
+		_reflectedArtworkView.frame = CGRectMake(47,246,226,226);
+		_artworkView.frame = CGRectMake(47,20,226,226);
 		_trackTitle.alpha = 1;
 		_artist.alpha = 1;
 		_progress.alpha = 1;
@@ -1021,6 +1021,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView setAnimationDuration:0.75];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:detailsBtnContainer cache:YES];
 		[detailsBtn setBackgroundImage:[UIImage imageNamed:@"info_button.png"] forState:UIControlStateNormal];
+		detailsBtn.frame = CGRectMake(0,0,30,30);
+		[detailsBtn superview].backgroundColor = [UIColor clearColor];
 		[UIView commitAnimations];
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.75];
@@ -1035,6 +1037,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView setAnimationDuration:0.75];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:detailsBtnContainer cache:YES];
 		[detailsBtn setBackgroundImage:trackView.artwork forState:UIControlStateNormal];
+		detailsBtn.frame = CGRectMake(1,1,28,28);
+		[detailsBtn superview].backgroundColor = [UIColor blackColor];
 		[UIView commitAnimations];
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.75];

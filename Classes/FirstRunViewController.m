@@ -50,5 +50,6 @@
 		[_password becomeFirstResponder];
 	if(textField == _password && [_password.text length] > 0)
 		[self loginButtonPressed:textField];
+	return NO;
 }
 @end

@@ -980,7 +980,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "F800CAEB-E3DA-4EE6-8AF0-1A04002F1F72";
-				SDKROOT = iphonesimulator2.0;
+				SDKROOT = iphoneos2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Distribution;
@@ -1030,7 +1030,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = DefaultProfileUuid;
-				SDKROOT = iphonesimulator2.0;
+				SDKROOT = iphoneos2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Debug;
@@ -1059,7 +1059,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "4911ECF4-1F92-40CA-8738-858BB4753AB9";
-				SDKROOT = iphonesimulator2.0;
+				SDKROOT = iphoneos2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Release;

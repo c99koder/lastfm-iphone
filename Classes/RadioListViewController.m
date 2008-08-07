@@ -119,7 +119,7 @@
 		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	}
 	//Hack to make the loading throbber appear before we block
-	[NSTimer scheduledTimerWithTimeInterval:0.5
+	[NSTimer scheduledTimerWithTimeInterval:0.1
 																	 target:self
 																 selector:@selector(_rowSelected:)
 																 userInfo:newIndexPath
