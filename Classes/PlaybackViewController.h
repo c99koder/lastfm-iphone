@@ -102,10 +102,12 @@
 	IBOutlet CalendarViewController *_calendar;
 	IBOutlet UITableView *_table;
 	IBOutlet UIImageView *_badge;
+	IBOutlet UIImageView *_shadow;
 	NSArray *_events;
 	NSMutableArray *_eventDates;
 	NSMutableArray *_attendingEvents;
 	NSMutableArray *_data;
+	NSLock *_lock;
 }
 - (void)doneButtonPressed:(id)sender;
 @end

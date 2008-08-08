@@ -844,6 +844,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	if(_badge) {
 		_badge.image = [[UIImage imageNamed:@"events_red_circle.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:0];
 	}
+	_lock = [[NSLock alloc] init];
 }
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchEvents:) toTarget:self withObject:[notification userInfo]];
@@ -859,6 +860,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_fetchEvents:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[_lock lock];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_events release];
@@ -886,7 +888,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			frame.size.width = [[NSString stringWithFormat:@"%i", [_events count]] sizeWithFont:[UIFont boldSystemFontOfSize:12]].width + 20;
 			_badge.frame = frame;
 			UILabel *l = [[UILabel alloc] init];
-			l.frame = CGRectMake(0,0,frame.size.width,frame.size.height);
+			l.frame = CGRectMake(0,-2,frame.size.width,frame.size.height);
 			l.text = [NSString stringWithFormat:@"%i", [_events count]];
 			l.font = [UIFont boldSystemFontOfSize: 12];
 			l.textAlignment = UITextAlignmentCenter;
@@ -901,6 +903,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
+	[_lock unlock];
 	[pool release];
 }
 - (void)calendarViewController:(CalendarViewController *)c didSelectDate:(NSDate *)d {
@@ -916,6 +919,23 @@ int tagSort(id tag1, id tag2, void *context) {
 	if(![_data count]) {
 		[_data release];
 		_data = nil;
+	}
+	if([_data count] > 1) {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.2];
+		_calendar.view.frame = CGRectMake(0,0,320,328);
+		_table.frame = CGRectMake(0,284,320,88);
+		_shadow.frame = CGRectMake(0,284,320,18);
+		[UIView commitAnimations];
+	} else {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.2];
+		_calendar.view.frame = CGRectMake(0,0,320,372);
+		_table.frame = CGRectMake(0,372,320,0);
+		_shadow.frame = CGRectMake(0,372,320,0);
+		[UIView commitAnimations];
+		if([_data count])
+			[self tableView:_table didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 	}
 	[_table reloadData];
 }
@@ -1045,6 +1065,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:contentView cache:YES];
 		[[contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 		[contentView addSubview: detailsViewContainer];
+		detailsViewContainer.frame = CGRectMake(0,0,320,416);
 		tabBar.selectedItem = [tabBar.items objectAtIndex:0];
 		[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
 		//detailType.selectedSegmentIndex = 0;

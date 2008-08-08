@@ -3,12 +3,10 @@
 #import "NSString+MD5.h"
 #import "NSString+URLEscaped.h"
 #import "version.h"
+#import <QuartzCore/QuartzCore.h>
 
 UIImage *calendarDay;
 UIImage *calendarDaySelected;
-UIImage *eventMarker;
-UIImage *eventMarkerSelected;
-UIImage *eventMarkerDisabled;
 
 @implementation CalendarViewController
 @synthesize delegate;
@@ -41,79 +39,56 @@ UIImage *eventMarkerDisabled;
 	[components release];
 	int daysInLastMonth = [self daysInMonth: lastMonth];
 	
-	int dayWidth = _days.frame.size.width / 7;
-	int dayHeight = _days.frame.size.height / ((x + daysInMonth)/7 + 1);
-
-	[[_days subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	
 	if(x) {
 		components = [[[NSDateComponents alloc] init] autorelease];
 		[components setMonth:-1];
 		components = [[NSCalendar currentCalendar] components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:[[NSCalendar currentCalendar] dateByAddingComponents:components  toDate:date options:0]];
 
 		for(day=0; day<x; day++) {
-			UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
-			b.frame = CGRectMake(day*dayWidth,y*dayHeight,dayWidth,dayHeight);
+			UIButton *b = tiles[day][y];
 			[b setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
 			[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
 			[b setTitle:[NSString stringWithFormat:@"%i", day+daysInLastMonth-x+1] forState:UIControlStateNormal];
+			[b removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
 			[b addTarget:self action:@selector(_selectDayInPreviousMonth:) forControlEvents:UIControlEventTouchUpInside];
 			[components setDay:day+daysInLastMonth-x+1];
 			if(eventDates) {
+				NSDate *currentDate = [[NSCalendar currentCalendar] dateFromComponents:components];
 				for(NSDate *d in eventDates) {
-					if([d isEqualToDate:[[NSCalendar currentCalendar] dateFromComponents:components]]) {
-						UIImageView *v = [[UIImageView alloc] initWithImage:eventMarkerDisabled];
-						v.frame = CGRectMake(dayWidth / 2 - 2, dayHeight - 7, 4, 5);
-						v.userInteractionEnabled = NO;
-						[b addSubview: v];
-						[v release];
+					if([d isEqualToDate:currentDate]) {
+						[b setBackgroundImage:calendarDaySelected forState:UIControlStateNormal];
 						break;
 					}
 				}
 			}
-			[_days addSubview: b];
 		}
 	}
 	
 	components = [[NSCalendar currentCalendar] components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:date];
 
 	for(day=0; day<daysInMonth; day++) {
-		UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
-		b.frame = CGRectMake(x*dayWidth,y*dayHeight,dayWidth,dayHeight);
+		UIButton *b = tiles[x][y];
 		[components setDay:day+1];
 		BOOL found=NO;
 		if(eventDates) {
+			NSDate *currentDate = [[NSCalendar currentCalendar] dateFromComponents:components];
 			for(NSDate *d in eventDates) {
-				if([d isEqualToDate:[[NSCalendar currentCalendar] dateFromComponents:components]]) {
+				if([d isEqualToDate:currentDate]) {
 					found=YES;
 					break;
 				}
 			}
 		}
-		if([selectedDate isEqualToDate:[[NSCalendar currentCalendar] dateFromComponents:components]]) {
+		if(found) {
 			[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 			[b setBackgroundImage:calendarDaySelected forState:UIControlStateNormal];
-			if(found) {
-				UIImageView *v = [[UIImageView alloc] initWithImage:eventMarkerSelected];
-				v.frame = CGRectMake(dayWidth / 2 - 2, dayHeight - 7, 4, 5);
-				v.userInteractionEnabled = NO;
-				[b addSubview: v];
-				[v release];
-			}
 		} else {
 			[b setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 			[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
-			if(found) {
-				UIImageView *v = [[UIImageView alloc] initWithImage:eventMarker];
-				v.frame = CGRectMake(dayWidth / 2 - 2, dayHeight - 7, 4, 5);
-				v.userInteractionEnabled = NO;
-				[b addSubview: v];
-				[v release];
-			}
 		}
 		[b setTitle:[NSString stringWithFormat:@"%i", day+1] forState:UIControlStateNormal];
+		[b removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
 		[b addTarget:self action:@selector(_selectDayInCurrentMonth:) forControlEvents:UIControlEventTouchUpInside];
-		[_days addSubview: b];
 		x++;
 		if(x>6) {
 			x=0;
@@ -121,32 +96,33 @@ UIImage *eventMarkerDisabled;
 		}
 	}
 	
-	if(x<7) {
+	if(x<7 || y<7) {
 		components = [[[NSDateComponents alloc] init] autorelease];
 		[components setMonth:1];
 		components = [[NSCalendar currentCalendar] components:NSMonthCalendarUnit|NSYearCalendarUnit fromDate:[[NSCalendar currentCalendar] dateByAddingComponents:components  toDate:date options:0]];
 
-		for(day=0; day<(7-x); day++) {
-			UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
-			b.frame = CGRectMake((x+day)*dayWidth,y*dayHeight,dayWidth,dayHeight);
-			[b setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-			[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
-			[b setTitle:[NSString stringWithFormat:@"%i", day+1] forState:UIControlStateNormal];
-			[b addTarget:self action:@selector(_selectDayInNextMonth:) forControlEvents:UIControlEventTouchUpInside];
-			[components setDay:day+1];
-			if(eventDates) {
-				for(NSDate *d in eventDates) {
-					if([d isEqualToDate:[[NSCalendar currentCalendar] dateFromComponents:components]]) {
-						UIImageView *v = [[UIImageView alloc] initWithImage:eventMarkerDisabled];
-						v.frame = CGRectMake(dayWidth / 2 - 2, dayHeight - 7, 4, 5);
-						v.userInteractionEnabled = NO;
-						[b addSubview: v];
-						[v release];
-						break;
+		day = 0;
+		
+		for(; y<7; y++) {
+			for(; x<7; x++) {
+				UIButton *b = tiles[x][y];
+				[b setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+				[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
+				[b setTitle:[NSString stringWithFormat:@"%i", day+1] forState:UIControlStateNormal];
+				[b removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+				[b addTarget:self action:@selector(_selectDayInNextMonth:) forControlEvents:UIControlEventTouchUpInside];
+				[components setDay:day+1];
+				if(eventDates) {
+					NSDate *currentDate = [[NSCalendar currentCalendar] dateFromComponents:components];
+					for(NSDate *d in eventDates) {
+						if([d isEqualToDate:currentDate]) {
+							break;
+						}
 					}
 				}
+				day++;
 			}
-			[_days addSubview: b];
+			x=0;
 		}
 	}
 	
@@ -156,19 +132,26 @@ UIImage *eventMarkerDisabled;
 	[formatter release];
 }
 - (void)viewDidLoad {
+	int x,y;
+	
 	if(!calendarDay)
-		calendarDay = [[[UIImage imageNamed:@"calendarday.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0] retain];
+		calendarDay = [[UIImage imageNamed:@"calendarday.png"] retain];
 	if(!calendarDaySelected)
-		calendarDaySelected = [[[UIImage imageNamed:@"calendarday-selected.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0] retain];
-	if(!eventMarker)
-		eventMarker = [[UIImage imageNamed:@"eventmarker.png"] retain];
-	if(!eventMarkerSelected)
-		eventMarkerSelected = [[UIImage imageNamed:@"eventmarker-selected.png"] retain];
-	if(!eventMarkerDisabled)
-		eventMarkerDisabled = [[UIImage imageNamed:@"eventmarker-disabled.png"] retain];
+		calendarDaySelected = [[UIImage imageNamed:@"calendarday-selected.png"] retain];
 	date = [[NSDate date] retain];
 	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSMonthCalendarUnit|NSDayCalendarUnit|NSYearCalendarUnit fromDate:date];
 	selectedDate = [[[NSCalendar currentCalendar] dateFromComponents:components] retain];
+	
+	for(y=0; y<7; y++) {
+		for(x=0; x<7; x++) {
+			tiles[x][y] = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			tiles[x][y].frame = CGRectMake(x*46, y*46, 46, 46);
+			tiles[x][y].opaque = YES;
+			[tiles[x][y] setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+			tiles[x][y].titleShadowOffset = CGSizeMake(0,-1);
+			[_days addSubview: tiles[x][y]];
+		}
+	}
 	[self _buildCalendar];
 }
 - (void)_selectDayInCurrentMonth:(id)sender {
@@ -178,7 +161,6 @@ UIImage *eventMarkerDisabled;
 	selectedDate = [[[NSCalendar currentCalendar] dateFromComponents:components] retain];
 	if(delegate)
 		[delegate calendarViewController:self didSelectDate:selectedDate];
-	[self _buildCalendar];
 }
 - (void)_selectDayInPreviousMonth:(id)sender {
 	[sender retain];
@@ -199,7 +181,26 @@ UIImage *eventMarkerDisabled;
 	[date release];
 	date = [newDate retain];
 	[components release];
+	if(!_transitionImage) {
+		_transitionImage = [[UIImageView alloc] initWithFrame:_days.frame];
+		[self.view addSubview:_transitionImage];
+	}
+	UIGraphicsBeginImageContext(_transitionImage.bounds.size);
+	[_days.layer renderInContext:UIGraphicsGetCurrentContext()];
+	_transitionImage.image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	CGRect frame = _days.frame;
+	_transitionImage.frame = frame;
+	frame.origin.x = -322;
+	_days.frame = frame;
 	[self _buildCalendar];
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration: 0.2];
+	frame = _transitionImage.frame;
+	_days.frame = frame;
+	frame.origin.x = 322;
+	_transitionImage.frame = frame;
+	[UIView commitAnimations];
 }
 - (void)nextMonthButtonPressed:(id)sender {
 	NSDateComponents *components = [[NSDateComponents alloc] init];
@@ -208,7 +209,26 @@ UIImage *eventMarkerDisabled;
 	[date release];
 	date = [newDate retain];
 	[components release];
+	if(!_transitionImage) {
+		_transitionImage = [[UIImageView alloc] initWithFrame:_days.frame];
+		[self.view addSubview:_transitionImage];
+	}
+	UIGraphicsBeginImageContext(_transitionImage.bounds.size);
+	[_days.layer renderInContext:UIGraphicsGetCurrentContext()];
+	_transitionImage.image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	CGRect frame = _days.frame;
+	_transitionImage.frame = frame;
+	frame.origin.x = 320;
+	_days.frame = frame;
 	[self _buildCalendar];
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration: 0.2];
+	frame = _transitionImage.frame;
+	_days.frame = frame;
+	frame.origin.x = -322;
+	_transitionImage.frame = frame;
+	[UIView commitAnimations];
 }
 - (NSArray *)eventDates {
 	return eventDates;

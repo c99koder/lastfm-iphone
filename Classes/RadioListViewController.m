@@ -62,7 +62,7 @@
 		case 2:
 			return [_recent count]?[_recent count]+1:0;
 		case 3:
-			return [_playlists count]+1;
+			return [_playlists count]?[_playlists count]+1:0;
 	}
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

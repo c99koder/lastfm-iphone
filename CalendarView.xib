@@ -32,23 +32,12 @@
 						<int key="NSvFlags">256</int>
 						<string key="NSFrameSize">{320, 49}</string>
 						<reference key="NSSuperview" ref="191373211"/>
-						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
-						<object class="NSCustomResource" key="IBUIImage" id="1024385578">
+						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">calendargradient.png</string>
+							<string key="NSResourceName">month_heading_panel.png</string>
 						</object>
-					</object>
-					<object class="IBUIImageView" id="920403255">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{0, 49}, {320, 171}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClipsSubviews">YES</bool>
-						<bool key="IBUIMultipleTouchEnabled">YES</bool>
-						<reference key="IBUIImage" ref="1024385578"/>
 					</object>
 					<object class="IBUILabel" id="751250882">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -181,13 +170,12 @@
 					<object class="IBUIView" id="709646929">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">272</int>
-						<string key="NSFrame">{{2, 49}, {316, 170}}</string>
+						<string key="NSFrame">{{-1, 49}, {322, 322}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MSAwLjA1MDAwMDAwMQA</bytes>
 						</object>
-						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 					</object>
@@ -205,11 +193,10 @@
 							<double key="NSSize">1.500000e+01</double>
 							<int key="NSfFlags">16</int>
 						</object>
-						<int key="IBUIButtonType">1</int>
-						<string type="base64-UTF8" key="IBUIHighlightedTitle">Pg</string>
-						<string type="base64-UTF8" key="IBUIDisabledTitle">Pg</string>
-						<string type="base64-UTF8" key="IBUISelectedTitle">Pg</string>
-						<string type="base64-UTF8" key="IBUINormalTitle">Pg</string>
+						<string key="IBUIHighlightedTitle"/>
+						<string key="IBUIDisabledTitle"/>
+						<string key="IBUISelectedTitle"/>
+						<string key="IBUINormalTitle"/>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="322811185">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MSAxIDEAA</bytes>
@@ -217,6 +204,10 @@
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
+						</object>
+						<object class="NSCustomResource" key="IBUINormalImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">month_arrow_right.png</string>
 						</object>
 					</object>
 					<object class="IBUIButton" id="338118368">
@@ -229,19 +220,22 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<reference key="IBUIFont" ref="923233889"/>
-						<int key="IBUIButtonType">1</int>
-						<string type="base64-UTF8" key="IBUIHighlightedTitle">PA</string>
-						<string type="base64-UTF8" key="IBUIDisabledTitle">PA</string>
-						<string type="base64-UTF8" key="IBUISelectedTitle">PA</string>
-						<string type="base64-UTF8" key="IBUINormalTitle">PA</string>
+						<string key="IBUIHighlightedTitle"/>
+						<string key="IBUIDisabledTitle"/>
+						<string key="IBUISelectedTitle"/>
+						<string key="IBUINormalTitle"/>
 						<reference key="IBUIHighlightedTitleColor" ref="322811185"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
 						</object>
+						<object class="NSCustomResource" key="IBUINormalImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">month_arrow_left.png</string>
+						</object>
 					</object>
 				</object>
-				<string key="NSFrameSize">{320, 220}</string>
+				<string key="NSFrameSize">{320, 372}</string>
 				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -323,10 +317,9 @@
 							<reference ref="14984942"/>
 							<reference ref="1029855967"/>
 							<reference ref="338118368"/>
-							<reference ref="709646929"/>
-							<reference ref="920403255"/>
 							<reference ref="62299664"/>
 							<reference ref="379186322"/>
+							<reference ref="709646929"/>
 						</object>
 						<reference key="parent" ref="360949347"/>
 						<string key="objectName">Calendar</string>
@@ -378,14 +371,6 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">11</int>
-						<reference key="object" ref="709646929"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">25</int>
 						<reference key="object" ref="1029855967"/>
 						<reference key="parent" ref="191373211"/>
@@ -396,11 +381,6 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">30</int>
-						<reference key="object" ref="920403255"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">4</int>
 						<reference key="object" ref="62299664"/>
 						<reference key="parent" ref="191373211"/>
@@ -408,6 +388,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">31</int>
 						<reference key="object" ref="379186322"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">11</int>
+						<reference key="object" ref="709646929"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</object>
@@ -436,7 +421,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>CalendarViewController</string>
 					<string>UIResponder</string>
-					<string>{{456, 381}, {320, 220}}</string>
+					<string>{{456, 381}, {320, 372}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

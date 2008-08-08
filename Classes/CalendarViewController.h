@@ -14,6 +14,8 @@
 	NSDate *date;
 	NSDate *selectedDate;
 	id<CalendarViewControllerDelegate> delegate;
+	UIButton *tiles[7][7];
+	UIImageView *_transitionImage;
 }
 @property (nonatomic, retain) NSArray *eventDates;
 @property (nonatomic, retain) id<CalendarViewControllerDelegate> delegate; 

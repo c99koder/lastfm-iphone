@@ -111,6 +111,10 @@
 		222340CE0D8DA75D0040486A /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 222340CB0D8DA75D0040486A /* FMResultSet.m */; };
 		222340DB0D8DAB140040486A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222340DA0D8DAB140040486A /* AudioToolbox.framework */; };
 		2223428A0D8DE8FC0040486A /* PlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 222342890D8DE8FC0040486A /* PlaybackViewController.m */; };
+		222903430E4B39A10024294D /* month_arrow_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903410E4B39A10024294D /* month_arrow_left.png */; };
+		222903440E4B39A10024294D /* month_arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903420E4B39A10024294D /* month_arrow_right.png */; };
+		222903460E4B39EE0024294D /* month_heading_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903450E4B39EE0024294D /* month_heading_panel.png */; };
+		222905270E4C92390024294D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222905260E4C92390024294D /* QuartzCore.framework */; };
 		223128F70DFF1ECB00EC3BF0 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 223128F60DFF1ECB00EC3BF0 /* MainWindow.xib */; };
 		223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223129320DFF21A500EC3BF0 /* FirstRunViewController.m */; };
 		22362B9B0E13E4600034F91A /* btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 22362B9A0E13E4600034F91A /* btn.png */; };
@@ -304,6 +308,10 @@
 		222340DA0D8DAB140040486A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		222342880D8DE8FC0040486A /* PlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaybackViewController.h; sourceTree = "<group>"; };
 		222342890D8DE8FC0040486A /* PlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackViewController.m; sourceTree = "<group>"; };
+		222903410E4B39A10024294D /* month_arrow_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_arrow_left.png; sourceTree = "<group>"; };
+		222903420E4B39A10024294D /* month_arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_arrow_right.png; sourceTree = "<group>"; };
+		222903450E4B39EE0024294D /* month_heading_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_heading_panel.png; sourceTree = "<group>"; };
+		222905260E4C92390024294D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		223128F60DFF1ECB00EC3BF0 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		223129310DFF21A500EC3BF0 /* FirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstRunViewController.h; sourceTree = "<group>"; };
 		223129320DFF21A500EC3BF0 /* FirstRunViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstRunViewController.m; sourceTree = "<group>"; };
@@ -402,6 +410,7 @@
 				22CBDFBE0DCE0BCE00AE5DE0 /* AddressBook.framework in Frameworks */,
 				225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */,
 				221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */,
+				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,6 +469,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				222905260E4C92390024294D /* QuartzCore.framework */,
 				221747140E48B6930058C0C3 /* IOKit.framework */,
 				225ECD430DFF882600323F42 /* MediaPlayer.framework */,
 				22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */,
@@ -605,6 +615,9 @@
 				2244DAF90E3A55C700C4F40B /* info_button.png */,
 				2212D4220E40C8FA0099DB03 /* lastfm-animated */,
 				225934DB0DA85DA60035A1AA /* love.png */,
+				222903410E4B39A10024294D /* month_arrow_left.png */,
+				222903420E4B39A10024294D /* month_arrow_right.png */,
+				222903450E4B39EE0024294D /* month_heading_panel.png */,
 				22F2FE040E31045A000DDCDC /* noartplaceholder.png */,
 				22117E3D0E153AC50093BFED /* now_playing_header.png */,
 				22117E3F0E153AC50093BFED /* now_playing_list.png */,
@@ -862,6 +875,9 @@
 				221744640E44D5FA0058C0C3 /* volume-min.png in Resources */,
 				221744650E44D5FA0058C0C3 /* volume-max.png in Resources */,
 				221748130E48BDED0058C0C3 /* IOKIT_README in Resources */,
+				222903430E4B39A10024294D /* month_arrow_left.png in Resources */,
+				222903440E4B39A10024294D /* month_arrow_right.png in Resources */,
+				222903460E4B39EE0024294D /* month_heading_panel.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
