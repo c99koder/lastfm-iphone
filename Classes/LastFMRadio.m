@@ -167,7 +167,6 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		[UIApplication sharedApplication].idleTimerDisabled = YES;
 		_state = TRACK_PLAYING;
-		AudioQueueSetParameter(queue, kAudioQueueParam_Volume, 0.1);
 	} else {
 		_state = TRACK_BUFFERING;
 	}
