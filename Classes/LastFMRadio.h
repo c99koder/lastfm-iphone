@@ -23,24 +23,57 @@
 #import "FMDatabase.h"
 
 #define RADIO_IDLE 0
-#define RADIO_BUFFERING 1
-#define RADIO_PLAYING 2
-#define RADIO_PAUSED 3
+#define TRACK_BUFFERING 1
+#define TRACK_READY 2
+#define TRACK_PLAYING 3
+#define TRACK_PAUSED 4
+
+NSString *kTrackDidBecomeAvailable;
+NSString *kTrackDidFinishLoading;
+NSString *kTrackDidFinishPlaying;
+NSString *kTrackDidChange;
+NSString *kTrackDidFailToStream;
+
+@interface LastFMTrack : NSObject {
+	NSDictionary *_trackInfo;
+	NSURLConnection *_connection;
+	NSMutableData *_receivedData;
+	BOOL _fileDidFinishLoading;
+	NSLock *_audioBufferCountLock;
+	int _audioBufferCount;
+	int _peakBufferCount;
+	AudioFileStreamID parser;
+	AudioQueueRef queue;
+	AudioStreamBasicDescription dataFormat;
+	int _state;
+	NSTimeInterval _startTime;
+}
+
+@property AudioFileStreamID parser;
+@property AudioQueueRef queue;
+@property AudioStreamBasicDescription dataFormat;
+
+-(id)initWithTrackInfo:(NSDictionary *)trackInfo;
+-(BOOL)play;
+-(void)pause;
+-(void)stop;
+-(BOOL)isPlaying;
+-(int)trackPosition;
+-(void)bufferEnqueued;
+-(void)bufferDequeued;
+-(float)bufferProgress;
+-(int)state;
+-(NSDictionary *)trackInfo;
+@end
 
 @interface LastFMRadio : NSObject {
 	NSString *_station;
 	NSString *_stationURL;
 	NSMutableArray *_playlist;
-	NSURLConnection *_connection;
-	NSMutableData *_receivedData;
-	int _state;
+	NSMutableArray *_tracks;
 	FMDatabase *_db;
 	NSLock *_busyLock;
 	BOOL playbackWasInterrupted;
-	BOOL _fileDidFinishLoading;
-	NSLock *_audioBufferCountLock;
-	int _audioBufferCount;
-	int _peakBufferCount;
 	NSTimeInterval _startTime;
 	int _errorSkipCounter;
 }
@@ -60,12 +93,6 @@
 -(int)state;
 -(NSString *)station;
 -(NSString *)stationURL;
--(void)restart;
--(void)pause;
--(void)bufferEnqueued;
--(void)bufferDequeued;
 -(NSTimeInterval)startTime;
 -(float)bufferProgress;
 @end
-
-#define kLastFMRadio_TrackDidChange @"LastFMRadio_TrackDidChange"

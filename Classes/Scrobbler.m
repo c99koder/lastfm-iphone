@@ -56,7 +56,7 @@
 																					selector:@selector(update:)
 																					userInfo:NULL
 																					 repeats:NO];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange) name:kTrackDidChange object:nil];
 	return self;
 }
 - (void)loadQueue {

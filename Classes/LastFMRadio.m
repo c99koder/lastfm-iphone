@@ -57,130 +57,238 @@ void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	}
 }
 
-void propListener(	void *                  inClientData,
-									AudioSessionPropertyID	inID,
-									UInt32                  inDataSize,
-									const void *            inData)
-{
-	if (inID == kAudioSessionProperty_AudioRouteChange)
-	{
-		CFDictionaryRef routeDictionary = (CFDictionaryRef)inData;			
-		CFShow(routeDictionary);
-		CFNumberRef reason = (CFNumberRef)CFDictionaryGetValue(routeDictionary, CFSTR(kAudioSession_AudioRouteChangeKey_Reason));
-		SInt32 reasonVal;
-		CFNumberGetValue(reason, kCFNumberSInt32Type, &reasonVal);
-		if (reasonVal != kAudioSessionRouteChangeReason_PolicyChange)
-		{
-			CFStringRef oldRoute = (CFStringRef)CFDictionaryGetValue(routeDictionary, CFSTR(kAudioSession_AudioRouteChangeKey_OldRoute));
-			 if (oldRoute)	
-			 {
-			 printf("old route:\n");
-			 CFShow(oldRoute);
-			 }
-			 else 
-			 printf("ERROR GETTING OLD AUDIO ROUTE!\n");
-			 
-			 CFStringRef newRoute;
-			 UInt32 size; size = sizeof(CFStringRef);
-			 OSStatus error = AudioSessionGetProperty(kAudioSessionProperty_AudioRoute, &size, &newRoute);
-			 if (error) printf("ERROR GETTING NEW AUDIO ROUTE! %d\n", error);
-			 else
-			 {
-			 printf("new route:\n");
-			 CFShow(newRoute);
-			 }
-			
-			if (reasonVal == kAudioSessionRouteChangeReason_OldDeviceUnavailable)
-			{			
-				/*if (THIS->_player->IsRunning()) {
-					[THIS stopPlayQueue];
-				}	*/	
-			}
-		}	
-	}
-}
-
-typedef struct AQCallbackStruct {
-	AudioFileStreamID parser;
-	AudioQueueRef queue;
-	AudioStreamBasicDescription mDataFormat;
-	BOOL decodeComplete;
-	LastFMRadio *radio;
-	int enqueuedBufferCount;
-} AQCallbackStruct;
-
-AQCallbackStruct in;
-
 static void AQBufferCallback(void *in, AudioQueueRef inQ, AudioQueueBufferRef outQB) {
 	AudioQueueFreeBuffer(inQ, outQB);
-	[[LastFMRadio sharedInstance] bufferDequeued];
+	[(LastFMTrack *)in performSelectorOnMainThread:@selector(bufferDequeued) withObject:nil waitUntilDone:NO];
 }
 
-void packetCallback(void *in,
-										 UInt32 inNumberBytes,
-										 UInt32 inNumberPackets,
-										 const void *inInputData,
-										 AudioStreamPacketDescription *inPacketDescriptions) {
-	AQCallbackStruct *inData = in;
+void packetCallback(void *in, UInt32 inNumberBytes, UInt32 inNumberPackets, const void *inInputData, AudioStreamPacketDescription *inPacketDescriptions) {
+	LastFMTrack *track = in;
 	AudioQueueBufferRef buf;
 	
-	AudioQueueAllocateBufferWithPacketDescriptions(inData->queue, inNumberBytes, inNumberPackets, &buf);
+	AudioQueueAllocateBufferWithPacketDescriptions(track.queue, inNumberBytes, inNumberPackets, &buf);
 	buf->mAudioDataByteSize = inNumberBytes;
 	memcpy(buf->mAudioData, inInputData, inNumberBytes);
-	AudioQueueEnqueueBuffer(inData->queue, buf, inNumberPackets, inPacketDescriptions);
-	[[LastFMRadio sharedInstance] bufferEnqueued];
+	AudioQueueEnqueueBuffer(track.queue, buf, inNumberPackets, inPacketDescriptions);
+	[track bufferEnqueued];
 }
 
-void propCallback(void *in,
-									AudioFileStreamID inAudioFileStream,
-									AudioFileStreamPropertyID inPropertyID,
-									UInt32 *ioFlags) {
-	AQCallbackStruct *inData = in;
+void propCallback(void *in,	AudioFileStreamID inAudioFileStream, AudioFileStreamPropertyID inPropertyID, UInt32 *ioFlags) {
+	LastFMTrack *track = in;
+	AudioStreamBasicDescription dataFormat;
+	AudioQueueRef queue;
 	
 	switch(inPropertyID) {
 		case kAudioFileStreamProperty_DataFormat:
 			NSLog(@"Got data format\n");
-			UInt32 len = sizeof(inData->mDataFormat);
-			AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &len, &inData->mDataFormat);
+			UInt32 len = sizeof(dataFormat);
+			AudioFileStreamGetProperty(inAudioFileStream, inPropertyID, &len, &dataFormat);
+			track.dataFormat = dataFormat;
 			break;
 		case kAudioFileStreamProperty_ReadyToProducePackets:
 			NSLog(@"Ready to produce packets\n");
-			OSStatus error = AudioQueueNewOutput(&inData->mDataFormat,
-													AQBufferCallback,
-													inData,
-													NULL,
-													kCFRunLoopCommonModes,
-													0,
-													&inData->queue);
+			dataFormat = track.dataFormat;
+			OSStatus error = AudioQueueNewOutput(&dataFormat, AQBufferCallback, track, NULL, kCFRunLoopCommonModes, 0, &queue);
 			if(error) {
-				NSLog(@"Unable to create audio queue!  Retrying...\n");
-				error = AudioQueueNewOutput(&inData->mDataFormat,
-																						 AQBufferCallback,
-																						 inData,
-																						 NULL,
-																						 kCFRunLoopCommonModes,
-																						 0,
-																						 &inData->queue);
-				if(error) {
-					NSLog(@"Second attempt failed too, bailing out!\n");
-					[inData->radio stop];
-					return;
-				}
+				NSLog(@"Unable to create audio queue!\n");
+			} else {
+				track.queue = queue;
 			}
-			/*NSLog(@"Starting audio queue");
-			error = AudioQueueStart(inData->queue, NULL);
-			if(error) {
-				NSLog(@"Unable to start audio queue, retrying...\n");
-				error = AudioQueueStart(inData->queue, NULL);
-				if(error) {
-					NSLog(@"Second attempt failed too, bailing out!\n");
-					[inData->radio stop];
-					return;
-				}
-			}*/
-		break;
+			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidBecomeAvailable object:track];
+			break;
 	}
 }
+
+NSString *kTrackDidBecomeAvailable = @"LastFMRadio_TrackDidBecomeAvailable";
+NSString *kTrackDidFinishLoading = @"LastFMRadio_TrackDidFinishLoading";
+NSString *kTrackDidFinishPlaying = @"LastFMRadio_TrackDidFinishPlaying";
+NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
+
+@implementation LastFMTrack
+
+@synthesize parser, queue, dataFormat;
+
+-(id)initWithTrackInfo:(NSDictionary *)trackInfo {
+	if(self = [super init]) {
+		_trackInfo = [trackInfo retain];
+		_audioBufferCountLock = [[NSLock alloc] init];
+		NSURL *trackURL = [NSURL URLWithString:[_trackInfo objectForKey:@"location"]];
+		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:trackURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
+		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
+		NSLog(@"Streaming: %@\n", trackURL);
+		_connection= [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+		if(_connection) {
+			_receivedData = [[NSMutableData alloc] init];
+			_audioBufferCount = 0;
+			_peakBufferCount = 0;
+			_state = TRACK_BUFFERING;
+			queue = nil;
+			AudioFileStreamOpen(self, propCallback, packetCallback, kAudioFileMP3Type, &parser);
+		} else {
+			[self release];
+			return nil;
+		}
+	}
+	return self;
+}
+-(void)dealloc {
+	[super dealloc];
+	if(queue) {
+		AudioQueueDispose(queue, true);
+		AudioFileStreamClose(parser);
+	}
+	[_trackInfo release];
+	[_connection release];
+	[_receivedData release];
+	[_audioBufferCountLock release];
+}
+-(BOOL)play {
+	OSStatus error;
+	
+	if(queue) {
+		NSLog(@"Starting playback");
+		error = AudioQueueStart(queue, NULL);
+		if(error)
+			return NO;
+		_startTime = [[NSDate date] timeIntervalSince1970];
+		UInt32 category = kAudioSessionCategory_MediaPlayback;
+		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
+		AudioSessionSetActive(true);
+		[LastFMRadio sharedInstance].playbackWasInterrupted = NO;
+		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:_trackInfo];
+		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
+																																						 title:[_trackInfo objectForKey:@"title"]
+																																						artist:[_trackInfo objectForKey:@"creator"]
+																																						 album:[_trackInfo objectForKey:@"album"]
+																																				 isPlaying:YES
+																																			hasImageData:NO
+																																		additionalInfo:nil];
+		[[SystemNowPlayingController sharedInstance] disableMediaHUD];
+		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
+		[UIApplication sharedApplication].idleTimerDisabled = YES;
+		_state = TRACK_PLAYING;
+		AudioQueueSetParameter(queue, kAudioQueueParam_Volume, 0.1);
+	} else {
+		_state = TRACK_BUFFERING;
+	}
+	return YES;
+}
+-(void)stop {
+	if(queue) {
+		AudioQueueDispose(queue, true);
+		AudioFileStreamClose(parser);
+		queue = nil;
+	}
+	[_connection cancel];
+	[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
+																																					 title:nil
+																																					artist:nil
+																																					 album:nil
+																																			 isPlaying:NO
+																																		hasImageData:NO
+																																	additionalInfo:nil];
+	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
+	[UIApplication sharedApplication].idleTimerDisabled = NO;
+}
+-(void)bufferEnqueued {
+	[_audioBufferCountLock lock];
+	_audioBufferCount++;
+	if(_audioBufferCount > _peakBufferCount) _peakBufferCount = _audioBufferCount;
+	[_audioBufferCountLock unlock];
+}
+-(void)bufferDequeued {
+	[_audioBufferCountLock lock];
+	_audioBufferCount--;
+	if(_state == TRACK_PLAYING && _peakBufferCount > 10) {
+		if(_audioBufferCount < 1) {
+			if(_fileDidFinishLoading) {
+				[_audioBufferCountLock unlock];
+				[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishPlaying object:self userInfo:nil];
+				return;
+			} else {
+				[self pause];
+				_state = TRACK_BUFFERING;
+				NSLog(@"Buffer underrun detected, peak buffers this cycle was %i.\n", _peakBufferCount);
+				_peakBufferCount = 0;
+			}
+		}
+	}
+	[_audioBufferCountLock unlock];	
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	if([_receivedData length] == 0 && _state == TRACK_BUFFERING) {
+		/*if(_errorSkipCounter++) {
+			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
+			[self stop];
+		} else {
+			[self skip];
+		}*/
+		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
+	} else {
+		_fileDidFinishLoading = YES;
+		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishLoading object:self userInfo:nil];
+	}
+}
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	[_receivedData setLength:0];
+}
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	[_receivedData appendData:data];
+	if(_state != TRACK_PAUSED && ([_receivedData length] > 196608 || _state == TRACK_PLAYING)) {
+		OSStatus error = AudioFileStreamParseBytes(parser, [_receivedData length], [_receivedData bytes], 0);
+		if(error) {
+			NSLog(@"Got an error pushing the data! :(");
+		} else {
+			[_receivedData setLength:0];
+		}
+	}
+}
+-(void)pause {
+	if(queue) {
+		NSLog(@"Pausing audio queue");
+		AudioQueuePause(queue);
+	}
+	_state = TRACK_PAUSED;
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
+}
+-(BOOL)isPlaying {
+	UInt32 isRunning = 0;
+	UInt32 size = sizeof(isRunning);
+	
+	OSStatus error = AudioQueueGetProperty(queue, kAudioQueueProperty_IsRunning, &isRunning, &size);
+	if(!error)
+		return isRunning;
+	else
+		return NO;
+}
+-(float)bufferProgress {
+	if(_state == TRACK_BUFFERING)
+		return ((float)[_receivedData length]) / 196608.0f;
+	else
+		return 1;
+}
+-(NSTimeInterval)startTime {
+	return _startTime;
+}
+-(int)state {
+	return _state;
+}
+-(NSDictionary *)trackInfo {
+	return _trackInfo;
+}
+-(int)trackPosition {
+	AudioTimeStamp t;
+	Boolean b;
+	
+	if(_state != TRACK_PLAYING || AudioQueueGetCurrentTime(queue, NULL, &t, &b) < 0)
+		return 0;
+	else
+		return t.mSampleTime / dataFormat.mSampleRate;
+}
+@end
+
 
 @implementation LastFMRadio
 
@@ -198,19 +306,19 @@ void propCallback(void *in,
 	return nil;
 }
 -(float)bufferProgress {
-	if(_state == RADIO_BUFFERING)
-		return ((float)[_receivedData length]) / 196608.0f;
-	else
-		return 1;
+	return [[_tracks objectAtIndex:0] bufferProgress];
 }
 -(NSTimeInterval)startTime {
-	return _startTime;
+	return [[_tracks objectAtIndex:0] startTime];
 }
 -(NSDictionary *)trackInfo {
-	return [_playlist objectAtIndex:0];
+	return [[_tracks objectAtIndex:0] trackInfo];
 }
 -(int)state {
-	return _state;
+	if([_tracks count])
+		return [[_tracks objectAtIndex:0] state];
+	else
+		return RADIO_IDLE;
 }
 -(NSString *)station {
 	return [_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
@@ -219,14 +327,10 @@ void propCallback(void *in,
 	return _stationURL;
 }
 -(int)trackPosition {
-	if(_state == RADIO_IDLE) return 0;
-	AudioTimeStamp t;
-	Boolean b;
-	
-	if(AudioQueueGetCurrentTime(in.queue, NULL, &t, &b) < 0)
-		return 0;
+	if([_tracks count])
+		return [[_tracks objectAtIndex:0] trackPosition];
 	else
-		return t.mSampleTime / in.mDataFormat.mSampleRate;
+		return 0;
 }
 -(id)init {
 	self = [super init];
@@ -246,15 +350,32 @@ void propCallback(void *in,
 	[_db close];
 	
 	_busyLock = [[NSLock alloc] init];
-	_audioBufferCountLock = [[NSLock alloc] init];
-	OSStatus error = AudioSessionInitialize(NULL, NULL, interruptionListener, self);
-	if (error) printf("ERROR INITIALIZING AUDIO SESSION! %d\n", error);
-	else 
-	{										
-		error = AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange, propListener, self);
-		if (error) printf("ERROR ADDING AUDIO SESSION PROP LISTENER! %d\n", error);
-	}
+	_tracks = [[NSMutableArray alloc] init];
+	AudioSessionInitialize(NULL, NULL, interruptionListener, self);
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidBecomeAvailable:) name:kTrackDidBecomeAvailable object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishPlaying:) name:kTrackDidFinishPlaying object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishLoading:) name:kTrackDidFinishLoading object:nil];
 	return self;
+}
+-(void)_trackDidBecomeAvailable:(NSNotification *)notification {
+	if(notification.object == [_tracks objectAtIndex:0]) {
+		[notification.object play];
+	}
+}
+-(void)_trackDidFinishPlaying:(NSNotification *)notification {
+	[_tracks removeObject:notification.object];
+	if([_tracks count]) {
+		[[_tracks objectAtIndex:0] play];
+	} else {
+		[self play];
+	}
+}
+-(void)_trackDidFinishLoading:(NSNotification *)notification {
+	if(notification.object == [_tracks objectAtIndex:0]) {
+		[_playlist removeObjectAtIndex:0];
+		[self play];
+		[[_tracks lastObject] pause];
+	}
 }
 -(void)purgeRecentURLs {
 	[_db open];
@@ -317,7 +438,6 @@ void propCallback(void *in,
 				[_playlist addObjectsFromArray:[playlist objectForKey:@"playlist"]];
 			}
 		} else {
-			_state = RADIO_IDLE;
 			if([LastFMService sharedInstance].error)
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
 			else
@@ -326,209 +446,53 @@ void propCallback(void *in,
 		}
 	}
 
-	NSURL *trackURL = [NSURL URLWithString:[[[_playlist objectAtIndex:0] objectForKey:@"location"] stringByAppendingFormat:@"?mobile_net=%@",[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?@"wifi":@"wwan"]];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:trackURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
-	[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
-	NSLog(@"Streaming: %@\n", trackURL);
-	if(_connection) [_connection release];
-	_connection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	if(_receivedData) [_receivedData release];
-	_receivedData = [[NSMutableData alloc] init];
-
-	if (_connection) {
+	LastFMTrack *track = [[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]];
+	
+	if(track) {
+		[_tracks addObject:track];
 		[[_playlist objectAtIndex:0] setObject:[NSString stringWithFormat:@"%i", (long)[[NSDate date] timeIntervalSince1970]] forKey:@"startTime"];
-		_state = RADIO_BUFFERING;
-		_fileDidFinishLoading = NO;
-		_audioBufferCount = 0;
-		_peakBufferCount = 0;
-		_startTime = [[NSDate date] timeIntervalSince1970];
-		in.decodeComplete = FALSE;
-		in.radio = self;
-		in.queue = nil;
-		UInt32 category = kAudioSessionCategory_MediaPlayback;
-		OSStatus result = AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
-		if (result) printf("ERROR SETTING AUDIO CATEGORY!\n");
-		
-		result = AudioSessionSetActive(true);
-		if (result) printf("ERROR SETTING AUDIO SESSION ACTIVE!\n");
-		self.playbackWasInterrupted = NO;
-		AudioFileStreamOpen (&in,
-												 propCallback,
-												 packetCallback,
-												 kAudioFileMP3Type,
-												 &in.parser);
 		[self removeRecentURL: _stationURL];
 		[_db open];
 		[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
 		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [[_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] capitalizedString], nil];
 		[_db close];
-		[[NSNotificationCenter defaultCenter] postNotificationName:kLastFMRadio_TrackDidChange object:self userInfo:[_playlist objectAtIndex:0]];
-		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
-																																						 title:[[_playlist objectAtIndex:0] objectForKey:@"title"]
-																																						artist:[[_playlist objectAtIndex:0] objectForKey:@"creator"]
-																																						 album:[[_playlist objectAtIndex:0] objectForKey:@"album"]
-																																				 isPlaying:YES
-																																			hasImageData:NO
-																																		additionalInfo:nil];
-		[[SystemNowPlayingController sharedInstance] disableMediaHUD];
-		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
-		[UIApplication sharedApplication].idleTimerDisabled = YES;
+		[track release];
 		return TRUE;
 	} else {
-		_state = RADIO_IDLE;
 		return FALSE;
 	}
 }
 -(void)dealloc {
-	if(_state != RADIO_IDLE) {
+	if([_tracks count]) {
 		[self stop];
 	}
+	[_tracks release];
 	[_playlist release];
-	[_connection release];
-	[_receivedData release];
 	[_busyLock release];
-	[_audioBufferCountLock release];
 	[super dealloc];
 }
 -(void)stop {
 	[_busyLock lock];
-	
 	NSLog(@"Stopping playback\n");
-	if(_state != RADIO_IDLE) {
-		if(in.queue) {
-			AudioQueueDispose(in.queue, true);
-			AudioFileStreamClose(in.parser);
-			AudioSessionSetActive(FALSE);
-			in.queue = nil;
-		}
-		_state = RADIO_IDLE;
-		[_connection cancel];
-		[_connection release];
-		_connection = nil;
-		[_receivedData release];
-		_receivedData = nil;
+	if([_tracks count]) {
+		[[_tracks objectAtIndex: 0] stop];
+		[_tracks removeAllObjects];
+		AudioSessionSetActive(FALSE);
 	}
-	[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
-																																					 title:nil
-																																					artist:nil
-																																					 album:nil
-																																			 isPlaying:NO
-																																		hasImageData:NO
-																																	additionalInfo:nil];
-	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
-	[UIApplication sharedApplication].idleTimerDisabled = NO;
 	NSLog(@"Playback stopped");
 	[_busyLock unlock];
 }
 -(void)skip {
 	[_busyLock lock];
-	
 	NSLog(@"Skipping to next track\n");
-	if(in.queue) {
-		AudioQueueDispose(in.queue, true);
-		AudioFileStreamClose(in.parser);
-		in.queue = nil;
-	}
-	[_connection cancel];
-	[_connection release];
-	_connection = nil;
-	[_receivedData release];
-	_receivedData = nil;
-	[_playlist removeObjectAtIndex:0];
+	[[_tracks objectAtIndex: 0] stop];
+	[_tracks removeObjectAtIndex: 0];
 	[_busyLock unlock];
-	[self play];
-}
--(void)bufferEnqueued {
-	[_audioBufferCountLock lock];
-	_audioBufferCount++;
-	if(_audioBufferCount > _peakBufferCount) _peakBufferCount = _audioBufferCount;
-	[_audioBufferCountLock unlock];	
-	if(_state == RADIO_BUFFERING)
-		[self restart];
-}
--(void)bufferDequeued {
-	[_audioBufferCountLock lock];
-	_audioBufferCount--;
-	if(_state == RADIO_PLAYING && _peakBufferCount > 10) {
-		if(_audioBufferCount < 1 && !_fileDidFinishLoading) {
-			_state = RADIO_BUFFERING;
-			[self pause];
-			NSLog(@"Buffer underrun detected, peak buffers this cycle was %i.\n", _peakBufferCount);
-			_peakBufferCount = 0;
-		}
-	}
-	[_audioBufferCountLock unlock];	
-}
-- (void)_skipWhenReady {
-	UInt32 isRunning = 0;
-	UInt32 size = sizeof(isRunning);
-
-	OSStatus error = AudioQueueGetProperty(in.queue, kAudioQueueProperty_IsRunning, &isRunning, &size);
-	if(!error && isRunning && in.queue) {
-		[_busyLock lock];
-		if(in.queue) {
-			AudioQueueFlush(in.queue);
-			AudioQueueStop(in.queue, false);
-		}
-		[_busyLock unlock];
-		NSLog(@"Waiting for stream to finish\n");
-		do {
-			CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.25, false);
-			error = AudioQueueGetProperty(in.queue, kAudioQueueProperty_IsRunning, &isRunning, &size);
-		} while(!error && isRunning && in.queue);
-		if(_state == RADIO_PLAYING && in.queue) {
-			NSLog(@"Preparing to skip\n");
-			[self performSelectorOnMainThread:@selector(skip) withObject:nil waitUntilDone:NO];
-		} else {
-			NSLog(@"Not skipping\n");
-		}
-	}
-}	
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	_fileDidFinishLoading = YES;
-	if([_receivedData length] == 0 && _state == RADIO_BUFFERING) {
-		if(_errorSkipCounter++) {
-			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
-			[self stop];
-		} else {
-			[self skip];
-		}
+	if([_tracks count]) {
+		[[_tracks objectAtIndex:0] play];
 	} else {
-		_errorSkipCounter = 0;
-		[NSThread detachNewThreadSelector:@selector(_skipWhenReady) toTarget:self withObject:nil];
-	}
-}
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-	[_receivedData setLength:0];
-}
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[_receivedData appendData:data];
-	if([_receivedData length] > 196608 || _state == RADIO_PLAYING) {
-		OSStatus error = AudioFileStreamParseBytes(in.parser, [_receivedData length], [_receivedData bytes], 0);
-		if(error) {
-			NSLog(@"Got an error pushing the data! :(");
-		} else {
-			[_receivedData setLength:0];
-			_state = RADIO_PLAYING;
-		}
-	}
-}
--(void)pause {
-	NSLog(@"Pausing audio queue");
-	AudioQueuePause(in.queue);
-}
--(void)restart {
-	NSLog(@"Restarting audio queue");
-	AudioQueueStart(in.queue, NULL);
-	_state = RADIO_PLAYING;
-	self.playbackWasInterrupted = NO;
-}
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	if(_errorSkipCounter++) {
-		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
-		[self stop];
-	} else {
-		[self skip];
+		[_playlist removeObjectAtIndex:0];
+		[self play];
 	}
 }
 @end

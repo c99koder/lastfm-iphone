@@ -46,7 +46,7 @@
 @implementation SimilarArtistsViewController
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	_lock = [[NSLock alloc] init];
 	_cells = [[NSMutableArray alloc] initWithCapacity:25];
 }
@@ -130,7 +130,7 @@ int tagSort(id tag1, id tag2, void *context) {
 @implementation TagsViewController
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	_lock = [[NSLock alloc] init];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -204,7 +204,7 @@ int tagSort(id tag1, id tag2, void *context) {
 @implementation FansViewController
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	_lock = [[NSLock alloc] init];
 	_cells = [[NSMutableArray alloc] init];
 }
@@ -275,7 +275,7 @@ int tagSort(id tag1, id tag2, void *context) {
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	[NSTimer scheduledTimerWithTimeInterval:0.5
 																	 target:self
 																 selector:@selector(_updateProgress:)
@@ -304,16 +304,16 @@ int tagSort(id tag1, id tag2, void *context) {
 		_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:duration-elapsed]];
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
 	}
-	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _loadingView.alpha < 1) {
+	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha < 1) {
 		_loadingView.alpha = 1;
 	}
-	if([[LastFMRadio sharedInstance] state] == RADIO_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
+	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:10];
 		_bufferPercentage.alpha = 1;
 		[UIView commitAnimations];
 	}
-	if([[LastFMRadio sharedInstance] state] != RADIO_BUFFERING && _loadingView.alpha == 1) {
+	if([[LastFMRadio sharedInstance] state] != TRACK_BUFFERING && _loadingView.alpha == 1) {
 		_bufferPercentage.alpha = 0;
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.5];
@@ -401,7 +401,7 @@ int tagSort(id tag1, id tag2, void *context) {
 @implementation ArtistBioView
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	_lock = [[NSLock alloc] init];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -507,7 +507,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	if(!_username)
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	_lock = [[NSLock alloc] init];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -840,7 +840,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	_calendar.delegate = self;
 	[self.view addSubview: _calendar.view];
 	[self.view sendSubviewToBack: _calendar.view];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	if(_badge) {
 		_badge.image = [[UIImage imageNamed:@"events_red_circle.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:0];
 	}
@@ -1000,7 +1000,7 @@ int tagSort(id tag1, id tag2, void *context) {
 
 @implementation PlaybackViewController
 - (void)viewDidLoad {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kLastFMRadio_TrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	trackView.view.frame = CGRectMake(0,0,320,416);
 	[contentView addSubview:trackView.view];
 	[contentView sendSubviewToBack:trackView.view];
