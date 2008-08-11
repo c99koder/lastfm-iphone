@@ -121,15 +121,20 @@
 	IBOutlet UILabel *_venue;
 	IBOutlet UILabel *_address;
 	IBOutlet UIImageView *_image;
-	IBOutlet UIPickerView *_attendance;
+	IBOutlet UIButton *_willAttendBtn;
+	IBOutlet UIButton *_mightAttendBtn;
+	IBOutlet UIButton *_notAttendBtn;
+	int attendance;
 	EventsViewController *delegate;
 }
 @property (nonatomic, retain) NSDictionary *event;
 @property (nonatomic, retain) EventsViewController *delegate;
+@property int attendance;
 - (IBAction)doneButtonPressed:(id)sender;
 - (IBAction)mapsButtonPressed:(id)sender;
-- (int)attendance;
-- (void)setAttendance:(int)status;
+- (IBAction)willAttendButtonPressed:(id)sender;
+- (IBAction)mightAttendButtonPressed:(id)sender;
+- (IBAction)notAttendButtonPressed:(id)sender;
 @end
 
 @interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate> {

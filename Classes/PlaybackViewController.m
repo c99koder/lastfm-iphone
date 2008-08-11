@@ -706,7 +706,7 @@ int tagSort(id tag1, id tag2, void *context) {
 @synthesize event, delegate;
 -(void)_updateEvent:(NSDictionary *)update {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[[LastFMService sharedInstance] attendEvent:[[update objectForKey:@"id"] intValue] status:[[update objectForKey:@"status"] intValue]];
+	[[LastFMService sharedInstance] attendEvent:[[update objectForKey:@"id"] intValue] status:attendance];
 	if([LastFMService sharedInstance].error) {
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
 	}
@@ -768,47 +768,40 @@ int tagSort(id tag1, id tag2, void *context) {
 	[address release];
 	[NSThread detachNewThreadSelector:@selector(_fetchImage:) toTarget:self withObject:[event objectForKey:@"image"]];
 }
+- (IBAction)willAttendButtonPressed:(id)sender {
+	self.attendance = eventStatusAttending;
+}
+- (IBAction)mightAttendButtonPressed:(id)sender {
+	self.attendance = eventStatusMaybeAttending;
+}
+- (IBAction)notAttendButtonPressed:(id)sender {
+	self.attendance = eventStatusNotAttending;
+}
 - (int)attendance {
-	switch([_attendance selectedRowInComponent:0]) {
-		case 0:
-			return eventStatusNotAttending;
-		case 1:
-			return eventStatusMaybeAttending;
-		case 2:
-			return eventStatusAttending;
-	}
-	return -1;
+	return attendance;
 }
 - (void)setAttendance:(int)status {
-	switch(status) {
+	attendance = status;
+	_willAttendBtn.selected = NO;
+	_mightAttendBtn.selected = NO;
+	_notAttendBtn.selected = NO;
+	
+	switch(attendance) {
 		case eventStatusNotAttending:
-			[_attendance selectRow:0 inComponent:0 animated:YES];
+			_notAttendBtn.selected = YES;
 			break;
 		case eventStatusMaybeAttending:
-			[_attendance selectRow:1 inComponent:0 animated:YES];
+			_mightAttendBtn.selected = YES;
 			break;
 		case eventStatusAttending:
-			[_attendance selectRow:2 inComponent:0 animated:YES];
+			_willAttendBtn.selected = YES;
 			break;
 	}
 }
 - (IBAction)doneButtonPressed:(id)sender {
-	NSNumber *status;
-	
-	switch([_attendance selectedRowInComponent:0]) {
-		case 0:
-			status = [NSNumber numberWithInt:eventStatusNotAttending];
-			break;
-		case 1:
-			status = [NSNumber numberWithInt:eventStatusMaybeAttending];
-			break;
-		case 2:
-			status = [NSNumber numberWithInt:eventStatusAttending];
-			break;
-	}
 	[NSThread detachNewThreadSelector:@selector(_updateEvent:)
 													 toTarget:self
-												 withObject:[NSDictionary dictionaryWithObjectsAndKeys:[event objectForKey:@"id"], @"id", status, @"status", nil]];
+												 withObject:[NSDictionary dictionaryWithObjectsAndKeys:[event objectForKey:@"id"], @"id", nil]];
 	[delegate doneButtonPressed:self];
 }
 - (IBAction)mapsButtonPressed:(id)sender {
@@ -879,6 +872,12 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_events release];
 	[_eventDates release];
+	[_attendingEvents release];
+	_attendingEvents = [[NSMutableArray alloc] init];
+	NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	for(NSDictionary *event in attendingEvents) {
+		[_attendingEvents addObject:[event objectForKey:@"id"]];
+	}
 	
 	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
 	_events = [events retain];
