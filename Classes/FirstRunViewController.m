@@ -52,4 +52,14 @@
 		[self loginButtonPressed:textField];
 	return NO;
 }
+-(void)dismissKeyboard {
+	[_username resignFirstResponder];
+	[_password resignFirstResponder];
+}
+@end
+
+@implementation FirstRunViewBackground
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	[delegate dismissKeyboard];
+}
 @end
