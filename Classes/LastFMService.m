@@ -283,7 +283,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 - (NSArray *)tagsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getTopTags" maxCacheAge:5*MINUTES XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"user.getTopTags" maxCacheAge:0 XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./count", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"count", nil]];
