@@ -27,6 +27,7 @@
 #import "UIViewController+NowPlayingButton.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "NSString+MD5.h"
+#import "TagEditorViewController.h"
 
 @implementation PlaybackSubview
 - (void)showLoadingView {
@@ -1198,6 +1199,15 @@ int tagSort(id tag1, id tag2, void *context) {
 		[sheet release];	
 	}
 	
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Tag"]) {
+		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
+		t.delegate = self;
+		t.myTags = [[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+		t.topTags = [[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
+		[self presentModalViewController:t animated:YES];
+		[t release];
+	}
+	
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Buy on iTunes"])
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"itms://ax.phobos.apple.com.edgesuite.net/WebObjects/MZSearch.woa/wa/search?term=%@+%@", 
 																																								[[trackInfo objectForKey:@"creator"] URLEscaped],
@@ -1225,6 +1235,14 @@ int tagSort(id tag1, id tag2, void *context) {
 	sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
 	[sheet showInView:self.view];
 	[sheet release];
+}
+-(void)tagEditorDidCancel {
+	[self dismissModalViewControllerAnimated:YES];
+}
+-(void)tagEditorCommitTags:(NSArray *)t {
+	[self dismissModalViewControllerAnimated:YES];
+	NSDictionary *trackInfo = [[LastFMRadio sharedInstance] trackInfo];
+	[[LastFMService sharedInstance] tagTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"] withTags:t];
 }
 -(void)loveButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) loveButtonPressed:sender];	

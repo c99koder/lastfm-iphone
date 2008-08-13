@@ -86,6 +86,7 @@ enum eventStatus {
 - (NSArray *)fansOfTrack:(NSString *)track byArtist:(NSString *)artist;
 - (NSArray *)topTagsForTrack:(NSString *)track byArtist:(NSString *)artist;
 - (void)recommendTrack:(NSString *)track byArtist:(NSString *)artist toEmailAddress:(NSString *)emailAddress;
+- (void)tagTrack:(NSString *)title byArtist:(NSString *)artist withTags:(NSArray *)tags;
 
 #pragma mark User methods
 

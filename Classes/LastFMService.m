@@ -247,6 +247,10 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	 [NSString stringWithFormat:@"recipient=%@", [emailAddress URLEscaped]],
 	 nil];
 }
+- (void)tagTrack:(NSString *)title byArtist:(NSString *)artist withTags:(NSArray *)tags {
+	[self doMethod:@"track.addTags" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+	 [NSString stringWithFormat:@"tags=%@", [[tags componentsJoinedByString:@","] URLEscaped]], nil];
+}
 
 #pragma mark User methods
 
@@ -279,7 +283,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 - (NSArray *)tagsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getTopTags" maxCacheAge:1*HOURS XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"user.getTopTags" maxCacheAge:5*MINUTES XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./count", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"count", nil]];
