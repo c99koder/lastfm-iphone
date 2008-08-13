@@ -12,13 +12,13 @@
 @synthesize tag;
 
 - (id)initWithTag:(NSString *)t {
-	CGSize size = [t sizeWithFont:[UIFont systemFontOfSize:18]];
+	CGSize size = [t sizeWithFont:[UIFont boldSystemFontOfSize:22]];
 	if(self = [super initWithFrame:CGRectMake(0,0,size.width + size.height + 8,size.height)]) {
 		tag = [t retain];
 		UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(6,0,size.width,size.height)];
 		l.textColor = [UIColor whiteColor];
 		l.backgroundColor = [UIColor clearColor];
-		l.font = [UIFont systemFontOfSize:18];
+		l.font = [UIFont boldSystemFontOfSize:22];
 		l.text = t;
 		[self addSubview: l];
 		[l release];
