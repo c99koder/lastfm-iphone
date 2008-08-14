@@ -243,13 +243,9 @@ NSString *kUserAgent;
 		_loadingViewLogo.animationImages = frames;
 		_loadingViewLogo.animationDuration = 2;
 		[_loadingViewLogo startAnimating];
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.4];
-		_loadingViewLogo.alpha = 1;
-		[UIView commitAnimations];
 		_loadingView.frame = [UIScreen mainScreen].applicationFrame;
 		[_mainView addSubview:_loadingView];
-		[NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(_loadProfile) userInfo:nil repeats:NO];
+		[self performSelector:@selector(_loadProfile) withObject:nil afterDelay:0.05];
 		_scrobbler = [[Scrobbler alloc] init];
 	} else {
 		[self showFirstRunView:NO];
