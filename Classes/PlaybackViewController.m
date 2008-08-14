@@ -383,9 +383,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.2];
 	if(_artworkView.frame.size.width == 320) {
-		_reflectionGradientView.frame = CGRectMake(0,246,320,170);
-		_reflectedArtworkView.frame = CGRectMake(47,246,226,226);
-		_artworkView.frame = CGRectMake(47,20,226,226);
+		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
+		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
+		_artworkView.frame = CGRectMake(47,10,226,226);
 		_trackTitle.alpha = 1;
 		_artist.alpha = 1;
 		_progress.alpha = 1;

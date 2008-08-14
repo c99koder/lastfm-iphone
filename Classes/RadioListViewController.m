@@ -143,8 +143,8 @@
 			l.textAlignment = UITextAlignmentLeft;
 			l.font = [UIFont boldSystemFontOfSize:18];
 			l.textColor = [UIColor whiteColor];
-			l.shadowColor = [UIColor grayColor];
-			l.shadowOffset = CGSizeMake(-1,-1);
+			l.shadowColor = [UIColor blackColor];
+			l.shadowOffset = CGSizeMake(0,-1);
 			l.backgroundColor = [UIColor clearColor];
 			l.text = @"Start a New Station";
 			[cell.contentView addSubview:l];
@@ -164,7 +164,7 @@
 					l.font = [UIFont boldSystemFontOfSize:14];
 					l.textColor = [UIColor whiteColor];
 					l.shadowColor = [UIColor blackColor];
-					l.shadowOffset = CGSizeMake(-1,0);
+					l.shadowOffset = CGSizeMake(0,-1);
 					l.backgroundColor = [UIColor clearColor];
 					l.text = @"My Stations";
 					[cell.contentView addSubview:l];
@@ -191,7 +191,7 @@
 				l.font = [UIFont boldSystemFontOfSize:14];
 				l.textColor = [UIColor whiteColor];
 				l.shadowColor = [UIColor blackColor];
-				l.shadowOffset = CGSizeMake(-1,0);
+				l.shadowOffset = CGSizeMake(0,-1);
 				l.backgroundColor = [UIColor clearColor];
 				l.text = @"Recent Stations";
 				[cell.contentView addSubview:l];
@@ -210,7 +210,7 @@
 				l.font = [UIFont boldSystemFontOfSize:14];
 				l.textColor = [UIColor whiteColor];
 				l.shadowColor = [UIColor blackColor];
-				l.shadowOffset = CGSizeMake(-1,0);
+				l.shadowOffset = CGSizeMake(0,-1);
 				l.backgroundColor = [UIColor clearColor];
 				l.text = @"My Playlists";
 				[cell.contentView addSubview:l];

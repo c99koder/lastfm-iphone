@@ -8,8 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="615"/>
-			<integer value="759"/>
+			<integer value="116"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -165,7 +164,7 @@
 						<object class="IBUIImageView" id="8006225">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{47, 14}, {226, 226}}</string>
+							<string key="NSFrame">{{47, 10}, {226, 226}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<object class="NSColor" key="IBUIBackgroundColor">
 								<int key="NSColorSpace">1</int>
@@ -184,7 +183,7 @@
 						<object class="IBUIImageView" id="831124287">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{47, 240}, {226, 226}}</string>
+							<string key="NSFrame">{{47, 236}, {226, 226}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<object class="NSColor" key="IBUIBackgroundColor">
 								<int key="NSColorSpace">1</int>
@@ -200,7 +199,7 @@
 						<object class="IBUIImageView" id="158343252">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{0, 240}, {320, 176}}</string>
+							<string key="NSFrame">{{0, 236}, {320, 180}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<object class="NSColor" key="IBUIBackgroundColor">
 								<int key="NSColorSpace">1</int>
@@ -218,7 +217,7 @@
 						<object class="IBUILabel" id="1016145769">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{20, 250}, {280, 18}}</string>
+							<string key="NSFrame">{{20, 246}, {280, 18}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -464,7 +463,7 @@
 						<object class="IBUIImageView" id="978880283">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{272, 377}, {24, 24}}</string>
+							<string key="NSFrame">{{273, 378}, {25, 21}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -478,7 +477,7 @@
 						<object class="IBUIImageView" id="520277152">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">256</int>
-							<string key="NSFrame">{{25, 381}, {16, 16}}</string>
+							<string key="NSFrame">{{28, 378}, {11, 21}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<int key="IBUIContentMode">4</int>
@@ -744,6 +743,7 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 372}, {320, 0}}</string>
 							<reference key="NSSuperview" ref="45479637"/>
+							<reference key="NSWindow"/>
 							<reference key="IBUIBackgroundColor" ref="177709577"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -760,6 +760,7 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{0, 372}, {320, 0}}</string>
 							<reference key="NSSuperview" ref="45479637"/>
+							<reference key="NSWindow"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -771,6 +772,7 @@
 					</object>
 					<string key="NSFrame">{{0, 54}, {320, 372}}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MQA</bytes>
@@ -2242,7 +2244,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>TrackViewController</string>
-					<string>{{835, 233}, {320, 480}}</string>
+					<string>{{743, 233}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>SimilarArtistsViewController</string>
 					<string>{{472, 321}, {320, 480}}</string>
