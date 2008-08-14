@@ -1199,7 +1199,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSDictionary *trackInfo = [[[LastFMRadio sharedInstance] trackInfo] retain];
 	[[LastFMService sharedInstance] addTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"] toPlaylist:[playlist intValue]];
 	if([LastFMService sharedInstance].error)
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) performSelectorOnMainThread:@selector(reportError:) withObject:[LastFMService sharedInstance].error waitUntilDone:YES];
 	[trackInfo release];
 	[pool release];
 }

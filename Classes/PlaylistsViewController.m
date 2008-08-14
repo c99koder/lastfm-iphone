@@ -39,13 +39,15 @@
 }
 - (void)_keyboardWillAppear:(NSNotification *)notification {
 	CGRect frame = _tableView.frame;
-	NSRect keyboardFrame = [[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] rectValue];
+	CGRect keyboardFrame;
+	[[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardFrame];
 	frame.size.height -= keyboardFrame.size.height;
 	_tableView.frame = frame;
 }
 - (void)_keyboardWillDisappear:(NSNotification *)notification {
 	CGRect frame = _tableView.frame;
-	NSRect keyboardFrame = [[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] rectValue];
+	CGRect keyboardFrame;
+	[[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardFrame];
 	frame.size.height += keyboardFrame.size.height;
 	_tableView.frame = frame;
 }
