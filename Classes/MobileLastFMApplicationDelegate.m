@@ -24,6 +24,8 @@
 #import "PlaybackViewController.h"
 #include "version.h"
 
+#import "PlaylistsViewController.h"
+
 void powerCallback(void *refCon, io_service_t service, natural_t messageType, void *messageArgument) {	
 	[(MobileLastFMApplicationDelegate *)refCon powerMessageReceived: messageType withArgument: messageArgument];
 }
@@ -250,6 +252,7 @@ NSString *kUserAgent;
 	} else {
 		[self showFirstRunView:NO];
 	}
+	
 	[window makeKeyAndVisible];
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {

@@ -1,14 +1,14 @@
 /* PlaylistsViewController.m - Display Last.fm user playlists
- * Copyright (C) 2008 Sam Steele
+ * CopyrightableView (C) 2008 Sam Steele
  *
- * This file is part of MobileLastFM.
+ * This file is partableView of MobileLastFM.
  *
- * MobileLastFM is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2
+ * MobileLastFM is free software; you can redistribute itableView and/or modify
+ * itableView under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation.
  *
- * MobileLastFM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MobileLastFM is distributed in the hope thatableView itableView will be useful,
+ * butableView WITHOUtableView ANY WARRANTY; withoutableView even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -26,77 +26,97 @@
 
 @implementation PlaylistsViewController
 
-- (id)initWithUsername:(NSString *)username {
-	if (self = [super init]) {
-		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Playlists", @"Playlists view title"), username];
-		_username = [username retain];
-		NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
-		_data = [[NSMutableArray alloc] init];
-		for(NSDictionary *playlist in playlists) {
-			if(![[playlist objectForKey:@"streamable"] isEqualToString:@"0"])
-				[_data addObject:playlist];
-		}
+@synthesize delegate;
+
+- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)bundle {
+	if(self = [super initWithNibName:nibName bundle:bundle]) {
+		_data = [[[LastFMService sharedInstance] playlistsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
+		if(!_data)
+			_data = [[NSMutableArray alloc] init];
+		_newPlaylist = nil;
 	}
-	
-	if(![_data count]) {
-		[self release];
-		return nil;
-	} else {
-		return self;
-	}
+	return self;
 }
-- (void)viewWillAppear:(BOOL)animated {
-	[super viewWillAppear:animated];
-	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	[self.tableView reloadData];
+- (void)_keyboardWillAppear:(NSNotification *)notification {
+	CGRect frame = _tableView.frame;
+	NSRect keyboardFrame = [[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] rectValue];
+	frame.size.height -= keyboardFrame.size.height;
+	_tableView.frame = frame;
 }
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
+- (void)_keyboardWillDisappear:(NSNotification *)notification {
+	CGRect frame = _tableView.frame;
+	NSRect keyboardFrame = [[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] rectValue];
+	frame.size.height += keyboardFrame.size.height;
+	_tableView.frame = frame;
 }
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [_data count];
+- (void)_doneButtonPressed:(id)sender {
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
+	[_data insertObject:[NSDictionary dictionaryWithObjectsAndKeys:_newPlaylist.text,@"title",nil] atIndex:0];
+	[_tableView beginUpdates];
+	[_tableView setEditing:NO animated:YES];
+	[_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
+	[_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
+	[_tableView endUpdates];
+	[_newPlaylist resignFirstResponder];
+	[_newPlaylist removeFromSuperview];
+	[_newPlaylist release];
+	_newPlaylist = nil;
+	_tableView.scrollEnabled = YES;
+	//TODO: Create the new playlist here when web service becomes available
 }
--(void)_playRadio:(NSTimer *)timer {
-	if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_NONETWORK",@"No network available") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE",@"No network available title")];
-	} else {
-		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[timer userInfo] animated:YES];
-		[[self tableView] reloadData];
-	}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+	return NO;
 }
--(void)playRadioStation:(NSString *)url {
-	//Hack to make the loading throbber appear before we block
-	[NSTimer scheduledTimerWithTimeInterval:0.5
-																	 target:self
-																 selector:@selector(_playRadio:)
-																 userInfo:url
-																	repeats:NO];
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[self _doneButtonPressed:textField];
+	return NO;
+}
+- (void)_addButtonPressed:(id)sender {
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(_doneButtonPressed:)] autorelease];
+	if([_data count])
+		[_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+	[_tableView setEditing:YES animated:YES];
+	[_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:YES];
+	_tableView.scrollEnabled = NO;
+}
+- (void)_cancelButtonPressed:(id)sender {
+	[delegate playlistViewControllerDidCancel];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	[[tableView cellForRowAtIndexPath:newIndexPath] showProgress: YES];
-	[self playRadioStation:[NSString stringWithFormat:@"lastfm://playlist/%@/shuffle", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"id"] URLEscaped]]];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
+	[delegate playlistViewControllerDidSelectPlaylist:[[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"id"] intValue]];
+}
+- (void)viewDidLoad {
+	self.title = @"Select a Playlist";
+	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(_cancelButtonPressed:)] autorelease];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillAppear:) name:UIKeyboardDidShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillDisappear:) name:UIKeyboardWillHideNotification object:nil];
+	_newPlaylist = nil;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableViewableView {
+	return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableViewableView numberOfRowsInSection:(NSInteger)section {
+	return _tableView.editing?[_data count]+1:[_data count];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BasicCell"];
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tableView.editing?@"EditingCell":@"BasicCell"];
 	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"BasicCell"];
+		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:tableView.editing?@"EditingCell":@"BasicCell"] autorelease];
 	}
-	cell.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"title"];
-	[cell showProgress: NO];
-	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE &&
-		 [[[LastFMRadio sharedInstance] stationURL] isEqualToString:[NSString stringWithFormat:@"lastfm://playlist/%@/shuffle", [[[_data objectAtIndex:[indexPath row]] objectForKey:@"id"] URLEscaped]]]) {
-		[self showNowPlayingButton:NO];
-		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 64, 30)];
-		[btn setBackgroundImage:[UIImage imageNamed:@"now_playing_list.png"] forState:UIControlStateNormal];
-		btn.adjustsImageWhenHighlighted = YES;
-		[btn addTarget:self action:@selector(nowPlayingButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		cell.accessoryView = btn;
-		[btn release];
+	if(tableView.editing && [indexPath row] == 0) {
+		if(!_newPlaylist) {
+			_newPlaylist = [[UITextField alloc] initWithFrame:CGRectMake(10,10,300,52)];
+			_newPlaylist.delegate = self;
+			_newPlaylist.font = [UIFont boldSystemFontOfSize:20];
+			_newPlaylist.autocorrectionType = UITextAutocorrectionTypeNo;
+			_newPlaylist.autocapitalizationType = UITextAutocapitalizationTypeNone;
+			[_newPlaylist becomeFirstResponder];
+			[cell.contentView addSubview:_newPlaylist];
+		}
 	} else {
-		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-		cell.accessoryView = img;
-		[img release];
+		cell.text = [[_data objectAtIndex:tableView.editing?[indexPath row]-1:[indexPath row]] objectForKey:@"title"];
 	}
 	return cell;
 }
@@ -104,8 +124,10 @@
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 - (void)dealloc {
-	[super dealloc];
-	[_username release];
 	[_data release];
+	[_newPlaylist release];
+	self.delegate = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[super dealloc];
 }
 @end

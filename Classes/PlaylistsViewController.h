@@ -20,9 +20,18 @@
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
 
-@interface PlaylistsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
-	NSString *_username;
+@protocol PlaylistsViewControllerDelegate
+- (void)playlistViewControllerDidCancel;
+- (void)playlistViewControllerDidSelectPlaylist:(int)playlist;
+@end
+
+@interface PlaylistsViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
+	IBOutlet UITableView *_tableView;
 	NSMutableArray *_data;
+	id<PlaylistsViewControllerDelegate> delegate;
+	UITextField *_newPlaylist;
 }
-- (id)initWithUsername:(NSString *)username;
+
+@property (retain, nonatomic) id<PlaylistsViewControllerDelegate> delegate;
+
 @end

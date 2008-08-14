@@ -1191,6 +1191,22 @@ int tagSort(id tag1, id tag2, void *context) {
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
 }
+-(void)playlistViewControllerDidCancel {
+	[self dismissModalViewControllerAnimated:YES];
+}
+-(void)_addToPlaylist:(NSNumber *)playlist {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSDictionary *trackInfo = [[[LastFMRadio sharedInstance] trackInfo] retain];
+	[[LastFMService sharedInstance] addTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"] toPlaylist:[playlist intValue]];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	[trackInfo release];
+	[pool release];
+}
+-(void)playlistViewControllerDidSelectPlaylist:(int)playlist {
+	[self dismissModalViewControllerAnimated:YES];
+	[NSThread detachNewThreadSelector:@selector(_addToPlaylist:) toTarget:self withObject:[NSNumber numberWithInt:playlist]];
+}
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
 
@@ -1211,6 +1227,15 @@ int tagSort(id tag1, id tag2, void *context) {
 		t.topTags = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 		[self presentModalViewController:t animated:YES];
 		[t release];
+	}
+	
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Add to Playlist"]) {
+		PlaylistsViewController *p = [[PlaylistsViewController alloc] initWithNibName:@"PlaylistsView" bundle:nil];
+		p.delegate = self;
+		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
+		[self presentModalViewController:n animated:YES];
+		[p release];
+		[n release];
 	}
 	
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Buy on iTunes"])
@@ -1248,6 +1273,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self dismissModalViewControllerAnimated:YES];
 	NSDictionary *trackInfo = [[LastFMRadio sharedInstance] trackInfo];
 	[[LastFMService sharedInstance] tagTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"] withTags:t];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
 }
 -(void)loveButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) loveButtonPressed:sender];	
