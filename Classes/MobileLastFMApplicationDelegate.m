@@ -404,6 +404,7 @@ NSString *kUserAgent;
 		if(![[LastFMRadio sharedInstance] play]) {
 			return FALSE;
 		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:[LastFMRadio sharedInstance] userInfo:[[LastFMRadio sharedInstance] trackInfo]];
 	}
 	if(animated) {
 		[self showPlaybackView];
