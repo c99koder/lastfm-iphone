@@ -679,13 +679,13 @@ int tagSort(id tag1, id tag2, void *context) {
 		int offset = [[[_eventDates objectAtIndex:[indexPath section]] objectForKey:@"index"] intValue];
 		EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
 		if(!cell)
-			cell = [[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"];
+			cell = [[[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"] autorelease];
 		[cell setEvent:[_events objectAtIndex:offset+[indexPath row]]];
 		return cell;
 	} else {
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NoEventsCell"];
 		if(!cell) {
-			cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"NoEventsCell"];
+			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"NoEventsCell"] autorelease];
 			UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,70)];
 			label.text = NSLocalizedString(@"No upcoming events", @"No events available");
 			label.textAlignment = UITextAlignmentCenter;
@@ -988,7 +988,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
 	if(!cell)
-		cell = [[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"];
+		cell = [[[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"] autorelease];
 	[cell setEvent:[_data objectAtIndex:[indexPath row]]];
 	return cell;
 }
