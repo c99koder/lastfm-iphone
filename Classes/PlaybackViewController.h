@@ -23,6 +23,7 @@
 #import "ArtworkCell.h"
 #import "FriendsViewController.h"
 #import "CalendarViewController.h"
+#import "TagEditorViewController.h"
 
 @interface PlaybackSubview : UIViewController {
 	IBOutlet UIView *_loadingView;
@@ -137,7 +138,7 @@
 - (IBAction)notAttendButtonPressed:(id)sender;
 @end
 
-@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate> {
+@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate> {
 	IBOutlet UILabel *_titleLabel;
 	IBOutlet UIToolbar *toolbar;
 	IBOutlet UIView *contentView;

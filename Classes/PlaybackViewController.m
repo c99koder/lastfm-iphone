@@ -27,7 +27,6 @@
 #import "UIViewController+NowPlayingButton.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "NSString+MD5.h"
-#import "TagEditorViewController.h"
 
 @implementation PlaybackSubview
 - (void)showLoadingView {
