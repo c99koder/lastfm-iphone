@@ -1207,8 +1207,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Tag"]) {
 		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
 		t.delegate = self;
-		t.myTags = [[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-		t.topTags = [[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
+		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
+		t.topTags = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 		[self presentModalViewController:t animated:YES];
 		[t release];
 	}
