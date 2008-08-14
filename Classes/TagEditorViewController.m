@@ -142,8 +142,10 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	return cell;
 }
 - (IBAction)tagButtonPressed:(id)sender {
-	[tagEditorView addTag:textField.text];
-	textField.text = @"";
+	if([textField.text length]) {
+		[tagEditorView addTag:textField.text];
+		textField.text = @"";
+	}
 }
 - (IBAction)cancelButtonPressed:(id)sender {
 	[delegate tagEditorDidCancel];
