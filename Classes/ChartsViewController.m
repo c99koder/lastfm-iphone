@@ -225,8 +225,10 @@
 }
 - (NSString *)formatDate:(NSString *)input {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"dd MMM yyyy, HH:mm zzz"];
 	NSDate *date = [formatter dateFromString:[input stringByAppendingString:@" GMT"]];
+	[formatter setLocale:[NSLocale currentLocale]];
 	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:[NSDate date]];
 	[components setHour: 23];
 	[components setMinute: 59];

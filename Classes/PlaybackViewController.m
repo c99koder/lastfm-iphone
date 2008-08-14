@@ -605,8 +605,10 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (NSString *)formatDate:(NSString *)input {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
 	NSDate *date = [formatter dateFromString:input];
+	[formatter setLocale:[NSLocale currentLocale]];
 	[formatter setDateStyle:NSDateFormatterShortStyle];
 
 	NSString *output = [formatter stringFromDate:date];
@@ -729,9 +731,11 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)viewDidLoad {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
 	NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
-
+	[formatter setLocale:[NSLocale currentLocale]];
+	
 	[formatter setDateFormat:@"MMM"];
 	_month.text = [formatter stringFromDate:date];
 	
@@ -866,6 +870,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_fetchEvents:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[trackInfo retain];
 	[_lock lock];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
@@ -948,6 +953,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)calendarViewController:(CalendarViewController *)c didSelectDate:(NSDate *)d {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
 	[_data release];
 	_data = [[NSMutableArray alloc] init];

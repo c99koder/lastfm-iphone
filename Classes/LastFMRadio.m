@@ -441,6 +441,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(NSArray *)recentURLs {
 	NSMutableArray *URLs = [[NSMutableArray alloc] init];
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"dd MMM yyyy, HH:mm"];
 	PLSqliteResultSet *rs = (PLSqliteResultSet *)[_db executeQuery:@"select * from recent_radio order by timestamp desc",  nil];
 	
