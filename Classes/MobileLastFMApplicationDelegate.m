@@ -32,15 +32,6 @@ void powerCallback(void *refCon, io_service_t service, natural_t messageType, vo
 
 NSString *kUserAgent;
 
-@implementation UIColor (TableHax)
-+ (UIColor *)pinStripeColor {
-	return [UIColor blackColor];
-}
-+ (UIColor *)groupTableViewBackgroundColor {
-	return [UIColor blackColor];
-}
-@end
-
 @implementation MobileLastFMApplicationDelegate
 
 @synthesize window;
