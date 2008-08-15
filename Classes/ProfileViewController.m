@@ -31,7 +31,7 @@
 
 @implementation ProfileViewController
 - (id)initWithUsername:(NSString *)username {
-	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+	if (self = [super initWithStyle:UITableViewStylePlain]) {
 		_username = [username retain];
 		self.title = _username;
 	}
@@ -49,7 +49,7 @@
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 3;
+	return 6;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return 46;
@@ -57,21 +57,38 @@
 -(void)_rowSelected:(NSTimer *)timer {
 	NSIndexPath *newIndexPath = [timer userInfo];
 	UINavigationController *controller = nil;
+	NSArray *data = nil;
 	
 	switch([newIndexPath row]) {
 		case 0:
-			controller = [[ChartsListViewController alloc] initWithUsername:_username];
+			controller = [[TopChartViewController alloc] initWithTitle:NSLocalizedString(@"Top Artists", @"Top Artists chart title")];
+			data = [[LastFMService sharedInstance] topArtistsForUser:_username];
 			break;
 		case 1:
-			controller = [[TagRadioViewController alloc] initWithUsername:_username];
+			controller = [[TopChartViewController alloc] initWithTitle:NSLocalizedString(@"Top Albums", @"Top Albums chart title")];
+			data = [[LastFMService sharedInstance] topAlbumsForUser:_username];
 			break;
 		case 2:
+			controller = [[TopChartViewController alloc] initWithTitle:NSLocalizedString(@"Top Tracks", @"Top Tracks chart title")];
+			data = [[LastFMService sharedInstance] topTracksForUser:_username];
+			break;
+		case 3:
+			controller = [[RecentlyPlayedChartViewController alloc] initWithUsername:_username];
+			data = [[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username];
+			break;
+		case 4:
+			controller = [[TagRadioViewController alloc] initWithUsername:_username];
+			break;
+		case 5:
 			controller = [[FriendsViewController alloc] initWithUsername:_username];
 			break;
 	}
 	
 	if(controller) {
-		[self.navigationController pushViewController:controller animated:YES];
+		if([newIndexPath row] < 3 && data) {
+			[(TopChartViewController *)controller setData:data];
+		}
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
 		[controller release];
 	}
 	[[self tableView] reloadData];
@@ -94,12 +111,21 @@
 
 	switch([indexPath row]) {
 		case 0:
-			cell.text = @"Charts";
+			cell.text = NSLocalizedString(@"Top Artists", @"Top Artists chart title");
 			break;
 		case 1:
-			cell.text = @"Tags";
+			cell.text = NSLocalizedString(@"Top Albums", @"Top Albums chart title");
 			break;
 		case 2:
+			cell.text = NSLocalizedString(@"Top Tracks", @"Top Tracks chart title");
+			break;
+		case 3:
+			cell.text = NSLocalizedString(@"Recently Played", @"Recently Played Tracks chart title");
+			break;
+		case 4:
+			cell.text = @"Tags";
+			break;
+		case 5:
 			cell.text = @"Friends";
 			break;
 	}

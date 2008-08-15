@@ -652,7 +652,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	} else {
 		[_attendingEvents addObject:[e.event objectForKey:@"id"]];
 	}
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
 	if(!_username)
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
@@ -664,7 +664,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
 	e.event = [_events objectAtIndex:offset + [newIndexPath row]];
 	//e.delegate = self;
-	[self.navigationController presentModalViewController:e animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:e animated:YES];
 	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
 		[e setAttendance:eventStatusAttending];
 	} else {
@@ -941,7 +941,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
 	e.event = [_data objectAtIndex:[newIndexPath row]];
 	e.delegate = self;
-	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).tabBarController presentModalViewController:e animated:YES];
+	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController presentModalViewController:e animated:YES];
 	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
 		[e setAttendance:eventStatusAttending];
 	} else {
@@ -1008,7 +1008,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	} else {
 		[_attendingEvents addObject:[e.event objectForKey:@"id"]];
 	}
-	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).tabBarController dismissModalViewControllerAnimated:YES];
+	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController dismissModalViewControllerAnimated:YES];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 - (void)dealloc {

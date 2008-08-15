@@ -46,7 +46,7 @@ NSString *kUserAgent;
 @synthesize window;
 @synthesize firstRunView;
 @synthesize playbackViewController;
-@synthesize tabBarController;
+@synthesize rootViewController;
 
 -(void)powerMessageReceived:(natural_t)messageType withArgument:(void *)messageArgument {
 	switch (messageType) {
@@ -141,41 +141,71 @@ NSString *kUserAgent;
 		_pendingAlert = nil;
 	}
 }
+- (UITabBarController *)profileViewForUser:(NSString *)username {
+	UITabBarController *tabBarController = [[UITabBarController alloc] init];
+	tabBarController.title = username;
+	RadioListViewController *r = [[RadioListViewController alloc] initWithUsername:username];
+	UITabBarItem *t = [[UITabBarItem alloc] initWithTitle:@"Radio" image:[UIImage imageNamed:@"radio_icon_tab.png"] tag:0];
+	r.tabBarItem = t;
+	[t release];
+	
+	ProfileViewController *p = [[ProfileViewController alloc] initWithUsername:username];
+	t = [[UITabBarItem alloc] initWithTitle:@"Profile" image:[UIImage imageNamed:@"profile_icon_tab.png"] tag:1];
+	p.tabBarItem = t;
+	[t release];
+
+	/*UINavigationController *radioNavController = [[UINavigationController alloc] initWithRootViewController:r];
+	radioNavController.tabBarItem = t;
+	radioNavController.navigationBar.barStyle = UIBarStyleBlackOpaque;*/
+
+	/*UINavigationController *profileNavController = [[UINavigationController alloc] initWithRootViewController:p];
+	profileNavController.tabBarItem = t;
+	profileNavController.navigationBar.barStyle = UIBarStyleBlackOpaque;*/
+
+	tabBarController.viewControllers = [NSArray arrayWithObjects:r, p, nil];
+	//[radioNavController release];
+	//[profileNavController release];
+
+	/*if(subview) {
+		tabBarController.hidesBottomBarWhenPushed = YES;
+		UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"Back Button")
+																																		 style:UIBarButtonItemStylePlain 
+																																		target:self
+																																		action:@selector(hidePlaybackView)];	
+		for(UINavigationController *n in tabBarController.viewControllers) { 
+			n.topViewController.navigationItem.leftBarButtonItem = backButton;
+		}
+		
+		[backButton release];
+	} else {
+		for(UINavigationController *n in tabBarController.viewControllers) { 
+			n.topViewController.navigationItem.leftBarButtonItem = logoutButton;
+		}
+		
+		[logoutButton release];
+	}*/
+	
+	[r release];
+	[p release];
+	
+	return tabBarController;
+}
 - (void)showProfileView:(BOOL)animated {
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	if(!_scrobbler) {
 		_scrobbler = [[Scrobbler alloc] init];
 	}
 	
-	[tabBarController release];
-	tabBarController = [[UITabBarController alloc] init];
-
+	UITabBarController *profile = [self profileViewForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
 																																	 style:UIBarButtonItemStylePlain 
 																																	target:self
 																																	action:@selector(logoutButtonPressed:)];	
-	
-	RadioListViewController *r = [[RadioListViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-	r.navigationItem.leftBarButtonItem = logoutButton;
-	UINavigationController *radioNavController = [[UINavigationController alloc] initWithRootViewController:r];
-	UITabBarItem *t = [[UITabBarItem alloc] initWithTitle:@"Radio" image:[UIImage imageNamed:@"radio_icon_tab.png"] tag:0];
-	radioNavController.tabBarItem = t;
-	radioNavController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-	[t release];
-	[r release];
-	
-	ProfileViewController *p = [[ProfileViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-	p.navigationItem.leftBarButtonItem = logoutButton;
-	UINavigationController *profileNavController = [[UINavigationController alloc] initWithRootViewController:p];
-	t = [[UITabBarItem alloc] initWithTitle:@"Profile" image:[UIImage imageNamed:@"profile_icon_tab.png"] tag:1];
-	profileNavController.tabBarItem = t;
-	profileNavController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-	[t release];
-	[p release];
-	
-	tabBarController.viewControllers = [NSArray arrayWithObjects:radioNavController, profileNavController, nil];
-	[radioNavController release];
-	[profileNavController release];
+	profile.navigationItem.leftBarButtonItem = logoutButton;
+	[logoutButton release];
+	[rootViewController release];
+	rootViewController = [[UINavigationController alloc] initWithRootViewController:profile];
+	rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 	
 	if(animated) {
 		[UIView beginAnimations:nil context:nil];
@@ -183,7 +213,7 @@ NSString *kUserAgent;
 		[UIView setAnimationDuration:0.4];
 	}
 	[[_mainView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	[_mainView addSubview:[tabBarController view]];
+	[_mainView addSubview:[rootViewController view]];
 	if(animated)
 		[UIView commitAnimations];
 
@@ -411,10 +441,10 @@ NSString *kUserAgent;
 	return TRUE;
 }
 -(void)showPlaybackView {
-	[(UINavigationController *)(tabBarController.selectedViewController) pushViewController:playbackViewController animated:YES];
+	[rootViewController pushViewController:playbackViewController animated:YES];
 }
 -(void)hidePlaybackView {
-	[(UINavigationController *)(tabBarController.selectedViewController) popViewControllerAnimated:YES];
+	[rootViewController popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {

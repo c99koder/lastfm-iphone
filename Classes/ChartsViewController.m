@@ -95,7 +95,7 @@
 
 @implementation TopChartViewController
 - (id)initWithTitle:(NSString *)title {
-	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+	if (self = [super initWithStyle:UITableViewStylePlain]) {
 		self.title = title;
 	}
 	return self;
@@ -451,7 +451,7 @@
 
 @implementation ChartsListViewController
 - (id)initWithUsername:(NSString *)username {
-	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+	if (self = [super initWithStyle:UITableViewStylePlain]) {
 		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Charts", @"Charts List Title"), username];
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Charts", @"Charts back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
@@ -516,7 +516,7 @@
 	if(chart) {
 		if([[timer userInfo] row] < 3)
 			[(TopChartViewController *)chart setData:data];
-		[self.navigationController pushViewController:chart animated:YES];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:chart animated:YES];
 		[chart release];
 	}
 	[[self tableView] reloadData];

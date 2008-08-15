@@ -28,7 +28,7 @@
 @implementation RadioListViewController
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		self.title = @"Radio";
+		self.title = username;
 		_username = [username retain];
 	}
 	return self;
@@ -56,11 +56,17 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch(section) {
 		case 0:
-			return 1;
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+				return 1;
+			else
+				return 0;
 		case 1:
 			return 4;
 		case 2:
-			return [_recent count]?[_recent count]+1:0;
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+				return [_recent count]?[_recent count]+1:0;
+			else
+				return 0;
 		case 3:
 			return [_playlists count]?[_playlists count]+1:0;
 	}
@@ -89,7 +95,7 @@
 		case 0:
 		{
 			SearchViewController *controller = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
-			[self.navigationController pushViewController:controller animated:YES];
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
 			break;
 		}
 		case 1:
@@ -166,7 +172,10 @@
 					l.shadowColor = [UIColor blackColor];
 					l.shadowOffset = CGSizeMake(0,-1);
 					l.backgroundColor = [UIColor clearColor];
-					l.text = @"My Stations";
+					if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+						l.text = @"My Stations";
+					else
+						l.text = [NSString stringWithFormat:@"%@'s Stations", _username];
 					[cell.contentView addSubview:l];
 					[l release];
 					[v release];

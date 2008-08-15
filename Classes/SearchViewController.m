@@ -38,7 +38,7 @@
 	self.hidesBottomBarWhenPushed = YES;
 }
 - (IBAction)backButtonPressed:(id)sender {
-	[self.navigationController popViewControllerAnimated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:YES];
 }
 - (void)_searchThread:(NSString *)text {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -138,9 +138,9 @@
 }
 -(IBAction)searchBarSearchButtonClicked:(id)sender {
 	if(_searchType.selectedSegmentIndex == 2) {
-		ProfileViewController *profileViewController = [[ProfileViewController alloc] initWithUsername:_searchBar.text];
-		[self.navigationController pushViewController:profileViewController animated:YES];
-		[profileViewController release];
+		UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:_searchBar.text];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
+		[tabBarController release];
 	} else {
 		[self searchBar:_searchBar textDidChange:_searchBar.text];
 	}

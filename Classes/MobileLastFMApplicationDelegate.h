@@ -41,8 +41,8 @@
 	UIView *_mainView;
 	IBOutlet UIView *_loadingView;
 	IBOutlet UIImageView *_loadingViewLogo;
+	UINavigationController *rootViewController;
 	NSString *_launchURL;
-	IBOutlet UITabBarController *tabBarController;
 	UIAlertView *_pendingAlert;
 	BOOL _locked;
 	io_connect_t root_port;
@@ -52,8 +52,9 @@
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) FirstRunViewController *firstRunView;
 @property (nonatomic, retain) PlaybackViewController *playbackViewController;
-@property (nonatomic, retain) UITabBarController *tabBarController;
+@property (nonatomic, retain) UINavigationController *rootViewController;
 
+-(UITabBarController *)profileViewForUser:(NSString *)username;
 -(void)powerMessageReceived:(natural_t)messageType withArgument:(void *) messageArgument;
 -(BOOL)hasNetworkConnection;
 -(BOOL)hasWiFiConnection;

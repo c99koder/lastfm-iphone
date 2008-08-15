@@ -19,6 +19,7 @@
 
 #import "FriendsViewController.h"
 #import "ProfileViewController.h"
+#import "RadioListViewController.h"
 #import "ArtworkCell.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "MobileLastFMApplicationDelegate.h"
@@ -38,7 +39,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (id)initWithUsername:(NSString *)username {
 	UInt32 reverseSort = NO;
 	
-	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+	if (self = [super initWithStyle:UITableViewStylePlain]) {
 		_data = [[[[LastFMService sharedInstance] friendsOfUser:username] sortedArrayUsingFunction:usernameSort context:&reverseSort] retain];
 		if([LastFMService sharedInstance].error) {
 			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
@@ -93,9 +94,10 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	if(delegate) {
 		[delegate friendsViewController:self didSelectFriend:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
 	} else {
-		ProfileViewController *profile = [[ProfileViewController alloc] initWithUsername:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
-		[self.navigationController pushViewController:profile animated:YES];
-		[profile release];
+		UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
+		[tabBarController release];
+
 		[[self.tableView cellForRowAtIndexPath:newIndexPath] showProgress:NO];
 	}
 }	

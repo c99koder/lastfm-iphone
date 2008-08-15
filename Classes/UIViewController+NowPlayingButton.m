@@ -28,7 +28,10 @@
 		btn.adjustsImageWhenHighlighted = YES;
 		[btn addTarget:self action:@selector(nowPlayingButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
-		self.navigationItem.rightBarButtonItem = item;
+		if(self.tabBarController)
+			self.tabBarController.navigationItem.rightBarButtonItem = item;
+		else
+			self.navigationItem.rightBarButtonItem = item;
 		[item release];
 		[btn release];
 	} else {
