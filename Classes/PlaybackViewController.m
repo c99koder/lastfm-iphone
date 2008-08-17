@@ -1238,11 +1238,18 @@ int tagSort(id tag1, id tag2, void *context) {
 		[n release];
 	}
 	
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Buy on iTunes"])
-		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"itms://ax.phobos.apple.com.edgesuite.net/WebObjects/MZSearch.woa/wa/search?term=%@+%@", 
-																																								[[trackInfo objectForKey:@"creator"] URLEscaped],
-																																								[[trackInfo objectForKey:@"title"] URLEscaped]
-																																								]]];
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Buy on iTunes"]) {
+		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@+%@&s=143444&partnerId=2003&affToken=www.last.fm", 
+												 [trackInfo objectForKey:@"creator"],
+												 [trackInfo objectForKey:@"title"]];
+		NSString *URL;
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"country"] isEqualToString:@"United States"])
+			URL = [NSString stringWithFormat:@"http://click.linksynergy.com/fs-bin/stat?id=bKEBG4*hrDs&offerid=78941&type=3&subid=0&tmpid=1826&RD_PARM1=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+		else
+			URL = [NSString stringWithFormat:@"http://clk.tradedoubler.com/click?p=23761&epi=GB_site&a=1474288&url=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+		
+		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:URL]];
+	}
 	
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")]) {
 		[self shareToAddressBook];
