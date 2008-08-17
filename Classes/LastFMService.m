@@ -312,6 +312,29 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./startDate", @"./image[@size=\"medium\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"startDate", @"image", nil]];
 }
+- (NSDictionary *)profileForUser:(NSString *)username {
+	NSDictionary *metadata = nil;
+	NSError *theError = nil;
+	NSData *theResponseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ws.audioscrobbler.com/1.0/user/%@/profile.xml", [username URLEscaped]]]];
+	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
+	if(theError) {
+		error = [theError retain];
+		return nil;
+	}
+	
+	metadata = [NSDictionary dictionaryWithObjectsAndKeys:
+							[[d rootElement] objectAtXPath:@"./realname"], @"realname",
+							[[d rootElement] objectAtXPath:@"./registered"], @"registered",
+							[[d rootElement] objectAtXPath:@"./age"], @"age",
+							[[d rootElement] objectAtXPath:@"./gender"], @"gender",
+							[[d rootElement] objectAtXPath:@"./country"], @"country",
+							[[d rootElement] objectAtXPath:@"./playcount"], @"playcount",
+							[[d rootElement] objectAtXPath:@"./avatar"], @"avatar",
+							[[d rootElement] objectAtXPath:@"./icon"], @"icon",
+							nil
+							];
+	return metadata;
+}
 
 #pragma mark Tag methods
 

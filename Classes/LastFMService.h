@@ -99,6 +99,7 @@ enum eventStatus {
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username;
 - (NSArray *)playlistsForUser:(NSString *)username;
 - (NSArray *)eventsForUser:(NSString *)username;
+- (NSDictionary *)profileForUser:(NSString *)username;
 
 #pragma mark Tag methods
 

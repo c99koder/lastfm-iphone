@@ -186,6 +186,17 @@ NSString *kUserAgent;
 	if(!_scrobbler) {
 		_scrobbler = [[Scrobbler alloc] init];
 	}
+	NSDictionary *info = [[LastFMService sharedInstance] profileForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	if([[info objectForKey:@"country"] length]) {
+		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"country"] forKey:@"country"];
+	}
+	if([[info objectForKey:@"icon"] length]) {
+		if([[info objectForKey:@"icon"] isEqualToString:@"http://cdn.last.fm/depth/global/icon_user.gif"]) {
+			[[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"lastfm_subscriber"];
+		} else {
+			[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"lastfm_subscriber"];
+		}
+	}
 	
 	UITabBarController *profile = [self profileViewForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
@@ -268,7 +279,7 @@ NSString *kUserAgent;
 		[_loadingViewLogo startAnimating];
 		_loadingView.frame = [UIScreen mainScreen].applicationFrame;
 		[_mainView addSubview:_loadingView];
-		[self performSelector:@selector(_loadProfile) withObject:nil afterDelay:0.05];
+		[self performSelector:@selector(_loadProfile) withObject:nil afterDelay:2];
 		_scrobbler = [[Scrobbler alloc] init];
 	} else {
 		[self showFirstRunView:NO];
