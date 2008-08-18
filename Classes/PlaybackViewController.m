@@ -187,12 +187,21 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil] autorelease];
-	cell.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(8,0,256,48)];
+	l.textColor = [UIColor blackColor];
+	l.backgroundColor = [UIColor clearColor];
+	l.font = [UIFont boldSystemFontOfSize:20];
+	l.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	[cell.contentView addSubview: l];
+	[l release];
 	float width = [[[_data objectAtIndex:[indexPath row]] objectForKey:@"count"] floatValue] / [[[_data objectAtIndex:0] objectForKey:@"count"] floatValue];
 	UIView *bar = [[UIView alloc] initWithFrame:CGRectMake(0,0,width * [cell frame].size.width,48)];
 	bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
-	[cell.contentView addSubview:bar];
+	UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+	[backgroundView addSubview: bar];
+	cell.backgroundView = backgroundView;
 	[bar release];
+	[backgroundView release];
 	UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
 	cell.accessoryView = img;
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
