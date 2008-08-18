@@ -336,6 +336,18 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	return metadata;
 }
 
+- (NSDictionary *)compareArtistsOfUser:(NSString *)username withUser:(NSString *)username2 {
+	NSDictionary *metadata = nil;
+	NSArray *nodes = [self doMethod:@"tasteometer.compare" maxCacheAge:0 XPath:@"./comparison" withParameters:@"type1=user", [NSString stringWithFormat:@"value1=%@", [username URLEscaped]], @"type2=user", [NSString stringWithFormat:@"value2=%@", [username2 URLEscaped]], nil];
+	if([nodes count]) {
+		CXMLNode *node = [nodes objectAtIndex:0];
+		metadata = [self _convertNode:node
+					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./result/score", @"./result/artists/artist/name", nil]
+													forKeys:[NSArray arrayWithObjects:@"score", @"artists", nil]];
+	}
+	return metadata;
+}
+
 #pragma mark Tag methods
 
 - (NSArray *)tagsSimilarTo:(NSString *)tag {
