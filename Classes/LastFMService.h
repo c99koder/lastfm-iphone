@@ -90,6 +90,7 @@ enum eventStatus {
 
 #pragma mark User methods
 
+- (void)createUser:(NSString *)username withPassword:(NSString *)password andEmail:(NSString *)email;
 - (NSDictionary *)getMobileSessionForUser:(NSString *)username password:(NSString *)password;
 - (NSArray *)friendsOfUser:(NSString *)username;
 - (NSArray *)topArtistsForUser:(NSString *)username;

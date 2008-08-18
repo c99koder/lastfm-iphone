@@ -24,6 +24,17 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 
+@implementation NSURLRequest(LastFMCertificateHack)
+
++ (BOOL)allowsAnyHTTPSCertificateForHost:(NSString *)host {
+	if([host hasSuffix:@".audioscrobbler.com"])
+		return YES;
+	else
+		return NO;
+}
+
+@end
+
 @interface CXMLNode (objectAtXPath)
 -(id)objectAtXPath:(NSString *)XPath;
 @end
@@ -254,6 +265,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 
 #pragma mark User methods
 
+- (void)createUser:(NSString *)username withPassword:(NSString *)password andEmail:(NSString *)email {
+	[self doMethod:@"user.signUp" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"username=%@", [username URLEscaped]],
+	 [NSString stringWithFormat:@"password=%@", [password URLEscaped]],
+	 [NSString stringWithFormat:@"email=%@", [email URLEscaped]],
+	 nil];
+}
 - (NSDictionary *)getMobileSessionForUser:(NSString *)username password:(NSString *)password {
 	NSString *authToken = [[NSString stringWithFormat:@"%@%@", [username lowercaseString], [password md5sum]] md5sum];
 	NSArray *nodes = [self doMethod:@"auth.getMobileSession" maxCacheAge:0 XPath:@"./session" withParameters:[NSString stringWithFormat:@"username=%@", [[username lowercaseString] URLEscaped]], [NSString stringWithFormat:@"authToken=%@", [authToken URLEscaped]], nil];
