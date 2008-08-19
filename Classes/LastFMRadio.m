@@ -269,7 +269,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			if(extraData) {
 				[_receivedData appendData:extraData];
 				extraData = nil;
-				CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.1, false);
 			}
 		}
 	}
