@@ -25,6 +25,7 @@
 	NSMutableArray *_playlists;
 	NSArray *_recent;
 	NSThread *_loadingThread;
+	NSArray *_commonArtists;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

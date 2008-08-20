@@ -24,6 +24,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
+#import "ArtworkCell.h"
 #import </usr/include/objc/objc-class.h>
 
 @implementation UIColor (TableHax)
@@ -127,6 +128,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (void)viewDidLoad {
 	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -141,30 +143,31 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	}
 	[_recent release];
 	_recent = [[[LastFMRadio sharedInstance] recentURLs] retain];
-	return 4;
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+		_commonArtists = [[[[LastFMService sharedInstance] compareArtistsOfUser:_username withUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] objectForKey:@"artists"] retain];
+	return 5;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch(section) {
 		case 0:
-			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
-				return 1;
-			else
-				return 0;
+			return 1;
 		case 1:
 			return 4;
 		case 2:
+			return [_commonArtists count]?[_commonArtists count]+1:0;			
+		case 3:
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
 				return [_recent count]?[_recent count]+1:0;
 			else
 				return 0;
-		case 3:
+		case 4:
 			return [_playlists count]?[_playlists count]+1:0;
 	}
 	return 0;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 	if([self tableView:tableView numberOfRowsInSection:section])
-		return 8;
+		return 10;
 	else
 		return 0;
 }
@@ -172,7 +175,9 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	return [[[UIView alloc] init] autorelease];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([indexPath section] == 0 || [indexPath row] > 0)
+	if([indexPath section] == 0)
+		return [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]?46:64;
+	else if([indexPath row] > 0)
 		return 46;
 	else
 		return 29;
@@ -184,9 +189,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:url animated:YES];
 	}
 }
--(void)_rowSelected:(NSTimer *)timer {
-	NSIndexPath *newIndexPath = (NSIndexPath *)[timer userInfo];
-	
+-(void)_rowSelected:(NSIndexPath *)newIndexPath {
 	if([newIndexPath section] > 0 && [newIndexPath row] == 0)
 		return;
 	
@@ -210,10 +213,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					break;
 			}
 			break;
-		case 2:
+		case 3:
 			[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[[_recent objectAtIndex:[newIndexPath row]-1] objectForKey:@"url"] waitUntilDone:YES];
 			break;
-		case 3:
+		case 4:
 			[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[NSString stringWithFormat:@"lastfm://playlist/%@/shuffle", [[_playlists objectAtIndex:[newIndexPath row]-1] objectForKey:@"id"]] waitUntilDone:YES];
 			break;
 	}
@@ -221,15 +224,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	if([newIndexPath row] > 0 || [newIndexPath section] == 0) {
+	if([newIndexPath row] > 0) {
 		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	}
-	//Hack to make the loading throbber appear before we block
-	[NSTimer scheduledTimerWithTimeInterval:0.1
-																	 target:self
-																 selector:@selector(_rowSelected:)
-																 userInfo:newIndexPath
-																	repeats:NO];
+	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
@@ -241,20 +239,47 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 
 	switch([indexPath section]) {
 		case 0:
-			v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_button.png"]];
-			cell.backgroundView = v;
-			[v release];
-			l = [[UILabel alloc] initWithFrame:CGRectMake(10,0,280,46)];
-			l.textAlignment = UITextAlignmentLeft;
-			l.font = [UIFont boldSystemFontOfSize:18];
-			l.textColor = [UIColor whiteColor];
-			l.shadowColor = [UIColor blackColor];
-			l.shadowOffset = CGSizeMake(0,-1);
-			l.backgroundColor = [UIColor clearColor];
-			l.text = @"Start a New Station";
-			l.textAlignment = UITextAlignmentCenter;
-			[cell.contentView addSubview:l];
-			[l release];
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
+				v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_button.png"]];
+				cell.backgroundView = v;
+				[v release];
+				l = [[UILabel alloc] initWithFrame:CGRectMake(10,0,280,46)];
+				l.textAlignment = UITextAlignmentLeft;
+				l.font = [UIFont boldSystemFontOfSize:18];
+				l.textColor = [UIColor whiteColor];
+				l.shadowColor = [UIColor blackColor];
+				l.shadowOffset = CGSizeMake(0,-1);
+				l.backgroundColor = [UIColor clearColor];
+				l.text = @"Start a New Station";
+				l.textAlignment = UITextAlignmentCenter;
+				[cell.contentView addSubview:l];
+				[l release];
+			} else {
+				ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
+				if(profilecell == nil) {
+					NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
+					profilecell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"];
+					profilecell.imageURL = [profile objectForKey:@"avatar"];
+					NSMutableString *html = [[NSMutableString alloc] init];
+					[html appendString:@"<html><body style=\"padding: 0px; margin: 0px; width: 100%\">"];
+					if([[profile objectForKey:@"realname"] length]) {
+						[html appendFormat:@"<b>%@</b><br/>", [profile objectForKey:@"realname"]];
+					}
+					if([[profile objectForKey:@"age"] length])
+						[html appendFormat:@"%@, ", [profile objectForKey:@"age"]];
+					[html appendFormat:@"%@<br/>", [profile objectForKey:@"country"]];
+					NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+					[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+					[html appendFormat:@"%@ plays since %@<br/>", [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], [profile objectForKey:@"registered"]];
+					[html appendString:@"</body></html>"];
+					UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(66,0,210,60)];
+					[webView loadHTMLString:html baseURL:nil];
+					[profilecell.contentView addSubview: webView];
+					[webView release];
+					[html release];
+				}
+				return profilecell;
+			}
 			break;
 		case 1:
 			switch([indexPath row]) {
@@ -298,6 +323,25 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				l.shadowColor = [UIColor blackColor];
 				l.shadowOffset = CGSizeMake(0,-1);
 				l.backgroundColor = [UIColor clearColor];
+				l.text = @"Common Artists";
+				[cell.contentView addSubview:l];
+				[l release];
+				[v release];
+			} else {
+				cell.text = [_commonArtists objectAtIndex:[indexPath row]-1];
+			}
+			break;			
+		case 3:
+			if([indexPath row] == 0) {
+				v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_header.png"]];
+				cell.backgroundView = v;
+				l = [[UILabel alloc] initWithFrame:v.frame];
+				l.textAlignment = UITextAlignmentCenter;
+				l.font = [UIFont boldSystemFontOfSize:14];
+				l.textColor = [UIColor whiteColor];
+				l.shadowColor = [UIColor blackColor];
+				l.shadowOffset = CGSizeMake(0,-1);
+				l.backgroundColor = [UIColor clearColor];
 				l.text = @"Recent Stations";
 				[cell.contentView addSubview:l];
 				[l release];
@@ -306,7 +350,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				cell.text = [[_recent objectAtIndex:[indexPath row]-1] objectForKey:@"name"];
 			}
 			break;
-		case 3:
+		case 4:
 			if([indexPath row] == 0) {
 				v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_header.png"]];
 				cell.backgroundView = v;
