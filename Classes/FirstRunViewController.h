@@ -23,9 +23,15 @@
 @interface FirstRunViewController : UIViewController<UITextFieldDelegate> {
 	IBOutlet UITextField *_username;
 	IBOutlet UITextField *_password;
+	IBOutlet UITextField *_regusername;
+	IBOutlet UITextField *_regpassword;
+	IBOutlet UITextField *_regemail;
+	IBOutlet UIView *_registrationView;
 }
 -(IBAction)loginButtonPressed:(id)sender;
 -(IBAction)registerButtonPressed:(id)sender;
+-(IBAction)createButtonPressed:(id)sender;
+-(IBAction)cancelButtonPressed:(id)sender;
 -(BOOL)textFieldShouldReturn:(UITextField *)textField;
 -(void)dismissKeyboard;
 @end

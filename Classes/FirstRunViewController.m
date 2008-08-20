@@ -24,7 +24,7 @@
 #import "version.h"
 
 @implementation FirstRunViewController
--(void)_authenticateUser:(NSTimer *)timer {
+-(void)_authenticateUser {
 	NSDictionary *session = [[LastFMService sharedInstance] getMobileSessionForUser:_username.text password:_password.text];
 	if([[session objectForKey:@"key"] length]) {
 		[[NSUserDefaults standardUserDefaults] setObject:_username.text forKey:@"lastfm_user"];
@@ -48,18 +48,58 @@
 	_username.text = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_user"];
 }
 -(IBAction)registerButtonPressed:(id)sender {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/join/iphone"]];
+	_regusername.text = @"";
+	_regpassword.text = @"";
+	_regemail.text = @"";
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.25];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.view cache:YES];
+	[self.view addSubview:_registrationView];
+	[UIView commitAnimations];
+}
+-(void)_registerUser {
+	[[LastFMService sharedInstance] createUser:_regusername.text withPassword:_regpassword.text andEmail:_regemail.text];
+	if([LastFMService sharedInstance].error) {
+		if([[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain] && [LastFMService sharedInstance].error.code == 6) {
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:[[LastFMService sharedInstance].error.userInfo objectForKey:NSLocalizedDescriptionKey] withTitle:NSLocalizedString(@"ERROR_REGFAILURE_TITLE", @"Registration error title")];
+		} else {
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+		}
+		_regusername.enabled = YES;
+		_regpassword.text = @"";
+		_regpassword.enabled = YES;
+		_regemail.enabled = YES;
+	} else {
+		_username.text = _regusername.text;
+		_password.text = _regpassword.text;
+		[self cancelButtonPressed:nil];
+		[self loginButtonPressed:nil];
+	}	
+}
+-(IBAction)createButtonPressed:(id)sender {
+	if([_regusername.text length] && [_regpassword.text length]) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		_regusername.enabled = NO;
+		_regpassword.enabled = NO;
+		_regemail.enabled = NO;
+		[self performSelector:@selector(_registerUser) withObject:nil afterDelay:0.1];
+	} else {
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"ERROR_MISSINGINFO", @"Missing info") withTitle:NSLocalizedString(@"ERROR_MISSINGINFO_TITLE", @"Missing info title")];
+	}	
+}
+-(IBAction)cancelButtonPressed:(id)sender {
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.25];
+	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
+	[_registrationView removeFromSuperview];
+	[UIView commitAnimations];
 }
 -(IBAction)loginButtonPressed:(id)sender {
 	if([_username.text length] && [_password.text length]) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 		_username.enabled = NO;
 		_password.enabled = NO;
-		[NSTimer scheduledTimerWithTimeInterval:0.1
-																		 target:self
-																	 selector:@selector(_authenticateUser:)
-																	 userInfo:nil
-																		repeats:NO];
+		[self performSelector:@selector(_authenticateUser) withObject:nil afterDelay:0.1];
 	} else {
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"ERROR_MISSINGINFO", @"Missing info") withTitle:NSLocalizedString(@"ERROR_MISSINGINFO_TITLE", @"Missing info title")];
 	}
@@ -69,6 +109,12 @@
 		[_password becomeFirstResponder];
 	if(textField == _password && [_password.text length] > 0)
 		[self loginButtonPressed:textField];
+	if(textField == _regusername && [_regusername.text length] > 0)
+		[_regpassword becomeFirstResponder];
+	if(textField == _regpassword && [_regpassword.text length] > 0)
+		[_regemail becomeFirstResponder];
+	if(textField == _regemail && [_regemail.text length] > 0)
+		[self createButtonPressed:textField];
 	return NO;
 }
 -(void)dismissKeyboard {
