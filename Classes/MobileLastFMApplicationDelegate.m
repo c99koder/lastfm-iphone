@@ -23,8 +23,7 @@
 #import "RadioListViewController.h"
 #import "PlaybackViewController.h"
 #include "version.h"
-
-#import "PlaylistsViewController.h"
+#include <SystemConfiguration/SCNetworkReachability.h>
 
 void powerCallback(void *refCon, io_service_t service, natural_t messageType, void *messageArgument) {	
 	[(MobileLastFMApplicationDelegate *)refCon powerMessageReceived: messageType withArgument: messageArgument];
@@ -367,16 +366,20 @@ NSString *kUserAgent;
 	}
 }
 -(BOOL)hasNetworkConnection {
-	if(!_reach)	_reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
+	SCNetworkReachabilityRef reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
 	SCNetworkConnectionFlags flags;
-	SCNetworkReachabilityGetFlags(_reach, &flags);
-	return (kSCNetworkFlagsReachable & flags) || (kSCNetworkFlagsConnectionRequired & flags);
+	BOOL ret = (kSCNetworkReachabilityFlagsReachable & flags) || (kSCNetworkReachabilityFlagsConnectionRequired & flags);
+	CFRelease(reach);
+	reach = nil;
+	return ret;
 }
 -(BOOL)hasWiFiConnection {
-	if(!_reach)	_reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
+	SCNetworkReachabilityRef reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
 	SCNetworkConnectionFlags flags;
-	SCNetworkReachabilityGetFlags(_reach, &flags);
-	return (kSCNetworkFlagsReachable & flags) && !(kSCNetworkReachabilityFlagsIsWWAN & flags);
+	BOOL ret = (kSCNetworkFlagsReachable & flags) && !(kSCNetworkReachabilityFlagsIsWWAN & flags);
+	CFRelease(reach);
+	reach = nil;
+	return ret;
 }
 -(NSURLRequest *)requestWithURL:(NSURL *)url { 
 	NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url]; 

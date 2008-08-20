@@ -18,7 +18,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#include <SystemConfiguration/SCNetworkReachability.h>
 #import <IOKit/pwr_mgt/IOPMLib.h>
 #import <IOKit/IOMessage.h>
 #import "LastFMRadio.h"
@@ -34,7 +33,6 @@
 
 @interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate> {
   IBOutlet UIWindow *window;
-	SCNetworkReachabilityRef _reach;
 	Scrobbler *_scrobbler;
 	FirstRunViewController *firstRunView;
 	PlaybackViewController *playbackViewController;
