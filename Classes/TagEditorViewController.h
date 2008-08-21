@@ -26,12 +26,14 @@
 - (id)initWithTag:(NSString *)tag;
 @end
 
-@interface TagEditorView : UIView {
+@interface TagEditorView : UIScrollView {
 	NSMutableArray *tags;
 	IBOutlet UITextField *textField;
+	TagView *lastTag;
 }
 - (void)addTag:(NSString *)tag;
 - (void)removeTag:(TagView *)tag;
+- (BOOL)hasTag:(NSString *)tag;
 - (NSArray *)tags;
 @end
 

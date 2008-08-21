@@ -52,7 +52,7 @@
 	_regpassword.text = @"";
 	_regemail.text = @"";
 	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.25];
+	[UIView setAnimationDuration:0.75];
 	[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.view cache:YES];
 	[self.view addSubview:_registrationView];
 	[UIView commitAnimations];
@@ -89,7 +89,7 @@
 }
 -(IBAction)cancelButtonPressed:(id)sender {
 	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.25];
+	[UIView setAnimationDuration:0.75];
 	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 	[_registrationView removeFromSuperview];
 	[UIView commitAnimations];

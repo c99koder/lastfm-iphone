@@ -367,7 +367,8 @@ NSString *kUserAgent;
 }
 -(BOOL)hasNetworkConnection {
 	SCNetworkReachabilityRef reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
-	SCNetworkConnectionFlags flags;
+	SCNetworkReachabilityFlags flags;
+	SCNetworkReachabilityGetFlags(reach, &flags);
 	BOOL ret = (kSCNetworkReachabilityFlagsReachable & flags) || (kSCNetworkReachabilityFlagsConnectionRequired & flags);
 	CFRelease(reach);
 	reach = nil;
@@ -375,7 +376,8 @@ NSString *kUserAgent;
 }
 -(BOOL)hasWiFiConnection {
 	SCNetworkReachabilityRef reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
-	SCNetworkConnectionFlags flags;
+	SCNetworkReachabilityFlags flags;
+	SCNetworkReachabilityGetFlags(reach, &flags);
 	BOOL ret = (kSCNetworkFlagsReachable & flags) && !(kSCNetworkReachabilityFlagsIsWWAN & flags);
 	CFRelease(reach);
 	reach = nil;

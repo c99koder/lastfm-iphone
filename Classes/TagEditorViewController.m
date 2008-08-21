@@ -23,22 +23,23 @@
 @synthesize tag;
 
 - (id)initWithTag:(NSString *)t {
-	CGSize size = [t sizeWithFont:[UIFont boldSystemFontOfSize:22]];
-	if(self = [super initWithFrame:CGRectMake(0,0,size.width + size.height + 8,size.height)]) {
+	CGSize size = [t sizeWithFont:[UIFont boldSystemFontOfSize:20]];
+	if(self = [super initWithFrame:CGRectMake(0,0,size.width + 19 + 18 + 2,size.height+4)]) {
+		self.image = [[UIImage imageNamed:@"tag-bg.png"] stretchableImageWithLeftCapWidth:18 topCapHeight:0];
 		tag = [t retain];
-		UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(6,0,size.width,size.height)];
+		UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(16,2,size.width,size.height)];
 		l.textColor = [UIColor whiteColor];
 		l.backgroundColor = [UIColor clearColor];
-		l.font = [UIFont boldSystemFontOfSize:22];
+		l.font = [UIFont boldSystemFontOfSize:20];
 		l.text = t;
 		[self addSubview: l];
 		[l release];
 		UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
 		[b setImage:[UIImage imageNamed:@"remove.png"] forState:UIControlStateNormal];
 		[b addTarget:self action:@selector(_deleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		b.frame = CGRectMake(size.width + 8, 2, size.height, size.height-4);
+		b.frame = CGRectMake(size.width + 18, 2+((size.height - 19)/2), 19, 19);
 		[self addSubview: b];
-		self.backgroundColor = [UIColor redColor];
+		self.backgroundColor = [UIColor clearColor];
 		self.userInteractionEnabled = YES;
 	}
 	return self;	
@@ -53,21 +54,28 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 
 @implementation TagEditorView
-- (id)initWithCoder:(NSCoder *)decoder {
-	if(self = [super initWithCoder:decoder]) {
+- (id)initWithFrame:(CGRect)frame {
+	if(self = [super initWithFrame:frame]) {
 		tags = [[NSMutableArray alloc] init];
+		self.directionalLockEnabled = YES;
 	}
 	return self;
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	[super touchesEnded:touches withEvent:event];
 	[textField resignFirstResponder];
 }
 - (void)_updateTags {
-	[tags sortUsingFunction:tagViewSort context:nil];
 	int x=4,y=4,height=0;
+
+	[self scrollRectToVisible:[lastTag frame] animated:YES];
+	[lastTag release];
+	lastTag = nil;
 	
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration: 0.5];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(_animationStopped)];
 	
 	for(TagView *tag in tags) {
 		CGSize size = tag.frame.size;
@@ -77,11 +85,15 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 			y += size.height + 4;
 		}
 		tag.frame = CGRectMake(x,y,size.width,size.height);
+		tag.alpha = 1;
 		x += size.width + 4;
 	}
 	[UIView commitAnimations];
+	self.contentSize = CGSizeMake(320,y+height+2);
 }
 - (void)addTag:(NSString *)tag {
+	int x=4,y=4;
+	CGSize size;
 	TagView *t;
 	for(t in tags) {
 		if([t.tag isEqualToString:tag])
@@ -90,17 +102,34 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	t = [[TagView alloc] initWithTag:tag];
 	[tags addObject:t];
 	[self addSubview:t];
-	CGRect frame = t.frame;
-	frame.origin.x = 16;
-	frame.origin.y = self.frame.size.height + textField.frame.origin.y + 4;
-	t.frame = frame;
-	[t release];
+	[tags sortUsingFunction:tagViewSort context:nil];
+	for(TagView *tag in tags) {
+		size = tag.frame.size;
+		if(x + size.width > self.frame.size.width) {
+			x = 4;
+			y += size.height + 4;
+		}
+		if(tag == t)
+			break;
+		x += size.width + 4;
+	}
+	t.frame = CGRectMake(x, y, size.width, size.height);
+	t.alpha = 0;
+	[lastTag release];
+	lastTag = t;
 	[self _updateTags];
 }
 - (void)removeTag:(TagView *)tag {
 	[tags removeObject:tag];
 	[tag removeFromSuperview];
 	[self _updateTags];
+}
+- (BOOL)hasTag:(NSString *)tag {
+	for(TagView *t in tags) {
+		if([t.tag isEqualToString:tag])
+			return YES;
+	}
+	return NO;
 }
 - (NSArray *)tags {
 	return [NSArray arrayWithArray:tags];
@@ -127,6 +156,8 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 - (void)viewDidLoad {
 	tabBar.selectedItem = [tabBar.items objectAtIndex:0];
+	tagEditorView = [[TagEditorView alloc] initWithFrame:CGRectMake(0,88,320,156)];
+	[self.view insertSubview:tagEditorView belowSubview:table];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
@@ -140,6 +171,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 	[tagEditorView addTag:[tableView cellForRowAtIndexPath:newIndexPath].text];
+	[tableView reloadData];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SimpleCell"];
@@ -148,8 +180,13 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	if(tabBar.selectedItem.tag == 0)
 		cell.text = [[myTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
 	else
-		cell.text = [[topTags objectAtIndex:[indexPath row]] objectForKey:@"name"];		
+		cell.text = [[topTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	if([tagEditorView hasTag:cell.text])
+		cell.textColor = [UIColor grayColor];
+	else
+		cell.textColor = [UIColor blackColor];
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	return cell;
 }
 - (IBAction)tagButtonPressed:(id)sender {
