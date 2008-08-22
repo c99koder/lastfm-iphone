@@ -35,6 +35,7 @@
 - (void)removeTag:(TagView *)tag;
 - (BOOL)hasTag:(NSString *)tag;
 - (NSArray *)tags;
+@property (retain, nonatomic) UITextField *textField;
 @end
 
 @protocol TagEditorViewControllerDelegate

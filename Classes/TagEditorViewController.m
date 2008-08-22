@@ -37,7 +37,7 @@
 		UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
 		[b setImage:[UIImage imageNamed:@"remove.png"] forState:UIControlStateNormal];
 		[b addTarget:self action:@selector(_deleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		b.frame = CGRectMake(size.width + 18, 2+((size.height - 19)/2), 19, 19);
+		b.frame = CGRectMake(size.width + 16, 2+((size.height - 20)/2), 21, 20);
 		[self addSubview: b];
 		self.backgroundColor = [UIColor clearColor];
 		self.userInteractionEnabled = YES;
@@ -54,6 +54,8 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 
 @implementation TagEditorView
+@synthesize textField;
+
 - (id)initWithFrame:(CGRect)frame {
 	if(self = [super initWithFrame:frame]) {
 		tags = [[NSMutableArray alloc] init];
@@ -157,6 +159,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 - (void)viewDidLoad {
 	tabBar.selectedItem = [tabBar.items objectAtIndex:0];
 	tagEditorView = [[TagEditorView alloc] initWithFrame:CGRectMake(0,88,320,156)];
+	tagEditorView.textField = textField;
 	[self.view insertSubview:tagEditorView belowSubview:table];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
