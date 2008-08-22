@@ -54,10 +54,9 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 
 @implementation TagEditorView
-@synthesize textField;
 
-- (id)initWithFrame:(CGRect)frame {
-	if(self = [super initWithFrame:frame]) {
+- (id)initWithCoder:(NSCoder *)coder {
+	if(self = [super initWithCoder:coder]) {
 		tags = [[NSMutableArray alloc] init];
 		self.directionalLockEnabled = YES;
 	}
@@ -90,6 +89,10 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 		tag.alpha = 1;
 		x += size.width + 4;
 	}
+	if([tags count])
+		instructions.alpha = 0;
+	else
+		instructions.alpha = 1;
 	[UIView commitAnimations];
 	self.contentSize = CGSizeMake(320,y+height+2);
 }
@@ -125,6 +128,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	[tags removeObject:tag];
 	[tag removeFromSuperview];
 	[self _updateTags];
+	[(TagEditorViewController *)(self.delegate) reload];
 }
 - (BOOL)hasTag:(NSString *)tag {
 	for(TagView *t in tags) {
@@ -153,14 +157,14 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 		[tagEditorView addTag: tag];
 	}
 }
+- (void)reload {
+	[table reloadData];
+}
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	[table reloadData];
 }
 - (void)viewDidLoad {
 	tabBar.selectedItem = [tabBar.items objectAtIndex:0];
-	tagEditorView = [[TagEditorView alloc] initWithFrame:CGRectMake(0,88,320,156)];
-	tagEditorView.textField = textField;
-	[self.view insertSubview:tagEditorView belowSubview:table];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;

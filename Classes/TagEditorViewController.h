@@ -30,12 +30,12 @@
 	NSMutableArray *tags;
 	IBOutlet UITextField *textField;
 	TagView *lastTag;
+	IBOutlet UILabel *instructions;
 }
 - (void)addTag:(NSString *)tag;
 - (void)removeTag:(TagView *)tag;
 - (BOOL)hasTag:(NSString *)tag;
 - (NSArray *)tags;
-@property (retain, nonatomic) UITextField *textField;
 @end
 
 @protocol TagEditorViewControllerDelegate
@@ -59,4 +59,5 @@
 - (IBAction)tagButtonPressed:(id)sender;
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
+- (void)reload;
 @end
