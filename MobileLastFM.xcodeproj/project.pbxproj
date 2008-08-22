@@ -142,7 +142,6 @@
 		22BA0DDF0DC3731100DBE5BD /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA0DDE0DC3731100DBE5BD /* stop.png */; };
 		22C03A2E0E5DA7E600EBF062 /* tag-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A2D0E5DA7E600EBF062 /* tag-bg.png */; };
 		22C03A8F0E5DB19900EBF062 /* top_tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A8E0E5DB19900EBF062 /* top_tags.png */; };
-		22C03BBE0E5DD30600EBF062 /* pinstripe.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03BBD0E5DD30600EBF062 /* pinstripe.png */; };
 		22C54F750DEEF9A30087322B /* TagRadioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C54F740DEEF9A30087322B /* TagRadioViewController.m */; };
 		22CBDFAF0DCE0AA300AE5DE0 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */; };
 		22CBDFBE0DCE0BCE00AE5DE0 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */; };
@@ -366,7 +365,6 @@
 		22BA0DDE0DC3731100DBE5BD /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
 		22C03A2D0E5DA7E600EBF062 /* tag-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag-bg.png"; sourceTree = "<group>"; };
 		22C03A8E0E5DB19900EBF062 /* top_tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top_tags.png; sourceTree = "<group>"; };
-		22C03BBD0E5DD30600EBF062 /* pinstripe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pinstripe.png; sourceTree = "<group>"; };
 		22C54F730DEEF9A30087322B /* TagRadioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagRadioViewController.h; sourceTree = "<group>"; };
 		22C54F740DEEF9A30087322B /* TagRadioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagRadioViewController.m; sourceTree = "<group>"; };
 		22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
@@ -620,7 +618,6 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				22C03BBD0E5DD30600EBF062 /* pinstripe.png */,
 				22EE86280E22587F00EBFF65 /* avatarplaceholder.png */,
 				225157970E09A67B00943078 /* backBtn.png */,
 				225934DA0DA85DA60035A1AA /* ban.png */,
@@ -959,7 +956,6 @@
 				22D1DEB30E5C61F700D1068D /* rounded_table_cell.png in Resources */,
 				22C03A2E0E5DA7E600EBF062 /* tag-bg.png in Resources */,
 				22C03A8F0E5DB19900EBF062 /* top_tags.png in Resources */,
-				22C03BBE0E5DD30600EBF062 /* pinstripe.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
