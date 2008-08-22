@@ -89,20 +89,20 @@
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<object class="NSMutableArray" key="IBUIItems">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBUITabBarItem" id="103473297">
-								<string key="IBUITitle">My Tags</string>
-								<object class="NSCustomResource" key="IBUIImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">profile_icon_tab.png</string>
-								</object>
-								<reference key="IBUITabBar" ref="966226402"/>
-							</object>
 							<object class="IBUITabBarItem" id="763179748">
-								<int key="IBUITag">1</int>
 								<string key="IBUITitle">Top Tags</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">top_tags.png</string>
+								</object>
+								<reference key="IBUITabBar" ref="966226402"/>
+							</object>
+							<object class="IBUITabBarItem" id="103473297">
+								<int key="IBUITag">1</int>
+								<string key="IBUITitle">My Tags</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">profile_icon_tab.png</string>
 								</object>
 								<reference key="IBUITabBar" ref="966226402"/>
 							</object>
@@ -151,7 +151,7 @@
 						<float key="IBUISectionHeaderHeight">2.700000e+01</float>
 						<float key="IBUISectionFooterHeight">2.700000e+01</float>
 					</object>
-					<object class="IBUIImageView" id="196846834">
+					<object class="IBUIImageView" id="911606541">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{0, 244}, {320, 18}}</string>
@@ -287,7 +287,7 @@
 							<reference ref="966226402"/>
 							<reference ref="250252282"/>
 							<reference ref="944914383"/>
-							<reference ref="196846834"/>
+							<reference ref="911606541"/>
 							<reference ref="690613910"/>
 						</object>
 						<reference key="parent" ref="360949347"/>
@@ -388,7 +388,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">35</int>
-						<reference key="object" ref="196846834"/>
+						<reference key="object" ref="911606541"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</object>

@@ -164,9 +164,9 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if(tabBar.selectedItem.tag == 0)
-		return [myTags count];
-	else
 		return [topTags count];
+	else
+		return [myTags count];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
@@ -178,14 +178,13 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	if (cell == nil)
 		cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"SimpleCell"];
 	if(tabBar.selectedItem.tag == 0)
-		cell.text = [[myTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
-	else
 		cell.text = [[topTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	else
+		cell.text = [[myTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
 	if([tagEditorView hasTag:cell.text])
 		cell.textColor = [UIColor grayColor];
 	else
 		cell.textColor = [UIColor blackColor];
-	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	return cell;
 }
