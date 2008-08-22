@@ -217,13 +217,13 @@
 					<object class="IBUIButton" id="209337376">
 						<reference key="NSNextResponder" ref="325394143"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{88, 231}, {144, 37}}</string>
+						<string key="NSFrame">{{88, 224}, {144, 37}}</string>
 						<reference key="NSSuperview" ref="325394143"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<object class="NSFont" key="IBUIFont" id="267587517">
+						<object class="NSFont" key="IBUIFont">
 							<string key="NSName">Helvetica-Bold</string>
 							<double key="NSSize">1.500000e+01</double>
 							<int key="NSfFlags">16</int>
@@ -259,13 +259,17 @@
 					<object class="IBUIButton" id="364652350">
 						<reference key="NSNextResponder" ref="325394143"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 389}, {280, 51}}</string>
+						<string key="NSFrame">{{20, 383}, {280, 51}}</string>
 						<reference key="NSSuperview" ref="325394143"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<reference key="IBUIFont" ref="267587517"/>
+						<object class="NSFont" key="IBUIFont" id="619819770">
+							<string key="NSName">Helvetica-Bold</string>
+							<double key="NSSize">1.800000e+01</double>
+							<int key="NSfFlags">16</int>
+						</object>
 						<int key="IBUIButtonType">1</int>
 						<bool key="IBUIAdjustsImageWhenHighlighted">NO</bool>
 						<string type="base64-UTF8" key="IBUIHighlightedTitle">SSdtIG5vdCBhdHRlbmRpbmc</string>
@@ -287,13 +291,13 @@
 					<object class="IBUIButton" id="939906941">
 						<reference key="NSNextResponder" ref="325394143"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 338}, {280, 51}}</string>
+						<string key="NSFrame">{{20, 332}, {280, 51}}</string>
 						<reference key="NSSuperview" ref="325394143"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<reference key="IBUIFont" ref="267587517"/>
+						<reference key="IBUIFont" ref="619819770"/>
 						<int key="IBUIButtonType">1</int>
 						<bool key="IBUIAdjustsImageWhenHighlighted">NO</bool>
 						<string key="IBUIHighlightedTitle">I might attend</string>
@@ -315,13 +319,13 @@
 					<object class="IBUIButton" id="810161398">
 						<reference key="NSNextResponder" ref="325394143"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 287}, {280, 51}}</string>
+						<string key="NSFrame">{{20, 281}, {280, 51}}</string>
 						<reference key="NSSuperview" ref="325394143"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<reference key="IBUIFont" ref="267587517"/>
+						<reference key="IBUIFont" ref="619819770"/>
 						<bool key="IBUIAdjustsImageWhenHighlighted">NO</bool>
 						<string type="base64-UTF8" key="IBUIHighlightedTitle">SSdtIGF0dGVuZGluZw</string>
 						<string type="base64-UTF8" key="IBUIDisabledTitle">SSdtIGF0dGVuZGluZw</string>
