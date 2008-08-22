@@ -24,6 +24,7 @@
 #import "LastFMRadio.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "NSString+URLEscaped.h"
+#import "UIApplication+openURLWithWarning.h"
 
 @implementation TrackCell
 
@@ -109,6 +110,18 @@
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 }
+- (void)buyButtonPressed:(UIButton *)sender {
+	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@+%@&s=143444&partnerId=2003&affToken=www.last.fm", 
+											 [[_data objectAtIndex:sender.tag] objectForKey:@"artist"],
+											 [[_data objectAtIndex:sender.tag] objectForKey:@"name"]];
+	NSString *URL;
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"country"] isEqualToString:@"United States"])
+		URL = [NSString stringWithFormat:@"http://click.linksynergy.com/fs-bin/stat?id=bKEBG4*hrDs&offerid=78941&type=3&subid=0&tmpid=1826&RD_PARM1=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+	else
+		URL = [NSString stringWithFormat:@"http://clk.tradedoubler.com/click?p=23761&epi=GB_site&a=1474288&url=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+	
+	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:URL]];
+}
 - (void)setData:(NSArray *)data {
 	[_data release];
 	_data = [data retain];
@@ -158,6 +171,7 @@
 	cell.barWidth = [[[_data objectAtIndex:[indexPath row]] objectForKey:@"playcount"] floatValue] / [[[_data objectAtIndex:0] objectForKey:@"playcount"] floatValue];
 	cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 	cell.shouldCacheArtwork = YES;
+
 	if([[_data objectAtIndex:[indexPath row]] objectForKey:@"streamable"]) {
 		NSString *radioURL = [NSString stringWithFormat:@"lastfm://artist/%@/similarartists",
 													[[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"] URLEscaped]];
@@ -173,6 +187,16 @@
 		} else {
 			[cell addStreamIcon];
 		}
+	} else {
+		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 49, 24)];
+		[btn setBackgroundImage:[UIImage imageNamed:@"buy.png"] forState:UIControlStateNormal];
+		[btn setTitle:@"Buy" forState:UIControlStateNormal];
+		[btn setFont:[UIFont boldSystemFontOfSize:14]];
+		btn.adjustsImageWhenHighlighted = YES;
+		btn.tag = [indexPath row];
+		[btn addTarget:self action:@selector(buyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+		cell.accessoryView = btn;
+		[btn release];
 	}
 	return cell;
 }
