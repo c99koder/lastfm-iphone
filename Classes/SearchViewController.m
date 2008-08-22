@@ -34,7 +34,7 @@
 	}
 	_searchBar.placeholder = NSLocalizedString(@"Enter an artist name", @"Artist search placeholder text");
 	_searchType.selectedSegmentIndex = 0;
-	_searchType.tintColor = [UIColor blackColor];
+	_searchType.tintColor = [UIColor grayColor];
 	self.hidesBottomBarWhenPushed = YES;
 }
 - (IBAction)backButtonPressed:(id)sender {
