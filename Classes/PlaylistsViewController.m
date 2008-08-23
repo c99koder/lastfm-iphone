@@ -114,6 +114,7 @@
 			_newPlaylist.font = [UIFont boldSystemFontOfSize:20];
 			_newPlaylist.autocorrectionType = UITextAutocorrectionTypeNo;
 			_newPlaylist.autocapitalizationType = UITextAutocapitalizationTypeNone;
+			_newPlaylist.returnKeyType = UIReturnKeyDone;
 			[_newPlaylist becomeFirstResponder];
 			[cell.contentView addSubview:_newPlaylist];
 		}
