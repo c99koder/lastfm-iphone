@@ -19,6 +19,7 @@
 
 #import "RadioListViewController.h"
 #import "SearchViewController.h"
+#import "TagRadioViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
@@ -152,7 +153,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		case 0:
 			return 1;
 		case 1:
-			return 4;
+			return 5;
 		case 2:
 			return [_commonArtists count]?[_commonArtists count]+1:0;			
 		case 3:
@@ -203,21 +204,27 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		case 1:
 			switch([newIndexPath row]-1) {
 				case 0:
-					[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[NSString stringWithFormat:@"lastfm://user/%@/personal", _username] waitUntilDone:YES];
+					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/personal", _username]];
 					break;
 				case 1:
-					[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[NSString stringWithFormat:@"lastfm://user/%@/loved", _username] waitUntilDone:YES];
+					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/loved", _username]];
 					break;
 				case 2:
-					[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username] waitUntilDone:YES];
+					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username]];
 					break;
+				case 3:
+				{
+					TagRadioViewController *tags = [[TagRadioViewController alloc] initWithUsername:_username];
+					[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tags animated:YES];
+					break;
+				}
 			}
 			break;
 		case 3:
-			[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[[_recent objectAtIndex:[newIndexPath row]-1] objectForKey:@"url"] waitUntilDone:YES];
+			[self playRadioStation:[[_recent objectAtIndex:[newIndexPath row]-1] objectForKey:@"url"]];
 			break;
 		case 4:
-			[self performSelectorOnMainThread:@selector(playRadioStation:) withObject:[NSString stringWithFormat:@"lastfm://playlist/%@/shuffle", [[_playlists objectAtIndex:[newIndexPath row]-1] objectForKey:@"id"]] waitUntilDone:YES];
+			[self playRadioStation:[NSString stringWithFormat:@"lastfm://playlist/%@/shuffle", [[_playlists objectAtIndex:[newIndexPath row]-1] objectForKey:@"id"]]];
 			break;
 	}
 	[self.tableView reloadData];
@@ -236,7 +243,8 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	UIImageView *img;
 
 	[cell showProgress: NO];
-
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	
 	switch([indexPath section]) {
 		case 0:
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
@@ -310,6 +318,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				case 3:
 					cell.text = @"Recommended by Last.fm";
 					break;
+				case 4:
+					cell.text = @"Tag Radio";
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					break;
 			}
 			break;
 		case 2:
@@ -370,7 +382,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 			}
 			break;
 	}
-	if([indexPath row] > 0) {
+	if([indexPath row] > 0 && cell.accessoryType == UITableViewCellAccessoryNone) {
 		img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
 		img.opaque = YES;
 		cell.accessoryView = img;
