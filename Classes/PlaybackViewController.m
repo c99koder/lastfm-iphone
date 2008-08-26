@@ -712,9 +712,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	} else {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	}
-	if(_badge) {
-		_badge.image = [[UIImage imageNamed:@"events_red_circle.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:0];
-	}
 	_lock = [[NSLock alloc] init];
 }
 - (id)initWithUsername:(NSString *)user {
@@ -742,22 +739,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self _processEvents:events];
 	
 	if([_events count]) {
-		if(_badge) {
+		if(_badge)
 			_badge.alpha = 1;
-			[[_badge subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-			CGRect frame = _badge.frame;
-			frame.size.width = [[NSString stringWithFormat:@"%i", [_events count]] sizeWithFont:[UIFont boldSystemFontOfSize:12]].width + 20;
-			_badge.frame = frame;
-			UILabel *l = [[UILabel alloc] init];
-			l.frame = CGRectMake(0,-2,frame.size.width,frame.size.height);
-			l.text = [NSString stringWithFormat:@"%i", [_events count]];
-			l.font = [UIFont boldSystemFontOfSize: 12];
-			l.textAlignment = UITextAlignmentCenter;
-			l.textColor = [UIColor whiteColor];
-			l.backgroundColor = [UIColor clearColor];
-			[_badge addSubview: l];
-			[l release];
-		}
 	} else {
 		if(_badge)
 			_badge.alpha = 0;
