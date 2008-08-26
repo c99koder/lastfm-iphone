@@ -49,7 +49,7 @@
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string type="base64-UTF8" key="IBUIText">TGFzdC5mbSBmb3IgaVBob25lIC8gaVBvZCBUb3VjaCB2ZXJzaW9uIDEuMS4wCsKpIDIwMDggTGFzdC5m
+						<string type="base64-UTF8" key="IBUIText">TGFzdC5mbSBmb3IgaVBob25lIC8gaVBvZCBUb3VjaCB2ZXJzaW9uIDIuMC4wCsKpIDIwMDggTGFzdC5m
 bSwgTHRkLg</string>
 						<object class="NSFont" key="IBUIFont">
 							<string key="NSName">Helvetica</string>
@@ -281,7 +281,7 @@ bSwgTHRkLg</string>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 			</object>
 			<object class="IBUIView" id="628209171">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -290,7 +290,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -302,7 +301,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{9, 112}, {302, 46}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -314,7 +312,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{9, 66}, {302, 46}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -329,7 +326,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{9, 20}, {302, 46}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -341,7 +337,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 27}, {193, 31}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -366,7 +361,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 32}, {79, 21}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -382,7 +376,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 77}, {79, 21}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -398,7 +391,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 123}, {79, 21}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -414,7 +406,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 72}, {193, 31}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -440,7 +431,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{107, 118}, {193, 31}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -465,7 +455,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{9, 181}, {142, 37}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -484,7 +473,6 @@ bSwgTHRkLg</string>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{168, 181}, {143, 37}}</string>
 						<reference key="NSSuperview" ref="628209171"/>
-						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<int key="IBUIContentHorizontalAlignment">0</int>
@@ -500,8 +488,6 @@ bSwgTHRkLg</string>
 					</object>
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
-				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
