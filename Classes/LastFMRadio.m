@@ -117,7 +117,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		NSURL *trackURL = [NSURL URLWithString:[_trackInfo objectForKey:@"location"]];
 		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:trackURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
-		NSLog(@"Streaming: %@\n", trackURL);
+
 		_connection= [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 		if(_connection) {
 			_receivedData = [[NSMutableData alloc] init];
@@ -241,8 +241,15 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			[self performSelectorOnMainThread:@selector(_notifyTrackFinishedLoading) withObject:self waitUntilDone:NO];
 	}
 }
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
+	NSLog(@"Streaming: %@", [request URL]);
+	return request;
+}
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response {
 	[_receivedData setLength:0];
+	NSLog(@"HTTP status code: %i\n", [response statusCode]);
+	if([response statusCode] != 200)
+		NSLog(@"HTTP headers: %@", [response allHeaderFields]);
 }
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	NSData *extraData = nil;
@@ -252,6 +259,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_receivedData appendData:data];
 	if(_state != TRACK_PAUSED && ([_receivedData length] > 196608 || _state == TRACK_PLAYING)) {
 		if(_state == TRACK_BUFFERING) {
+			NSLog(@"Staring queue");
 			AudioQueueStart(queue, NULL);
 			_state = TRACK_PLAYING;
 		}
@@ -283,6 +291,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
+	NSLog(@"%@", error);
 }
 -(BOOL)isPlaying {
 	UInt32 isRunning = 0;
@@ -502,7 +511,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	
 	if(track) {
 		[_tracks addObject:track];
-		//[[_playlist objectAtIndex:0] setObject:[NSString stringWithFormat:@"%i", (long)[[NSDate date] timeIntervalSince1970]] forKey:@"startTime"];
 		return TRUE;
 	} else {
 		return FALSE;
