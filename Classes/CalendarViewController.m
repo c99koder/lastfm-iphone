@@ -259,6 +259,12 @@ UIImage *calendarDaySelected;
 - (void)setEventDates:(NSArray *)e {
 	[eventDates release];
 	eventDates = [e retain];
+	if([e count])
+		date = [[e objectAtIndex:0] retain];
+	else
+		date = [[NSDate date] retain];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSMonthCalendarUnit|NSDayCalendarUnit|NSYearCalendarUnit fromDate:date];
+	selectedDate = [[[NSCalendar currentCalendar] dateFromComponents:components] retain];
 	[self _buildCalendar];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
