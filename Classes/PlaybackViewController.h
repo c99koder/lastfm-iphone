@@ -87,20 +87,7 @@
 - (void)setEvent:(NSDictionary *)event;
 @end
 
-@interface EventsListViewController : PlaybackSubview<UITableViewDelegate, UITableViewDataSource> {
-	NSArray *_events;
-	NSMutableArray *_eventDates;
-	NSMutableArray *_attendingEvents;
-	IBOutlet UITableView *_table;
-	NSLock *_lock;
-	NSString *_username;
-}
-- (id)initWithUsername:(NSString *)user;
-- (NSString *)formatDate:(NSString *)date;
-- (void)doneButtonPressed:(id)sender;
-@end
-
-@interface EventsViewController : PlaybackSubview<CalendarViewControllerDelegate> {
+@interface EventsViewController : PlaybackSubview<CalendarViewControllerDelegate,UITableViewDelegate,UITableViewDataSource> {
 	IBOutlet CalendarViewController *_calendar;
 	IBOutlet UITableView *_table;
 	IBOutlet UIImageView *_badge;
@@ -110,7 +97,9 @@
 	NSMutableArray *_attendingEvents;
 	NSMutableArray *_data;
 	NSLock *_lock;
+	NSString *_username;
 }
+- (id)initWithUsername:(NSString *)user;
 - (void)doneButtonPressed:(id)sender;
 @end
 

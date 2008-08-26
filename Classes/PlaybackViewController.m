@@ -516,203 +516,6 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 @end
 
-@implementation EventsListViewController
-- (void)loadView {
-	[super loadView];
-	if(_username)
-		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	self.view = _table;
-}
-- (void)viewDidLoad {
-	[super viewDidLoad];
-	if(!_username)
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
-	_lock = [[NSLock alloc] init];
-}
-- (void)viewWillAppear:(BOOL)animated {
-	[_table scrollRectToVisible:[_table frame] animated:NO];
-	if(_username)
-		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-}
-- (void)_trackDidChange:(NSNotification*)notification {
-	[NSThread detachNewThreadSelector:@selector(_fetchEvents:) toTarget:self withObject:[notification userInfo]];
-}
-- (void)_processEvents:(NSArray *)events {
-	int i,lasti = 0;
-	[_events release];
-	[_eventDates release];
-
-	_events = [events retain];
-	_eventDates = [[NSMutableArray alloc] init];
-	
-	if([_events count]) {
-		NSString *date, *lastDate = [self formatDate:[[_events objectAtIndex:0] objectForKey:@"startDate"]];
-		
-		for(i=0; i<[_events count]; i++) {
-			NSDictionary *event = [_events objectAtIndex:i];
-			date = [self formatDate:[event objectForKey:@"startDate"]];
-			if(![lastDate isEqualToString:date]) {
-				[_eventDates addObject:[NSDictionary dictionaryWithObjectsAndKeys:lastDate,@"date",[NSNumber numberWithInt:i-lasti],@"count",[NSNumber numberWithInt:lasti],@"index",nil]];
-				lasti = i;
-				lastDate = date;
-			}
-		}
-		[_eventDates addObject:[NSDictionary dictionaryWithObjectsAndKeys:lastDate,@"date",[NSNumber numberWithInt:i-lasti],@"count",[NSNumber numberWithInt:lasti],@"index",nil]];
-		self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%i", [_events count]];
-	} else {
-		self.tabBarItem.badgeValue = nil;
-	}
-	[_table reloadData];
-	[_table scrollRectToVisible:[_table frame] animated:YES];
-}
-- (BOOL)isAttendingEvent:(NSString *)event_id {
-	for(NSString *event in _attendingEvents) {
-		if([event isEqualToString:event_id]) {
-			return YES;
-		}
-	}
-	return NO;
-}
-- (id)initWithUsername:(NSString *)user {
-	if(self = [super init]) {
-		self.title = [NSString stringWithFormat:@"%@'s Events", user];
-		_username = [user retain];
-		_table = [[UITableView alloc] initWithFrame:CGRectMake(0,0,320,460)];
-		_table.delegate = self;
-		_table.dataSource = self;
-		NSArray *events = [[LastFMService sharedInstance] eventsForUser:user];
-		if([LastFMService sharedInstance].error) {
-			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-			[self release];
-			return nil;
-		}
-		[self _processEvents:events];
-		events = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-		_attendingEvents = [[NSMutableArray alloc] init];
-		for(NSDictionary *event in events) {
-			[_attendingEvents addObject:[event objectForKey:@"id"]];
-		}
-	}
-	return self;
-}
-- (void)_fetchEvents:(NSDictionary *)trackInfo {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[trackInfo retain];
-	[_lock lock];
-	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
-	[_attendingEvents release];
-	_attendingEvents = [[NSMutableArray alloc] init];
-	NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-	for(NSDictionary *event in attendingEvents) {
-		[_attendingEvents addObject:[event objectForKey:@"id"]];
-	}
-	[self performSelectorOnMainThread:@selector(_processEvents:) withObject:[[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]] waitUntilDone:YES];
-	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
-	[_lock unlock];
-	[trackInfo release];
-	[pool release];
-}
-- (NSString *)formatDate:(NSString *)input {
-	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
-	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
-	NSDate *date = [formatter dateFromString:input];
-	[formatter setLocale:[NSLocale currentLocale]];
-	[formatter setDateStyle:NSDateFormatterShortStyle];
-
-	NSString *output = [formatter stringFromDate:date];
-	[formatter release];
-	return output;
-}
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	if([_eventDates count])
-		return [_eventDates count];
-	else
-		return 1;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if([_eventDates count])
-		return [[[_eventDates objectAtIndex:section] objectForKey:@"count"] intValue];
-	else
-		return 1;
-}
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if([_eventDates count])
-		return [[_eventDates objectAtIndex:section] objectForKey:@"date"];
-	else
-		return nil;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 78;
-}
-- (void)doneButtonPressed:(id)sender {
-	EventDetailViewController *e = (EventDetailViewController *)sender;
-	if([e attendance] == eventStatusNotAttending) {
-		[_attendingEvents removeObject:[e.event objectForKey:@"id"]];
-		if(_username) {
-			NSMutableArray *events = [[NSMutableArray alloc] init];
-			for(NSDictionary *event in _events) {
-				if(![[event objectForKey:@"id"] isEqualToString:[e.event objectForKey:@"id"]])
-					[events addObject:event];
-			}
-			[self _processEvents:events];
-			[events release];
-		}
-	} else {
-		[_attendingEvents addObject:[e.event objectForKey:@"id"]];
-	}
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
-	if(!_username)
-		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	int offset = 0;
-	if([_eventDates count]) {
-		offset = [[[_eventDates objectAtIndex:[newIndexPath section]] objectForKey:@"index"] intValue];
-	}
-	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
-	e.event = [_events objectAtIndex:offset + [newIndexPath row]];
-	//e.delegate = self;
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:e animated:YES];
-	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
-		[e setAttendance:eventStatusAttending];
-	} else {
-		[e setAttendance:eventStatusNotAttending];
-	}
-	[e release];
-	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([_eventDates count]) {
-		int offset = [[[_eventDates objectAtIndex:[indexPath section]] objectForKey:@"index"] intValue];
-		EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
-		if(!cell)
-			cell = [[[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"] autorelease];
-		[cell setEvent:[_events objectAtIndex:offset+[indexPath row]]];
-		return cell;
-	} else {
-		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NoEventsCell"];
-		if(!cell) {
-			cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"NoEventsCell"] autorelease];
-			UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,70)];
-			label.text = NSLocalizedString(@"No upcoming events", @"No events available");
-			label.textAlignment = UITextAlignmentCenter;
-			[cell.contentView addSubview: label];
-			[label release];
-		}
-		return cell;
-	}
-}
-- (void)dealloc {
-	[_events release];
-	[_eventDates release];
-	[_attendingEvents release];
-	[_username release];
-	[super dealloc];
-}
-@end
-
 @implementation EventDetailViewController
 @synthesize event, delegate;
 -(void)_updateEvent:(NSDictionary *)update {
@@ -854,17 +657,6 @@ int tagSort(id tag1, id tag2, void *context) {
 @end
 
 @implementation EventsViewController
-- (void)viewDidLoad {
-	_calendar = [[CalendarViewController alloc] initWithNibName:@"CalendarView" bundle:nil];
-	_calendar.delegate = self;
-	[self.view addSubview: _calendar.view];
-	[self.view sendSubviewToBack: _calendar.view];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
-	if(_badge) {
-		_badge.image = [[UIImage imageNamed:@"events_red_circle.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:0];
-	}
-	_lock = [[NSLock alloc] init];
-}
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchEvents:) toTarget:self withObject:[notification userInfo]];
 }
@@ -876,13 +668,66 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	return NO;
 }
-- (void)_fetchEvents:(NSDictionary *)trackInfo {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+- (void)_processEvents:(NSArray *)events {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
+	_events = [events retain];
+	_eventDates = [[NSMutableArray alloc] init];
+	if([_events count]) {
+		NSDate *date, *lastDate = nil;
+		
+		for(NSDictionary *event in _events) {
+			date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+			if(![lastDate isEqualToDate:date]) {
+				[_eventDates addObject:date];
+				lastDate = date;
+			}
+		}
+		[_eventDates addObject:lastDate];
+	}
+	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
+}
+- (void)viewDidLoad {
+	_calendar = [[CalendarViewController alloc] initWithNibName:@"CalendarView" bundle:nil];
+	_calendar.delegate = self;
+	[self.view addSubview: _calendar.view];
+	[self.view sendSubviewToBack: _calendar.view];
+	if(_username) {
+		_table = [[UITableView alloc] initWithFrame:CGRectMake(0,372,320,0)];
+		_table.delegate = self;
+		_table.dataSource = self;
+		[self.view addSubview:_table];
+		NSArray *events = [[LastFMService sharedInstance] eventsForUser:_username];
+		if([LastFMService sharedInstance].error) {
+			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+			[self release];
+		}
+		events = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+		_attendingEvents = [[NSMutableArray alloc] init];
+		for(NSDictionary *event in events) {
+			[_attendingEvents addObject:[event objectForKey:@"id"]];
+		}
+		[self _processEvents:events];
+	} else {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
+	}
+	if(_badge) {
+		_badge.image = [[UIImage imageNamed:@"events_red_circle.png"] stretchableImageWithLeftCapWidth:11 topCapHeight:0];
+	}
+	_lock = [[NSLock alloc] init];
+}
+- (id)initWithUsername:(NSString *)user {
+	if(self = [super init]) {
+		self.title = [NSString stringWithFormat:@"%@'s Events", user];
+		_username = [user retain];
+	}
+	return self;
+}
+- (void)_fetchEvents:(NSDictionary *)trackInfo {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
 	[_lock lock];
-	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_events release];
 	[_eventDates release];
@@ -894,20 +739,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	
 	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
-	_events = [events retain];
-	_eventDates = [[NSMutableArray alloc] init];
+	[self _processEvents:events];
 	
 	if([_events count]) {
-		NSDate *date, *lastDate = [formatter dateFromString:[[_events objectAtIndex:0] objectForKey:@"startDate"]];
-		
-		for(NSDictionary *event in _events) {
-			date = [formatter dateFromString:[event objectForKey:@"startDate"]];
-			if(![lastDate isEqualToDate:date]) {
-				[_eventDates addObject:date];
-				lastDate = date;
-			}
-		}
-		[_eventDates addObject:lastDate];
 		if(_badge) {
 			_badge.alpha = 1;
 			[[_badge subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -928,7 +762,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		if(_badge)
 			_badge.alpha = 0;
 	}
-	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];
@@ -950,7 +783,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
 	e.event = [_data objectAtIndex:[newIndexPath row]];
 	e.delegate = self;
-	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController presentModalViewController:e animated:YES];
+	if(_username)
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController presentModalViewController:e animated:YES];
+	else
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController presentModalViewController:e animated:YES];
 	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
 		[e setAttendance:eventStatusAttending];
 	} else {
@@ -968,13 +804,14 @@ int tagSort(id tag1, id tag2, void *context) {
 	_data = [[NSMutableArray alloc] init];
 	
 	for(NSDictionary *event in _events) {
-		if([[event objectForKey:@"startDate"] isEqualToString:[formatter stringFromDate:d]])
+		if([[event objectForKey:@"startDate"] hasPrefix:[formatter stringFromDate:d]])
 			[_data addObject:event];
 	}
 	if(![_data count]) {
 		[_data release];
 		_data = nil;
 	}
+	
 	if([_data count] > 1) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.2];
@@ -1005,7 +842,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	EventDetailViewController *e = (EventDetailViewController *)sender;
 	if([e attendance] == eventStatusNotAttending) {
 		[_attendingEvents removeObject:[e.event objectForKey:@"id"]];
-		/*if(_username) {
+		if(_username) {
 			NSMutableArray *events = [[NSMutableArray alloc] init];
 			for(NSDictionary *event in _events) {
 				if(![[event objectForKey:@"id"] isEqualToString:[e.event objectForKey:@"id"]])
@@ -1013,11 +850,19 @@ int tagSort(id tag1, id tag2, void *context) {
 			}
 			[self _processEvents:events];
 			[events release];
-		}*/
+		}
 	} else {
 		[_attendingEvents addObject:[e.event objectForKey:@"id"]];
 	}
-	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController dismissModalViewControllerAnimated:YES];
+	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController dismissModalViewControllerAnimated:YES];
+	if([_data count]) {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.2];
+		_calendar.view.frame = CGRectMake(0,0,320,372);
+		_table.frame = CGRectMake(0,372,320,0);
+		_shadow.frame = CGRectMake(0,372,320,0);
+		[UIView commitAnimations];
+	}
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 - (void)dealloc {

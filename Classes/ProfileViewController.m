@@ -54,8 +54,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return 46;
 }
--(void)_rowSelected:(NSTimer *)timer {
-	NSIndexPath *newIndexPath = [timer userInfo];
+-(void)_rowSelected:(NSIndexPath *)newIndexPath {
 	UINavigationController *controller = nil;
 	NSArray *data = nil;
 	
@@ -77,7 +76,7 @@
 			data = [[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username];
 			break;
 		case 4:
-			controller = [[TagRadioViewController alloc] initWithUsername:_username];
+			controller = [[EventsViewController alloc] initWithUsername:_username];
 			break;
 		case 5:
 			controller = [[FriendsViewController alloc] initWithUsername:_username];
@@ -96,12 +95,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	//Hack to make the loading throbber appear before we block
-	[NSTimer scheduledTimerWithTimeInterval:0.5
-																	 target:self
-																 selector:@selector(_rowSelected:)
-																 userInfo:newIndexPath
-																	repeats:NO];
+	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.5];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
@@ -123,7 +117,7 @@
 			cell.text = NSLocalizedString(@"Recently Played", @"Recently Played Tracks chart title");
 			break;
 		case 4:
-			cell.text = @"Tags";
+			cell.text = @"Events";
 			break;
 		case 5:
 			cell.text = @"Friends";

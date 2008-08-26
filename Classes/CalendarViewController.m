@@ -76,6 +76,7 @@ UIImage *calendarDaySelected;
 				for(NSDate *d in eventDates) {
 					if([d isEqualToDate:currentDate]) {
 						[b setBackgroundImage:calendarDaySelected forState:UIControlStateNormal];
+						[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 						break;
 					}
 				}
@@ -135,6 +136,8 @@ UIImage *calendarDaySelected;
 					NSDate *currentDate = [[NSCalendar currentCalendar] dateFromComponents:components];
 					for(NSDate *d in eventDates) {
 						if([d isEqualToDate:currentDate]) {
+							[b setBackgroundImage:calendarDaySelected forState:UIControlStateNormal];
+							[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 							break;
 						}
 					}
