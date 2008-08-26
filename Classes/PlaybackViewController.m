@@ -894,11 +894,11 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)detailsButtonPressed:(id)sender {
 	if([[detailView subviews] count]) {
+		detailsBtn.frame = CGRectMake(0,0,30,30);
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.75];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:detailsBtnContainer cache:YES];
 		[detailsBtn setBackgroundImage:[UIImage imageNamed:@"info_button.png"] forState:UIControlStateNormal];
-		detailsBtn.frame = CGRectMake(0,0,30,30);
 		[detailsBtn superview].backgroundColor = [UIColor clearColor];
 		[UIView commitAnimations];
 		[UIView beginAnimations:nil context:nil];
@@ -910,11 +910,11 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView commitAnimations];
 		_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
 	} else {
+		detailsBtn.frame = CGRectMake(1,1,28,28);
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.75];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:detailsBtnContainer cache:YES];
 		[detailsBtn setBackgroundImage:trackView.artwork forState:UIControlStateNormal];
-		detailsBtn.frame = CGRectMake(1,1,28,28);
 		[detailsBtn superview].backgroundColor = [UIColor blackColor];
 		[UIView commitAnimations];
 		[UIView beginAnimations:nil context:nil];
