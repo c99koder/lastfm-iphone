@@ -35,7 +35,10 @@
 		[item release];
 		[btn release];
 	} else {
-		self.navigationItem.rightBarButtonItem = nil;
+		if(self.tabBarController)
+			self.tabBarController.navigationItem.rightBarButtonItem = nil;
+		else
+			self.navigationItem.rightBarButtonItem = nil;
 	}
 }
 -(void)nowPlayingButtonPressed:(id)sender {
