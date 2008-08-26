@@ -153,7 +153,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		case 0:
 			return 1;
 		case 1:
-			return 5;
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+				return 5;
+			else
+				return 3;
 		case 2:
 			return [_commonArtists count]?[_commonArtists count]+1:0;			
 		case 3:
@@ -162,7 +165,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 			else
 				return 0;
 		case 4:
-			return [_playlists count]?[_playlists count]+1:0;
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+				return [_playlists count]?[_playlists count]+1:0;
+			else
+				return 0;
 	}
 	return 0;
 }
@@ -207,10 +213,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/personal", _username]];
 					break;
 				case 1:
-					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/loved", _username]];
+					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username]];
 					break;
 				case 2:
-					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username]];
+					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/loved", _username]];
 					break;
 				case 3:
 				{
@@ -316,10 +322,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					cell.text = @"My Library";
 					break;
 				case 2:
-					cell.text = @"Loved Tracks";
+					cell.text = @"Recommended by Last.fm";
 					break;
 				case 3:
-					cell.text = @"Recommended by Last.fm";
+					cell.text = @"Loved Tracks";
 					break;
 				case 4:
 					cell.text = @"Tag Radio";
