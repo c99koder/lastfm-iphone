@@ -73,13 +73,13 @@
 					</object>
 					<object class="IBUIView" key="IBUITitleView" id="939654475">
 						<nil key="NSNextResponder"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">294</int>
 						<object class="NSMutableArray" key="NSSubviews">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBUILabel" id="468376810">
 								<reference key="NSNextResponder" ref="939654475"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrameSize">{181, 33}</string>
+								<int key="NSvFlags">310</int>
+								<string key="NSFrameSize">{200, 28}</string>
 								<reference key="NSSuperview" ref="939654475"/>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
@@ -88,7 +88,7 @@
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
-								<string key="IBUIText">Station Name</string>
+								<string key="IBUIText"/>
 								<object class="NSFont" key="IBUIFont">
 									<string key="NSName">Helvetica-Bold</string>
 									<double key="NSSize">2.100000e+01</double>
@@ -101,7 +101,7 @@
 								<int key="IBUITextAlignment">1</int>
 							</object>
 						</object>
-						<string key="NSFrame">{{70, 6}, {181, 33}}</string>
+						<string key="NSFrame">{{70, 11}, {200, 28}}</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MSAwAA</bytes>
@@ -334,10 +334,11 @@
 						<object class="IBUIButton" id="787876777">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{25, 335}, {29, 25}}</string>
+							<string key="NSFrame">{{28, 331}, {32, 32}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+							<int key="IBUIContentMode">4</int>
 							<int key="IBUIContentHorizontalAlignment">0</int>
 							<int key="IBUIContentVerticalAlignment">0</int>
 							<reference key="IBUIFont" ref="437759127"/>
@@ -358,7 +359,7 @@
 						<object class="IBUIButton" id="873764632">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{78, 333}, {27, 27}}</string>
+							<string key="NSFrame">{{78, 331}, {32, 32}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -406,7 +407,7 @@
 						<object class="IBUIButton" id="339684106">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{215, 336}, {22, 23}}</string>
+							<string key="NSFrame">{{215, 331}, {32, 32}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -430,7 +431,7 @@
 						<object class="IBUIButton" id="983297981">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{260, 336}, {36, 23}}</string>
+							<string key="NSFrame">{{260, 331}, {36, 32}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -734,7 +735,7 @@
 			</object>
 			<object class="IBUIViewController" id="551302869">
 				<object class="IBUIView" key="IBUIView" id="45479637">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -743,7 +744,6 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrame">{{0, 372}, {320, 0}}</string>
 							<reference key="NSSuperview" ref="45479637"/>
-							<reference key="NSWindow"/>
 							<reference key="IBUIBackgroundColor" ref="177709577"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
@@ -760,7 +760,6 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{0, 372}, {320, 0}}</string>
 							<reference key="NSSuperview" ref="45479637"/>
-							<reference key="NSWindow"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClipsSubviews">YES</bool>
 							<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -771,8 +770,6 @@
 						</object>
 					</object>
 					<string key="NSFrame">{{0, 54}, {320, 372}}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
 						<bytes key="NSWhite">MQA</bytes>
@@ -1843,11 +1840,7 @@
 							<reference ref="8006225"/>
 							<reference ref="445910046"/>
 							<reference ref="761031478"/>
-							<reference ref="983297981"/>
-							<reference ref="339684106"/>
 							<reference ref="126824231"/>
-							<reference ref="873764632"/>
-							<reference ref="787876777"/>
 							<reference ref="932854978"/>
 							<reference ref="98295960"/>
 							<reference ref="978880283"/>
@@ -1855,6 +1848,10 @@
 							<reference ref="275770404"/>
 							<reference ref="321003824"/>
 							<reference ref="609475281"/>
+							<reference ref="983297981"/>
+							<reference ref="339684106"/>
+							<reference ref="873764632"/>
+							<reference ref="787876777"/>
 						</object>
 						<reference key="parent" ref="586853498"/>
 					</object>
@@ -2244,7 +2241,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>TrackViewController</string>
-					<string>{{743, 233}, {320, 480}}</string>
+					<string>{{702, 233}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>SimilarArtistsViewController</string>
 					<string>{{472, 321}, {320, 480}}</string>
