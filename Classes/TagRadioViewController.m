@@ -74,7 +74,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[[tableView cellForRowAtIndexPath:newIndexPath] showProgress: YES];
-	[self playRadioStation:[NSString stringWithFormat:@"lastfm://globaltags/%@", [[_data objectAtIndex:[newIndexPath row]] URLEscaped]]];
+	[self playRadioStation:[NSString stringWithFormat:@"lastfm://usertags/%@/%@", _username, [[_data objectAtIndex:[newIndexPath row]] URLEscaped]]];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

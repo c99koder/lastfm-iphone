@@ -215,7 +215,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				case 3:
 				{
 					TagRadioViewController *tags = [[TagRadioViewController alloc] initWithUsername:_username];
-					[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tags animated:YES];
+					if(tags) {
+						[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tags animated:YES];
+						[tags release];
+					}
 					break;
 				}
 			}
