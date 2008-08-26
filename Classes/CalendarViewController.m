@@ -171,6 +171,7 @@ UIImage *calendarDaySelected;
 			tiles[x][y].opaque = YES;
 			[tiles[x][y] setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
 			tiles[x][y].titleShadowOffset = CGSizeMake(0,-1);
+			tiles[x][y].font = [UIFont boldSystemFontOfSize:20];
 			[_days addSubview: tiles[x][y]];
 		}
 	}
