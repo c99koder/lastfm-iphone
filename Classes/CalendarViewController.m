@@ -199,6 +199,11 @@ UIImage *calendarDaySelected;
 	[self _selectDayInCurrentMonth:sender];
 	[sender release];
 }
+- (void)_transitionEnded {
+	[_transitionImage removeFromSuperview];
+	[_transitionImage release];
+	_transitionImage = nil;
+}
 - (void)prevMonthButtonPressed:(id)sender {
 	NSDateComponents *components = [[NSDateComponents alloc] init];
 	[components setMonth:-1];
