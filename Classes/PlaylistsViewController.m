@@ -89,7 +89,7 @@
 	[delegate playlistViewControllerDidSelectPlaylist:[[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"id"] intValue]];
 }
 - (void)viewDidLoad {
-	self.title = @"Select a Playlist";
+	self.title = NSLocalizedString(@"Select a Playlist", @"Playlist selector title");
 	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(_cancelButtonPressed:)] autorelease];
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillAppear:) name:UIKeyboardDidShowNotification object:nil];

@@ -103,7 +103,7 @@
 - (void)doneButtonPressed:(id)sender;
 @end
 
-@interface EventDetailViewController : UIViewController<UIPickerViewDelegate, UIPickerViewDataSource> {
+@interface EventDetailViewController : UIViewController {
 	NSDictionary *event;
 	IBOutlet UILabel *_eventTitle;
 	IBOutlet UILabel *_artists;

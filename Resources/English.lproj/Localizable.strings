@@ -1,11 +1,11 @@
-﻿/* Charts List Title */
+/* Charts List Title */
 "%@'s Charts" = "%@'s Charts";
+
+/* User events title */
+"%@'s Events" = "%@'s Events";
 
 /* Friends view title */
 "%@'s Friends" = "%@'s Friends";
-
-/* Playlists view title */
-"%@'s Playlists" = "%@'s Playlists";
 
 /* Tags view title */
 "%@'s Tags" = "%@'s Tags";
@@ -13,11 +13,20 @@
 /* Yesterday date format string */
 "'Yesterday'" = "'Yesterday'";
 
+/* Add to Playlist button */
+"Add to Playlist" = "Add to Playlist";
+
 /* Ban Confirmation */
 "Are you sure you want to mark this song as banned?" = "Are you sure you want to mark this song as banned?";
 
 /* Love Confirmation */
 "Are you sure you want to mark this song as loved?" = "Are you sure you want to mark this song as loved?";
+
+/* Artist Bio tab title */
+"Artist Bio" = "Artist Bio";
+
+/* Back Button */
+"Back" = "Back";
 
 /* Ban Track */
 "Ban" = "Ban";
@@ -25,11 +34,20 @@
 /* Ban Track (long) */
 "Ban Track" = "Ban Track";
 
+/* Buy on iTunes button */
+"Buy on iTunes" = "Buy on iTunes";
+
 /* Cancel */
 "Cancel" = "Cancel";
 
-/* Show User Charts */
+/* Charts back button title */
 "Charts" = "Charts";
+
+/* Friend selector title */
+"Choose A Friend" = "Choose A Friend";
+
+/* Common Artists heading */
+"Common Artists" = "Common Artists";
 
 /* Share to Address Book */
 "Contacts" = "Contacts";
@@ -54,12 +72,6 @@
 
 /* Authentication error title */
 "ERROR_AUTH_TITLE" = "Incorrect username or password";
-
-/* System clock error */
-"ERROR_BADTIME" = "The time difference between your clock and the Last.fm server is too large.  Please check your time and time zone settings and try again.";
-
-/* System clock error title */
-"ERROR_BADTIME_TITLE" = "Incorrect Time or Timezone";
 
 /* Empty chart error */
 "ERROR_CHART_EMPTY" = "This chart hasn't been generated yet.  Keep listening to music, and try again in a few days.";
@@ -100,6 +112,9 @@
 /* Playback failed error title */
 "ERROR_PLAYBACK_FAILED_TITLE" = "Playback Failed";
 
+/* Registration error title */
+"ERROR_REGFAILURE_TITLE" = "Account Creation Failed";
+
 /* Servers are temporarily unavailable */
 "ERROR_SERVER_UNAVAILABLE" = "There was a problem communicating with the Last.fm servers.  Please try again shortly.";
 
@@ -127,38 +142,35 @@
 /* Upgrade required title */
 "ERROR_UPGRADE_TITLE" = "Upgrade Required";
 
-/* Show User Events */
+/* Events tab title item */
 "Events" = "Events";
 
-/* External link title */
-"EXTERNAL_LINK_TITLE" = "Radio Is Playing";
-
 /* External link */
-"EXTERNAL_LINK" = "Following this link will cause the radio to stop playing.";
+"EXTERNAL_LINK" = "EXTERNAL_LINK";
 
-/* Browse Friends */
+/* External link title */
+"EXTERNAL_LINK_TITLE" = "EXTERNAL_LINK_TITLE";
+
+/* Friends back button title */
 "Friends" = "Friends";
 
-/* Friends empty */
-"FRIENDS_EMPTY" = "You haven't made any friends yet.  Visit the last.fm website to find friends.";
+/* No friends */
+"FRIENDS_EMPTY" = "FRIENDS_EMPTY";
 
-/* Friends empty title */
-"FRIENDS_EMPTY_TITLE" = "No Friends";
+/* No friends title */
+"FRIENDS_EMPTY_TITLE" = "FRIENDS_EMPTY_TITLE";
 
 /* Share to Last.fm friend */
 "Last.fm Friends" = "Last.fm Friends";
 
-/* Login Button */
-"Login" = "Login";
-
-/* Logout */
+/* Logout Button */
 "Logout" = "Logout";
 
 /* Logout confirmation */
-"LOGOUT_BODY" = "Are you sure you want to log out of Last.fm?";
+"LOGOUT_BODY" = "LOGOUT_BODY";
 
 /* Logout confirmation title */
-"LOGOUT_TITLE" = "Logout of Last.fm";
+"LOGOUT_TITLE" = "LOGOUT_TITLE";
 
 /* Love Track */
 "Love" = "Love";
@@ -166,32 +178,32 @@
 /* Love Track (long) */
 "Love Track" = "Love Track";
 
-/* Listen to Loved Tracks */
-"Loved Tracks Radio" = "Loved Tracks Radio";
+/* Loved Tracks station */
+"Loved Tracks" = "Loved Tracks";
 
-/* Listen to Library Radio */
+/* My Library station */
 "My Library" = "My Library";
 
-/* Listen to My Playlist */
-"My Playlist" = "My Playlist";
+/* My Playlists heading */
+"My Playlists" = "My Playlists";
 
-/* Listen to My Neighborhood */
-"Neighbour Radio" = "Neighbour Radio";
+/* My Stations heading */
+"My Stations" = "My Stations";
 
 /* Wiki text empty */
 "No artist description available." = "No artist description available.";
 
-/* No events available */
-"No upcoming events" = "No upcoming events";
-
 /* OK */
 "OK" = "OK";
 
-/* Password */
-"Password" = "Password";
+/* x plays since join date */
+"plays since" = "plays since";
 
-/* Show user Playlists */
-"Playlists" = "Playlists";
+/* Profile tab label */
+"Profile" = "Profile";
+
+/* Radio tab label */
+"Radio" = "Radio";
 
 /* Recent Radio Stations chart title */
 "Recent Stations" = "Recent Stations";
@@ -205,8 +217,14 @@
 /* Recently Played Tracks chart title */
 "Recently Played" = "Recently Played";
 
-/* Listen to Recommendation Radio */
-"Recommended Radio" = "Recommended Radio";
+/* Recommended by Last.fm station */
+"Recommended by Last.fm" = "Recommended by Last.fm";
+
+/* Playlist selector title */
+"Select a Playlist" = "Select a Playlist";
+
+/* Share button */
+"Share" = "Share";
 
 /* Share successful */
 "SHARE_SUCCESSFUL" = "This track was successfully sent.";
@@ -214,13 +232,19 @@
 /* Share successful title */
 "SHARE_SUCCESSFUL_TITLE" = "Track Shared";
 
-/* Sign Up Button */
-"Sign Up" = "Sign Up";
+/* Similar Artists tab title */
+"Similar Artists" = "Similar Artists";
 
-/* Start a new station */
-"Start a new station" = "Start a new station";
+/* Start a New Station button */
+"Start a New Station" = "Start a New Station";
 
-/* Show User Tags */
+/* Tag button */
+"Tag" = "Tag";
+
+/* Tag Radio station */
+"Tag Radio" = "Tag Radio";
+
+/* Tags tab title */
 "Tags" = "Tags";
 
 /* Top Albums chart title */
@@ -229,11 +253,11 @@
 /* Top Artists chart title */
 "Top Artists" = "Top Artists";
 
+/* Top Listeners tab title */
+"Top Listeners" = "Top Listeners";
+
 /* Top Tracks chart title */
 "Top Tracks" = "Top Tracks";
-
-/* Username */
-"Username" = "Username";
 
 /* Share sheet title */
 "Who would you like to share this track with?" = "Who would you like to share this track with?";

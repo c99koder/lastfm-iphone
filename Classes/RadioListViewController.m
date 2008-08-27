@@ -267,7 +267,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				l.shadowColor = [UIColor blackColor];
 				l.shadowOffset = CGSizeMake(0,-1);
 				l.backgroundColor = [UIColor clearColor];
-				l.text = @"Start a New Station";
+				l.text = NSLocalizedString(@"Start a New Station", @"Start a New Station button");
 				l.textAlignment = UITextAlignmentCenter;
 				[cell.contentView addSubview:l];
 				[l release];
@@ -287,7 +287,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					[html appendFormat:@"%@<br/>", [profile objectForKey:@"country"]];
 					NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 					[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-					[html appendFormat:@"%@ plays since %@<br/>", [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], [profile objectForKey:@"registered"]];
+					[html appendFormat:@"%@ %@ %@<br/>", NSLocalizedString(@"plays since", @"x plays since join date"),[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], [profile objectForKey:@"registered"]];
 					[html appendString:@"</body></html>"];
 					UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(66,0,210,60)];
 					[webView loadHTMLString:html baseURL:nil];
@@ -311,7 +311,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					l.shadowOffset = CGSizeMake(0,-1);
 					l.backgroundColor = [UIColor clearColor];
 					if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
-						l.text = @"My Stations";
+						l.text = NSLocalizedString(@"My Stations", @"My Stations heading");
 					else
 						l.text = [NSString stringWithFormat:@"%@'s Stations", _username];
 					[cell.contentView addSubview:l];
@@ -319,16 +319,16 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					[v release];
 					break;
 				case 1:
-					cell.text = @"My Library";
+					cell.text = NSLocalizedString(@"My Library", @"My Library station");
 					break;
 				case 2:
-					cell.text = @"Recommended by Last.fm";
+					cell.text = NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station");
 					break;
 				case 3:
-					cell.text = @"Loved Tracks";
+					cell.text = NSLocalizedString(@"Loved Tracks", @"Loved Tracks station");
 					break;
 				case 4:
-					cell.text = @"Tag Radio";
+					cell.text = NSLocalizedString(@"Tag Radio", @"Tag Radio station");
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					break;
 			}
@@ -344,7 +344,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				l.shadowColor = [UIColor blackColor];
 				l.shadowOffset = CGSizeMake(0,-1);
 				l.backgroundColor = [UIColor clearColor];
-				l.text = @"Common Artists";
+				l.text = NSLocalizedString(@"Common Artists", @"Common Artists heading");
 				[cell.contentView addSubview:l];
 				[l release];
 				[v release];
@@ -363,7 +363,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				l.shadowColor = [UIColor blackColor];
 				l.shadowOffset = CGSizeMake(0,-1);
 				l.backgroundColor = [UIColor clearColor];
-				l.text = @"Recent Stations";
+				l.text = NSLocalizedString(@"Recent Stations", @"Recent Stations heading");
 				[cell.contentView addSubview:l];
 				[l release];
 				[v release];
@@ -382,7 +382,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				l.shadowColor = [UIColor blackColor];
 				l.shadowOffset = CGSizeMake(0,-1);
 				l.backgroundColor = [UIColor clearColor];
-				l.text = @"My Playlists";
+				l.text = NSLocalizedString(@"My Playlists", @"My Playlists heading");
 				[cell.contentView addSubview:l];
 				[l release];
 				[v release];

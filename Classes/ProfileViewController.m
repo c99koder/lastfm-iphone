@@ -117,10 +117,10 @@
 			cell.text = NSLocalizedString(@"Recently Played", @"Recently Played Tracks chart title");
 			break;
 		case 4:
-			cell.text = @"Events";
+			cell.text = NSLocalizedString(@"Events", @"Events profile item");
 			break;
 		case 5:
-			cell.text = @"Friends";
+			cell.text = NSLocalizedString(@"Friends", @"Friends profile item");
 			break;
 	}
 	[cell showProgress: NO];

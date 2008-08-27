@@ -135,12 +135,12 @@ NSString *kUserAgent;
 	UITabBarController *tabBarController = [[UITabBarController alloc] init];
 	tabBarController.title = username;
 	RadioListViewController *r = [[RadioListViewController alloc] initWithUsername:username];
-	UITabBarItem *t = [[UITabBarItem alloc] initWithTitle:@"Radio" image:[UIImage imageNamed:@"radio_icon_tab.png"] tag:0];
+	UITabBarItem *t = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Radio", @"Radio tab label") image:[UIImage imageNamed:@"radio_icon_tab.png"] tag:0];
 	r.tabBarItem = t;
 	[t release];
 	
 	ProfileViewController *p = [[ProfileViewController alloc] initWithUsername:username];
-	t = [[UITabBarItem alloc] initWithTitle:@"Profile" image:[UIImage imageNamed:@"profile_icon_tab.png"] tag:1];
+	t = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Profile", @"Profile tab label") image:[UIImage imageNamed:@"profile_icon_tab.png"] tag:1];
 	p.tabBarItem = t;
 	[t release];
 

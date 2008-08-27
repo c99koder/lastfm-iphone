@@ -636,24 +636,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?f=q&q=%@&ie=UTF8&om=1&iwloc=addr", [query URLEscaped]]]];
 }
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-	return 1;
-}
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-	return 3;
-}
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-	switch(row) {
-		case 0:
-			return @"Not attending";
-		case 1:
-			return @"I might attend";
-		case 2:
-			return @"I will attend";
-		default:
-			return @"";
-	}
-}
 @end
 
 @implementation EventsViewController
@@ -716,7 +698,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (id)initWithUsername:(NSString *)user {
 	if(self = [super init]) {
-		self.title = [NSString stringWithFormat:@"%@'s Events", user];
+		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Events", @"User events title"), user];
 		_username = [user retain];
 	}
 	return self;
@@ -925,46 +907,32 @@ int tagSort(id tag1, id tag2, void *context) {
 		detailsViewContainer.frame = CGRectMake(0,0,320,416);
 		tabBar.selectedItem = [tabBar.items objectAtIndex:0];
 		[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
-		//detailType.selectedSegmentIndex = 0;
-		//[self detailTypeChanged:nil];
 		[UIView commitAnimations];
 	}
 }
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
-	/*[detailType setImage:[UIImage imageNamed:@"bio.png"] forSegmentAtIndex:0];
-	[detailType setImage:[UIImage imageNamed:@"tags.png"] forSegmentAtIndex:1];
-	[detailType setImage:[UIImage imageNamed:@"similar_artists.png"] forSegmentAtIndex:2];
-	[detailType setImage:[UIImage imageNamed:@"events.png"] forSegmentAtIndex:3];
-	[detailType setImage:[UIImage imageNamed:@"top_listeners.png"] forSegmentAtIndex:4];*/
-	
-	
 	
 	switch(item.tag) {
 		case 0:
 			[detailView addSubview:artistBio.view];
-			_titleLabel.text = @"Artist Bio";
-			//[detailType setImage:[UIImage imageNamed:@"bio_selected.png"] forSegmentAtIndex:0];
+			_titleLabel.text = NSLocalizedString(@"Artist Bio", @"Artist Bio tab title");
 			break;
 		case 1:
 			[detailView addSubview:tags.view];
-			_titleLabel.text = @"Tags";
-			//[detailType setImage:[UIImage imageNamed:@"tags_selected.png"] forSegmentAtIndex:1];
+			_titleLabel.text = NSLocalizedString(@"Tags", @"Tags tab title");
 			break;
 		case 2:
 			[detailView addSubview:similarArtists.view];
-			_titleLabel.text = @"Similar Artists";
-			//[detailType setImage:[UIImage imageNamed:@"similar_artists_selected.png"] forSegmentAtIndex:2];
+			_titleLabel.text = NSLocalizedString(@"Similar Artists", @"Similar Artists tab title");
 			break;
 		case 3:
 			[detailView addSubview:events.view];
-			_titleLabel.text = @"Events";
-			//[detailType setImage:[UIImage imageNamed:@"events_selected.png"] forSegmentAtIndex:3];
+			_titleLabel.text = NSLocalizedString(@"Events", @"Events tab title");
 			break;
 		case 4:
 			[detailView addSubview:fans.view];
-			_titleLabel.text = @"Top Listeners";
+			_titleLabel.text = NSLocalizedString(@"Top Listeners", @"Top Listeners tab title");
 			break;
 	}
 }
@@ -1003,7 +971,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	if(friends) {
 		friends.delegate = self;
-		friends.title = @"Choose A Friend";
+		friends.title = NSLocalizedString(@"Choose A Friend", @"Friend selector title");
 		UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:friends];
 		[friends release];
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController presentModalViewController:nav animated:YES];
@@ -1047,7 +1015,7 @@ int tagSort(id tag1, id tag2, void *context) {
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
 
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Share"]) {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Share", @"Share button")]) {
 		UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
 																											 delegate:self
 																							cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
@@ -1057,7 +1025,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[sheet release];	
 	}
 	
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Tag"]) {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Tag", @"Tag button")]) {
 		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
 		t.delegate = self;
 		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
@@ -1066,7 +1034,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[t release];
 	}
 	
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Add to Playlist"]) {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
 		PlaylistsViewController *p = [[PlaylistsViewController alloc] initWithNibName:@"PlaylistsView" bundle:nil];
 		p.delegate = self;
 		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
@@ -1075,7 +1043,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[n release];
 	}
 	
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Buy on iTunes"]) {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button")]) {
 		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@+%@&s=143444&partnerId=2003&affToken=www.last.fm", 
 												 [trackInfo objectForKey:@"creator"],
 												 [trackInfo objectForKey:@"title"]];
@@ -1101,11 +1069,11 @@ int tagSort(id tag1, id tag2, void *context) {
 																										 delegate:self
 																						cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
 																			 destructiveButtonTitle:nil
-																						otherButtonTitles:@"Tag",
-													@"Add to Playlist",
-													@"Share",
-													@"Buy on iTunes",
-													nil];
+																						otherButtonTitles:NSLocalizedString(@"Tag", @"Tag button"),
+																															NSLocalizedString(@"Add to Playlist", @"Add to Playlist button"),
+																															NSLocalizedString(@"Share", @"Share button"),
+																															NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button"),
+																															nil];
 	sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
 	[sheet showInView:self.view];
 	[sheet release];
