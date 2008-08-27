@@ -37,9 +37,6 @@
 	}
 	return self;
 }
-- (void)viewDidLoad {
-	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
@@ -94,7 +91,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
-	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
+	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.5];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
