@@ -146,19 +146,19 @@
 "Events" = "Events";
 
 /* External link */
-"EXTERNAL_LINK" = "EXTERNAL_LINK";
+"EXTERNAL_LINK" = "Opening this link will stop the radio and quit the Last.fm software";
 
 /* External link title */
-"EXTERNAL_LINK_TITLE" = "EXTERNAL_LINK_TITLE";
+"EXTERNAL_LINK_TITLE" = "Radio is Playing";
 
 /* Friends back button title */
 "Friends" = "Friends";
 
 /* No friends */
-"FRIENDS_EMPTY" = "FRIENDS_EMPTY";
+"FRIENDS_EMPTY" = "You haven't added any friends yet.  Visit the Last.fm website to add new friends.";
 
 /* No friends title */
-"FRIENDS_EMPTY_TITLE" = "FRIENDS_EMPTY_TITLE";
+"FRIENDS_EMPTY_TITLE" = "No Friends";
 
 /* Share to Last.fm friend */
 "Last.fm Friends" = "Last.fm Friends";
@@ -167,10 +167,10 @@
 "Logout" = "Logout";
 
 /* Logout confirmation */
-"LOGOUT_BODY" = "LOGOUT_BODY";
+"LOGOUT_BODY" = "Are you sure you want to log out?";
 
 /* Logout confirmation title */
-"LOGOUT_TITLE" = "LOGOUT_TITLE";
+"LOGOUT_TITLE" = "Logout of Last.fm";
 
 /* Love Track */
 "Love" = "Love";
