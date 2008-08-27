@@ -676,6 +676,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.view addSubview: _calendar.view];
 	[self.view sendSubviewToBack: _calendar.view];
 	if(_username) {
+		UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,372,320,44)];
+		toolbar.barStyle = UIBarStyleBlackOpaque;
+		[self.view addSubview: toolbar];
+		[toolbar release];
 		_table = [[UITableView alloc] initWithFrame:CGRectMake(0,372,320,0)];
 		_table.delegate = self;
 		_table.dataSource = self;
