@@ -326,31 +326,44 @@
 	}
 	return self;
 }
--(void)_love:(NSTimer *)timer {
-	[[LastFMService sharedInstance] loveTrack:[[timer userInfo] objectForKey:@"name"] byArtist:[[timer userInfo] objectForKey:@"artist"]];
+-(void)_love:(NSDictionary *)track {
+	[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"name"] byArtist:[track objectForKey:@"artist"]];
 	if([LastFMService sharedInstance].error) {
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
 	}
 }
--(void)_ban:(NSTimer *)timer {
-	[[LastFMService sharedInstance] banTrack:[[timer userInfo] objectForKey:@"name"] byArtist:[[timer userInfo] objectForKey:@"artist"]];
+-(void)_ban:(NSDictionary *)track {
+	[[LastFMService sharedInstance] banTrack:[track objectForKey:@"name"] byArtist:[track objectForKey:@"artist"]];
 	if([LastFMService sharedInstance].error) {
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
 	}
+}
+-(void)playlistViewControllerDidCancel {
+	[self dismissModalViewControllerAnimated:YES];
+}
+-(void)_addToPlaylist:(NSNumber *)playlist {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[[LastFMService sharedInstance] addTrack:[_selectedTrack objectForKey:@"name"] byArtist:[_selectedTrack objectForKey:@"artist"] toPlaylist:[playlist intValue]];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) performSelectorOnMainThread:@selector(reportError:) withObject:[LastFMService sharedInstance].error waitUntilDone:YES];
+	[pool release];
+}
+-(void)playlistViewControllerDidSelectPlaylist:(int)playlist {
+	[self dismissModalViewControllerAnimated:YES];
+	[NSThread detachNewThreadSelector:@selector(_addToPlaylist:) toTarget:self withObject:[NSNumber numberWithInt:playlist]];
 }
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Love", @"Love Track")]) {
-		[NSTimer scheduledTimerWithTimeInterval:0.5
-																		 target:self
-																	 selector:@selector(_love:)
-																	 userInfo:_selectedTrack
-																		repeats:NO];
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
+		PlaylistsViewController *p = [[PlaylistsViewController alloc] initWithNibName:@"PlaylistsView" bundle:nil];
+		p.delegate = self;
+		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
+		[self presentModalViewController:n animated:YES];
+		[p release];
+		[n release];
+	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Love", @"Love Track")]) {
+		[self performSelector:@selector(_love:) withObject:_selectedTrack afterDelay:0.5];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Ban", @"Ban Track")]) {
-		[NSTimer scheduledTimerWithTimeInterval:0.5
-																		 target:self
-																	 selector:@selector(_ban:)
-																	 userInfo:_selectedTrack
-																		repeats:NO];
+		[self performSelector:@selector(_ban:) withObject:_selectedTrack afterDelay:0.5];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Ban Track", @"Ban Track (long)")]) {
 		if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_NONETWORK", @"No network available") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE", @"No network available title")];
@@ -382,8 +395,10 @@
 	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
 																													 delegate:self
 																									cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-																						 destructiveButtonTitle:NSLocalizedString(@"Ban Track", @"Ban Track (long)")
-																									otherButtonTitles:NSLocalizedString(@"Love Track", @"Love Track (long)"), nil];
+																						 destructiveButtonTitle:nil
+																									otherButtonTitles:NSLocalizedString(@"Love Track", @"Love Track (long)"), 
+													NSLocalizedString(@"Ban Track", @"Ban Track (long)"),
+													NSLocalizedString(@"Add to Playlist", @"Add to Playlist button"), nil];
 	[sheet showInView:self.view];
 	[sheet release];
 	

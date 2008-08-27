@@ -18,6 +18,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "PlaylistsViewController.h"
 #import "LastFMService.h"
 
 @interface TrackCell : UITableViewCell {
@@ -57,7 +58,7 @@
 @end
 #endif
 
-@interface RecentlyPlayedChartViewController : RecentChartViewController<UIActionSheetDelegate> {
+@interface RecentlyPlayedChartViewController : RecentChartViewController<UIActionSheetDelegate,PlaylistsViewControllerDelegate> {
 }
 - (id)initWithUsername:(NSString *)username;
 @end
