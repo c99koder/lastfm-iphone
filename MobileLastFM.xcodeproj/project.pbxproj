@@ -188,7 +188,6 @@
 		22EB60420E65A8B30021751A /* EventDetailsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60410E65A8B30021751A /* EventDetailsView.xib */; };
 		22EB60440E65A8B40021751A /* CalendarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60430E65A8B40021751A /* CalendarView.xib */; };
 		22EB60460E65A8B40021751A /* TagEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60450E65A8B40021751A /* TagEditorView.xib */; };
-		22EB60480E65A8B40021751A /* PlaylistsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60470E65A8B40021751A /* PlaylistsView.xib */; };
 		22EE86290E22587F00EBFF65 /* avatarplaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EE86280E22587F00EBFF65 /* avatarplaceholder.png */; };
 		22F2FE050E31045B000DDCDC /* noartplaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE040E31045A000DDCDC /* noartplaceholder.png */; };
 		22F2FE0B0E31046D000DDCDC /* rounded_table_cell_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE060E31046D000DDCDC /* rounded_table_cell_bottom.png */; };
@@ -358,7 +357,6 @@
 		228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURLWithWarning.m"; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		2291317E0E1C2441007F5E63 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		22A754BE0E548F0500196389 /* PlaylistsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PlaylistsView.xib; path = English.lproj/PlaylistsView.xib; sourceTree = "<group>"; };
 		22ABB3010DAE68FB00D2871E /* ChartsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsViewController.h; sourceTree = "<group>"; };
 		22ABB3020DAE68FC00D2871E /* ChartsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartsViewController.m; sourceTree = "<group>"; };
 		22ABB41C0DB10C3100D2871E /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
@@ -747,7 +745,6 @@
 				22EB60410E65A8B30021751A /* EventDetailsView.xib */,
 				22EB60430E65A8B40021751A /* CalendarView.xib */,
 				22EB60450E65A8B40021751A /* TagEditorView.xib */,
-				22EB60470E65A8B40021751A /* PlaylistsView.xib */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				225934CA0DA85D8E0035A1AA /* Resources */,
@@ -961,7 +958,6 @@
 				22E42D0F0E507FA8009167EA /* event_map_btn.png in Resources */,
 				22EB60460E65A8B40021751A /* TagEditorView.xib in Resources */,
 				22E6E93D0E534F2A009FD470 /* remove.png in Resources */,
-				22EB60480E65A8B40021751A /* PlaylistsView.xib in Resources */,
 				22D1DEB30E5C61F700D1068D /* rounded_table_cell.png in Resources */,
 				22C03A2E0E5DA7E600EBF062 /* tag-bg.png in Resources */,
 				22C03A8F0E5DB19900EBF062 /* top_tags.png in Resources */,
@@ -1085,15 +1081,6 @@
 				22E6E8740E533FFB009FD470 /* English */,
 			);
 			name = TagEditorView.xib;
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		22EB60470E65A8B40021751A /* PlaylistsView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22A754BE0E548F0500196389 /* PlaylistsView.xib */,
-			);
-			name = PlaylistsView.xib;
 			path = Resources;
 			sourceTree = "<group>";
 		};

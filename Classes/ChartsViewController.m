@@ -354,7 +354,7 @@
 }
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
-		PlaylistsViewController *p = [[PlaylistsViewController alloc] initWithNibName:@"PlaylistsView" bundle:nil];
+		PlaylistsViewController *p = [[PlaylistsViewController alloc] init];
 		p.delegate = self;
 		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
 		[self presentModalViewController:n animated:YES];

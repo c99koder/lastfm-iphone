@@ -1039,7 +1039,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
-		PlaylistsViewController *p = [[PlaylistsViewController alloc] initWithNibName:@"PlaylistsView" bundle:nil];
+		PlaylistsViewController *p = [[PlaylistsViewController alloc] init];
 		p.delegate = self;
 		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
 		[self presentModalViewController:n animated:YES];

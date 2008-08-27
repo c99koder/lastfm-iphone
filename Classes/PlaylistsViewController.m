@@ -28,8 +28,8 @@
 
 @synthesize delegate;
 
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)bundle {
-	if(self = [super initWithNibName:nibName bundle:bundle]) {
+- (id)init {
+	if(self = [super initWithStyle:UITableViewStylePlain]) {
 		_data = [[[LastFMService sharedInstance] playlistsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
 		if(!_data)
 			_data = [[NSMutableArray alloc] init];
@@ -38,32 +38,32 @@
 	return self;
 }
 - (void)_keyboardWillAppear:(NSNotification *)notification {
-	CGRect frame = _tableView.frame;
+	CGRect frame = self.tableView.frame;
 	CGRect keyboardFrame;
 	[[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardFrame];
 	frame.size.height -= keyboardFrame.size.height;
-	_tableView.frame = frame;
+	self.tableView.frame = frame;
 }
 - (void)_keyboardWillDisappear:(NSNotification *)notification {
-	CGRect frame = _tableView.frame;
+	CGRect frame = self.tableView.frame;
 	CGRect keyboardFrame;
 	[[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardFrame];
 	frame.size.height += keyboardFrame.size.height;
-	_tableView.frame = frame;
+	self.tableView.frame = frame;
 }
 - (void)_doneButtonPressed:(id)sender {
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
 	[_data insertObject:[NSDictionary dictionaryWithObjectsAndKeys:_newPlaylist.text,@"title",nil] atIndex:0];
-	[_tableView beginUpdates];
-	[_tableView setEditing:NO animated:YES];
-	[_tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
-	[_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
-	[_tableView endUpdates];
+	[self.tableView beginUpdates];
+	[self.tableView setEditing:NO animated:YES];
+	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
+	[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
+	[self.tableView endUpdates];
 	[_newPlaylist resignFirstResponder];
 	[_newPlaylist removeFromSuperview];
 	[_newPlaylist release];
 	_newPlaylist = nil;
-	_tableView.scrollEnabled = YES;
+	self.tableView.scrollEnabled = YES;
 	//TODO: Create the new playlist here when web service becomes available
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -76,10 +76,10 @@
 - (void)_addButtonPressed:(id)sender {
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(_doneButtonPressed:)] autorelease];
 	if([_data count])
-		[_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-	[_tableView setEditing:YES animated:YES];
-	[_tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:YES];
-	_tableView.scrollEnabled = NO;
+		[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+	[self.tableView setEditing:YES animated:YES];
+	[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:YES];
+	self.tableView.scrollEnabled = NO;
 }
 - (void)_cancelButtonPressed:(id)sender {
 	[delegate playlistViewControllerDidCancel];
@@ -96,11 +96,11 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillDisappear:) name:UIKeyboardWillHideNotification object:nil];
 	_newPlaylist = nil;
 }
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableViewableView {
+- (NSInteger)numberOfSectionsIntableView:(UITableView *)tableViewableView {
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableViewableView numberOfRowsInSection:(NSInteger)section {
-	return _tableView.editing?[_data count]+1:[_data count];
+	return self.tableView.editing?[_data count]+1:[_data count];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tableView.editing?@"EditingCell":@"BasicCell"];

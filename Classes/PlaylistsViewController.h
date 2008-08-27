@@ -25,7 +25,7 @@
 - (void)playlistViewControllerDidSelectPlaylist:(int)playlist;
 @end
 
-@interface PlaylistsViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
+@interface PlaylistsViewController : UITableViewController<UITextFieldDelegate> {
 	IBOutlet UITableView *_tableView;
 	NSMutableArray *_data;
 	id<PlaylistsViewControllerDelegate> delegate;
