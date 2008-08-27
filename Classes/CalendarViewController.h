@@ -35,6 +35,7 @@
 	id<CalendarViewControllerDelegate> delegate;
 	UIButton *tiles[7][7];
 	UIImageView *_transitionImage;
+	int _lastRowInMonth;
 }
 @property (nonatomic, retain) NSArray *eventDates;
 @property (nonatomic, retain) id<CalendarViewControllerDelegate> delegate; 

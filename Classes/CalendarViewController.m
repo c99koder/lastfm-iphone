@@ -116,6 +116,8 @@ UIImage *calendarDaySelected;
 		}
 	}
 	
+	_lastRowInMonth = y;
+	
 	if(x<7 || y<7) {
 		components = [[[NSDateComponents alloc] init] autorelease];
 		[components setMonth:1];
@@ -206,23 +208,22 @@ UIImage *calendarDaySelected;
 	[components release];
 	if(!_transitionImage) {
 		_transitionImage = [[UIImageView alloc] initWithFrame:_days.frame];
-		[self.view addSubview:_transitionImage];
+		[_days addSubview:_transitionImage];
+		[_days sendSubviewToBack:_transitionImage];
 	}
 	UIGraphicsBeginImageContext(_transitionImage.bounds.size);
 	[_days.layer renderInContext:UIGraphicsGetCurrentContext()];
 	_transitionImage.image = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
-	CGRect frame = _days.frame;
-	_transitionImage.frame = frame;
-	frame.origin.x = -322;
-	_days.frame = frame;
 	[self _buildCalendar];
+	CGRect frame = _days.frame;
+	_transitionImage.frame = CGRectMake(0,322 - ((7-_lastRowInMonth) * 46),322,322);
+	_days.frame = CGRectMake(-1,49-322+((7-_lastRowInMonth) * 46),322,322);
 	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration: 0.2];
-	frame = _transitionImage.frame;
+	[UIView setAnimationDuration: 0.25];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(_transitionEnded)];
 	_days.frame = frame;
-	frame.origin.x = 322;
-	_transitionImage.frame = frame;
 	[UIView commitAnimations];
 }
 - (void)nextMonthButtonPressed:(id)sender {
@@ -234,23 +235,22 @@ UIImage *calendarDaySelected;
 	[components release];
 	if(!_transitionImage) {
 		_transitionImage = [[UIImageView alloc] initWithFrame:_days.frame];
-		[self.view addSubview:_transitionImage];
+		[_days addSubview:_transitionImage];
+		[_days sendSubviewToBack:_transitionImage];
 	}
 	UIGraphicsBeginImageContext(_transitionImage.bounds.size);
 	[_days.layer renderInContext:UIGraphicsGetCurrentContext()];
 	_transitionImage.image = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	CGRect frame = _days.frame;
-	_transitionImage.frame = frame;
-	frame.origin.x = 320;
-	_days.frame = frame;
+	_transitionImage.frame = CGRectMake(0,-322 + ((7-_lastRowInMonth) * 46),322,322);
+	_days.frame = CGRectMake(-1,49+322-((7-_lastRowInMonth) * 46),322,322);
 	[self _buildCalendar];
 	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration: 0.2];
-	frame = _transitionImage.frame;
+	[UIView setAnimationDuration: 0.25];
+	[UIView setAnimationDelegate:self];
+	[UIView setAnimationDidStopSelector:@selector(_transitionEnded)];
 	_days.frame = frame;
-	frame.origin.x = -322;
-	_transitionImage.frame = frame;
 	[UIView commitAnimations];
 }
 - (NSArray *)eventDates {
