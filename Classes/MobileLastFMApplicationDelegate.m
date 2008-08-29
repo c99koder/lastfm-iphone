@@ -24,6 +24,8 @@
 #import "PlaybackViewController.h"
 #include "version.h"
 #include <SystemConfiguration/SCNetworkReachability.h>
+#import "NSString+URLEscaped.h"
+#import "NSData+Compress.h"
 
 void powerCallback(void *refCon, io_service_t service, natural_t messageType, void *messageArgument) {	
 	[(MobileLastFMApplicationDelegate *)refCon powerMessageReceived: messageType withArgument: messageArgument];
@@ -88,7 +90,6 @@ NSString *kUserAgent;
 		NSLog(@"%@", kUserAgent);
 		[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 																														 [NSNumber numberWithFloat: 0.8], @"volume",
-																														 [NSNumber numberWithInt:0], @"discovery",
 																														 nil]];
 		[NSThread detachNewThreadSelector:@selector(_cleanCache) toTarget:self withObject:nil];
 	}
@@ -106,7 +107,7 @@ NSString *kUserAgent;
 	[_scrobbler release];
 	_scrobbler = nil;
 	[self showFirstRunView:YES];
-}	
+}
 - (void)logoutButtonPressed:(id)sender {
 	UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"LOGOUT_TITLE", @"Logout confirmation title")
 																									 message:NSLocalizedString(@"LOGOUT_BODY",@"Logout confirmation")
@@ -123,9 +124,51 @@ NSString *kUserAgent;
 	if(_pendingAlert)
 		[_pendingAlert show];
 }
+- (void)_sendCrashReport {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	NSString *url = [NSString stringWithFormat:@"http://oops.last.fm/logsubmission/add?username=%@&platform=%@&clientname=iPhoneFM&clientversion=%@",
+									 [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped],
+									 [[UIDevice currentDevice].model URLEscaped],
+									 VERSION];
+
+	NSMutableData *body = [NSMutableData data];
+	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16\r\nContent-Disposition: form-data; name=\"usernotes\"\r\n\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16\r\nContent-Disposition: form-data; name=\"logs\"\r\n\r\ncrash.log\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16\r\nContent-Disposition: form-data; name=\"crash.log\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+	[body appendData:[[NSData dataWithContentsOfFile:CACHE_FILE(@"crash.log")] compressWithLevel:9]];
+	[body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16--"] dataUsingEncoding:NSUTF8StringEncoding]];
+
+	NSData *theResponseData;
+	NSHTTPURLResponse *theResponse = NULL;
+	NSError *theError = NULL;
+	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
+	[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
+	[theRequest setValue:@"multipart/form-data;boundary=8e61d618ca16" forHTTPHeaderField:@"Content-Type"];
+	[theRequest setHTTPMethod:@"POST"];
+	[theRequest setHTTPBody:body];
+	
+	theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
+
+	if([theResponse statusCode] == 200) {
+		[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"crash.log") error:nil];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"crashed"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[self displayError:NSLocalizedString(@"CRASH_REPORT_SUCCESS", @"Crash report sucessfully sent") withTitle:NSLocalizedString(@"CRASH_REPORT_SUCCESS_TITLE", @"Crash report sucessfully sent title")];
+	} else {
+		[self displayError:NSLocalizedString(@"CRASH_REPORT_FAIL", @"Crash report failed to send") withTitle:NSLocalizedString(@"CRASH_REPORT_SUCCESS_TITLE", @"Crash report failed to send title")];
+	}
+	
+	[pool release];
+}
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Logout", @"Logout")])
 		[self performSelectorOnMainThread:@selector(_logout) withObject:nil waitUntilDone:YES];
+	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Cancel", @"Cancel")])
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"crashed"];
+	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Send", @"Send")])
+		[NSThread detachNewThreadSelector:@selector(_sendCrashReport) toTarget:self withObject:nil];
 	if(_pendingAlert) {
 		[_pendingAlert release];
 		_pendingAlert = nil;
@@ -285,6 +328,15 @@ NSString *kUserAgent;
 	}
 	
 	[window makeKeyAndVisible];
+	
+	if([[NSUserDefaults standardUserDefaults] objectForKey:@"crashed"]) {
+		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CRASH_REPORT_TITLE", @"Crash reporter title")
+																										 message:NSLocalizedString(@"CRASH_REPORT_BODY",@"Crash reporter body")
+																										delegate:self
+																					 cancelButtonTitle:NSLocalizedString(@"Cancel", @"cancel")
+																					 otherButtonTitles:NSLocalizedString(@"Send", @"Send"), nil] autorelease];
+		[alert show];
+	}
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {
 	NSDictionary *track = [self trackInfo];
@@ -457,7 +509,7 @@ NSString *kUserAgent;
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
 	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
 	if(!_locked)
-		[_pendingAlert show];
+		[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 }
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
 	if([url.scheme isEqualToString:@"lastfm"]) {

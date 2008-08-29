@@ -58,6 +58,24 @@
 /* Country name */
 "country" = "country";
 
+/* Crash report successfully sent */
+"CRASH_REPORT_SUCCESS" = "Crash report successfully sent";
+
+/* Crash report successfully sent title */
+"CRASH_REPORT_SUCCESS_TITLE" = "Crash Reporter";
+
+/* Crash report failed to send */
+"CRASH_REPORT_FAIL" = "Unable to send crash report.  Please try again later.";
+
+/* Crash report failed to send title */
+"CRASH_REPORT_FAIL_TITLE" = "Crash Reporter";
+
+/* Crash report title */
+"CRASH_REPORT_TITLE" = "Crash Reporter";
+
+/* Crash report body */
+"CRASH_REPORT_BODY" = "A crash report was found on this device.  Would you like to send it to Last.fm?";
+
 /* Tag search placeholder text */
 "Enter a tag" = "Enter a tag";
 
