@@ -30,10 +30,7 @@
 
 @implementation PlaybackSubview
 - (void)showLoadingView {
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.5];
 	_loadingView.alpha = 1;
-	[UIView commitAnimations];
 }
 - (void)hideLoadingView {
 	[UIView beginAnimations:nil context:nil];
