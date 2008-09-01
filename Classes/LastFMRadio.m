@@ -170,14 +170,16 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
 		AudioSessionSetActive(true);
 		[LastFMRadio sharedInstance].playbackWasInterrupted = NO;
-		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
-																																						 title:[_trackInfo objectForKey:@"title"]
-																																						artist:[_trackInfo objectForKey:@"creator"]
-																																						 album:[_trackInfo objectForKey:@"album"]
-																																				 isPlaying:YES
-																																			hasImageData:NO
-																																		additionalInfo:nil];
-		[[SystemNowPlayingController sharedInstance] disableMediaHUD];
+		if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)]) {
+			[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
+																																							 title:[_trackInfo objectForKey:@"title"]
+																																							artist:[_trackInfo objectForKey:@"creator"]
+																																							 album:[_trackInfo objectForKey:@"album"]
+																																					 isPlaying:YES
+																																				hasImageData:NO
+																																			additionalInfo:nil];
+			[[SystemNowPlayingController sharedInstance] disableMediaHUD];
+		}
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		[UIApplication sharedApplication].idleTimerDisabled = YES;
 		_state = TRACK_PLAYING;
@@ -197,13 +199,15 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		queue = nil;
 	}
 	[_connection cancel];
-	[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
-																																					 title:nil
-																																					artist:nil
-																																					 album:nil
-																																			 isPlaying:NO
-																																		hasImageData:NO
-																																	additionalInfo:nil];
+	if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)]) {
+		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
+																																						 title:nil
+																																						artist:nil
+																																						 album:nil
+																																				 isPlaying:NO
+																																			hasImageData:NO
+																																		additionalInfo:nil];
+	}
 	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
 	[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
