@@ -98,7 +98,6 @@
 		221744650E44D5FA0058C0C3 /* volume-max.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744630E44D5FA0058C0C3 /* volume-max.png */; };
 		221746FB0E48A9710058C0C3 /* NSData+Compress.m in Sources */ = {isa = PBXBuildFile; fileRef = 221746FA0E48A9710058C0C3 /* NSData+Compress.m */; };
 		221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 221747140E48B6930058C0C3 /* IOKit.framework */; };
-		221748130E48BDED0058C0C3 /* IOKIT_README in Resources */ = {isa = PBXBuildFile; fileRef = 221748120E48BDED0058C0C3 /* IOKIT_README */; };
 		2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */; };
 		221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */ = {isa = PBXBuildFile; fileRef = 221E6B030DC2BD300006E74C /* Scrobbler.m */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
@@ -197,18 +196,6 @@
 		22F2FE0F0E31046D000DDCDC /* transparent_grey_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE0A0E31046D000DDCDC /* transparent_grey_button.png */; };
 		22F452FD0DD50EBD0060DF02 /* NSString+URLEscaped.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F452FC0DD50EBD0060DF02 /* NSString+URLEscaped.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		22A8638F0DA5AEA0009EB12C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 1;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -789,7 +776,6 @@
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
-				22A8638F0DA5AEA0009EB12C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -946,7 +932,6 @@
 				2214D0940E43590F00FC3F3D /* events_red_circle.png in Resources */,
 				221744640E44D5FA0058C0C3 /* volume-min.png in Resources */,
 				221744650E44D5FA0058C0C3 /* volume-max.png in Resources */,
-				221748130E48BDED0058C0C3 /* IOKIT_README in Resources */,
 				222903430E4B39A10024294D /* month_arrow_left.png in Resources */,
 				222903440E4B39A10024294D /* month_arrow_right.png in Resources */,
 				222903460E4B39EE0024294D /* month_heading_panel.png in Resources */,
