@@ -56,30 +56,33 @@
 			break;
 	}
 	
-	[_data release];
-	if([results count]) {
-		_data = [[NSMutableArray alloc] init];
-		for(NSDictionary *result in results) {
-			if([result objectForKey:@"streamable"] == nil || [[result objectForKey:@"streamable"] intValue])
-				[(NSMutableArray *)_data addObject:[result objectForKey:@"name"]];
-		}
-		if([_data count] < 1) {
-			[_data release];
+	if(![[NSThread currentThread] isCancelled]) {
+		[_data release];
+		if([results count]) {
+			_data = [[NSMutableArray alloc] init];
+			for(NSDictionary *result in results) {
+				if([result objectForKey:@"streamable"] == nil || [[result objectForKey:@"streamable"] intValue])
+					[(NSMutableArray *)_data addObject:[result objectForKey:@"name"]];
+			}
+			if([_data count] < 1) {
+				[_data release];
+				_data = nil;
+			}
+		} else {
 			_data = nil;
 		}
-	} else {
-		_data = nil;
+		
+		[_table reloadData];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	}
-	
-	[_table reloadData];
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[_searchThread release];
+	_searchThread = nil;
 	[pool release];
 }
 -(void)_search:(NSTimer *)timer {
-	[NSThread detachNewThreadSelector:@selector(_searchThread:)
-													 toTarget:self
-												 withObject:[timer userInfo]];
-	[_searchTimer release];
+	[_searchThread cancel];
+	_searchThread = [[NSThread alloc] initWithTarget:self selector:@selector(_searchThread:) object:[timer userInfo]];
+	[_searchThread start];
 	_searchTimer = nil;
 }
 -(IBAction)searchTypeChanged:(id)sender {
@@ -174,6 +177,7 @@
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:url animated:YES];
 		}
 	}
+	[_table reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
