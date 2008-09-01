@@ -33,7 +33,7 @@
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStylePlain]) {
 		_username = [username retain];
-		self.title = _username;
+		self.title = [username retain];
 	}
 	return self;
 }

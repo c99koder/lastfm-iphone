@@ -117,7 +117,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 - (id)initWithUsername:(NSString *)username {
 	_PerformSwizzle([UIColor class], @selector(pinStripeColor),@selector(pinStripeColorHax), NO);
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		self.title = username;
+		self.title = [username retain];
 		_username = [username retain];
 		self.tableView.sectionHeaderHeight = 0;
 		self.tableView.sectionFooterHeight = 0;
@@ -128,13 +128,6 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	[self.tableView reloadData];
-	[self loadContentForCells:[self.tableView visibleCells]];
-}
-- (void)viewDidLoad {
-	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-}
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	[_playlists release];
 	_playlists = [[NSMutableArray alloc] init];
 	NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
@@ -146,6 +139,17 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	_recent = [[[LastFMRadio sharedInstance] recentURLs] retain];
 	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
 		_commonArtists = [[[[LastFMService sharedInstance] compareArtistsOfUser:_username withUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] objectForKey:@"artists"] retain];
+	if(![_commonArtists isKindOfClass:[NSArray class]]) {
+		[_commonArtists release];
+		_commonArtists = nil;
+	}
+	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
+}
+- (void)viewDidLoad {
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 5;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -287,7 +291,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					[html appendFormat:@"%@<br/>", [profile objectForKey:@"country"]];
 					NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 					[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-					[html appendFormat:@"%@ %@ %@<br/>", NSLocalizedString(@"plays since", @"x plays since join date"),[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], [profile objectForKey:@"registered"]];
+					[html appendFormat:@"%@ %@ %@<br/>",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], NSLocalizedString(@"plays since", @"x plays since join date"), [profile objectForKey:@"registered"]];
 					[html appendString:@"</body></html>"];
 					UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(66,0,210,60)];
 					[webView loadHTMLString:html baseURL:nil];
