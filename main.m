@@ -78,8 +78,7 @@ void uncaughtExceptionHandler(NSException *exception) {
 	NSLog(@"%@", report);
 	
 	// Copy debug.log to crash.log
-	[[NSFileManager defaultManager] removeFileAtPath:CACHE_FILE(@"crash.log") handler:nil];
-	[[NSFileManager defaultManager] copyPath:CACHE_FILE(@"debug.log") toPath:CACHE_FILE(@"crash.log") handler:nil];
+	[[NSData dataWithContentsOfFile:CACHE_FILE(@"debug.log")] writeToFile:CACHE_FILE(@"crash.log") atomically:YES];
 	
 	// Set a key so we prompt the user to report this on next launch
 	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"crashed"];
@@ -182,8 +181,7 @@ void mysighandler(int sig, siginfo_t *info, void *context) {
 	NSLog(report);
 
 	// Copy debug.log to crash.log
-	[[NSFileManager defaultManager] removeFileAtPath:CACHE_FILE(@"crash.log") handler:nil];
-	[[NSFileManager defaultManager] copyPath:CACHE_FILE(@"debug.log") toPath:CACHE_FILE(@"crash.log") handler:nil];
+	[[NSData dataWithContentsOfFile:CACHE_FILE(@"debug.log")] writeToFile:CACHE_FILE(@"crash.log") atomically:YES];
 
 	// Set a key so we prompt the user to report this on next launch
 	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"crashed"];
@@ -238,7 +236,7 @@ int main(int argc, char *argv[])
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	int retVal;
 	
-	[[NSFileManager defaultManager] removeFileAtPath:CACHE_FILE(@"debug.log") handler:nil];
+	[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"debug.log") error:nil];
 	
 	// The following exception handling logic allows us to catch unhandled
 	// exceptions. Using the builtin unhandled exceptions handler routines
