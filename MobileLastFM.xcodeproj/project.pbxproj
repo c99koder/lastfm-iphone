@@ -128,6 +128,7 @@
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
 		229122800E6C34F500F9C17C /* tagareabg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291227F0E6C34F500F9C17C /* tagareabg.png */; };
+		2291244A0E6D7CC700F9C17C /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229124490E6D7CC700F9C17C /* Entitlements.plist */; };
 		229130CE0E1C153F007F5E63 /* blueBackBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 229130CD0E1C153F007F5E63 /* blueBackBtn.png */; };
 		2291317F0E1C2441007F5E63 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291317E0E1C2441007F5E63 /* Default.png */; };
 		22ABB3030DAE68FC00D2871E /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB3020DAE68FC00D2871E /* ChartsViewController.m */; };
@@ -344,6 +345,7 @@
 		228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURLWithWarning.h"; sourceTree = "<group>"; };
 		228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURLWithWarning.m"; sourceTree = "<group>"; };
 		2291227F0E6C34F500F9C17C /* tagareabg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tagareabg.png; sourceTree = "<group>"; };
+		229124490E6D7CC700F9C17C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		2291317E0E1C2441007F5E63 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		22ABB3010DAE68FB00D2871E /* ChartsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsViewController.h; sourceTree = "<group>"; };
@@ -726,6 +728,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				221748120E48BDED0058C0C3 /* IOKIT_README */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
@@ -953,6 +956,7 @@
 				22EB5F6C0E6492920021751A /* info_button_behind.png in Resources */,
 				22EB5FC00E6499C80021751A /* ontourbadge.png in Resources */,
 				229122800E6C34F500F9C17C /* tagareabg.png in Resources */,
+				2291244A0E6D7CC700F9C17C /* Entitlements.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1160,6 +1164,56 @@
 			};
 			name = Distribution;
 		};
+		229124430E6D7C8000F9C17C /* Distribution (ad-hoc) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
+				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
+				GCC_VERSION = 4.0;
+				HEADER_SEARCH_PATHS = (
+					TouchXML,
+					/usr/include/libxml2,
+				);
+				IBC_NOTICES = NO;
+				IBC_WARNINGS = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_PREPROCESS = YES;
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lxml2",
+					"-lsqlite3",
+				);
+				PREBINDING = NO;
+				PROVISIONING_PROFILE = "B1C9C95D-4970-4BD6-BC27-215860BF903C";
+				SDKROOT = iphoneos2.0;
+				VALID_ARCHS = "armv6 i386 ppc";
+			};
+			name = "Distribution (ad-hoc)";
+		};
+		229124440E6D7C8000F9C17C /* Distribution (ad-hoc) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MobileLastFM_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				PREBINDING = NO;
+				PRODUCT_NAME = Last.fm;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Distribution (ad-hoc)";
+		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1230,6 +1284,7 @@
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
 				223AB58D0E2000EC002E06F2 /* Distribution */,
+				229124440E6D7C8000F9C17C /* Distribution (ad-hoc) */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -1240,6 +1295,7 @@
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
 				223AB58C0E2000EC002E06F2 /* Distribution */,
+				229124430E6D7C8000F9C17C /* Distribution (ad-hoc) */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
