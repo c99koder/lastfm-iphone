@@ -131,6 +131,11 @@
 		2291244A0E6D7CC700F9C17C /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229124490E6D7CC700F9C17C /* Entitlements.plist */; };
 		229130CE0E1C153F007F5E63 /* blueBackBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 229130CD0E1C153F007F5E63 /* blueBackBtn.png */; };
 		2291317F0E1C2441007F5E63 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291317E0E1C2441007F5E63 /* Default.png */; };
+		229808CF0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CA0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png */; };
+		229808D00E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CB0E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png */; };
+		229808D10E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */; };
+		229808D20E6DAA44009CEDF9 /* profile_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CD0E6DAA44009CEDF9 /* profile_panel.png */; };
+		229808D30E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */; };
 		22ABB3030DAE68FC00D2871E /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB3020DAE68FC00D2871E /* ChartsViewController.m */; };
 		22ABB41E0DB10C3100D2871E /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB41D0DB10C3100D2871E /* SearchViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
@@ -348,6 +353,11 @@
 		229124490E6D7CC700F9C17C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		2291317E0E1C2441007F5E63 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		229808CA0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_dark_bkg_upper.png; sourceTree = "<group>"; };
+		229808CB0E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_lower.png; sourceTree = "<group>"; };
+		229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_dark_bkg_lower.png; sourceTree = "<group>"; };
+		229808CD0E6DAA44009CEDF9 /* profile_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_panel.png; sourceTree = "<group>"; };
+		229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_upper.png; sourceTree = "<group>"; };
 		22ABB3010DAE68FB00D2871E /* ChartsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsViewController.h; sourceTree = "<group>"; };
 		22ABB3020DAE68FC00D2871E /* ChartsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartsViewController.m; sourceTree = "<group>"; };
 		22ABB41C0DB10C3100D2871E /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
@@ -613,6 +623,11 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				229808CA0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png */,
+				229808CB0E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png */,
+				229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */,
+				229808CD0E6DAA44009CEDF9 /* profile_panel.png */,
+				229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */,
 				22EE86280E22587F00EBFF65 /* avatarplaceholder.png */,
 				225157970E09A67B00943078 /* backBtn.png */,
 				225934DA0DA85DA60035A1AA /* ban.png */,
@@ -957,6 +972,11 @@
 				22EB5FC00E6499C80021751A /* ontourbadge.png in Resources */,
 				229122800E6C34F500F9C17C /* tagareabg.png in Resources */,
 				2291244A0E6D7CC700F9C17C /* Entitlements.plist in Resources */,
+				229808CF0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png in Resources */,
+				229808D00E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png in Resources */,
+				229808D10E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png in Resources */,
+				229808D20E6DAA44009CEDF9 /* profile_panel.png in Resources */,
+				229808D30E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

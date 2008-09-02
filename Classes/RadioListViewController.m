@@ -187,7 +187,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0)
-		return [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]?46:64;
+		return [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]?46:59;
 	else if([indexPath row] > 0)
 		return 46;
 	else
@@ -280,24 +280,40 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				if(profilecell == nil) {
 					NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
 					profilecell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"];
+					v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_panel.png"]];
+					profilecell.backgroundView = v;
+					[v release];
 					profilecell.imageURL = [profile objectForKey:@"avatar"];
-					NSMutableString *html = [[NSMutableString alloc] init];
-					[html appendString:@"<html><body style=\"padding: 0px; margin: 0px; width: 100%\">"];
-					if([[profile objectForKey:@"realname"] length]) {
-						[html appendFormat:@"<b>%@</b><br/>", [profile objectForKey:@"realname"]];
-					}
+					UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(62,4,230,18)];
+					l.backgroundColor = [UIColor clearColor];
+					l.textColor = [UIColor whiteColor];
+					l.text = [profile objectForKey:@"realname"];
+					l.font = [UIFont boldSystemFontOfSize: 16];
+					[profilecell.contentView addSubview: l];
+					[l release];
+					
+					NSMutableString *line2 = [NSMutableString string];
 					if([[profile objectForKey:@"age"] length])
-						[html appendFormat:@"%@, ", [profile objectForKey:@"age"]];
-					[html appendFormat:@"%@<br/>", [profile objectForKey:@"country"]];
+						[line2 appendFormat:@"%@, ", [profile objectForKey:@"age"]];
+					[line2 appendFormat:@"%@", [profile objectForKey:@"country"]];
+					l = [[UILabel alloc] initWithFrame:CGRectMake(62,22,230,16)];
+					l.backgroundColor = [UIColor clearColor];
+					l.textColor = [UIColor grayColor];
+					l.text = line2;
+					l.font = [UIFont systemFontOfSize: 14];
+					[profilecell.contentView addSubview: l];
+					[l release];
+					
 					NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 					[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-					[html appendFormat:@"%@ %@ %@<br/>",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], NSLocalizedString(@"plays since", @"x plays since join date"), [profile objectForKey:@"registered"]];
-					[html appendString:@"</body></html>"];
-					UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(66,0,210,60)];
-					[webView loadHTMLString:html baseURL:nil];
-					[profilecell.contentView addSubview: webView];
-					[webView release];
-					[html release];
+					l = [[UILabel alloc] initWithFrame:CGRectMake(62,38,230,16)];
+					l.backgroundColor = [UIColor clearColor];
+					l.textColor = [UIColor grayColor];
+					l.text = [NSString stringWithFormat:@"%@ %@ %@",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], NSLocalizedString(@"plays since", @"x plays since join date"), [profile objectForKey:@"registered"]];
+					l.font = [UIFont systemFontOfSize: 14];
+					[profilecell.contentView addSubview: l];
+					[l release];
+					[numberFormatter release];
 				}
 				return profilecell;
 			}

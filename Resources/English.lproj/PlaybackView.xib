@@ -253,7 +253,7 @@
 						<object class="IBUIImageView" id="578961894">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{256, 0}, {64, 64}}</string>
+							<string key="NSFrame">{{233, 0}, {87, 86}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>

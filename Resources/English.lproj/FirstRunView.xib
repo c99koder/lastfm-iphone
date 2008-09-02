@@ -9,6 +9,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="3"/>
+			<integer value="53"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -136,9 +137,9 @@ bSwgTHRkLg</string>
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="1043294242">
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="724461032">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">transparent_grey_button.png</string>
+							<string key="NSResourceName">black_button_dark_bkg_upper.png</string>
 						</object>
 					</object>
 					<object class="IBUIButton" id="689278323">
@@ -157,9 +158,9 @@ bSwgTHRkLg</string>
 						<string key="IBUINormalTitle">Sign up</string>
 						<reference key="IBUIHighlightedTitleColor" ref="649291039"/>
 						<reference key="IBUINormalTitleColor" ref="583470059"/>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="43621804">
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">event_map_btn.png</string>
+							<string key="NSResourceName">red_button_dark_bkg_lower.png</string>
 						</object>
 					</object>
 					<object class="IBUILabel" id="401370767">
@@ -281,7 +282,7 @@ bSwgTHRkLg</string>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 			</object>
 			<object class="IBUIView" id="628209171">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -466,7 +467,10 @@ bSwgTHRkLg</string>
 						<string key="IBUINormalTitle">Create Account</string>
 						<reference key="IBUIHighlightedTitleColor" ref="649291039"/>
 						<reference key="IBUINormalTitleColor" ref="583470059"/>
-						<reference key="IBUINormalBackgroundImage" ref="43621804"/>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">red_button_dark_bkg_upper.png</string>
+						</object>
 					</object>
 					<object class="IBUIButton" id="686254200">
 						<reference key="NSNextResponder" ref="628209171"/>
@@ -484,10 +488,11 @@ bSwgTHRkLg</string>
 						<string key="IBUINormalTitle">Cancel</string>
 						<reference key="IBUIHighlightedTitleColor" ref="649291039"/>
 						<reference key="IBUINormalTitleColor" ref="583470059"/>
-						<reference key="IBUINormalBackgroundImage" ref="1043294242"/>
+						<reference key="IBUINormalBackgroundImage" ref="724461032"/>
 					</object>
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
+				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
@@ -984,7 +989,7 @@ bSwgTHRkLg</string>
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
-		<string key="IBDocument.LastKnownRelativeProjectPath">MobileLastFM.xcodeproj</string>
+		<string key="IBDocument.LastKnownRelativeProjectPath">../../MobileLastFM.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 	</data>
 </archive>

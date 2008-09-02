@@ -722,8 +722,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
 	[self _processEvents:events];
 	
-//TODO: Re-enable this when mattb provides better art
-#if 0
 	if([_events count]) {
 		if(_badge)
 			_badge.alpha = 1;
@@ -731,7 +729,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if(_badge)
 			_badge.alpha = 0;
 	}
-#endif
+
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];
