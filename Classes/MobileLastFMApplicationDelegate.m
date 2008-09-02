@@ -317,6 +317,7 @@ NSString *kUserAgent;
 			[frames addObject:[UIImage imageNamed:filename]];
 		}
 		_loadingViewLogo.animationImages = frames;
+		[frames release];
 		_loadingViewLogo.animationDuration = 2;
 		[_loadingViewLogo startAnimating];
 		_loadingView.frame = [UIScreen mainScreen].applicationFrame;

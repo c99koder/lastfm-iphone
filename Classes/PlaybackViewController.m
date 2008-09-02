@@ -666,6 +666,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[_eventDates addObject:lastDate];
 	}
 	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
+	[formatter release];
 }
 - (void)viewDidLoad {
 	_calendar = [[CalendarViewController alloc] initWithNibName:@"CalendarView" bundle:nil];

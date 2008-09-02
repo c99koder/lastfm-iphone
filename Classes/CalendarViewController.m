@@ -264,6 +264,9 @@ UIImage *calendarDaySelected;
 - (void)setEventDates:(NSArray *)e {
 	[eventDates release];
 	eventDates = [e retain];
+	[date release];
+	[selectedDate release];
+	
 	if([e count])
 		date = [[e objectAtIndex:0] retain];
 	else
