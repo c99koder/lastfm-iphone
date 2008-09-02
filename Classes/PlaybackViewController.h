@@ -90,7 +90,7 @@
 @interface EventsViewController : PlaybackSubview<CalendarViewControllerDelegate,UITableViewDelegate,UITableViewDataSource> {
 	IBOutlet CalendarViewController *_calendar;
 	IBOutlet UITableView *_table;
-	IBOutlet UIImageView *_badge;
+	IBOutlet UIButton *_badge;
 	IBOutlet UIImageView *_shadow;
 	NSArray *_events;
 	NSMutableArray *_eventDates;
@@ -156,4 +156,5 @@
 -(void)stopButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
+-(void)onTourButtonPressed:(id)sender;
 @end

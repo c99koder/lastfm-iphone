@@ -724,10 +724,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	
 	if([_events count]) {
 		if(_badge)
-			_badge.alpha = 1;
+			_badge.hidden = NO;
 	} else {
 		if(_badge)
-			_badge.alpha = 0;
+			_badge.hidden = YES;
 	}
 
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
@@ -924,6 +924,11 @@ int tagSort(id tag1, id tag2, void *context) {
 		[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
 		[UIView commitAnimations];
 	}
+}
+-(void)onTourButtonPressed:(id)sender {
+	[self detailsButtonPressed:sender];
+	tabBar.selectedItem = [tabBar.items objectAtIndex: 3];
+	[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
 }
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];

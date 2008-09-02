@@ -250,21 +250,6 @@
 								<string key="NSResourceName">reflectionmask.png</string>
 							</object>
 						</object>
-						<object class="IBUIImageView" id="578961894">
-							<reference key="NSNextResponder" ref="609645942"/>
-							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{233, 0}, {87, 86}}</string>
-							<reference key="NSSuperview" ref="609645942"/>
-							<bool key="IBUIOpaque">NO</bool>
-							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-							<float key="IBUIAlpha">0.000000e+00</float>
-							<int key="IBUIContentMode">4</int>
-							<bool key="IBUIUserInteractionEnabled">NO</bool>
-							<object class="NSCustomResource" key="IBUIImage">
-								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">ontourbadge.png</string>
-							</object>
-						</object>
 						<object class="IBUILabel" id="1016145769">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
@@ -568,6 +553,30 @@
 							<object class="NSColor" key="IBUINormalTitleColor">
 								<int key="NSColorSpace">1</int>
 								<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
+							</object>
+						</object>
+						<object class="IBUIButton" id="143074339">
+							<reference key="NSNextResponder" ref="609645942"/>
+							<int key="NSvFlags">-2147483356</int>
+							<string key="NSFrame">{{233, 0}, {87, 86}}</string>
+							<reference key="NSSuperview" ref="609645942"/>
+							<bool key="IBUIOpaque">NO</bool>
+							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+							<int key="IBUIContentHorizontalAlignment">0</int>
+							<int key="IBUIContentVerticalAlignment">0</int>
+							<reference key="IBUIFont" ref="437759127"/>
+							<string key="IBUIHighlightedTitle"/>
+							<string key="IBUIDisabledTitle"/>
+							<string key="IBUISelectedTitle"/>
+							<string key="IBUINormalTitle"/>
+							<reference key="IBUIHighlightedTitleColor" ref="177709577"/>
+							<object class="NSColor" key="IBUINormalTitleColor">
+								<int key="NSColorSpace">1</int>
+								<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
+							</object>
+							<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+								<string key="NSClassName">NSImage</string>
+								<string key="NSResourceName">ontourbadge.png</string>
 							</object>
 						</object>
 						<object class="IBUIView" id="609475281">
@@ -1555,12 +1564,21 @@
 					<int key="connectionID">852</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">onTourButtonPressed:</string>
+						<reference key="source" ref="143074339"/>
+						<reference key="destination" ref="187518303"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">859</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">_badge</string>
 						<reference key="source" ref="551302869"/>
-						<reference key="destination" ref="578961894"/>
+						<reference key="destination" ref="143074339"/>
 					</object>
-					<int key="connectionID">857</int>
+					<int key="connectionID">860</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1883,7 +1901,7 @@
 							<reference ref="339684106"/>
 							<reference ref="873764632"/>
 							<reference ref="787876777"/>
-							<reference ref="578961894"/>
+							<reference ref="143074339"/>
 						</object>
 						<reference key="parent" ref="586853498"/>
 					</object>
@@ -2125,8 +2143,8 @@
 						<reference key="parent" ref="223536557"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">856</int>
-						<reference key="object" ref="578961894"/>
+						<int key="objectID">858</int>
+						<reference key="object" ref="143074339"/>
 						<reference key="parent" ref="609645942"/>
 					</object>
 				</object>
@@ -2216,7 +2234,7 @@
 					<string>842.IBPluginDependency</string>
 					<string>851.IBPluginDependency</string>
 					<string>855.IBPluginDependency</string>
-					<string>856.IBPluginDependency</string>
+					<string>858.IBPluginDependency</string>
 					<string>89.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
@@ -2326,7 +2344,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">857</int>
+			<int key="maxID">860</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2413,7 +2431,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIImageView</string>
+							<string>UIButton</string>
 							<string>CalendarViewController</string>
 							<string>UIImageView</string>
 							<string>UITableView</string>
@@ -2467,11 +2485,13 @@
 							<string>banButtonPressed:</string>
 							<string>detailsButtonPressed:</string>
 							<string>loveButtonPressed:</string>
+							<string>onTourButtonPressed:</string>
 							<string>skipButtonPressed:</string>
 							<string>stopButtonPressed:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
