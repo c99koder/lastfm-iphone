@@ -543,12 +543,15 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(void)skip {
 	[_busyLock lock];
 	NSLog(@"Skipping to next track\n");
-	[[_tracks objectAtIndex: 0] stop];
-	[_tracks removeObjectAtIndex: 0];
+	if([_tracks count]) {
+		[[_tracks objectAtIndex: 0] stop];
+		[_tracks removeObjectAtIndex: 0];
+	}
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];
 	} else {
-		[_playlist removeObjectAtIndex:0];
+		if([_playlist count])
+			[_playlist removeObjectAtIndex:0];
 		[self play];
 	}
 	[_busyLock unlock];
