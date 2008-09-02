@@ -40,6 +40,11 @@
 - (IBAction)backButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:YES];
 }
+- (void)_showProfile:(NSString *)text {
+	UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:text];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
+	[tabBarController release];
+}	
 - (void)_searchThread:(NSString *)text {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *results = nil;
@@ -52,8 +57,17 @@
 			results = [[LastFMService sharedInstance] searchForTag:text];
 			break;
 		case 2:
-			results = nil;
-			break;
+		{
+				NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:text];
+				if(profile) {
+					[self performSelectorOnMainThread:@selector(_showProfile:) withObject:text waitUntilDone:YES];
+				} else {
+					[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"ERROR_NOSUCHUSER", @"User not found error") withTitle:NSLocalizedString(@"ERROR_NOSUCHUSER_TITLE", @"User not found error title")];
+					_searchBar.text = @"";
+				}
+				results = nil;
+		}
+		break;
 	}
 	
 	if(![[NSThread currentThread] isCancelled]) {
@@ -141,9 +155,12 @@
 }
 -(IBAction)searchBarSearchButtonClicked:(id)sender {
 	if(_searchType.selectedSegmentIndex == 2) {
-		UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:_searchBar.text];
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
-		[tabBarController release];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		_searchTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0
+																										 target:self
+																									 selector:@selector(_search:)
+																									 userInfo:_searchBar.text
+																										repeats:NO] retain];
 	} else {
 		[self searchBar:_searchBar textDidChange:_searchBar.text];
 	}
