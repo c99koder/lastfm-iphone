@@ -102,12 +102,22 @@ UIImage *avatarPlaceholder = nil;
 	if(barWidth > 0) {
 		_bar.frame = CGRectMake(0,0,barWidth*([self frame].size.width - 20),[self frame].size.height);
 		_bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
+		_bar.opaque = NO;
 	}
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
 	title.highlighted = selected;
 	subtitle.highlighted = selected;
+	if(selected) {
+		_bar.alpha = 0;
+	} else {
+		_bar.alpha = 0;
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.4];
+		_bar.alpha = 1;
+		[UIView commitAnimations];
+	}
 }
 -(void)_fetchImage {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
