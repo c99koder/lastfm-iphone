@@ -350,13 +350,22 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	return nil;
 }
 -(float)bufferProgress {
-	return [[_tracks objectAtIndex:0] bufferProgress];
+	if([_tracks count])
+		return [[_tracks objectAtIndex:0] bufferProgress];
+	else
+		return 0;
 }
 -(NSTimeInterval)startTime {
-	return [[_tracks objectAtIndex:0] startTime];
+	if([_tracks count])
+		return [[_tracks objectAtIndex:0] startTime];
+	else
+		return 0;
 }
 -(NSDictionary *)trackInfo {
-	return [[_tracks objectAtIndex:0] trackInfo];
+	if([_tracks count])
+		return [[_tracks objectAtIndex:0] trackInfo];
+	else
+		return nil;
 }
 -(int)state {
 	if([_tracks count])
@@ -365,7 +374,10 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		return RADIO_IDLE;
 }
 -(NSString *)station {
-	return [_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
+	if(_station)
+		return [_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
+	else
+		return @"";
 }
 -(NSString *)stationURL {
 	return _stationURL;
