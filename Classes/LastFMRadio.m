@@ -398,6 +398,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(void)_trackDidBecomeAvailable:(NSNotification *)notification {
 	if(notification.object == [_tracks objectAtIndex:0]) {
 		[notification.object play];
+		_errorSkipCounter = 0;
 	}
 }
 -(void)_trackDidFinishPlaying:(NSNotification *)notification {
@@ -433,7 +434,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)_trackDidFail:(NSNotification *)notification {
 	if(notification.object == [_tracks objectAtIndex:0]) {
-		if(_errorSkipCounter++) {
+		if(_errorSkipCounter++ > 1) {
 			 [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
 			 [self stop];
 		 } else {
