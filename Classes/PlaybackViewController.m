@@ -258,10 +258,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	return 48;
 }
 -(void)_showProfile:(NSTimer *)timer {
-	ProfileViewController *profileViewController = [[ProfileViewController alloc] initWithUsername:[timer userInfo]];
-	//[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).navController pushViewController:profileViewController animated:NO];
-	[profileViewController release];
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hidePlaybackView];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+	UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:[timer userInfo]];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
+	[tabBarController release];
 	[_table reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
@@ -274,7 +274,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return [_cells objectAtIndex:[indexPath row]];
+	UITableViewCell *cell = [_cells objectAtIndex:[indexPath row]];
+	[cell showProgress:NO];
+	return cell;
 }
 - (void)dealloc {
 	[_data release];
@@ -875,6 +877,8 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+	if([[detailView subviews] count])
+		[self detailsButtonPressed:self];
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	if([[detailView subviews] count])
