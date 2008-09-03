@@ -28,6 +28,13 @@
 
 @interface CalendarViewController : UIViewController {
 	IBOutlet UILabel *_month;
+	IBOutlet UILabel *_sun;
+	IBOutlet UILabel *_mon;
+	IBOutlet UILabel *_tue;
+	IBOutlet UILabel *_wed;
+	IBOutlet UILabel *_thur;
+	IBOutlet UILabel *_fri;
+	IBOutlet UILabel *_sat;
 	IBOutlet UIView *_days;
 	NSArray *eventDates;
 	NSDate *date;

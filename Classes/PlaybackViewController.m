@@ -856,7 +856,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	fans.view.frame = CGRectMake(0,0,320,369);
 	events.view.frame = CGRectMake(0,0,320,369);
 	
-	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:volumeView.frame];
+	CGRect frame = volumeView.frame;
+	frame.origin.y -= 2;
+	frame.size.height += 10;
+	
+	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:frame];
 	[volumeView removeFromSuperview];
 	volumeView = v;
 	[volumeView sizeToFit];

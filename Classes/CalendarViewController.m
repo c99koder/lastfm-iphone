@@ -65,7 +65,8 @@ UIImage *calendarDaySelected;
 
 		for(day=0; day<x; day++) {
 			UIButton *b = tiles[day][y];
-			[b setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+			[b setTitleColor: [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient-disabled.png"]] forState:UIControlStateNormal];
+			[b setTitleShadowColor: [UIColor whiteColor] forState:UIControlStateNormal];
 			[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
 			[b setTitle:[NSString stringWithFormat:@"%i", day+daysInLastMonth-x+1] forState:UIControlStateNormal];
 			[b removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
@@ -77,6 +78,7 @@ UIImage *calendarDaySelected;
 					if([d isEqualToDate:currentDate]) {
 						[b setBackgroundImage:calendarDaySelected forState:UIControlStateNormal];
 						[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+						[b setTitleShadowColor: [UIColor colorWithWhite:0 alpha:0.4] forState:UIControlStateNormal];
 						break;
 					}
 				}
@@ -101,9 +103,11 @@ UIImage *calendarDaySelected;
 		}
 		if(found) {
 			[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+			[b setTitleShadowColor: [UIColor colorWithWhite:0 alpha:0.4] forState:UIControlStateNormal];
 			[b setBackgroundImage:calendarDaySelected forState:UIControlStateNormal];
 		} else {
-			[b setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+			[b setTitleColor: [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]] forState:UIControlStateNormal];
+			[b setTitleShadowColor: [UIColor whiteColor] forState:UIControlStateNormal];
 			[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
 		}
 		[b setTitle:[NSString stringWithFormat:@"%i", day+1] forState:UIControlStateNormal];
@@ -128,7 +132,8 @@ UIImage *calendarDaySelected;
 		for(; y<7; y++) {
 			for(; x<7; x++) {
 				UIButton *b = tiles[x][y];
-				[b setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+				[b setTitleColor: [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient-disabled.png"]] forState:UIControlStateNormal];
+				[b setTitleShadowColor: [UIColor whiteColor] forState:UIControlStateNormal];
 				[b setBackgroundImage:calendarDay forState:UIControlStateNormal];
 				[b setTitle:[NSString stringWithFormat:@"%i", day+1] forState:UIControlStateNormal];
 				[b removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
@@ -140,6 +145,7 @@ UIImage *calendarDaySelected;
 						if([d isEqualToDate:currentDate]) {
 							[b setBackgroundImage:calendarDaySelected forState:UIControlStateNormal];
 							[b setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+							[b setTitleShadowColor: [UIColor colorWithWhite:0 alpha:0.4] forState:UIControlStateNormal];
 							break;
 						}
 					}
@@ -157,7 +163,15 @@ UIImage *calendarDaySelected;
 }
 - (void)viewDidLoad {
 	int x,y;
-	
+	_month.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+	_sun.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+	_mon.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+	_tue.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+	_wed.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+	_thur.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+	_fri.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+	_sat.textColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"daygradient.png"]];
+
 	if(!calendarDay)
 		calendarDay = [[UIImage imageNamed:@"calendarday.png"] retain];
 	if(!calendarDaySelected)
@@ -172,8 +186,8 @@ UIImage *calendarDaySelected;
 			tiles[x][y].frame = CGRectMake(x*46, y*46, 46, 46);
 			tiles[x][y].opaque = YES;
 			[tiles[x][y] setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
-			tiles[x][y].titleShadowOffset = CGSizeMake(0,-1);
-			tiles[x][y].font = [UIFont boldSystemFontOfSize:20];
+			tiles[x][y].titleShadowOffset = CGSizeMake(0,1);
+			tiles[x][y].font = [UIFont boldSystemFontOfSize:22];
 			[_days addSubview: tiles[x][y]];
 		}
 	}
