@@ -206,9 +206,9 @@ void NSLog(NSString *format, ...) {
 	FILE *f = fopen([CACHE_FILE(@"debug.log") UTF8String], "a");
 	fprintf(f, "%s %s", [[[NSDate date] description] UTF8String], [print UTF8String]);
 	fclose(f);
-	
+#ifndef DISTRIBUTION	
 	fprintf(stderr, "%s %s", [[[NSDate date] description] UTF8String], [print UTF8String]);
-	
+#endif	
 	[print release];
 }
 

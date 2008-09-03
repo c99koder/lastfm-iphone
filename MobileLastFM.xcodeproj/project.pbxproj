@@ -1143,7 +1143,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DISTRIBUTION,
+					PL_DB_PRIVATE,
+				);
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
@@ -1159,7 +1162,7 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "F800CAEB-E3DA-4EE6-8AF0-1A04002F1F72";
+				PROVISIONING_PROFILE = "DE873345-A0C0-446A-A24D-49A6723BE99F";
 				SDKROOT = iphoneos2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
@@ -1193,7 +1196,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DISTRIBUTION,
+					PL_DB_PRIVATE,
+				);
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
