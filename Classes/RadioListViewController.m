@@ -206,11 +206,11 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	
 	switch([newIndexPath section]) {
 		case 0:
-		{
-			SearchViewController *controller = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
-			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
+				SearchViewController *controller = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
+				[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+			}
 			break;
-		}
 		case 1:
 			switch([newIndexPath row]-1) {
 				case 0:
