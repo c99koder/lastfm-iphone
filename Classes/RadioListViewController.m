@@ -187,7 +187,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0)
-		return [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]?46:59;
+		return [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]?46:67;
 	else if([indexPath row] > 0)
 		return 46;
 	else
@@ -284,10 +284,13 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					profilecell.backgroundView = v;
 					[v release];
 					profilecell.imageURL = [profile objectForKey:@"avatar"];
-					UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(62,4,230,18)];
+					UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(70,6,230,18)];
 					l.backgroundColor = [UIColor clearColor];
 					l.textColor = [UIColor whiteColor];
-					l.text = [profile objectForKey:@"realname"];
+					if([[profile objectForKey:@"realname"] length])
+						l.text = [profile objectForKey:@"realname"];
+					else
+						l.text = _username;
 					l.font = [UIFont boldSystemFontOfSize: 16];
 					[profilecell.contentView addSubview: l];
 					[l release];
@@ -296,9 +299,9 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					if([[profile objectForKey:@"age"] length])
 						[line2 appendFormat:@"%@, ", [profile objectForKey:@"age"]];
 					[line2 appendFormat:@"%@", [profile objectForKey:@"country"]];
-					l = [[UILabel alloc] initWithFrame:CGRectMake(62,22,230,16)];
+					l = [[UILabel alloc] initWithFrame:CGRectMake(70,26,230,16)];
 					l.backgroundColor = [UIColor clearColor];
-					l.textColor = [UIColor grayColor];
+					l.textColor = [UIColor colorWithWhite:0.6 alpha:1.0];
 					l.text = line2;
 					l.font = [UIFont systemFontOfSize: 14];
 					[profilecell.contentView addSubview: l];
@@ -306,9 +309,9 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					
 					NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 					[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-					l = [[UILabel alloc] initWithFrame:CGRectMake(62,38,230,16)];
+					l = [[UILabel alloc] initWithFrame:CGRectMake(70,44,230,16)];
 					l.backgroundColor = [UIColor clearColor];
-					l.textColor = [UIColor grayColor];
+					l.textColor = [UIColor colorWithWhite:0.6 alpha:1.0];
 					l.text = [NSString stringWithFormat:@"%@ %@ %@",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], NSLocalizedString(@"plays since", @"x plays since join date"), [profile objectForKey:@"registered"]];
 					l.font = [UIFont systemFontOfSize: 14];
 					[profilecell.contentView addSubview: l];
