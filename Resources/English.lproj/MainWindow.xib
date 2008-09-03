@@ -77,7 +77,7 @@
 					<object class="IBUIImageView" id="454878275">
 						<reference key="NSNextResponder" ref="695788471"/>
 						<int key="NSvFlags">256</int>
-						<string key="NSFrame">{{85, 209}, {150, 42}}</string>
+						<string key="NSFrame">{{85, 181}, {150, 42}}</string>
 						<reference key="NSSuperview" ref="695788471"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -290,14 +290,12 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_loadingView</string>
 							<string>_loadingViewLogo</string>
-							<string>tabBarController</string>
 							<string>window</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UIView</string>
 							<string>UIImageView</string>
-							<string>UITabBarController</string>
 							<string>UIWindow</string>
 						</object>
 					</object>
@@ -325,28 +323,10 @@
 						<string key="minorKey">Classes/UIApplication+openURLWithWarning.h</string>
 					</object>
 				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/ArtworkCell.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">nowPlayingButtonPressed:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/UIViewController+NowPlayingButton.h</string>
-					</object>
-				</object>
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
-		<string key="IBDocument.LastKnownRelativeProjectPath">MobileLastFM.xcodeproj</string>
+		<string key="IBDocument.LastKnownRelativeProjectPath">../../MobileLastFM.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 	</data>
 </archive>
