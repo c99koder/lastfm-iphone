@@ -26,6 +26,8 @@
 #import "NSString+URLEscaped.h"
 #import "UIApplication+openURLWithWarning.h"
 
+int tagSort(id tag1, id tag2, void *context);
+
 @implementation TrackCell
 
 @synthesize title, subtitle, date;
@@ -352,8 +354,105 @@
 	[self dismissModalViewControllerAnimated:YES];
 	[NSThread detachNewThreadSelector:@selector(_addToPlaylist:) toTarget:self withObject:[NSNumber numberWithInt:playlist]];
 }
+- (void)shareToAddressBook {
+	ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
+	peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
+	peoplePicker.peoplePickerDelegate = self;
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:peoplePicker animated:YES];
+	[peoplePicker release];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person {
+	return YES;
+}
+- (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
+	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(ABRecordCopyValue(person, property), ABMultiValueGetIndexForIdentifier(ABRecordCopyValue(person, property), identifier));
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+	
+	[[LastFMService sharedInstance] recommendTrack:[_selectedTrack objectForKey:@"name"]
+																				byArtist:[_selectedTrack objectForKey:@"artist"]
+																	toEmailAddress:email];
+	
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	else
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	return NO;
+}
+- (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+}
+- (void)shareToFriend {
+	FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	if(friends) {
+		friends.delegate = self;
+		friends.title = NSLocalizedString(@"Choose A Friend", @"Friend selector title");
+		UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:friends];
+		[friends release];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:nav animated:YES];
+		[nav release];
+		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	}
+}
+- (void)friendsViewController:(FriendsViewController *)friends didSelectFriend:(NSString *)username {
+	[[LastFMService sharedInstance] recommendTrack:[_selectedTrack objectForKey:@"name"]
+																				byArtist:[_selectedTrack objectForKey:@"artist"]
+																	toEmailAddress:username];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	else
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
+	
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+}
+- (void)friendsViewControllerDidCancel:(FriendsViewController *)friends {
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+}
+-(void)tagEditorDidCancel {
+	[self dismissModalViewControllerAnimated:YES];
+}
+-(void)tagEditorCommitTags:(NSArray *)t {
+	[self dismissModalViewControllerAnimated:YES];
+	[[LastFMService sharedInstance] tagTrack:[_selectedTrack objectForKey:@"name"] byArtist:[_selectedTrack objectForKey:@"artist"] withTags:t];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+}
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")]) {
+		[self shareToAddressBook];
+	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend")]) {
+		[self shareToFriend];
+	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button")]) {
+		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@+%@&s=143444&partnerId=2003&affToken=www.last.fm", 
+												 [_selectedTrack objectForKey:@"artist"],
+												 [_selectedTrack objectForKey:@"name"]];
+		NSString *URL;
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"country"] isEqualToString:@"United States"])
+			URL = [NSString stringWithFormat:@"http://click.linksynergy.com/fs-bin/stat?id=bKEBG4*hrDs&offerid=78941&type=3&subid=0&tmpid=1826&RD_PARM1=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+		else
+			URL = [NSString stringWithFormat:@"http://clk.tradedoubler.com/click?p=23761&epi=GB_site&a=1474288&url=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+		
+		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:URL]];
+	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Share", @"Share button")]) {
+		UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
+																											 delegate:self
+																							cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+																				 destructiveButtonTitle:nil
+																							otherButtonTitles:NSLocalizedString(@"Contacts", @"Share to Address Book"), NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
+		[sheet showInView:self.view];
+		[sheet release];	
+	} if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Tag", @"Tag button")]) {
+		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
+		t.delegate = self;
+		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
+		t.topTags = [[[LastFMService sharedInstance] topTagsForTrack:[_selectedTrack objectForKey:@"name"] byArtist:[_selectedTrack objectForKey:@"artist"]] sortedArrayUsingFunction:tagSort context:nil];
+		[self presentModalViewController:t animated:YES];
+		[t release];
+	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
 		PlaylistsViewController *p = [[PlaylistsViewController alloc] init];
 		p.delegate = self;
 		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
@@ -398,7 +497,11 @@
 																						 destructiveButtonTitle:nil
 																									otherButtonTitles:NSLocalizedString(@"Love Track", @"Love Track (long)"), 
 													NSLocalizedString(@"Ban Track", @"Ban Track (long)"),
-													NSLocalizedString(@"Add to Playlist", @"Add to Playlist button"), nil];
+													NSLocalizedString(@"Add to Playlist", @"Add to Playlist button"),
+													NSLocalizedString(@"Tag", @"Tag button"),
+													NSLocalizedString(@"Share", @"Share button"),
+													NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button"),
+													nil];
 	[sheet showInView:self.view];
 	[sheet release];
 	

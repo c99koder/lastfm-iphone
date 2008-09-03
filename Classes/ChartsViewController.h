@@ -20,6 +20,10 @@
 #import <UIKit/UIKit.h>
 #import "PlaylistsViewController.h"
 #import "LastFMService.h"
+#import <AddressBookUI/AddressBookUI.h>
+#import "FriendsViewController.h"
+#import "TagEditorViewController.h"
+#import "PlaylistsViewController.h"
 
 @interface TrackCell : UITableViewCell {
 	UILabel *title;
@@ -58,7 +62,7 @@
 @end
 #endif
 
-@interface RecentlyPlayedChartViewController : RecentChartViewController<UIActionSheetDelegate,PlaylistsViewControllerDelegate> {
+@interface RecentlyPlayedChartViewController : RecentChartViewController<UIActionSheetDelegate,PlaylistsViewControllerDelegate,ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,TagEditorViewControllerDelegate> {
 }
 - (id)initWithUsername:(NSString *)username;
 @end
