@@ -154,6 +154,12 @@
 /* Subscription required title */
 "ERROR_SUBSCRIPTION_TITLE" = "Subscriber-Only Feature";
 
+/* User not found */
+"ERROR_NOSUCHUSER" = "Unable to find a user with this username.  Please check the spelling and try again";
+
+/* User not found title */
+"ERROR_NOSUCHUSER_TITLE" = "User Not Found";
+
 /* Upgrade required */
 "ERROR_UPGRADE" = "An upgrade is required to continue using this software.  Please upgrade your software and try again.";
 
@@ -260,7 +266,7 @@
 "Tag" = "Tag";
 
 /* Tag Radio station */
-"Tag Radio" = "Tag Radio";
+"Tag Radio" = "My Tag Radio";
 
 /* Tags tab title */
 "Tags" = "Tags";
