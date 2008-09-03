@@ -107,16 +107,18 @@ UIImage *avatarPlaceholder = nil;
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
-	title.highlighted = selected;
-	subtitle.highlighted = selected;
-	if(selected) {
-		_bar.alpha = 0;
-	} else {
-		_bar.alpha = 0;
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.4];
-		_bar.alpha = 1;
-		[UIView commitAnimations];
+	if(self.selectionStyle != UITableViewCellSelectionStyleNone) {
+		title.highlighted = selected;
+		subtitle.highlighted = selected;
+		if(selected) {
+			_bar.alpha = 0;
+		} else {
+			_bar.alpha = 0;
+			[UIView beginAnimations:nil context:nil];
+			[UIView setAnimationDuration:0.4];
+			_bar.alpha = 1;
+			[UIView commitAnimations];
+		}
 	}
 }
 -(void)_fetchImage {

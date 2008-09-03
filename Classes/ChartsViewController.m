@@ -186,6 +186,7 @@ int tagSort(id tag1, id tag2, void *context);
 			[btn addTarget:self action:@selector(nowPlayingButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 			cell.accessoryView = btn;
 			[btn release];
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 		} else {
 			[cell addStreamIcon];
 		}
@@ -199,6 +200,7 @@ int tagSort(id tag1, id tag2, void *context);
 		[btn addTarget:self action:@selector(buyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 		cell.accessoryView = btn;
 		[btn release];
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
 	return cell;
 }
