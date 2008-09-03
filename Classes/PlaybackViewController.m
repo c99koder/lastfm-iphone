@@ -684,15 +684,16 @@ int tagSort(id tag1, id tag2, void *context) {
 		_table.delegate = self;
 		_table.dataSource = self;
 		[self.view addSubview:_table];
-		NSArray *events = [[LastFMService sharedInstance] eventsForUser:_username];
-		if([LastFMService sharedInstance].error) {
-			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-			[self release];
-		}
-		events = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+		NSArray *events = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 		_attendingEvents = [[NSMutableArray alloc] init];
 		for(NSDictionary *event in events) {
 			[_attendingEvents addObject:[event objectForKey:@"id"]];
+		}
+		events = [[LastFMService sharedInstance] eventsForUser:_username];
+
+		if([LastFMService sharedInstance].error) {
+			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+			[self release];
 		}
 		[self _processEvents:events];
 	} else {
