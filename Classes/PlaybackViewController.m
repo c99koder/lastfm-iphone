@@ -452,12 +452,16 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_lock lock];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_bio release];
-	NSString *bio = [[[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]] objectForKey:@"bio"];
+	NSDictionary *artistinfo = [[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
+	
+	NSString *bio = [artistinfo objectForKey:@"bio"];
 	if(![bio length]) {
 		bio = [[[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:@"en"] objectForKey:@"bio"];
 	}
 	if(![bio length]) {
 		bio = NSLocalizedString(@"No artist description available.", @"Wiki text empty");
+	} else {
+		_img = [[artistinfo objectForKey:@"image"] retain];
 	}
 
 	_bio = [[bio stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"] retain];
@@ -468,10 +472,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	[pool release];
 }
 - (void)refresh {
-	NSString *html = [NSString stringWithFormat:@"<html>\
-										<body style=\"margin:0; padding:0; color:black; background: white; font-family: 'Lucida Grande', Arial; line-height: 1.2em;\">\
+	NSString *html = [NSString stringWithFormat:@"<html><style>a { color: red; }</style>\
+										<body style=\"margin:0; padding:0; color:white; background: black; font-family: 'Lucida Grande', Arial; line-height: 1.2em;\">\
 										<div style=\"padding:12px; margin:0; top:0px; left:0px; width:260px; position:absolute;\">\
-										%@</div></body></html>", _bio];
+										<img src=\"%@\" style=\"float:left; margin-right: 8px;\"/>\
+										%@</div></body></html>", _img, _bio];
 	self.navigationItem.title = [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"];
 	[_webView loadHTMLString:html baseURL:nil];
 }
