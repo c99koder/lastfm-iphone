@@ -76,6 +76,7 @@
 @interface ArtistBioView : PlaybackSubview {
 	IBOutlet UIWebView *_webView;
 	NSString *_bio;
+	NSString *_img;
 	NSLock *_lock;
 }
 - (void)refresh;
