@@ -280,6 +280,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				if(profilecell == nil) {
 					NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
 					profilecell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"];
+					profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 					v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_panel.png"]];
 					profilecell.backgroundView = v;
 					[v release];
