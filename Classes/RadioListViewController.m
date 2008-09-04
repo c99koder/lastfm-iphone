@@ -233,6 +233,9 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				}
 			}
 			break;
+		case 2:
+			[self playRadioStation:[NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [[_commonArtists objectAtIndex:[newIndexPath row]-1] URLEscaped]]];
+			break;
 		case 3:
 			[self playRadioStation:[[_recent objectAtIndex:[newIndexPath row]-1] objectForKey:@"url"]];
 			break;
