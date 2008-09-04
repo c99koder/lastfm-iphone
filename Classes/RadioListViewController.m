@@ -265,6 +265,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		case 0:
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
 				v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_button.png"]];
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
 				cell.backgroundView = v;
 				[v release];
 				l = [[UILabel alloc] initWithFrame:CGRectMake(10,0,280,46)];
@@ -329,6 +330,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 			switch([indexPath row]) {
 				case 0:
 					v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_header.png"]];
+					cell.selectionStyle = UITableViewCellSelectionStyleNone;
 					cell.backgroundView = v;
 					l = [[UILabel alloc] initWithFrame:v.frame];
 					l.textAlignment = UITextAlignmentCenter;
@@ -363,6 +365,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		case 2:
 			if([indexPath row] == 0) {
 				v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_header.png"]];
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
 				cell.backgroundView = v;
 				l = [[UILabel alloc] initWithFrame:v.frame];
 				l.textAlignment = UITextAlignmentCenter;
@@ -382,6 +385,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		case 3:
 			if([indexPath row] == 0) {
 				v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_header.png"]];
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
 				cell.backgroundView = v;
 				l = [[UILabel alloc] initWithFrame:v.frame];
 				l.textAlignment = UITextAlignmentCenter;
@@ -401,6 +405,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 		case 4:
 			if([indexPath row] == 0) {
 				v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_header.png"]];
+				cell.selectionStyle = UITableViewCellSelectionStyleNone;
 				cell.backgroundView = v;
 				l = [[UILabel alloc] initWithFrame:v.frame];
 				l.textAlignment = UITextAlignmentCenter;
