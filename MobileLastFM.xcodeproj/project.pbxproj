@@ -108,6 +108,7 @@
 		222903460E4B39EE0024294D /* month_heading_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903450E4B39EE0024294D /* month_heading_panel.png */; };
 		222905270E4C92390024294D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222905260E4C92390024294D /* QuartzCore.framework */; };
 		223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223129320DFF21A500EC3BF0 /* FirstRunViewController.m */; };
+		22327C140E700B1F002016DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22327C130E700B1F002016DD /* Settings.bundle */; };
 		22362B9B0E13E4600034F91A /* btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 22362B9A0E13E4600034F91A /* btn.png */; };
 		223DFE7D0DBFFAFF00510722 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223DFE7C0DBFFAFF00510722 /* SystemConfiguration.framework */; };
 		2244DAEB0E3A554500C4F40B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAEA0E3A554500C4F40B /* Localizable.strings */; };
@@ -326,6 +327,7 @@
 		223128F60DFF1ECB00EC3BF0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		223129310DFF21A500EC3BF0 /* FirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstRunViewController.h; sourceTree = "<group>"; };
 		223129320DFF21A500EC3BF0 /* FirstRunViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstRunViewController.m; sourceTree = "<group>"; };
+		22327C130E700B1F002016DD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		22362B9A0E13E4600034F91A /* btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn.png; sourceTree = "<group>"; };
 		223DFE7C0DBFFAFF00510722 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		2244DAE70E3A553D00C4F40B /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -356,7 +358,7 @@
 		228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURLWithWarning.h"; sourceTree = "<group>"; };
 		228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURLWithWarning.m"; sourceTree = "<group>"; };
 		2291227F0E6C34F500F9C17C /* tagareabg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tagareabg.png; sourceTree = "<group>"; };
-		229124490E6D7CC700F9C17C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
+		229124490E6D7CC700F9C17C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.entitlements"; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		2291317E0E1C2441007F5E63 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		229808CA0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_dark_bkg_upper.png; sourceTree = "<group>"; };
@@ -708,6 +710,7 @@
 				221744620E44D5FA0058C0C3 /* volume-min.png */,
 				221744630E44D5FA0058C0C3 /* volume-max.png */,
 				22F2FE090E31046D000DDCDC /* white_lfm_logo.png */,
+				22327C130E700B1F002016DD /* Settings.bundle */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -989,6 +992,7 @@
 				22624B1B0E6EF39200072BB4 /* daygradient-disabled.png in Resources */,
 				22624B1D0E6EF3A000072BB4 /* daygradient.png in Resources */,
 				22624B4E0E6F01FE00072BB4 /* calendar-view-gradient.png in Resources */,
+				22327C140E700B1F002016DD /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

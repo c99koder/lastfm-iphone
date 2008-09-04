@@ -181,7 +181,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			[[SystemNowPlayingController sharedInstance] disableMediaHUD];
 		}
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
-		[UIApplication sharedApplication].idleTimerDisabled = YES;
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"disableautolock"] isEqualToString:@"YES"])
+			[UIApplication sharedApplication].idleTimerDisabled = YES;
 		_state = TRACK_PLAYING;
 		[self performSelectorOnMainThread:@selector(_notifyTrackChange) withObject:nil waitUntilDone:NO];
 	} else {

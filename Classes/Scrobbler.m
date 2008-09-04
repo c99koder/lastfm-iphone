@@ -286,25 +286,33 @@
 								i, [[track objectForKey:@"album"] URLEscaped],
 								i, i
 								];
-		[postData appendData:[trackStr dataUsingEncoding:NSUTF8StringEncoding]];
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"] || [track objectForKey:@"rating"])
+			[postData appendData:[trackStr dataUsingEncoding:NSUTF8StringEncoding]];
 		i++;
 	}
-	_submissionCount = i;
-	NSLog(@"Sending %i / %i tracks...\n", i, [_queue count]);
-
-	NSURL *theURL = [NSURL URLWithString:_scrobbleURL];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
 	
-	[theRequest setHTTPMethod:@"POST"];
-	[theRequest setHTTPBody:postData];
-	[postData release];
-	
-	_connection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	if (_connection) {
-		_scrobblerState = SCROBBLER_SCROBBLING;
-    _receivedData=[[NSMutableData alloc] init];
+	if([postData length] == [[NSString stringWithFormat:@"s=%@",_sess] length]) {
+		NSLog(@"Not sending any tracks");
+		[_queue removeAllObjects];
+		_queueTimerInterval = 15;
 	} else {
-		[self doQueueTimer];
+		_submissionCount = i;
+		NSLog(@"Sending %i / %i tracks...\n", i, [_queue count]);
+
+		NSURL *theURL = [NSURL URLWithString:_scrobbleURL];
+		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
+		
+		[theRequest setHTTPMethod:@"POST"];
+		[theRequest setHTTPBody:postData];
+		[postData release];
+		
+		_connection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+		if (_connection) {
+			_scrobblerState = SCROBBLER_SCROBBLING;
+			_receivedData=[[NSMutableData alloc] init];
+		} else {
+			[self doQueueTimer];
+		}
 	}
 }
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -330,7 +338,7 @@
 				_scrobbleURL = [[list objectAtIndex: 3] retain];
 				_scrobblerState = SCROBBLER_READY;
 				NSLog(@"Authenticated. Session: %@\n", _sess);
-				_queueTimerInterval = 5;
+				_queueTimerInterval = 15;
 			} else {
 				[_sess release];
 				_sess = nil;
@@ -344,7 +352,7 @@
 		case SCROBBLER_SCROBBLING:
 			if([scrobblerResult isEqualToString:@"OK"]) {
 				NSLog(@"Scrobble succeeded!\n");
-				_queueTimerInterval = 5;
+				_queueTimerInterval = 15;
 				for(i=0; [_queue count] > 0 && i < _submissionCount; i++) {
 					NSDictionary *track = [_queue objectAtIndex: 0];
 					if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {

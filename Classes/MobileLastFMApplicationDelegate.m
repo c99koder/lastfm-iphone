@@ -90,7 +90,11 @@ NSString *kUserAgent;
 		NSLog(@"%@", kUserAgent);
 		[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 																														 [NSNumber numberWithFloat: 0.8], @"volume",
+																														 @"YES", @"scrobbling",
+																														 @"YES", @"disableautolock",
 																														 nil]];
+		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
+			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
 		[NSThread detachNewThreadSelector:@selector(_cleanCache) toTarget:self withObject:nil];
 	}
 	return self;
