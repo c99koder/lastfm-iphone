@@ -27,16 +27,32 @@
 				<int key="NSvFlags">292</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="IBUIImageView" id="543190852">
+					<object class="IBUIImageView" id="939237832">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{-1, 48}, {322, 324}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">calendar-view-gradient.png</string>
 						</object>
+					</object>
+					<object class="IBUIView" id="141635138">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{-1, 48}, {322, 324}}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<object class="NSColor" key="IBUIBackgroundColor">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MSAwAA</bytes>
+							<object class="NSColorSpace" key="NSCustomColorSpace" id="432722424">
+								<int key="NSID">2</int>
+							</object>
+						</object>
+						<bool key="IBUIOpaque">NO</bool>
+						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 					</object>
 					<object class="IBUIImageView" id="379186322">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -71,14 +87,12 @@
 						<object class="NSColor" key="IBUIHighlightedColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
-							<object class="NSColorSpace" key="NSCustomColorSpace" id="613892015">
-								<int key="NSID">2</int>
-							</object>
+							<reference key="NSCustomColorSpace" ref="432722424"/>
 						</object>
 						<object class="NSColor" key="IBUIShadowColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
-							<reference key="NSCustomColorSpace" ref="613892015"/>
+							<reference key="NSCustomColorSpace" ref="432722424"/>
 						</object>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
@@ -94,25 +108,25 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Sun</string>
-						<object class="NSFont" key="IBUIFont" id="102732834">
+						<object class="NSFont" key="IBUIFont" id="839468383">
 							<string key="NSName">Helvetica-Bold</string>
 							<double key="NSSize">1.000000e+01</double>
 							<int key="NSfFlags">16</int>
 						</object>
-						<object class="NSColor" key="IBUITextColor" id="405692248">
+						<object class="NSColor" key="IBUITextColor" id="86808740">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
-							<reference key="NSCustomColorSpace" ref="613892015"/>
+							<reference key="NSCustomColorSpace" ref="432722424"/>
 						</object>
-						<object class="NSColor" key="IBUIHighlightedColor" id="1004429058">
+						<object class="NSColor" key="IBUIHighlightedColor" id="772683277">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
-							<reference key="NSCustomColorSpace" ref="613892015"/>
+							<reference key="NSCustomColorSpace" ref="432722424"/>
 						</object>
-						<object class="NSColor" key="IBUIShadowColor" id="124284773">
+						<object class="NSColor" key="IBUIShadowColor" id="686507483">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
-							<reference key="NSCustomColorSpace" ref="613892015"/>
+							<reference key="NSCustomColorSpace" ref="432722424"/>
 						</object>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
@@ -128,10 +142,10 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Mon</string>
-						<reference key="IBUIFont" ref="102732834"/>
-						<reference key="IBUITextColor" ref="405692248"/>
-						<reference key="IBUIHighlightedColor" ref="1004429058"/>
-						<reference key="IBUIShadowColor" ref="124284773"/>
+						<reference key="IBUIFont" ref="839468383"/>
+						<reference key="IBUITextColor" ref="86808740"/>
+						<reference key="IBUIHighlightedColor" ref="772683277"/>
+						<reference key="IBUIShadowColor" ref="686507483"/>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">1.000000e+01</float>
@@ -146,10 +160,10 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Tue</string>
-						<reference key="IBUIFont" ref="102732834"/>
-						<reference key="IBUITextColor" ref="405692248"/>
-						<reference key="IBUIHighlightedColor" ref="1004429058"/>
-						<reference key="IBUIShadowColor" ref="124284773"/>
+						<reference key="IBUIFont" ref="839468383"/>
+						<reference key="IBUITextColor" ref="86808740"/>
+						<reference key="IBUIHighlightedColor" ref="772683277"/>
+						<reference key="IBUIShadowColor" ref="686507483"/>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">1.000000e+01</float>
@@ -164,10 +178,10 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Wed</string>
-						<reference key="IBUIFont" ref="102732834"/>
-						<reference key="IBUITextColor" ref="405692248"/>
-						<reference key="IBUIHighlightedColor" ref="1004429058"/>
-						<reference key="IBUIShadowColor" ref="124284773"/>
+						<reference key="IBUIFont" ref="839468383"/>
+						<reference key="IBUITextColor" ref="86808740"/>
+						<reference key="IBUIHighlightedColor" ref="772683277"/>
+						<reference key="IBUIShadowColor" ref="686507483"/>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">1.000000e+01</float>
@@ -182,10 +196,10 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Thur</string>
-						<reference key="IBUIFont" ref="102732834"/>
-						<reference key="IBUITextColor" ref="405692248"/>
-						<reference key="IBUIHighlightedColor" ref="1004429058"/>
-						<reference key="IBUIShadowColor" ref="124284773"/>
+						<reference key="IBUIFont" ref="839468383"/>
+						<reference key="IBUITextColor" ref="86808740"/>
+						<reference key="IBUIHighlightedColor" ref="772683277"/>
+						<reference key="IBUIShadowColor" ref="686507483"/>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">1.000000e+01</float>
@@ -200,10 +214,10 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Fri</string>
-						<reference key="IBUIFont" ref="102732834"/>
-						<reference key="IBUITextColor" ref="405692248"/>
-						<reference key="IBUIHighlightedColor" ref="1004429058"/>
-						<reference key="IBUIShadowColor" ref="124284773"/>
+						<reference key="IBUIFont" ref="839468383"/>
+						<reference key="IBUITextColor" ref="86808740"/>
+						<reference key="IBUIHighlightedColor" ref="772683277"/>
+						<reference key="IBUIShadowColor" ref="686507483"/>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">1.000000e+01</float>
@@ -218,10 +232,10 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Sat</string>
-						<reference key="IBUIFont" ref="102732834"/>
-						<reference key="IBUITextColor" ref="405692248"/>
-						<reference key="IBUIHighlightedColor" ref="1004429058"/>
-						<reference key="IBUIShadowColor" ref="124284773"/>
+						<reference key="IBUIFont" ref="839468383"/>
+						<reference key="IBUITextColor" ref="86808740"/>
+						<reference key="IBUIHighlightedColor" ref="772683277"/>
+						<reference key="IBUIShadowColor" ref="686507483"/>
 						<string key="IBUIShadowOffset">{0, 1}</string>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">1.000000e+01</float>
@@ -230,7 +244,7 @@
 					<object class="IBUIButton" id="1029855967">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{292, 6}, {20, 24}}</string>
+						<string key="NSFrame">{{292, 6}, {28, 24}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -261,7 +275,7 @@
 					<object class="IBUIButton" id="338118368">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{8, 6}, {20, 24}}</string>
+						<string key="NSFrame">{{0, 6}, {34, 24}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -288,7 +302,7 @@
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
-					<reference key="NSCustomColorSpace" ref="613892015"/>
+					<reference key="NSCustomColorSpace" ref="432722424"/>
 				</object>
 			</object>
 		</object>
@@ -328,14 +342,6 @@
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">28</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">_days</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="543190852"/>
-					</object>
-					<int key="connectionID">33</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -393,6 +399,14 @@
 					</object>
 					<int key="connectionID">41</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">_days</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="141635138"/>
+					</object>
+					<int key="connectionID">43</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -417,11 +431,12 @@
 							<reference ref="386660511"/>
 							<reference ref="634055891"/>
 							<reference ref="14984942"/>
-							<reference ref="1029855967"/>
 							<reference ref="338118368"/>
 							<reference ref="62299664"/>
 							<reference ref="379186322"/>
-							<reference ref="543190852"/>
+							<reference ref="939237832"/>
+							<reference ref="141635138"/>
+							<reference ref="1029855967"/>
 						</object>
 						<reference key="parent" ref="360949347"/>
 						<string key="objectName">Calendar</string>
@@ -494,7 +509,12 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">32</int>
-						<reference key="object" ref="543190852"/>
+						<reference key="object" ref="939237832"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">42</int>
+						<reference key="object" ref="141635138"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</object>
@@ -513,6 +533,7 @@
 					<string>3.IBPluginDependency</string>
 					<string>32.IBPluginDependency</string>
 					<string>4.IBPluginDependency</string>
+					<string>42.IBPluginDependency</string>
 					<string>5.IBPluginDependency</string>
 					<string>6.IBPluginDependency</string>
 					<string>7.IBPluginDependency</string>
@@ -524,6 +545,7 @@
 					<string>CalendarViewController</string>
 					<string>UIResponder</string>
 					<string>{{456, 381}, {320, 372}}</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -558,7 +580,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">41</int>
+			<int key="maxID">43</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

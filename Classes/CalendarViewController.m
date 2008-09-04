@@ -184,7 +184,7 @@ UIImage *calendarDaySelected;
 		for(x=0; x<7; x++) {
 			tiles[x][y] = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 			tiles[x][y].frame = CGRectMake(x*46, y*46, 46, 46);
-			tiles[x][y].opaque = YES;
+			tiles[x][y].opaque = NO;
 			[tiles[x][y] setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
 			tiles[x][y].titleShadowOffset = CGSizeMake(0,1);
 			tiles[x][y].font = [UIFont boldSystemFontOfSize:22];
@@ -254,13 +254,14 @@ UIImage *calendarDaySelected;
 	[components release];
 	if(!_transitionImage) {
 		_transitionImage = [[UIImageView alloc] initWithFrame:_days.frame];
-		[_days addSubview:_transitionImage];
-		[_days sendSubviewToBack:_transitionImage];
 	}
 	UIGraphicsBeginImageContext(_transitionImage.bounds.size);
 	[_days.layer renderInContext:UIGraphicsGetCurrentContext()];
 	_transitionImage.image = UIGraphicsGetImageFromCurrentImageContext();
+	[UIImagePNGRepresentation(_transitionImage.image) writeToFile:CACHE_FILE(@"tmp.png") atomically:YES];
 	UIGraphicsEndImageContext();
+	[_days addSubview:_transitionImage];
+	[_days sendSubviewToBack:_transitionImage];
 	CGRect frame = _days.frame;
 	_transitionImage.frame = CGRectMake(0,-322 + ((7-_lastRowInMonth) * 46),322,322);
 	_days.frame = CGRectMake(-1,49+322-((7-_lastRowInMonth) * 46),322,322);

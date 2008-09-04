@@ -371,6 +371,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	[trackInfo release];
 	[pool release];
 }
+- (void)_hideMetadata {
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.6];
+	_fullscreenMetadataView.frame = CGRectMake(0,320,320,87);
+	_fullscreenMetadataView.alpha = 0;
+	[UIView commitAnimations];
+}
 - (void)_trackDidChange:(NSNotification *)notification {
 	NSDictionary *trackInfo = [notification userInfo];
 	
@@ -386,6 +393,17 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self _updateProgress:nil];
 
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:[notification userInfo]];
+	
+	/*if(_artworkView.frame.size.width == 320) {
+		_fullscreenMetadataView.frame = CGRectMake(0,320,320,87);
+		_fullscreenMetadataView.alpha = 0;
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.6];
+		_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
+		_fullscreenMetadataView.alpha = 1;
+		[UIView commitAnimations];
+		[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:6];
+	}*/
 }
 -(IBAction)artworkButtonPressed:(id)sender {
 	[UIView beginAnimations:nil context:nil];
@@ -394,8 +412,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
 		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
 		_artworkView.frame = CGRectMake(47,10,226,226);
-		_trackTitle.alpha = 1;
-		_artist.alpha = 1;
+		_fullscreenMetadataView.frame = CGRectMake(0,236,320,87);
+		_fullscreenMetadataView.alpha = 1;
 		_progress.alpha = 1;
 		_elapsed.alpha = 1;
 		_remaining.alpha = 1;
@@ -403,12 +421,14 @@ int tagSort(id tag1, id tag2, void *context) {
 		_reflectionGradientView.frame = CGRectMake(0,320,320,320);
 		_reflectedArtworkView.frame = CGRectMake(0,320,320,320);
 		_artworkView.frame = CGRectMake(0,0,320,320);
-		_trackTitle.alpha = 0;
-		_artist.alpha = 0;
-		_progress.alpha = 0;
+		//_fullscreenMetadataView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
+		//_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
+		_fullscreenMetadataView.alpha = 0;
 		_elapsed.alpha = 0;
 		_remaining.alpha = 0;
+		_progress.alpha = 0;
 		_artworkView.image = artwork;
+		//[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:6];
 	}
 	[UIView commitAnimations];
 }
@@ -879,11 +899,13 @@ int tagSort(id tag1, id tag2, void *context) {
 		}
 	}
 }
+- (void)hideDetailsView {
+	if([[detailView subviews] count])
+		[self detailsButtonPressed:self];
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
-	if([[detailView subviews] count])
-		[self detailsButtonPressed:self];
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	if([[detailView subviews] count])

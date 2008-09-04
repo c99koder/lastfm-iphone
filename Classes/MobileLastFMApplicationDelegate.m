@@ -505,6 +505,7 @@ NSString *kUserAgent;
 	return TRUE;
 }
 -(void)showPlaybackView {
+	[playbackViewController hideDetailsView];
 	[rootViewController pushViewController:playbackViewController animated:YES];
 }
 -(void)hidePlaybackView {

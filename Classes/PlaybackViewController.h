@@ -66,6 +66,7 @@
 	IBOutlet UILabel *_remaining;
 	IBOutlet UIProgressView *_progress;
 	IBOutlet UILabel *_bufferPercentage;
+	IBOutlet UIView *_fullscreenMetadataView;
 	UIImage *artwork;
 }
 -(IBAction)artworkButtonPressed:(id)sender;
@@ -157,4 +158,5 @@
 -(void)skipButtonPressed:(id)sender;
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
 -(void)onTourButtonPressed:(id)sender;
+-(void)hideDetailsView;
 @end
