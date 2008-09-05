@@ -105,7 +105,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
-	[self playRadioStation:[NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"name"] URLEscaped]]];
+	[self playRadioStation:[NSString stringWithFormat:@"lastfm://artist/%@", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"name"] URLEscaped]]];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -494,15 +494,29 @@ int tagSort(id tag1, id tag2, void *context) {
 @implementation EventCell
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
+		_eventTitle = [[UILabel alloc] init];
+		_eventTitle.textColor = [UIColor blackColor];
+		_eventTitle.highlightedTextColor = [UIColor whiteColor];
+		_eventTitle.backgroundColor = [UIColor clearColor];
+		_eventTitle.font = [UIFont boldSystemFontOfSize:14];
+		[self.contentView addSubview:_eventTitle];
+		
+		_artists = [[UILabel alloc] init];
+		_artists.textColor = [UIColor grayColor];
+		_artists.highlightedTextColor = [UIColor whiteColor];
+		_artists.backgroundColor = [UIColor clearColor];
+		_artists.font = [UIFont systemFontOfSize:14];
+		[self.contentView addSubview:_artists];
+		
 		_venue = [[UILabel alloc] init];
-		_venue.textColor = [UIColor blackColor];
+		_venue.textColor = [UIColor grayColor];
 		_venue.highlightedTextColor = [UIColor whiteColor];
 		_venue.backgroundColor = [UIColor clearColor];
-		_venue.font = [UIFont boldSystemFontOfSize:14];
+		_venue.font = [UIFont systemFontOfSize:14];
 		[self.contentView addSubview:_venue];
 
 		_location = [[UILabel alloc] init];
-		_location.textColor = [UIColor blackColor];
+		_location.textColor = [UIColor grayColor];
 		_location.highlightedTextColor = [UIColor whiteColor];
 		_location.backgroundColor = [UIColor clearColor];
 		_location.font = [UIFont systemFontOfSize:14];
@@ -511,6 +525,15 @@ int tagSort(id tag1, id tag2, void *context) {
 	return self;
 }
 - (void)setEvent:(NSDictionary *)event {
+	_eventTitle.text = [event objectForKey:@"title"];
+	NSMutableString *artists = [[NSMutableString alloc] initWithString:[event objectForKey:@"headliner"]];
+	if([[event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[event objectForKey:@"artists"] count] > 0) {
+		for(NSString *artist in [event objectForKey:@"artists"]) {
+			if(![artist isEqualToString:[event objectForKey:@"headliner"]])
+				[artists appendFormat:@", %@", artist];
+		}
+	}
+	_artists.text = artists;
 	_venue.text = [event objectForKey:@"venue"];
 	_location.text = [NSString stringWithFormat:@"%@, %@", [event objectForKey:@"city"], NSLocalizedString([event objectForKey:@"country"], @"Country name")];
 }
@@ -523,15 +546,42 @@ int tagSort(id tag1, id tag2, void *context) {
 	[super layoutSubviews];
 	
 	CGRect frame = [self.contentView bounds];
-	frame.origin.x += 8;
-	frame.origin.y += 4;
-	frame.size.width -= 16;
-	
-	frame.size.height = 16;
-	[_venue setFrame: frame];
-	
-	frame.origin.y += 16;
-	[_location setFrame: frame];
+	if(frame.size.height > 42) {
+		[self addSubview:_eventTitle];
+		[self addSubview:_artists];
+		_venue.font = [UIFont systemFontOfSize:14];
+		_venue.textColor = [UIColor grayColor];
+		frame.origin.x += 8;
+		frame.origin.y += 4;
+		frame.size.width -= 16;
+		
+		frame.size.height = 16;
+		[_eventTitle setFrame: frame];
+		
+		frame.origin.y += 16;
+		[_artists setFrame: frame];
+		
+		frame.origin.y += 16;
+		[_venue setFrame: frame];
+		
+		frame.origin.y += 16;
+		[_location setFrame: frame];
+	} else {
+		[_eventTitle removeFromSuperview];
+		[_artists removeFromSuperview];
+		_venue.font = [UIFont boldSystemFontOfSize:14];
+		_venue.textColor = [UIColor blackColor];
+
+		frame.origin.x += 8;
+		frame.origin.y += 4;
+		frame.size.width -= 16;
+		
+		frame.size.height = 16;
+		[_venue setFrame: frame];
+		
+		frame.origin.y += 16;
+		[_location setFrame: frame];
+	}
 }
 -(void)dealloc {
 	[_venue release];
@@ -676,10 +726,10 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)viewTypeToggled:(id)sender {
 	switch([(UISegmentedControl *)sender selectedSegmentIndex]) {
-		case 0:
+		case 1:
 			_table.frame = CGRectMake(0,372,320,0);
 			break;
-		case 1:
+		case 0:
 			if(_username)
 				_table.frame = CGRectMake(0,0,320,372);
 			else
@@ -735,7 +785,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		segment.frame = CGRectMake(0,0,207,30);
 		segment.segmentedControlStyle = UISegmentedControlStyleBar;
 		segment.tintColor = [UIColor grayColor];
-		segment.selectedSegmentIndex = 0;
+		segment.selectedSegmentIndex = 1;
 		[segment addTarget:self action:@selector(viewTypeToggled:) forControlEvents:UIControlEventValueChanged];
 		UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,372,320,44)];
 		toolbar.barStyle = UIBarStyleBlackOpaque;
@@ -811,7 +861,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if([_eventDates count]) {
 		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-		[formatter setDateStyle:NSDateFormatterShortStyle];
+		[formatter setDateStyle:NSDateFormatterLongStyle];
 		NSString *output = [formatter stringFromDate:[_eventDates objectAtIndex:section]];
 		[formatter release];
 		return output;
@@ -828,7 +878,10 @@ int tagSort(id tag1, id tag2, void *context) {
 		return 0;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 42;
+	if(_data)
+		return 42;
+	else
+		return 78;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];

@@ -83,6 +83,8 @@
 @end
 
 @interface EventCell : UITableViewCell {
+	UILabel *_eventTitle;
+	UILabel *_artists;
 	UILabel *_venue;
 	UILabel *_location;
 }
