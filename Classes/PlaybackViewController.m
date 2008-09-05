@@ -674,23 +674,53 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	return NO;
 }
+- (void)viewTypeToggled:(id)sender {
+	switch([(UISegmentedControl *)sender selectedSegmentIndex]) {
+		case 0:
+			_table.frame = CGRectMake(0,372,320,0);
+			break;
+		case 1:
+			if(_username)
+				_table.frame = CGRectMake(0,0,320,372);
+			else
+				_table.frame = CGRectMake(0,0,320,326);
+			[_data release];
+			_data = nil;
+			[_table reloadData];
+			break;
+	}
+}
 - (void)_processEvents:(NSArray *)events {
+	int i=0,lasti=0;
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
+	[_events release];
+	[_eventDates release];
+	[_eventDateOffsets release];
+	[_eventDateCounts release];
 	_events = [events retain];
 	_eventDates = [[NSMutableArray alloc] init];
+	_eventDateOffsets = [[NSMutableArray alloc] init];
+	_eventDateCounts = [[NSMutableArray alloc] init];
+	
 	if([_events count]) {
-		NSDate *date, *lastDate = nil;
+		NSDate *date, *lastDate = [formatter dateFromString:[[_events objectAtIndex:0] objectForKey:@"startDate"]];
 		
 		for(NSDictionary *event in _events) {
 			date = [formatter dateFromString:[event objectForKey:@"startDate"]];
 			if(![lastDate isEqualToDate:date]) {
-				[_eventDates addObject:date];
+				[_eventDateOffsets addObject:[NSNumber numberWithInt:lasti]];
+				[_eventDateCounts addObject:[NSNumber numberWithInt:i - lasti]];
+				[_eventDates addObject:lastDate];
+				lasti = i;
 				lastDate = date;
 			}
+			i++;
 		}
+		[_eventDateOffsets addObject:[NSNumber numberWithInt:lasti]];
 		[_eventDates addObject:lastDate];
+		[_eventDateCounts addObject:[NSNumber numberWithInt:i - lasti]];
 	}
 	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
 	[formatter release];
@@ -701,9 +731,18 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.view addSubview: _calendar.view];
 	[self.view sendSubviewToBack: _calendar.view];
 	if(_username) {
+		UISegmentedControl *segment = [[[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Calendar",@"List",nil]] autorelease];
+		segment.frame = CGRectMake(0,0,207,30);
+		segment.segmentedControlStyle = UISegmentedControlStyleBar;
+		segment.tintColor = [UIColor grayColor];
+		segment.selectedSegmentIndex = 0;
+		[segment addTarget:self action:@selector(viewTypeToggled:) forControlEvents:UIControlEventValueChanged];
 		UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,372,320,44)];
 		toolbar.barStyle = UIBarStyleBlackOpaque;
-		[self.view addSubview: toolbar];
+		toolbar.items = [NSArray arrayWithObjects: [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
+										 [[[UIBarButtonItem alloc] initWithCustomView:segment] autorelease],
+										 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],nil];
+		[self.view addSubview:toolbar];
 		[toolbar release];
 		_table = [[UITableView alloc] initWithFrame:CGRectMake(0,372,320,0)];
 		_table.delegate = self;
@@ -738,8 +777,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	[trackInfo retain];
 	[_lock lock];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
-	[_events release];
-	[_eventDates release];
 	[_attendingEvents release];
 	_attendingEvents = [[NSMutableArray alloc] init];
 	NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
@@ -764,11 +801,29 @@ int tagSort(id tag1, id tag2, void *context) {
 	[pool release];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
+	if(_data)
+		return 1;
+	else if([_events count])
+		return [_eventDates count];
+	else
+		return 1;
+}
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	if([_eventDates count]) {
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+		[formatter setDateStyle:NSDateFormatterShortStyle];
+		NSString *output = [formatter stringFromDate:[_eventDates objectAtIndex:section]];
+		[formatter release];
+		return output;
+	}
+	else
+		return nil;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if(_data)
 		return [_data count];
+	else if([_events count])
+		return [[_eventDateCounts objectAtIndex:section] intValue];
 	else
 		return 0;
 }
@@ -777,7 +832,12 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
-	e.event = [_data objectAtIndex:[newIndexPath row]];
+	if(_data)
+		e.event = [_data objectAtIndex:[newIndexPath row]];
+	else {
+		int offset = [[_eventDateOffsets objectAtIndex:[newIndexPath section]] intValue];
+		e.event = [_events objectAtIndex:[newIndexPath row]+offset];
+	}
 	e.delegate = self;
 	if(_username)
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController presentModalViewController:e animated:YES];
@@ -811,14 +871,17 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([_data count] > 1) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.2];
-		_calendar.view.frame = CGRectMake(0,0,320,328);
-		_table.frame = CGRectMake(0,284,320,88);
-		_shadow.frame = CGRectMake(0,284,320,18);
+		if(_username) {
+			_table.frame = CGRectMake(0,264,320,108);
+			_shadow.frame = CGRectMake(0,264,320,18);
+		} else {
+			_table.frame = CGRectMake(0,240,320,108);
+			_shadow.frame = CGRectMake(0,240,320,18);
+		}
 		[UIView commitAnimations];
 	} else {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.2];
-		_calendar.view.frame = CGRectMake(0,0,320,372);
 		_table.frame = CGRectMake(0,372,320,0);
 		_shadow.frame = CGRectMake(0,372,320,0);
 		[UIView commitAnimations];
@@ -828,10 +891,14 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_table reloadData];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	int offset = [[_eventDateOffsets objectAtIndex:[indexPath section]] intValue];
 	EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
 	if(!cell)
 		cell = [[[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"] autorelease];
-	[cell setEvent:[_data objectAtIndex:[indexPath row]]];
+	if(_data)
+		[cell setEvent:[_data objectAtIndex:[indexPath row]]];
+	else
+		[cell setEvent:[_events objectAtIndex:[indexPath row]+offset]];
 	return cell;
 }
 - (void)doneButtonPressed:(id)sender {

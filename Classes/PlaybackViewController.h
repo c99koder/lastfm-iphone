@@ -96,6 +96,8 @@
 	IBOutlet UIImageView *_shadow;
 	NSArray *_events;
 	NSMutableArray *_eventDates;
+	NSMutableArray *_eventDateCounts;
+	NSMutableArray *_eventDateOffsets;
 	NSMutableArray *_attendingEvents;
 	NSMutableArray *_data;
 	NSLock *_lock;
@@ -103,6 +105,7 @@
 }
 - (id)initWithUsername:(NSString *)user;
 - (void)doneButtonPressed:(id)sender;
+- (void)viewTypeToggled:(id)sender;
 @end
 
 @interface EventDetailViewController : UIViewController {
