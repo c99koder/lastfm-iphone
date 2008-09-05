@@ -67,6 +67,7 @@
 	IBOutlet UIProgressView *_progress;
 	IBOutlet UILabel *_bufferPercentage;
 	IBOutlet UIView *_fullscreenMetadataView;
+	IBOutlet UIButton *_badge;
 	UIImage *artwork;
 	NSLock *_lock;
 }
@@ -97,6 +98,7 @@
 	IBOutlet UITableView *_table;
 	IBOutlet UIButton *_badge;
 	IBOutlet UIImageView *_shadow;
+	IBOutlet UILabel *_artistLabel;
 	NSArray *_events;
 	NSMutableArray *_eventDates;
 	NSMutableArray *_eventDateCounts;

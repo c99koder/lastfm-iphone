@@ -393,6 +393,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
 	_artworkView.image = artwork;
 	_reflectedArtworkView.image = artwork;
+	_badge.hidden = YES;
+	_artist.frame = CGRectMake(20,13,280,18);
 	[self _updateProgress:nil];
 
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:[notification userInfo]];
@@ -851,13 +853,21 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self _processEvents:events];
 	
 	if([_events count]) {
-		if(_badge)
+		if(_badge) {
 			_badge.hidden = NO;
+			float width = [_artistLabel.text sizeWithFont:_artistLabel.font].width;
+			_artistLabel.frame = CGRectMake(160 - (width + 68.0f) / 2,13,width,18);
+			_badge.frame = CGRectMake((160 - (width + 68.0f) / 2) + width, 9,68,26);
+		}
+		self.tabBarItem.title = [NSString stringWithFormat:@"Events (%i)", [_events count]];
 	} else {
-		if(_badge)
+		if(_badge) {
 			_badge.hidden = YES;
+			_artistLabel.frame = CGRectMake(20,13,280,18);
+		}
+		self.tabBarItem.title = @"Events";
 	}
-
+	
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];
