@@ -99,6 +99,7 @@
 	IBOutlet UIButton *_badge;
 	IBOutlet UIImageView *_shadow;
 	IBOutlet UILabel *_artistLabel;
+	IBOutlet UISegmentedControl *segment;
 	NSArray *_events;
 	NSMutableArray *_eventDates;
 	NSMutableArray *_eventDateCounts;

@@ -796,10 +796,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.view addSubview: _calendar.view];
 	[self.view sendSubviewToBack: _calendar.view];
 	if(_username) {
-		UISegmentedControl *segment = [[[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Calendar",@"List",nil]] autorelease];
+		segment = [[[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Calendar",@"List",nil]] autorelease];
 		segment.frame = CGRectMake(0,0,207,30);
 		segment.segmentedControlStyle = UISegmentedControlStyleBar;
-		segment.tintColor = [UIColor grayColor];
 		segment.selectedSegmentIndex = 1;
 		[segment addTarget:self action:@selector(viewTypeToggled:) forControlEvents:UIControlEventValueChanged];
 		UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,372,320,44)];
@@ -828,6 +827,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	} else {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	}
+	segment.tintColor = [UIColor grayColor];
 	_lock = [[NSLock alloc] init];
 }
 - (id)initWithUsername:(NSString *)user {
@@ -837,21 +837,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	return self;
 }
-- (void)_fetchEvents:(NSDictionary *)trackInfo {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[trackInfo retain];
-	[_lock lock];
-	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
-	[_attendingEvents release];
-	_attendingEvents = [[NSMutableArray alloc] init];
-	NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-	for(NSDictionary *event in attendingEvents) {
-		[_attendingEvents addObject:[event objectForKey:@"id"]];
-	}
-	
-	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
-	[self _processEvents:events];
-	
+- (void)_updateBadge {
 	if([_events count]) {
 		if(_badge) {
 			_badge.hidden = NO;
@@ -867,7 +853,23 @@ int tagSort(id tag1, id tag2, void *context) {
 		}
 		self.tabBarItem.title = @"Events";
 	}
+}	
+- (void)_fetchEvents:(NSDictionary *)trackInfo {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[trackInfo retain];
+	[_lock lock];
+	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
+	[_attendingEvents release];
+	_attendingEvents = [[NSMutableArray alloc] init];
+	NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	for(NSDictionary *event in attendingEvents) {
+		[_attendingEvents addObject:[event objectForKey:@"id"]];
+	}
 	
+	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
+	[self _processEvents:events];
+	
+	[self performSelectorOnMainThread:@selector(_updateBadge) withObject:nil waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];
