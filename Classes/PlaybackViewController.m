@@ -296,6 +296,7 @@ int tagSort(id tag1, id tag2, void *context) {
 																 userInfo:nil
 																	repeats:YES];
 	_reflectedArtworkView.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	_lock = [[NSLock alloc] init];
 }
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
@@ -338,6 +339,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_fetchArtwork:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
+	[_lock lock];
 	NSDictionary *albumData = [[LastFMService sharedInstance] metadataForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
 	NSString *artworkURL = nil;
 	UIImage *artworkImage;
@@ -368,6 +370,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	_reflectedArtworkView.image = artworkImage;
 	[artwork release];
 	artwork = artworkImage;
+	[_lock unlock];
 	[trackInfo release];
 	[pool release];
 }

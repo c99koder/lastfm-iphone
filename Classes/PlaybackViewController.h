@@ -68,6 +68,7 @@
 	IBOutlet UILabel *_bufferPercentage;
 	IBOutlet UIView *_fullscreenMetadataView;
 	UIImage *artwork;
+	NSLock *_lock;
 }
 -(IBAction)artworkButtonPressed:(id)sender;
 @property (nonatomic, readonly) UIImage *artwork;
