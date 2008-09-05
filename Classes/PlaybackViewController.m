@@ -464,7 +464,15 @@ int tagSort(id tag1, id tag2, void *context) {
 	if(![bio length]) {
 		bio = NSLocalizedString(@"No artist description available.", @"Wiki text empty");
 	} else {
-		_img = [[artistinfo objectForKey:@"image"] retain];
+		NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+		[formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+		[_img release];
+		_img = [[[artistinfo objectForKey:@"image"] stringByReplacingOccurrencesOfString:@"/126/" withString:@"/126s/"] retain];
+		[_listeners release];
+		_listeners = [[NSString stringWithFormat:@"%@ listeners",[formatter stringFromNumber:[NSNumber numberWithInt:[[artistinfo objectForKey:@"listeners"] intValue]]]] retain];
+		[_playcount release];
+		_playcount = [[NSString stringWithFormat:@"%@ plays",[formatter stringFromNumber:[NSNumber numberWithInt:[[artistinfo objectForKey:@"playcount"] intValue]]]] retain];
+		[formatter release];
 	}
 
 	_bio = [[bio stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"] retain];
@@ -475,11 +483,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	[pool release];
 }
 - (void)refresh {
-	NSString *html = [NSString stringWithFormat:@"<html><style>a { color: red; }</style>\
-										<body style=\"margin:0; padding:0; color:white; background: black; font-family: 'Lucida Grande', Arial; line-height: 1.2em;\">\
-										<div style=\"padding:12px; margin:0; top:0px; left:0px; width:260px; position:absolute;\">\
-										<img src=\"%@\" style=\"float:left; margin-right: 8px;\"/>\
-										%@</div></body></html>", _img, _bio];
+	NSString *html = [NSString stringWithFormat:@"<html>\
+										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica;\">\
+										<div style=\"padding:12px; margin:0; top:0px; left:0px; width:260; position:absolute;\">\
+										<img src=\"%@\" style=\"float: left; margin-right: 8px; width:100px; height:100px; border:1px solid gray; padding: 1px;\"/>\
+										<div style=\"float:right; width: 148px; padding:0px; margin:0px;\"><span style=\"font-size: 16pt; font-weight:bold;\">%@</span><br/>\
+										<span style=\"color:gray;\">%@<br/>%@</span></div>\
+										<br style=\"clear:right;\"/>%@</div></body></html>", _img, [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"], _listeners, _playcount, _bio];
 	self.navigationItem.title = [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"];
 	[_webView loadHTMLString:html baseURL:nil];
 }
