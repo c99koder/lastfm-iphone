@@ -69,6 +69,7 @@
 	IBOutlet UIView *_fullscreenMetadataView;
 	IBOutlet UIButton *_badge;
 	UIImage *artwork;
+	UIImageView *_noArtworkView;
 	NSLock *_lock;
 }
 -(IBAction)artworkButtonPressed:(id)sender;

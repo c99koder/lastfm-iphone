@@ -297,6 +297,10 @@ int tagSort(id tag1, id tag2, void *context) {
 																	repeats:YES];
 	_reflectedArtworkView.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 	_lock = [[NSLock alloc] init];
+	_noArtworkView = [[UIImageView alloc] initWithFrame:_artworkView.bounds];
+	_noArtworkView.image = [UIImage imageNamed:@"noartplaceholder.png"];
+	_noArtworkView.opaque = NO;
+	[_artworkView addSubview: _noArtworkView];
 }
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
@@ -370,6 +374,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	_reflectedArtworkView.image = artworkImage;
 	[artwork release];
 	artwork = artworkImage;
+	[UIView beginAnimations:nil context:nil];
+	_noArtworkView.alpha = 0;
+	[UIView commitAnimations];
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
@@ -391,8 +398,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	_progress.progress = 0;
 	[artwork release];
 	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
-	_artworkView.image = artwork;
 	_reflectedArtworkView.image = artwork;
+	[UIView beginAnimations:nil context:nil];
+	_noArtworkView.alpha = 1;
+	[UIView commitAnimations];
 	_artist.frame = CGRectMake(20,13,280,18);
 	[self _updateProgress:nil];
 
@@ -416,6 +425,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
 		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
 		_artworkView.frame = CGRectMake(47,10,226,226);
+		_noArtworkView.frame = CGRectMake(0,0,226,226);
 		_fullscreenMetadataView.frame = CGRectMake(0,236,320,87);
 		_fullscreenMetadataView.alpha = 1;
 		_progress.alpha = 1;
@@ -425,6 +435,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		_reflectionGradientView.frame = CGRectMake(0,320,320,320);
 		_reflectedArtworkView.frame = CGRectMake(0,320,320,320);
 		_artworkView.frame = CGRectMake(0,0,320,320);
+		_noArtworkView.frame = CGRectMake(0,0,320,320);
 		//_fullscreenMetadataView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
 		//_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
 		_fullscreenMetadataView.alpha = 0;
