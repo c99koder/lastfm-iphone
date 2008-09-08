@@ -482,9 +482,17 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	return [URLs autorelease];
 }
 -(BOOL)selectStation:(NSString *)station {
+	int x;
+	NSDictionary *tune;
 	NSLog(@"Selecting station: %@\n", station);
 	NSLog(@"Network connection type: %@\n", [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasWiFiConnection]?@"WiFi":@"EDGE");
-	NSDictionary *tune = [[LastFMService sharedInstance] tuneRadioStation:station];
+	for(x=0; x<5; x++) {
+		tune = [[LastFMService sharedInstance] tuneRadioStation:station];
+		if((![LastFMService sharedInstance].error) || [LastFMService sharedInstance].error.code != 8)
+			break;
+		else
+			NSLog(@"Server busy, retrying...\n");
+	}
 	if([LastFMService sharedInstance].error) {
 		[_playlist release];
 		[_stationURL release];
@@ -508,21 +516,32 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	return FALSE;
 }
 -(BOOL)play {
+	int x;
+	NSLog(@"Fetching playlist");
 	if(!_playlist || [_playlist count] < 3 || _station == nil) {
-		NSDictionary *playlist = [[LastFMService sharedInstance] getPlaylist];
-		if([[playlist objectForKey:@"playlist"] count]) {
-			if(!_playlist) {
-				_playlist = [[NSMutableArray alloc] initWithArray:[playlist objectForKey:@"playlist"]];
+		for(x=0; x<5; x++) {
+			NSDictionary *playlist = [[LastFMService sharedInstance] getPlaylist];
+			if([[playlist objectForKey:@"playlist"] count]) {
+				if(!_playlist) {
+					_playlist = [[NSMutableArray alloc] initWithArray:[playlist objectForKey:@"playlist"]];
+				} else {
+					[_playlist addObjectsFromArray:[playlist objectForKey:@"playlist"]];
+				}
+				break;
 			} else {
-				[_playlist addObjectsFromArray:[playlist objectForKey:@"playlist"]];
+				if([LastFMService sharedInstance].error && [LastFMService sharedInstance].error.code != 8)
+					break;
+				else
+					NSLog(@"Server busy, retrying...\n");
 			}
-		} else {
-			if([LastFMService sharedInstance].error)
-				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
-			else
-				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
-			return FALSE;
 		}
+	}
+	if(![_playlist count]) {
+		if([LastFMService sharedInstance].error)
+			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
+		else
+			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
+		return FALSE;
 	}
 
 	LastFMTrack *track = [[[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]] autorelease];
