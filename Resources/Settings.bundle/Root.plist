@@ -42,6 +42,20 @@
 			<key>FalseValue</key>
 			<string>NO</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>On Tour indicator</string>
+			<key>Key</key>
+			<string>showontour</string>
+			<key>DefaultValue</key>
+			<string>YES</string>
+			<key>TrueValue</key>
+			<string>YES</string>
+			<key>FalseValue</key>
+			<string>NO</string>
+		</dict>
 	</array>
 </dict>
 </plist>

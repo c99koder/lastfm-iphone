@@ -913,7 +913,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
 	[self _processEvents:events];
 	
-	[self performSelectorOnMainThread:@selector(_updateBadge) withObject:nil waitUntilDone:YES];
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"showontour"] isEqualToString:@"YES"])
+		[self performSelectorOnMainThread:@selector(_updateBadge) withObject:nil waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];

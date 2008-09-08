@@ -92,6 +92,7 @@ NSString *kUserAgent;
 																														 [NSNumber numberWithFloat: 0.8], @"volume",
 																														 @"YES", @"scrobbling",
 																														 @"YES", @"disableautolock",
+																														 @"YES", @"showontour",
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
