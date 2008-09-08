@@ -377,16 +377,54 @@ int tagSort(id tag1, id tag2, void *context) {
 	[UIView beginAnimations:nil context:nil];
 	_noArtworkView.alpha = 0;
 	[UIView commitAnimations];
+	if(_artworkView.frame.size.width == 320) {
+		[self performSelectorOnMainThread:@selector(_showGradient) withObject:nil waitUntilDone:YES];
+	}
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
 }
+- (void)_showMetadata {
+	_trackTitle.textAlignment = UITextAlignmentLeft;
+	_artist.textAlignment = UITextAlignmentLeft;
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.6];
+	_trackTitle.alpha = 1;
+	_artist.alpha = 1;
+	_artist.frame = CGRectMake(30,96,280,18);
+	_trackTitle.frame = CGRectMake(30,117,280,18);
+	[UIView commitAnimations];
+	[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:4];
+}
 - (void)_hideMetadata {
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.6];
-	_fullscreenMetadataView.frame = CGRectMake(0,320,320,87);
+	_trackTitle.alpha = 0;
+	_artist.alpha = 0;
+	_artist.frame = CGRectMake(30,196,280,18);
+	_trackTitle.frame = CGRectMake(30,217,280,18);
 	_fullscreenMetadataView.alpha = 0;
 	[UIView commitAnimations];
+	//[self performSelector:@selector(_hideGradient) withObject:nil afterDelay:0.4];
+}
+- (void)_hideGradient {
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:1.0];
+	[UIView commitAnimations];
+}
+- (void)_showGradient {
+	_trackTitle.alpha = 0;
+	_artist.alpha = 0;
+	_artist.frame = CGRectMake(30,196,280,18);
+	_trackTitle.frame = CGRectMake(30,217,280,18);
+	_fullscreenMetadataView.frame = CGRectMake(0,161,320,159);
+	_fullscreenMetadataView.alpha = 0;
+	_fullscreenMetadataView.image = [UIImage imageNamed:@"metadatagradient.png"];
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:1.0];
+	_fullscreenMetadataView.alpha = 1;
+	[UIView commitAnimations];
+	[self performSelector:@selector(_showMetadata) withObject:nil afterDelay:0.5];
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	NSDictionary *trackInfo = [notification userInfo];
@@ -401,33 +439,30 @@ int tagSort(id tag1, id tag2, void *context) {
 	_reflectedArtworkView.image = artwork;
 	[UIView beginAnimations:nil context:nil];
 	_noArtworkView.alpha = 1;
+	_badge.alpha = 0;
 	[UIView commitAnimations];
 	_artist.frame = CGRectMake(20,13,280,18);
 	[self _updateProgress:nil];
 
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:[notification userInfo]];
-	
-	/*if(_artworkView.frame.size.width == 320) {
-		_fullscreenMetadataView.frame = CGRectMake(0,320,320,87);
-		_fullscreenMetadataView.alpha = 0;
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.6];
-		_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
-		_fullscreenMetadataView.alpha = 1;
-		[UIView commitAnimations];
-		[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:6];
-	}*/
 }
 -(IBAction)artworkButtonPressed:(id)sender {
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.2];
 	if(_artworkView.frame.size.width == 320) {
+		_trackTitle.textAlignment = UITextAlignmentCenter;
+		_artist.textAlignment = UITextAlignmentCenter;
+		_trackTitle.frame = CGRectMake(20,13,280,18);
+		_artist.frame = CGRectMake(20,30,280,18);
 		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
 		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
 		_artworkView.frame = CGRectMake(47,10,226,226);
 		_noArtworkView.frame = CGRectMake(0,0,226,226);
 		_fullscreenMetadataView.frame = CGRectMake(0,236,320,87);
 		_fullscreenMetadataView.alpha = 1;
+		_fullscreenMetadataView.image = nil;
+		_trackTitle.alpha = 1;
+		_artist.alpha = 1;
 		_progress.alpha = 1;
 		_elapsed.alpha = 1;
 		_remaining.alpha = 1;
@@ -436,14 +471,15 @@ int tagSort(id tag1, id tag2, void *context) {
 		_reflectedArtworkView.frame = CGRectMake(0,320,320,320);
 		_artworkView.frame = CGRectMake(0,0,320,320);
 		_noArtworkView.frame = CGRectMake(0,0,320,320);
-		//_fullscreenMetadataView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
-		//_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
+		_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
 		_fullscreenMetadataView.alpha = 0;
+		_trackTitle.alpha = 0;
+		_artist.alpha = 0;
 		_elapsed.alpha = 0;
 		_remaining.alpha = 0;
 		_progress.alpha = 0;
 		_artworkView.image = artwork;
-		//[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:6];
+		//[self performSelector:@selector(_showMetadata) withObject:nil afterDelay:0.6];
 	}
 	[UIView commitAnimations];
 }

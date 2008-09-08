@@ -66,7 +66,7 @@
 	IBOutlet UILabel *_remaining;
 	IBOutlet UIProgressView *_progress;
 	IBOutlet UILabel *_bufferPercentage;
-	IBOutlet UIView *_fullscreenMetadataView;
+	IBOutlet UIImageView *_fullscreenMetadataView;
 	IBOutlet UIButton *_badge;
 	UIImage *artwork;
 	UIImageView *_noArtworkView;
