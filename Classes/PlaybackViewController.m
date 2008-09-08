@@ -558,29 +558,33 @@ int tagSort(id tag1, id tag2, void *context) {
 		_eventTitle = [[UILabel alloc] init];
 		_eventTitle.textColor = [UIColor blackColor];
 		_eventTitle.highlightedTextColor = [UIColor whiteColor];
-		_eventTitle.backgroundColor = [UIColor clearColor];
+		_eventTitle.backgroundColor = [UIColor whiteColor];
 		_eventTitle.font = [UIFont boldSystemFontOfSize:14];
+		_eventTitle.opaque = YES;
 		[self.contentView addSubview:_eventTitle];
 		
 		_artists = [[UILabel alloc] init];
 		_artists.textColor = [UIColor grayColor];
 		_artists.highlightedTextColor = [UIColor whiteColor];
-		_artists.backgroundColor = [UIColor clearColor];
+		_artists.backgroundColor = [UIColor whiteColor];
 		_artists.font = [UIFont systemFontOfSize:14];
+		_artists.opaque = YES;
 		[self.contentView addSubview:_artists];
 		
 		_venue = [[UILabel alloc] init];
 		_venue.textColor = [UIColor grayColor];
 		_venue.highlightedTextColor = [UIColor whiteColor];
-		_venue.backgroundColor = [UIColor clearColor];
+		_venue.backgroundColor = [UIColor whiteColor];
 		_venue.font = [UIFont systemFontOfSize:14];
+		_venue.opaque = YES;
 		[self.contentView addSubview:_venue];
 
 		_location = [[UILabel alloc] init];
 		_location.textColor = [UIColor grayColor];
 		_location.highlightedTextColor = [UIColor whiteColor];
-		_location.backgroundColor = [UIColor clearColor];
+		_location.backgroundColor = [UIColor whiteColor];
 		_location.font = [UIFont systemFontOfSize:14];
+		_location.opaque = YES;
 		[self.contentView addSubview:_location];
 	}
 	return self;
@@ -597,11 +601,23 @@ int tagSort(id tag1, id tag2, void *context) {
 	_artists.text = artists;
 	_venue.text = [event objectForKey:@"venue"];
 	_location.text = [NSString stringWithFormat:@"%@, %@", [event objectForKey:@"city"], NSLocalizedString([event objectForKey:@"country"], @"Country name")];
+	_eventTitle.backgroundColor = [UIColor whiteColor];
+	_artists.backgroundColor = [UIColor whiteColor];
+	_venue.backgroundColor = [UIColor whiteColor];
+	_location.backgroundColor = [UIColor whiteColor];
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
+	_eventTitle.highlighted = selected;
+	_artists.highlighted = selected;
 	_venue.highlighted = selected;
 	_location.highlighted = selected;
+	if(selected) {
+		_eventTitle.backgroundColor = [UIColor clearColor];
+		_artists.backgroundColor = [UIColor clearColor];
+		_venue.backgroundColor = [UIColor clearColor];
+		_location.backgroundColor = [UIColor clearColor];
+	}
 }
 - (void)layoutSubviews {
 	[super layoutSubviews];
@@ -645,6 +661,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 }
 -(void)dealloc {
+	[_eventTitle release];
+	[_artists release];
 	[_venue release];
 	[_location release];
 	[super dealloc];
