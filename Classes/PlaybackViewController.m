@@ -998,8 +998,8 @@ int tagSort(id tag1, id tag2, void *context) {
 			_table.frame = CGRectMake(0,264,320,108);
 			_shadow.frame = CGRectMake(0,264,320,18);
 		} else {
-			_table.frame = CGRectMake(0,240,320,108);
-			_shadow.frame = CGRectMake(0,240,320,18);
+			_table.frame = CGRectMake(0,218,320,108);
+			_shadow.frame = CGRectMake(0,218,320,18);
 		}
 		[UIView commitAnimations];
 	} else {
