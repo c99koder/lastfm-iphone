@@ -8,8 +8,8 @@
 		<string key="IBDocument.HIToolboxVersion">352.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="759"/>
 			<integer value="116"/>
+			<integer value="759"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -448,6 +448,31 @@
 								<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
 							</object>
 						</object>
+						<object class="IBUIButton" id="143074339">
+							<reference key="NSNextResponder" ref="609645942"/>
+							<int key="NSvFlags">292</int>
+							<string key="NSFrame">{{234, 0}, {86, 86}}</string>
+							<reference key="NSSuperview" ref="609645942"/>
+							<bool key="IBUIOpaque">NO</bool>
+							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+							<float key="IBUIAlpha">0.000000e+00</float>
+							<int key="IBUIContentHorizontalAlignment">0</int>
+							<int key="IBUIContentVerticalAlignment">0</int>
+							<reference key="IBUIFont" ref="437759127"/>
+							<string key="IBUIHighlightedTitle"/>
+							<string key="IBUIDisabledTitle"/>
+							<string key="IBUISelectedTitle"/>
+							<string key="IBUINormalTitle"/>
+							<reference key="IBUIHighlightedTitleColor" ref="177709577"/>
+							<object class="NSColor" key="IBUINormalTitleColor">
+								<int key="NSColorSpace">1</int>
+								<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
+							</object>
+							<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+								<string key="NSClassName">NSImage</string>
+								<string key="NSResourceName">ontourbadge.png</string>
+							</object>
+						</object>
 						<object class="IBUIView" id="1028391811">
 							<reference key="NSNextResponder" ref="609645942"/>
 							<int key="NSvFlags">292</int>
@@ -555,30 +580,6 @@
 									<int key="IBUIBaselineAdjustment">1</int>
 									<float key="IBUIMinimumFontSize">6.000000e+00</float>
 									<int key="IBUITextAlignment">2</int>
-								</object>
-								<object class="IBUIButton" id="143074339">
-									<reference key="NSNextResponder" ref="1028391811"/>
-									<int key="NSvFlags">-2147483356</int>
-									<string key="NSFrame">{{126, 13}, {68, 26}}</string>
-									<reference key="NSSuperview" ref="1028391811"/>
-									<bool key="IBUIOpaque">NO</bool>
-									<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-									<int key="IBUIContentHorizontalAlignment">0</int>
-									<int key="IBUIContentVerticalAlignment">0</int>
-									<reference key="IBUIFont" ref="437759127"/>
-									<string key="IBUIHighlightedTitle"/>
-									<string key="IBUIDisabledTitle"/>
-									<string key="IBUISelectedTitle"/>
-									<string key="IBUINormalTitle"/>
-									<reference key="IBUIHighlightedTitleColor" ref="177709577"/>
-									<object class="NSColor" key="IBUINormalTitleColor">
-										<int key="NSColorSpace">1</int>
-										<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
-									</object>
-									<object class="NSCustomResource" key="IBUINormalBackgroundImage">
-										<string key="NSClassName">NSImage</string>
-										<string key="NSResourceName">on_tour_button.png</string>
-									</object>
 								</object>
 							</object>
 							<string key="NSFrame">{{0, 236}, {320, 87}}</string>
@@ -2034,6 +2035,7 @@
 							<reference ref="609475281"/>
 							<reference ref="321003824"/>
 							<reference ref="1028391811"/>
+							<reference ref="143074339"/>
 						</object>
 						<reference key="parent" ref="586853498"/>
 					</object>
@@ -2211,7 +2213,6 @@
 							<reference ref="433469269"/>
 							<reference ref="932854978"/>
 							<reference ref="98295960"/>
-							<reference ref="143074339"/>
 						</object>
 						<reference key="parent" ref="609645942"/>
 					</object>
@@ -2334,7 +2335,7 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">858</int>
 						<reference key="object" ref="143074339"/>
-						<reference key="parent" ref="1028391811"/>
+						<reference key="parent" ref="609645942"/>
 					</object>
 				</object>
 			</object>

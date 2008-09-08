@@ -393,7 +393,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
 	_artworkView.image = artwork;
 	_reflectedArtworkView.image = artwork;
-	_badge.hidden = YES;
 	_artist.frame = CGRectMake(20,13,280,18);
 	[self _updateProgress:nil];
 
@@ -840,18 +839,16 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_updateBadge {
 	if([_events count]) {
 		if(_badge) {
-			_badge.hidden = NO;
-			float width = [_artistLabel.text sizeWithFont:_artistLabel.font].width;
-			_artistLabel.frame = CGRectMake(160 - (width + 68.0f) / 2,13,width,18);
-			_badge.frame = CGRectMake((160 - (width + 68.0f) / 2) + width, 9,68,26);
+			[UIView beginAnimations:nil context:nil];
+			_badge.alpha = 1;
+			[UIView commitAnimations];
 		}
-		self.tabBarItem.title = [NSString stringWithFormat:@"Events (%i)", [_events count]];
 	} else {
 		if(_badge) {
-			_badge.hidden = YES;
-			_artistLabel.frame = CGRectMake(20,13,280,18);
+			[UIView beginAnimations:nil context:nil];
+			_badge.alpha = 0;
+			[UIView commitAnimations];
 		}
-		self.tabBarItem.title = @"Events";
 	}
 }	
 - (void)_fetchEvents:(NSDictionary *)trackInfo {

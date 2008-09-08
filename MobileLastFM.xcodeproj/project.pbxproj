@@ -205,7 +205,6 @@
 		22F2FE0E0E31046D000DDCDC /* white_lfm_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE090E31046D000DDCDC /* white_lfm_logo.png */; };
 		22F2FE0F0E31046D000DDCDC /* transparent_grey_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE0A0E31046D000DDCDC /* transparent_grey_button.png */; };
 		22F452FD0DD50EBD0060DF02 /* NSString+URLEscaped.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F452FC0DD50EBD0060DF02 /* NSString+URLEscaped.m */; };
-		22FF66970E71B645006DA659 /* on_tour_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 22FF66960E71B645006DA659 /* on_tour_button.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -446,7 +445,6 @@
 		22F2FE0A0E31046D000DDCDC /* transparent_grey_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transparent_grey_button.png; sourceTree = "<group>"; };
 		22F452FB0DD50EBD0060DF02 /* NSString+URLEscaped.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEscaped.h"; sourceTree = "<group>"; };
 		22F452FC0DD50EBD0060DF02 /* NSString+URLEscaped.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEscaped.m"; sourceTree = "<group>"; };
-		22FF66960E71B645006DA659 /* on_tour_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = on_tour_button.png; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* MobileLastFM_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileLastFM_Prefix.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -633,7 +631,6 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				22FF66960E71B645006DA659 /* on_tour_button.png */,
 				22624B4D0E6F01FE00072BB4 /* calendar-view-gradient.png */,
 				229808CA0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png */,
 				229808CB0E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png */,
@@ -996,7 +993,6 @@
 				22624B1D0E6EF3A000072BB4 /* daygradient.png in Resources */,
 				22624B4E0E6F01FE00072BB4 /* calendar-view-gradient.png in Resources */,
 				22327C140E700B1F002016DD /* Settings.bundle in Resources */,
-				22FF66970E71B645006DA659 /* on_tour_button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
