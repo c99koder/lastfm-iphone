@@ -1214,6 +1214,7 @@
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1237,6 +1238,7 @@
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "09B94101-C6D6-46A9-888C-9B035EE50019";
 				SDKROOT = iphoneos2.0;
+				STRIP_INSTALLED_PRODUCT = YES;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = "Distribution (ad-hoc)";

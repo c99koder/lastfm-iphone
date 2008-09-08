@@ -452,8 +452,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	if(_artworkView.frame.size.width == 320) {
 		_trackTitle.textAlignment = UITextAlignmentCenter;
 		_artist.textAlignment = UITextAlignmentCenter;
-		_trackTitle.frame = CGRectMake(20,13,280,18);
-		_artist.frame = CGRectMake(20,30,280,18);
+		_artist.frame = CGRectMake(20,13,280,18);
+		_trackTitle.frame = CGRectMake(20,30,280,18);
 		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
 		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
 		_artworkView.frame = CGRectMake(47,10,226,226);
