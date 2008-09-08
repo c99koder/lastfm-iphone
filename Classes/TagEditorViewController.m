@@ -24,6 +24,8 @@
 
 - (id)initWithTag:(NSString *)t {
 	CGSize size = [t sizeWithFont:[UIFont boldSystemFontOfSize:20]];
+	if(size.width > 272)
+		size.width = 272;
 	if(self = [super initWithFrame:CGRectMake(0,0,size.width + 19 + 18 + 2,size.height+4)]) {
 		self.image = [[UIImage imageNamed:@"tag-bg.png"] stretchableImageWithLeftCapWidth:18 topCapHeight:0];
 		tag = [t retain];
