@@ -144,7 +144,7 @@
 	[super viewWillAppear:animated];
 	[_searchBar becomeFirstResponder];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	_table.frame = CGRectMake(0,44,320,205);
+	_table.frame = CGRectMake(0,44,320,156);
 	[_table reloadData];
 }
 - (void)viewWillDisappear:(BOOL)animated {
