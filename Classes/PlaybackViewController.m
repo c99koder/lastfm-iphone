@@ -852,6 +852,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[_eventDateCounts addObject:[NSNumber numberWithInt:i - lasti]];
 	}
 	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
+	[_table reloadData];
 	[formatter release];
 }
 - (void)viewDidLoad {
