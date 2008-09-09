@@ -196,9 +196,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[_bufferLock release];
 	[super dealloc];
 }
--(void)_notifyTrackChange {
-	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:_trackInfo];
-}
 -(void)_notifyTrackFinishedLoading {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishLoading object:self userInfo:nil];
 }
@@ -235,7 +232,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"disableautolock"] isEqualToString:@"YES"])
 			[UIApplication sharedApplication].idleTimerDisabled = YES;
 		_state = TRACK_PLAYING;
-		[self performSelectorOnMainThread:@selector(_notifyTrackChange) withObject:nil waitUntilDone:NO];
 	} else {
 		_state = TRACK_BUFFERING;
 		//kick start the audio stream
@@ -473,6 +469,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[t release];
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];
+		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
 	} else {
 		[self play];
 	}
@@ -599,6 +596,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	
 	if(track) {
 		[_tracks addObject:track];
+		if([_tracks count] == 1)
+			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
 		return TRUE;
 	} else {
 		return FALSE;
@@ -633,6 +632,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	}
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];
+		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
 	} else {
 		if([_playlist count])
 			[_playlist removeObjectAtIndex:0];
