@@ -1103,13 +1103,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	self.hidesBottomBarWhenPushed = YES;
 }
 - (void)_systemVolumeChanged:(NSNotification *)notification {
-	if([[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeChangeReasonNotificationParameter"] isEqualToString:@"ExplicitVolumeChange"]) {
-		float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
-		for(UIView *v in [volumeView subviews]) {
-			if([v isKindOfClass:[UISlider class]]) {
-				if(((UISlider *)v).value != volume)
-					((UISlider *)v).value = volume;
-			}
+	float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+	for(UIView *v in [volumeView subviews]) {
+		if([v isKindOfClass:[UISlider class]]) {
+			if(((UISlider *)v).value != volume)
+				((UISlider *)v).value = volume;
 		}
 	}
 }
