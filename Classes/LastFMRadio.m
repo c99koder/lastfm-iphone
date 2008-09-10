@@ -317,7 +317,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 		while([_receivedData length]) {
 			if([_receivedData length] > 16384) {
-				extraData = [NSData dataWithBytes:[_receivedData bytes]+16384 length:[_receivedData length]-16384];
+				extraData = [[NSData alloc] initWithBytes:[_receivedData bytes]+16384 length:[_receivedData length]-16384];
 				[_receivedData setLength: 16384];
 			}
 			OSStatus error = AudioFileStreamParseBytes(parser, [_receivedData length], [_receivedData bytes], 0);
@@ -328,6 +328,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			}
 			if(extraData) {
 				[_receivedData appendData:extraData];
+				[extraData release];
 				extraData = nil;
 			}
 		}

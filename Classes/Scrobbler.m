@@ -318,6 +318,7 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	NSString *theResponseString = [[NSString alloc] initWithData:_receivedData encoding:NSASCIIStringEncoding];
 	NSArray *list = [theResponseString componentsSeparatedByString:@"\n"];
+	[theResponseString release];
 	int i;
 	[_connection release];
 	_connection = nil;
@@ -384,7 +385,6 @@
 			_scrobblerState = SCROBBLER_READY;
 		}
 	}
-	[theResponseString release];
 }
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	[_receivedData setLength:0];
