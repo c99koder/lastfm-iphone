@@ -398,39 +398,43 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	NSArray *nodes = [[[[[self doMethod:@"radio.getPlaylist" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"mobile_net=%@",[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?@"wifi":@"wwan"], nil] objectAtIndex:0] children] objectAtIndex:1] children];
 	NSString *title = nil;
 	
-	for(CXMLNode *node in nodes) {
-		if([[node name] isEqualToString:@"trackList"]) {
-			playlist = [[[NSMutableArray alloc] init] autorelease];
-			
-			for(CXMLNode *tracklistNode in [node children]) {
-				if([[tracklistNode name] isEqualToString:@"track"]) {
-					NSArray *trackNodes = [tracklistNode children];
-					NSEnumerator *trackMembers = [trackNodes objectEnumerator];
-					CXMLNode *trackNode = nil;
-					NSMutableDictionary *track = [[NSMutableDictionary alloc] init];
-					
-					while ((trackNode = [trackMembers nextObject])) {
-						if([[trackNode name] isEqualToString:@"extension"]) {
-							for(CXMLNode *extNode in [trackNode children]) {
-								if([extNode stringValue])
-									[track setObject:[extNode stringValue] forKey:[extNode name]];
-							}
-						} else if([trackNode stringValue])
-							[track setObject:[trackNode stringValue] forKey:[trackNode name]];
+	if([nodes count]) {
+		for(CXMLNode *node in nodes) {
+			if([[node name] isEqualToString:@"trackList"] && [[node children] count]) {
+				playlist = [[[NSMutableArray alloc] init] autorelease];
+				
+				for(CXMLNode *tracklistNode in [node children]) {
+					if([[tracklistNode name] isEqualToString:@"track"]) {
+						NSArray *trackNodes = [tracklistNode children];
+						NSEnumerator *trackMembers = [trackNodes objectEnumerator];
+						CXMLNode *trackNode = nil;
+						NSMutableDictionary *track = [[NSMutableDictionary alloc] init];
+						
+						while ((trackNode = [trackMembers nextObject])) {
+							if([[trackNode name] isEqualToString:@"extension"]) {
+								for(CXMLNode *extNode in [trackNode children]) {
+									if([extNode stringValue])
+										[track setObject:[extNode stringValue] forKey:[extNode name]];
+								}
+							} else if([trackNode stringValue])
+								[track setObject:[trackNode stringValue] forKey:[trackNode name]];
+						}
+						
+						[playlist addObject:track];
+						[track release];
 					}
-					
-					[playlist addObject:track];
-					[track release];
 				}
+			} else if([[node name] isEqualToString:@"title"] && [node stringValue]) {
+				NSMutableString *station = [NSMutableString stringWithString:[node stringValue]];
+				[station replaceOccurrencesOfString:@"+" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [station length])];
+				[station replaceOccurrencesOfString:@"-" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [station length])];
+				title = [(NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL,(CFStringRef)[station stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]],CFSTR("")) autorelease];
 			}
-		} else if([[node name] isEqualToString:@"title"] && [node stringValue]) {
-			NSMutableString *station = [NSMutableString stringWithString:[node stringValue]];
-			[station replaceOccurrencesOfString:@"+" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [station length])];
-			[station replaceOccurrencesOfString:@"-" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [station length])];
-			title = [(NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL,(CFStringRef)[station stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]],CFSTR("")) autorelease];
 		}
+		return [NSDictionary dictionaryWithObjectsAndKeys:playlist,@"playlist",title,@"title",nil]; 
+	} else {
+		return nil;
 	}
-	return [NSDictionary dictionaryWithObjectsAndKeys:playlist,@"playlist",title,@"title",nil]; 
 }
 
 #pragma mark Event methods
