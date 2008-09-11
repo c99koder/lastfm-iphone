@@ -531,13 +531,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	[pool release];
 }
 - (void)refresh {
-	NSString *html = [NSString stringWithFormat:@"<html>\
-										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica;\">\
-										<div style=\"padding:12px; margin:0; top:0px; left:0px; width:260; position:absolute;\">\
-										<img src=\"%@\" style=\"float: left; margin-right: 8px; width:100px; height:100px; border:1px solid gray; padding: 1px;\"/>\
-										<div style=\"float:right; width: 148px; padding:0px; margin:0px;\"><span style=\"font-size: 16pt; font-weight:bold;\">%@</span><br/>\
-										<span style=\"color:gray;\">%@<br/>%@</span></div>\
-										<br style=\"clear:right;\"/>%@</div></body></html>", _img, [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"], _listeners, _playcount, _bio];
+	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; }</style></head>\
+										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
+										<div style=\"padding:17px; margin:0; top:0px; left:0px; width:286; position:absolute;\">\
+										<img src=\"%@\" style=\"margin-top: 4px; float: left; margin-right: 0px; margin-bottom: 14px; width:64px; height:64px; border:1px solid gray; padding: 1px;\"/>\
+										<div style=\"float:right; width: 207px; padding:0px; margin:0px; margin-top:1px; margin-left:3px;\"><span style=\"font-size: 15pt; font-weight:bold; padding:0px; margin:0px;\">%@</span><br/>\
+										<span style=\"color:gray; font-weight: normal; font-size: 10pt;\">%@<br/>%@</span></div>\
+										<br style=\"clear:both;\"/>%@</div></body></html>", _img, [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"], _listeners, _playcount, _bio];
 	self.navigationItem.title = [[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"];
 	[_webView loadHTMLString:html baseURL:nil];
 }
