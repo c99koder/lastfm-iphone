@@ -231,6 +231,8 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 
 
 - (void)dealloc {
+	[topTags release];
+	[myTags release];
 	[super dealloc];
 }
 

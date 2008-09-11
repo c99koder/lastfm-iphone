@@ -48,6 +48,7 @@
 - (void)_searchThread:(NSString *)text {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *results = nil;
+	[text retain];
 	
 	switch(_searchType.selectedSegmentIndex) {
 		case 0:
@@ -69,6 +70,8 @@
 		}
 		break;
 	}
+
+	[text release];
 	
 	if(![[NSThread currentThread] isCancelled]) {
 		[_data release];
@@ -97,6 +100,7 @@
 	[_searchThread cancel];
 	_searchThread = [[NSThread alloc] initWithTarget:self selector:@selector(_searchThread:) object:[timer userInfo]];
 	[_searchThread start];
+	[_searchTimer release];
 	_searchTimer = nil;
 }
 -(IBAction)searchTypeChanged:(id)sender {

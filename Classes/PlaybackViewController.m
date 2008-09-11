@@ -599,6 +599,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		}
 	}
 	_artists.text = artists;
+	[artists release];
 	_venue.text = [event objectForKey:@"venue"];
 	_location.text = [NSString stringWithFormat:@"%@, %@", [event objectForKey:@"city"], NSLocalizedString([event objectForKey:@"country"], @"Country name")];
 	_eventTitle.backgroundColor = [UIColor whiteColor];

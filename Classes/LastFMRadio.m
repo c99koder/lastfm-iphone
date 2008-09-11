@@ -86,7 +86,7 @@ void propCallback(void *in,	AudioFileStreamID inAudioFileStream, AudioFileStream
 			track.dataFormat = dataFormat;
 			break;
 		case kAudioFileStreamProperty_ReadyToProducePackets:
-			NSLog(@"Ready to produce packets\n");
+			NSLog(@"Ready to produce packets (hi laurie!)\n");
 			dataFormat = track.dataFormat;
 			OSStatus error = AudioQueueNewOutput(&dataFormat, AQBufferCallback, track, NULL, kCFRunLoopCommonModes, 0, &queue);
 			if(error) {
