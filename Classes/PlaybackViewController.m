@@ -397,20 +397,16 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:4];
 }
 - (void)_hideMetadata {
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.6];
-	_trackTitle.alpha = 0;
-	_artist.alpha = 0;
-	_artist.frame = CGRectMake(30,196,280,18);
-	_trackTitle.frame = CGRectMake(30,217,280,18);
-	_fullscreenMetadataView.alpha = 0;
-	[UIView commitAnimations];
-	//[self performSelector:@selector(_hideGradient) withObject:nil afterDelay:0.4];
-}
-- (void)_hideGradient {
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:1.0];
-	[UIView commitAnimations];
+	if(_artworkView.frame.size.width == 320) {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.6];
+		_trackTitle.alpha = 0;
+		_artist.alpha = 0;
+		_artist.frame = CGRectMake(30,196,280,18);
+		_trackTitle.frame = CGRectMake(30,217,280,18);
+		_fullscreenMetadataView.alpha = 0;
+		[UIView commitAnimations];
+	}
 }
 - (void)_showGradient {
 	_trackTitle.alpha = 0;
