@@ -513,6 +513,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(BOOL)selectStation:(NSString *)station {
 	int x;
 	NSDictionary *tune;
+	[self removeRecentURL: _stationURL];
 	NSLog(@"Selecting station: %@\n", station);
 	NSLog(@"Network connection type: %@\n", [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasWiFiConnection]?@"WiFi":@"EDGE");
 	for(x=0; x<5; x++) {
@@ -537,7 +538,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_station release];
 		_station = [[tune objectForKey:@"name"] retain];
 		_errorSkipCounter = 0;
-		[self removeRecentURL: _stationURL];
 		[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
 		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [[_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] capitalizedString], nil];
 		return TRUE;
@@ -566,6 +566,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 	}
 	if(![_playlist count]) {
+		[self removeRecentURL: _stationURL];
 		if([LastFMService sharedInstance].error)
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
 		else
