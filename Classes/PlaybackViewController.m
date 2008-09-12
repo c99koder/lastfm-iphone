@@ -1348,9 +1348,9 @@ int tagSort(id tag1, id tag2, void *context) {
 																										 delegate:self
 																						cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
 																			 destructiveButtonTitle:nil
-																						otherButtonTitles:NSLocalizedString(@"Tag", @"Tag button"),
+																						otherButtonTitles:NSLocalizedString(@"Share", @"Share button"),
+																															NSLocalizedString(@"Tag", @"Tag button"),
 																															NSLocalizedString(@"Add to Playlist", @"Add to Playlist button"),
-																															NSLocalizedString(@"Share", @"Share button"),
 																															NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button"),
 																															nil];
 	sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;

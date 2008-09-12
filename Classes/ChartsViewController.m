@@ -499,9 +499,9 @@ int tagSort(id tag1, id tag2, void *context);
 																						 destructiveButtonTitle:nil
 																									otherButtonTitles:NSLocalizedString(@"Love Track", @"Love Track (long)"), 
 													NSLocalizedString(@"Ban Track", @"Ban Track (long)"),
+													NSLocalizedString(@"Share", @"Share button"),
 													NSLocalizedString(@"Add to Playlist", @"Add to Playlist button"),
 													NSLocalizedString(@"Tag", @"Tag button"),
-													NSLocalizedString(@"Share", @"Share button"),
 													NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button"),
 													nil];
 	[sheet showInView:self.view];
