@@ -57,24 +57,27 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
 	[_lock lock];
-	[self showLoadingView];
-	[_data release];
-	[_cells removeAllObjects];
-	_data = [[LastFMService sharedInstance] artistsSimilarTo:[trackInfo objectForKey:@"creator"]];
-	_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>25)?25:[_data count])] retain];
-	for(NSDictionary *artist in _data) {
-		ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
-		cell.title.text = [artist objectForKey:@"name"];
-		cell.barWidth = [[artist objectForKey:@"match"] floatValue] / 100.0f;
-		cell.imageURL = [artist objectForKey:@"image"];
-		[cell addStreamIcon];
-		[_cells addObject:cell];
-		[cell release];
+	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
+		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
+		[self showLoadingView];
+		[_data release];
+		[_cells removeAllObjects];
+		_data = [[LastFMService sharedInstance] artistsSimilarTo:[trackInfo objectForKey:@"creator"]];
+		_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>25)?25:[_data count])] retain];
+		for(NSDictionary *artist in _data) {
+			ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
+			cell.title.text = [artist objectForKey:@"name"];
+			cell.barWidth = [[artist objectForKey:@"match"] floatValue] / 100.0f;
+			cell.imageURL = [artist objectForKey:@"image"];
+			[cell addStreamIcon];
+			[_cells addObject:cell];
+			[cell release];
+		}
+		[_table reloadData];
+		[_table scrollRectToVisible:[_table frame] animated:YES];
+		[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
-	[_table reloadData];
-	[_table scrollRectToVisible:[_table frame] animated:YES];
-	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
-	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
@@ -142,13 +145,16 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
 	[_lock lock];
-	[self showLoadingView];
-	[_data release];
-	_data = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
-	_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
-	[_table reloadData];
-	[_table scrollRectToVisible:[_table frame] animated:YES];
-	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
+	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
+		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
+		[self showLoadingView];
+		[_data release];
+		_data = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
+		_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
+		[_table reloadData];
+		[_table scrollRectToVisible:[_table frame] animated:YES];
+		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
+	}
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
@@ -228,22 +234,25 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
 	[_lock lock];
-	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
-	[_data release];
-	[_cells removeAllObjects];
-	_data = [[LastFMService sharedInstance] fansOfTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
-	_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
-	for(NSDictionary *fan in _data) {
-		ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
-		cell.title.text = [fan objectForKey:@"username"];
-		cell.imageURL = [fan objectForKey:@"image"];
-		[_cells addObject:cell];
-		[cell release];
+	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
+		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
+		[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
+		[_data release];
+		[_cells removeAllObjects];
+		_data = [[LastFMService sharedInstance] fansOfTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
+		_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
+		for(NSDictionary *fan in _data) {
+			ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
+			cell.title.text = [fan objectForKey:@"username"];
+			cell.imageURL = [fan objectForKey:@"image"];
+			[_cells addObject:cell];
+			[cell release];
+		}
+		[_table reloadData];
+		[_table scrollRectToVisible:[_table frame] animated:YES];
+		[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
-	[_table reloadData];
-	[_table scrollRectToVisible:[_table frame] animated:YES];
-	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
-	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
@@ -370,15 +379,18 @@ int tagSort(id tag1, id tag2, void *context) {
 		artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
 	}
 
-	_artworkView.image = artworkImage;
-	_reflectedArtworkView.image = artworkImage;
-	[artwork release];
-	artwork = artworkImage;
-	[UIView beginAnimations:nil context:nil];
-	_noArtworkView.alpha = 0;
-	[UIView commitAnimations];
-	if(_artworkView.frame.size.width == 320) {
-		[self performSelectorOnMainThread:@selector(_showGradient) withObject:nil waitUntilDone:YES];
+	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
+		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
+		_artworkView.image = artworkImage;
+		_reflectedArtworkView.image = artworkImage;
+		[artwork release];
+		artwork = artworkImage;
+		[UIView beginAnimations:nil context:nil];
+		_noArtworkView.alpha = 0;
+		[UIView commitAnimations];
+		if(_artworkView.frame.size.width == 320) {
+			[self performSelectorOnMainThread:@selector(_showGradient) withObject:nil waitUntilDone:YES];
+		}
 	}
 	[_lock unlock];
 	[trackInfo release];
@@ -497,31 +509,34 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
 	[_lock lock];
-	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
-	[_bio release];
-	NSDictionary *artistinfo = [[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-	
-	NSString *bio = [artistinfo objectForKey:@"bio"];
-	if(![bio length]) {
-		bio = [[[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:@"en"] objectForKey:@"bio"];
-	}
-	if(![bio length]) {
-		bio = NSLocalizedString(@"No artist description available.", @"Wiki text empty");
-	} else {
-		NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-		[formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-		[_img release];
-		_img = [[[artistinfo objectForKey:@"image"] stringByReplacingOccurrencesOfString:@"/126/" withString:@"/126s/"] retain];
-		[_listeners release];
-		_listeners = [[NSString stringWithFormat:@"%@ listeners",[formatter stringFromNumber:[NSNumber numberWithInt:[[artistinfo objectForKey:@"listeners"] intValue]]]] retain];
-		[_playcount release];
-		_playcount = [[NSString stringWithFormat:@"%@ plays",[formatter stringFromNumber:[NSNumber numberWithInt:[[artistinfo objectForKey:@"playcount"] intValue]]]] retain];
-		[formatter release];
-	}
+	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
+		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
+		[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
+		[_bio release];
+		NSDictionary *artistinfo = [[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
+		
+		NSString *bio = [artistinfo objectForKey:@"bio"];
+		if(![bio length]) {
+			bio = [[[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:@"en"] objectForKey:@"bio"];
+		}
+		if(![bio length]) {
+			bio = NSLocalizedString(@"No artist description available.", @"Wiki text empty");
+		} else {
+			NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+			[formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+			[_img release];
+			_img = [[[artistinfo objectForKey:@"image"] stringByReplacingOccurrencesOfString:@"/126/" withString:@"/126s/"] retain];
+			[_listeners release];
+			_listeners = [[NSString stringWithFormat:@"%@ listeners",[formatter stringFromNumber:[NSNumber numberWithInt:[[artistinfo objectForKey:@"listeners"] intValue]]]] retain];
+			[_playcount release];
+			_playcount = [[NSString stringWithFormat:@"%@ plays",[formatter stringFromNumber:[NSNumber numberWithInt:[[artistinfo objectForKey:@"playcount"] intValue]]]] retain];
+			[formatter release];
+		}
 
-	_bio = [[bio stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"] retain];
-	[self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
-	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
+		_bio = [[bio stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"] retain];
+		[self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
+	}
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
@@ -918,20 +933,23 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
 	[_lock lock];
-	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
-	[_attendingEvents release];
-	_attendingEvents = [[NSMutableArray alloc] init];
-	NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-	for(NSDictionary *event in attendingEvents) {
-		[_attendingEvents addObject:[event objectForKey:@"id"]];
+	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
+		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
+		[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
+		[_attendingEvents release];
+		_attendingEvents = [[NSMutableArray alloc] init];
+		NSArray *attendingEvents = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+		for(NSDictionary *event in attendingEvents) {
+			[_attendingEvents addObject:[event objectForKey:@"id"]];
+		}
+		
+		NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
+		[self _processEvents:events];
+		
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"showontour"] isEqualToString:@"YES"])
+			[self performSelectorOnMainThread:@selector(_updateBadge) withObject:nil waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
-	
-	NSArray *events = [[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]];
-	[self _processEvents:events];
-	
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"showontour"] isEqualToString:@"YES"])
-		[self performSelectorOnMainThread:@selector(_updateBadge) withObject:nil waitUntilDone:YES];
-	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
@@ -1096,7 +1114,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	volumeView = v;
 	[volumeView sizeToFit];
 	[trackView.view addSubview: volumeView];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+	if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)])
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 	self.hidesBottomBarWhenPushed = YES;
 }
 - (void)_systemVolumeChanged:(NSNotification *)notification {

@@ -25,26 +25,6 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 
-@interface SystemNowPlayingController : NSObject
-{
-	int _disableHUDCount;
-	BOOL _notifyEnableSystemHUDLastPostedState;
-	int _notifyDisableSystemHUDToken;
-}
-
-+ (id)sharedInstance;
-- (id)init;
-- (id)_init;
-- (void)dealloc;
-- (void)_setEnableSBMediaHUD:(BOOL)fp8;
-- (void)disableMediaHUD;
-- (void)enableMediaHUD;
-- (void)_postCurrentMedia:(BOOL)fp8 path:(id)fp12 title:(id)fp16 artist:(id)fp20 album:(id)fp24 isPlaying:(BOOL)fp28 playingToTVOut:(BOOL)fp32 hasImageData:(BOOL)fp36 additionalInfo:(id)fp40;
-- (void)postNowPlayingInfoForMovieWithTitle:(id)fp8 artist:(id)fp12 album:(id)fp16 isPlaying:(BOOL)fp20 playingToTVOut:(BOOL)fp24;
-- (void)postNowPlayingInfoForSongWithPath:(id)fp8 title:(id)fp12 artist:(id)fp16 album:(id)fp20 isPlaying:(BOOL)fp24 hasImageData:(BOOL)fp28 additionalInfo:(id)fp32;
-
-@end
-
 void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	if(inInterruptionState == kAudioSessionBeginInterruption) {
 		NSLog(@"interruption detected! stopping playback/recording\n");
