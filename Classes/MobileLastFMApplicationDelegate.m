@@ -275,7 +275,7 @@ NSString *kUserAgent;
 		_launchURL = nil;
 	}
 
-	if([[NSUserDefaults standardUserDefaults] objectForKey:@"crashed"]||1) {
+	if([[NSUserDefaults standardUserDefaults] objectForKey:@"crashed"]) {
 		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CRASH_REPORT_TITLE", @"Crash reporter title")
 																										 message:NSLocalizedString(@"CRASH_REPORT_BODY",@"Crash reporter body")
 																										delegate:self
