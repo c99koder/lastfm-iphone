@@ -127,6 +127,10 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		if([artistData objectForKey:@"image"])
 			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
 	}
+
+	if([artworkURL hasPrefix:@"http://images.amazon.com/images/P/"]) {
+		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@".M" withString:@".L"];
+	}
 	
 	if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
 		NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString: artworkURL]];
