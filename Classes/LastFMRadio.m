@@ -517,12 +517,12 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(BOOL)selectStation:(NSString *)station {
 	int x;
 	NSDictionary *tune;
-	[self removeRecentURL: _stationURL];
+	[self removeRecentURL: station];
 	NSLog(@"Selecting station: %@\n", station);
 	NSLog(@"Network connection type: %@\n", [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasWiFiConnection]?@"WiFi":@"EDGE");
 	for(x=0; x<5; x++) {
 		tune = [[LastFMService sharedInstance] tuneRadioStation:station];
-		if((![LastFMService sharedInstance].error) || [LastFMService sharedInstance].error.code != 8)
+		if((![LastFMService sharedInstance].error) || [LastFMService sharedInstance].error.code != 8 || [LastFMService sharedInstance].error.code != 16)
 			break;
 		else
 			NSLog(@"Server busy, retrying...\n");
@@ -562,7 +562,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 				}
 				break;
 			} else {
-				if([LastFMService sharedInstance].error && [LastFMService sharedInstance].error.code != 8)
+				if([LastFMService sharedInstance].error && !([LastFMService sharedInstance].error.code == 8 || [LastFMService sharedInstance].error.code == 16))
 					break;
 				else
 					NSLog(@"Server busy, retrying...\n");
