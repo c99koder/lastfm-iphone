@@ -163,7 +163,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [_data count];
+	return [_data count]?[_data count]:1;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return 48;
@@ -185,30 +185,35 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
-	[self playRadioStation:[NSString stringWithFormat:@"lastfm://globaltags/%@", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"name"] URLEscaped]]];
+	if([_data count])
+		[self playRadioStation:[NSString stringWithFormat:@"lastfm://globaltags/%@", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"name"] URLEscaped]]];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil] autorelease];
-	UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(8,0,256,48)];
-	l.textColor = [UIColor blackColor];
-	l.backgroundColor = [UIColor clearColor];
-	l.font = [UIFont boldSystemFontOfSize:20];
-	l.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
-	[cell.contentView addSubview: l];
-	[l release];
-	float width = [[[_data objectAtIndex:[indexPath row]] objectForKey:@"count"] floatValue] / [[[_data objectAtIndex:0] objectForKey:@"count"] floatValue];
-	UIView *bar = [[UIView alloc] initWithFrame:CGRectMake(0,0,width * [cell frame].size.width,48)];
-	bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
-	UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
-	[backgroundView addSubview: bar];
-	cell.backgroundView = backgroundView;
-	[bar release];
-	[backgroundView release];
-	UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-	cell.accessoryView = img;
-	cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	[img release];
+	if([_data count]) {
+		UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(8,0,256,48)];
+		l.textColor = [UIColor blackColor];
+		l.backgroundColor = [UIColor clearColor];
+		l.font = [UIFont boldSystemFontOfSize:20];
+		l.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
+		[cell.contentView addSubview: l];
+		[l release];
+		float width = [[[_data objectAtIndex:[indexPath row]] objectForKey:@"count"] floatValue] / [[[_data objectAtIndex:0] objectForKey:@"count"] floatValue];
+		UIView *bar = [[UIView alloc] initWithFrame:CGRectMake(0,0,width * [cell frame].size.width,48)];
+		bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
+		UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+		[backgroundView addSubview: bar];
+		cell.backgroundView = backgroundView;
+		[bar release];
+		[backgroundView release];
+		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
+		cell.accessoryView = img;
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		[img release];
+	} else {
+		cell.text = @"No Tags";
+	}
 	return cell;
 }
 - (void)dealloc {
@@ -983,7 +988,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	else if([_events count])
 		return [[_eventDateCounts objectAtIndex:section] intValue];
 	else
-		return 0;
+		return 1;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(_data)
@@ -1052,15 +1057,21 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_table reloadData];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	int offset = [[_eventDateOffsets objectAtIndex:[indexPath section]] intValue];
-	EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
-	if(!cell)
-		cell = [[[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"] autorelease];
-	if(_data)
-		[cell setEvent:[_data objectAtIndex:[indexPath row]]];
-	else
-		[cell setEvent:[_events objectAtIndex:[indexPath row]+offset]];
-	return cell;
+	if([_events count]) {
+		int offset = [[_eventDateOffsets objectAtIndex:[indexPath section]] intValue];
+		EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
+		if(!cell)
+			cell = [[[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"] autorelease];
+		if(_data)
+			[cell setEvent:[_data objectAtIndex:[indexPath row]]];
+		else
+			[cell setEvent:[_events objectAtIndex:[indexPath row]+offset]];
+		return cell;
+	} else {
+		UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
+		cell.text = @"No Upcoming Events";
+		return cell;
+	}
 }
 - (void)doneButtonPressed:(id)sender {
 	EventDetailViewController *e = (EventDetailViewController *)sender;
