@@ -47,12 +47,16 @@ void packetCallback(void *in, UInt32 inNumberBytes, UInt32 inNumberPackets, cons
 	LastFMTrack *track = in;
 	AudioQueueBufferRef buf;
 	
-	AudioQueueAllocateBufferWithPacketDescriptions(track.queue, inNumberBytes, inNumberPackets, &buf);
-	buf->mAudioDataByteSize = inNumberBytes;
-	memcpy(buf->mAudioData, inInputData, inNumberBytes);
-	AudioQueueEnqueueBuffer(track.queue, buf, inNumberPackets, inPacketDescriptions);
-	track.audioBufferDataSize = track.audioBufferDataSize + inNumberBytes;
-	[track bufferEnqueued];
+	OSStatus error = AudioQueueAllocateBufferWithPacketDescriptions(track.queue, inNumberBytes, inNumberPackets, &buf);
+	if(error) {
+		NSLog(@"Unable to allocate buffer, discarding packet");
+	} else {
+		buf->mAudioDataByteSize = inNumberBytes;
+		memcpy(buf->mAudioData, inInputData, inNumberBytes);
+		AudioQueueEnqueueBuffer(track.queue, buf, inNumberPackets, inPacketDescriptions);
+		track.audioBufferDataSize = track.audioBufferDataSize + inNumberBytes;
+		[track bufferEnqueued];
+	}
 }
 
 void propCallback(void *in,	AudioFileStreamID inAudioFileStream, AudioFileStreamPropertyID inPropertyID, UInt32 *ioFlags) {
