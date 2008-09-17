@@ -27,6 +27,7 @@
 #import "NSString+URLEscaped.h"
 #import "ArtworkCell.h"
 #import </usr/include/objc/objc-class.h>
+#import "DebugViewController.h"
 
 @implementation UIColor (TableHax)
 + (UIColor *)pinStripeColorHax {
@@ -150,7 +151,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 5;
+	return 6;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch(section) {
@@ -173,6 +174,12 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 				return [_playlists count]?[_playlists count]+1:0;
 			else
 				return 0;
+		case 5:
+#ifdef DISTRIBUTION	
+			return 0;
+#else
+			return 1;
+#endif
 	}
 	return 0;
 }
@@ -188,7 +195,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0)
 		return [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]?46:67;
-	else if([indexPath row] > 0)
+	else if([indexPath row] > 0 || [indexPath section] == 5)
 		return 46;
 	else
 		return 29;
@@ -201,7 +208,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	}
 }
 -(void)_rowSelected:(NSIndexPath *)newIndexPath {
-	if([newIndexPath section] > 0 && [newIndexPath row] == 0)
+	if([newIndexPath section] > 0 && [newIndexPath section] != 5 && [newIndexPath row] == 0)
 		return;
 	
 	switch([newIndexPath section]) {
@@ -241,6 +248,12 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 			break;
 		case 4:
 			[self playRadioStation:[NSString stringWithFormat:@"lastfm://playlist/%@/shuffle", [[_playlists objectAtIndex:[newIndexPath row]-1] objectForKey:@"id"]]];
+			break;
+		case 5:
+		{
+			DebugViewController *controller = [[DebugViewController alloc] initWithNibName:@"DebugView" bundle:nil];
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+		}
 			break;
 	}
 	[self.tableView reloadData];
@@ -421,6 +434,11 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 			} else {
 				cell.text = [[_playlists objectAtIndex:[indexPath row]-1] objectForKey:@"title"];
 			}
+			break;
+		case 5:
+			cell.text = @"Debug";
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 			break;
 	}
 	if([indexPath row] > 0 && cell.accessoryType == UITableViewCellAccessoryNone) {

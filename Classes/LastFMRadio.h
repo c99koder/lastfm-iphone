@@ -43,6 +43,7 @@ NSString *kTrackDidFailToStream;
 	NSLock *_bufferLock;
 	int _audioBufferCount;
 	int _peakBufferCount;
+	int audioBufferDataSize;
 	AudioFileStreamID parser;
 	AudioQueueRef queue;
 	AudioStreamBasicDescription dataFormat;
@@ -53,6 +54,7 @@ NSString *kTrackDidFailToStream;
 @property AudioFileStreamID parser;
 @property AudioQueueRef queue;
 @property AudioStreamBasicDescription dataFormat;
+@property int audioBufferDataSize;
 
 -(id)initWithTrackInfo:(NSDictionary *)trackInfo;
 -(BOOL)play;
@@ -65,6 +67,8 @@ NSString *kTrackDidFailToStream;
 -(float)bufferProgress;
 -(int)state;
 -(NSDictionary *)trackInfo;
+-(int)audioBufferCount;
+-(int)httpBufferSize;
 @end
 
 @interface LastFMRadio : NSObject {
@@ -96,6 +100,7 @@ NSString *kTrackDidFailToStream;
 -(NSString *)stationURL;
 -(NSTimeInterval)startTime;
 -(float)bufferProgress;
+-(LastFMTrack *)currentTrack;
 @end
 
 @interface SystemNowPlayingController : NSObject

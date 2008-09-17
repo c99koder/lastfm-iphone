@@ -129,7 +129,7 @@ NSString *kUserAgent;
 	if(_pendingAlert)
 		[_pendingAlert show];
 }
-- (void)_sendCrashReport {
+- (void)sendCrashReport {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	NSString *url = [NSString stringWithFormat:@"http://oops.last.fm/logsubmission/add?username=%@&platform=%@&clientname=iPhoneFM&clientversion=%@",
@@ -173,7 +173,7 @@ NSString *kUserAgent;
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Cancel", @"Cancel")])
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"crashed"];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Send", @"Send")])
-		[NSThread detachNewThreadSelector:@selector(_sendCrashReport) toTarget:self withObject:nil];
+		[NSThread detachNewThreadSelector:@selector(sendCrashReport) toTarget:self withObject:nil];
 	if(_pendingAlert) {
 		[_pendingAlert release];
 		_pendingAlert = nil;

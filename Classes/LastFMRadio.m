@@ -38,6 +38,7 @@ void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 }
 
 static void AQBufferCallback(void *in, AudioQueueRef inQ, AudioQueueBufferRef outQB) {
+	((LastFMTrack *)in).audioBufferDataSize = ((LastFMTrack *)in).audioBufferDataSize - outQB->mAudioDataByteSize;
 	AudioQueueFreeBuffer(inQ, outQB);
 	[(LastFMTrack *)in performSelectorOnMainThread:@selector(bufferDequeued) withObject:nil waitUntilDone:NO];
 }
@@ -50,6 +51,7 @@ void packetCallback(void *in, UInt32 inNumberBytes, UInt32 inNumberPackets, cons
 	buf->mAudioDataByteSize = inNumberBytes;
 	memcpy(buf->mAudioData, inInputData, inNumberBytes);
 	AudioQueueEnqueueBuffer(track.queue, buf, inNumberPackets, inPacketDescriptions);
+	track.audioBufferDataSize = track.audioBufferDataSize + inNumberBytes;
 	[track bufferEnqueued];
 }
 
@@ -87,7 +89,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 
 @implementation LastFMTrack
 
-@synthesize parser, queue, dataFormat;
+@synthesize parser, queue, dataFormat, audioBufferDataSize;
 
 - (void)_prefetchSimilarArtists {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -364,6 +366,12 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	else
 		return t.mSampleTime / dataFormat.mSampleRate;
 }
+-(int)audioBufferCount {
+	return _audioBufferCount;
+}
+-(int)httpBufferSize {
+	return [_receivedData length];
+}
 @end
 
 
@@ -381,6 +389,12 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
     return sharedInstance;
   }
 	return nil;
+}
+-(LastFMTrack *)currentTrack {
+	if([_tracks count])
+		return [_tracks objectAtIndex:0];
+	else
+		return nil;
 }
 -(float)bufferProgress {
 	if([_tracks count])
