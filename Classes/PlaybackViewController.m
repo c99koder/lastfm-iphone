@@ -1124,11 +1124,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	frame.origin.y -= 2;
 	frame.size.height += 10;
 	
+#if !(TARGET_IPHONE_SIMULATOR)
 	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:frame];
 	[volumeView removeFromSuperview];
 	volumeView = v;
 	[volumeView sizeToFit];
 	[trackView.view addSubview: volumeView];
+#endif
 	if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)])
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 	self.hidesBottomBarWhenPushed = YES;

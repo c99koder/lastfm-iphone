@@ -1201,6 +1201,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "DE873345-A0C0-446A-A24D-49A6723BE99F";
+				"PROVISIONING_PROFILE[sdk=iphonesimulator*]" = DefaultProfileUuid;
 				SDKROOT = iphoneos2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
