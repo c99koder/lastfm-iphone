@@ -139,7 +139,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	}
 	
 	if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
-		NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString: artworkURL]];
+		[NSData dataWithContentsOfURL:[NSURL URLWithString: artworkURL]];
 	}
 	[_trackInfo release];
 	[pool release];
@@ -196,13 +196,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
 }
 -(BOOL)play {
-	OSStatus error;
-	
 	if(queue) {
-		NSLog(@"Starting playback");
-		error = AudioQueueStart(queue, NULL);
-		if(error)
-			return NO;
 		_startTime = [[NSDate date] timeIntervalSince1970];
 		UInt32 category = kAudioSessionCategory_MediaPlayback;
 		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
@@ -221,7 +215,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"disableautolock"] isEqualToString:@"YES"])
 			[UIApplication sharedApplication].idleTimerDisabled = YES;
-		_state = TRACK_PLAYING;
 	} else {
 		_state = TRACK_BUFFERING;
 		//kick start the audio stream
@@ -249,16 +242,45 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
 	[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
+- (void)_pushDataChunk {
+	NSData *extraData = nil;
+	[_bufferLock lock];
+	if([_receivedData length] > 16384) {
+		extraData = [[NSData alloc] initWithBytes:[_receivedData bytes]+16384 length:[_receivedData length]-16384];
+		[_receivedData setLength: 16384];
+	}
+	OSStatus error = AudioFileStreamParseBytes(parser, [_receivedData length], [_receivedData bytes], 0);
+	if(error) {
+		NSLog(@"Got an error pushing the data! :(");
+	} else {
+		[_receivedData setLength:0];
+	}
+	if(extraData) {
+		[_receivedData appendData:extraData];
+		[extraData release];
+		extraData = nil;
+	}
+	[_bufferLock unlock];
+}
 -(void)bufferEnqueued {
 	[_audioBufferCountLock lock];
 	_audioBufferCount++;
-	if(_audioBufferCount > _peakBufferCount) _peakBufferCount = _audioBufferCount;
 	[_audioBufferCountLock unlock];
+	if(_audioBufferCount > _peakBufferCount) _peakBufferCount = _audioBufferCount;
+	if(_state == TRACK_BUFFERING) {
+		NSLog(@"Starting queue");
+		AudioQueueStart(queue, NULL);
+		_state = TRACK_PLAYING;
+	}
 }
 -(void)bufferDequeued {
 	[_audioBufferCountLock lock];
 	_audioBufferCount--;
-	if(_state == TRACK_PLAYING && _peakBufferCount > 10) {
+	[_audioBufferCountLock unlock];	
+	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 10) {
+		[self _pushDataChunk];
+	}
+	if(_state == TRACK_PLAYING && _peakBufferCount > 4) {
 		if(_audioBufferCount < 1 && [_receivedData length] < 8192) {
 			if(_fileDidFinishLoading) {
 				[self performSelectorOnMainThread:@selector(_notifyTrackFinishedPlaying) withObject:nil waitUntilDone:NO];
@@ -270,7 +292,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			}
 		}
 	}
-	[_audioBufferCountLock unlock];	
 }
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[_connection release];
@@ -294,36 +315,14 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		NSLog(@"HTTP headers: %@", [response allHeaderFields]);
 }
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	NSData *extraData = nil;
-	[_bufferLock lock];
-	
-	if(data)
+	if(data) {
+		[_bufferLock lock];
 		[_receivedData appendData:data];
-	if(_state != TRACK_PAUSED && ([_receivedData length] > 196608 || _state == TRACK_PLAYING)) {
-		if(_state == TRACK_BUFFERING) {
-			NSLog(@"Starting queue");
-			AudioQueueStart(queue, NULL);
-			_state = TRACK_PLAYING;
-		}
-		while([_receivedData length]) {
-			if([_receivedData length] > 16384) {
-				extraData = [[NSData alloc] initWithBytes:[_receivedData bytes]+16384 length:[_receivedData length]-16384];
-				[_receivedData setLength: 16384];
-			}
-			OSStatus error = AudioFileStreamParseBytes(parser, [_receivedData length], [_receivedData bytes], 0);
-			if(error) {
-				NSLog(@"Got an error pushing the data! :(");
-			} else {
-				[_receivedData setLength:0];
-			}
-			if(extraData) {
-				[_receivedData appendData:extraData];
-				[extraData release];
-				extraData = nil;
-			}
-		}
+		[_bufferLock unlock];
 	}
-	[_bufferLock unlock];
+	if(_state != TRACK_PAUSED && ([_receivedData length] > 196608 && _state == TRACK_BUFFERING)) {
+		[self _pushDataChunk];
+	}
 }
 -(void)pause {
 	if(queue) {

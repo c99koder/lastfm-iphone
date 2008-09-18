@@ -18,7 +18,7 @@
   [super viewDidLoad];
 }
 -(void)update {
-	_httpBuffers.text = [NSString stringWithFormat:@"%.0f KB", (float)[[[LastFMRadio sharedInstance] currentTrack] audioBufferDataSize] / 1024.0f];
+	_httpBuffers.text = [NSString stringWithFormat:@"%.0f KB", (float)[[[LastFMRadio sharedInstance] currentTrack] httpBufferSize] / 1024.0f];
 	_audioBuffers.text = [NSString stringWithFormat:@"%i", [[[LastFMRadio sharedInstance] currentTrack] audioBufferCount]];
 	_errorCode.text = [NSString stringWithFormat:@"%i", [LastFMService sharedInstance].error.code];
 	_errorMsg.text = [[LastFMService sharedInstance].error.userInfo objectForKey:NSLocalizedDescriptionKey];
