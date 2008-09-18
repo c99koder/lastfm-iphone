@@ -97,6 +97,7 @@
 	} else {
 		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[timer userInfo] animated:NO];
 	}
+	[_table reloadData];
 }
 -(void)playRadioStation:(NSString *)url {
 	//Hack to make the loading throbber appear before we block
@@ -174,6 +175,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	} else {
 		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[timer userInfo] animated:NO];
 	}
+	[_table reloadData];
 }
 -(void)playRadioStation:(NSString *)url {
 	//Hack to make the loading throbber appear before we block
