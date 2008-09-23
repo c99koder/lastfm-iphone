@@ -68,7 +68,7 @@
 BOOL shouldUseCache(NSString *file, double seconds) {
 	NSDate *age = [[[NSFileManager defaultManager] fileAttributesAtPath:file traverseLink:YES] objectForKey:NSFileModificationDate];
 	if(age==nil) return NO;
-	if(([age timeIntervalSinceNow] * -1) > seconds) {
+	if(([age timeIntervalSinceNow] * -1) > seconds && [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasNetworkConnection]) {
 		[[NSFileManager defaultManager] removeItemAtPath:file error:NULL];
 		return NO;
 	} else
@@ -106,7 +106,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	[signature appendString:[NSString stringWithFormat:@"%s", API_SECRET]];
 	if(seconds && shouldUseCache(CACHE_FILE([signature md5sum]),seconds)) {
 		theResponseData = [NSData dataWithContentsOfFile:CACHE_FILE([signature md5sum])];
-	} else {
+	} else if([((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasNetworkConnection]) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", API_URL]] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 		[theRequest setHTTPMethod:@"POST"];
@@ -115,9 +116,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 		if(seconds)
 			[theResponseData writeToFile:CACHE_FILE([signature md5sum]) atomically:YES];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	} else {
+		error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:0 userInfo:nil];
+		return nil;
 	}
 	[signature release];
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	
 	if(theError) {
 		error = [theError retain];
@@ -143,7 +147,6 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	NSArray *output = nil;
 	id eachParam;
 	va_list argumentList;
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 	
 	if(firstParam) {
 		[params addObject: firstParam];
