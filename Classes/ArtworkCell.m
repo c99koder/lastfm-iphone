@@ -127,7 +127,9 @@ UIImage *avatarPlaceholder = nil;
 	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS)) {
 		imageData = [[NSData alloc] initWithContentsOfFile:CACHE_FILE([imageURL md5sum])];
 	} else {
-		imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:imageURL]];
+		NSURL *url = [[NSURL alloc] initWithString:imageURL];
+		imageData = [[NSData alloc] initWithContentsOfURL:url];
+		[url release];
 		if(shouldCacheArtwork)
 			[imageData writeToFile:CACHE_FILE([imageURL md5sum]) atomically: YES];
 	}
