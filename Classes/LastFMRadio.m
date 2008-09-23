@@ -217,9 +217,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			[UIApplication sharedApplication].idleTimerDisabled = YES;
 	} else {
 		_state = TRACK_BUFFERING;
-		//kick start the audio stream
-		if(!_connection)
-			[self connection:nil didReceiveData:nil];
+		[self _pushDataChunk];
 	}
 	return YES;
 }
@@ -277,7 +275,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[_audioBufferCountLock lock];
 	_audioBufferCount--;
 	[_audioBufferCountLock unlock];	
-	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 10) {
+	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 100) {
 		[self _pushDataChunk];
 	}
 	if(_state == TRACK_PLAYING && _peakBufferCount > 4) {
@@ -321,7 +319,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_bufferLock unlock];
 	}
 	if(_state != TRACK_PAUSED && ([_receivedData length] > 196608 && _state == TRACK_BUFFERING)) {
-		[self _pushDataChunk];
+		while(_audioBufferCount < 6 && [_receivedData length] > 8192)
+			[self _pushDataChunk];
 	}
 }
 -(void)pause {
@@ -567,8 +566,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(BOOL)play {
 	int x;
-	NSLog(@"Fetching playlist");
-	if(!_playlist || [_playlist count] < 3 || _station == nil) {
+	if(!_playlist || [_playlist count] < 1 || _station == nil) {
+		NSLog(@"Fetching playlist");
 		for(x=0; x<5; x++) {
 			NSDictionary *playlist = [[LastFMService sharedInstance] getPlaylist];
 			if([[playlist objectForKey:@"playlist"] count]) {
