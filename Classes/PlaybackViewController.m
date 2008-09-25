@@ -376,8 +376,8 @@ int tagSort(id tag1, id tag2, void *context) {
 			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
 	}
 	
-	if([artworkURL hasPrefix:@"http://images.amazon.com/images/P/"]) {
-		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@".M" withString:@".L"];
+	if([artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
+		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@"MZZZ" withString:@"LZZZ"];
 	}
 	
 	NSLog(@"Loading artwork: %@\n", artworkURL);
