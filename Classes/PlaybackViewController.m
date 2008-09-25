@@ -999,26 +999,28 @@ int tagSort(id tag1, id tag2, void *context) {
 		return 78;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
-	if(_data)
-		e.event = [_data objectAtIndex:[newIndexPath row]];
-	else {
-		int offset = [[_eventDateOffsets objectAtIndex:[newIndexPath section]] intValue];
-		e.event = [_events objectAtIndex:[newIndexPath row]+offset];
+	if([_events count]) {
+		EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
+		if(_data)
+			e.event = [_data objectAtIndex:[newIndexPath row]];
+		else {
+			int offset = [[_eventDateOffsets objectAtIndex:[newIndexPath section]] intValue];
+			e.event = [_events objectAtIndex:[newIndexPath row]+offset];
+		}
+		e.delegate = self;
+		if(_username)
+			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController presentModalViewController:e animated:YES];
+		else
+			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController presentModalViewController:e animated:YES];
+		if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
+			[e setAttendance:eventStatusAttending];
+		} else {
+			[e setAttendance:eventStatusNotAttending];
+		}
+		[e release];
+		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	}
-	e.delegate = self;
-	if(_username)
-		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController presentModalViewController:e animated:YES];
-	else
-		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController presentModalViewController:e animated:YES];
-	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
-		[e setAttendance:eventStatusAttending];
-	} else {
-		[e setAttendance:eventStatusNotAttending];
-	}
-	[e release];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
 - (void)calendarViewController:(CalendarViewController *)c didSelectDate:(NSDate *)d {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
