@@ -49,6 +49,7 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[_table scrollRectToVisible:[_table frame] animated:NO];
+	[self loadContentForCells:[_table visibleCells]];
 }
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchSimilarArtists:) toTarget:self withObject:[notification userInfo]];
@@ -75,7 +76,6 @@
 		}
 		[_table reloadData];
 		[_table scrollRectToVisible:[_table frame] animated:YES];
-		[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
 		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
 	[_lock unlock];
@@ -233,6 +233,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[_table scrollRectToVisible:[_table frame] animated:NO];
+	[self loadContentForCells:[_table visibleCells]];
 }
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchFans:) toTarget:self withObject:[notification userInfo]];
@@ -257,7 +258,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		}
 		[_table reloadData];
 		[_table scrollRectToVisible:[_table frame] animated:YES];
-		[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
 		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
 	[_lock unlock];
@@ -1215,22 +1215,27 @@ int tagSort(id tag1, id tag2, void *context) {
 	
 	switch(item.tag) {
 		case 0:
+			[artistBio viewWillAppear:NO];
 			[detailView addSubview:artistBio.view];
 			_titleLabel.text = NSLocalizedString(@"Artist Bio", @"Artist Bio tab title");
 			break;
 		case 1:
+			[tags viewWillAppear:NO];
 			[detailView addSubview:tags.view];
 			_titleLabel.text = NSLocalizedString(@"Tags", @"Tags tab title");
 			break;
 		case 2:
+			[similarArtists viewWillAppear:NO];
 			[detailView addSubview:similarArtists.view];
 			_titleLabel.text = NSLocalizedString(@"Similar Artists", @"Similar Artists tab title");
 			break;
 		case 3:
+			[events viewWillAppear:NO];
 			[detailView addSubview:events.view];
 			_titleLabel.text = NSLocalizedString(@"Events", @"Events tab title");
 			break;
 		case 4:
+			[fans viewWillAppear:NO];
 			[detailView addSubview:fans.view];
 			_titleLabel.text = NSLocalizedString(@"Top Listeners", @"Top Listeners tab title");
 			break;
