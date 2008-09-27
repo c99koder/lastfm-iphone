@@ -37,6 +37,7 @@
 	_errorMsg.text = [[LastFMService sharedInstance].error.userInfo objectForKey:NSLocalizedDescriptionKey];
 }
 -(IBAction)uploadLogs:(id)sender {
+	[[NSData dataWithContentsOfFile:CACHE_FILE(@"debug.log")] writeToFile:CACHE_FILE(@"crash.log") atomically:YES];
 	[NSThread detachNewThreadSelector:@selector(sendCrashReport) toTarget:[UIApplication sharedApplication].delegate withObject:nil];
 }
 - (void)dealloc {
