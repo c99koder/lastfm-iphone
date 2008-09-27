@@ -54,6 +54,22 @@
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchSimilarArtists:) toTarget:self withObject:[notification userInfo]];
 }
+- (void)_updateCells:(NSArray *)data {
+	[_data release];
+	[_cells removeAllObjects];
+	_data = [[data subarrayWithRange:NSMakeRange(0,([data count]>25)?25:[data count])] retain];
+	for(NSDictionary *artist in _data) {
+		ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
+		cell.title.text = [artist objectForKey:@"name"];
+		cell.barWidth = [[artist objectForKey:@"match"] floatValue] / 100.0f;
+		cell.imageURL = [artist objectForKey:@"image"];
+		[cell addStreamIcon];
+		[_cells addObject:cell];
+		[cell release];
+	}
+	[_table reloadData];
+	[_table scrollRectToVisible:[_table frame] animated:YES];
+}
 - (void)_fetchSimilarArtists:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
@@ -61,21 +77,7 @@
 	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
 		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
 		[self showLoadingView];
-		[_data release];
-		[_cells removeAllObjects];
-		_data = [[LastFMService sharedInstance] artistsSimilarTo:[trackInfo objectForKey:@"creator"]];
-		_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>25)?25:[_data count])] retain];
-		for(NSDictionary *artist in _data) {
-			ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
-			cell.title.text = [artist objectForKey:@"name"];
-			cell.barWidth = [[artist objectForKey:@"match"] floatValue] / 100.0f;
-			cell.imageURL = [artist objectForKey:@"image"];
-			[cell addStreamIcon];
-			[_cells addObject:cell];
-			[cell release];
-		}
-		[_table reloadData];
-		[_table scrollRectToVisible:[_table frame] animated:YES];
+		[self performSelectorOnMainThread:@selector(_updateCells:) withObject:[[LastFMService sharedInstance] artistsSimilarTo:[trackInfo objectForKey:@"creator"]] waitUntilDone:YES];
 		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
 	[_lock unlock];
@@ -238,6 +240,20 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchFans:) toTarget:self withObject:[notification userInfo]];
 }
+- (void)_updateCells:(NSArray *)data {
+	[_data release];
+	[_cells removeAllObjects];
+	_data = [[data subarrayWithRange:NSMakeRange(0,([data count]>10)?10:[data count])] retain];
+	for(NSDictionary *fan in _data) {
+		ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
+		cell.title.text = [fan objectForKey:@"username"];
+		cell.imageURL = [fan objectForKey:@"image"];
+		[_cells addObject:cell];
+		[cell release];
+	}
+	[_table reloadData];
+	[_table scrollRectToVisible:[_table frame] animated:YES];
+}
 - (void)_fetchFans:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[trackInfo retain];
@@ -245,19 +261,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
 		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
 		[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
-		[_data release];
-		[_cells removeAllObjects];
-		_data = [[LastFMService sharedInstance] fansOfTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
-		_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
-		for(NSDictionary *fan in _data) {
-			ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
-			cell.title.text = [fan objectForKey:@"username"];
-			cell.imageURL = [fan objectForKey:@"image"];
-			[_cells addObject:cell];
-			[cell release];
-		}
-		[_table reloadData];
-		[_table scrollRectToVisible:[_table frame] animated:YES];
+		[self performSelectorOnMainThread:@selector(_updateCells:) withObject:[[LastFMService sharedInstance] fansOfTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] waitUntilDone:YES];
 		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
 	[_lock unlock];
