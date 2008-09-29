@@ -217,7 +217,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			[UIApplication sharedApplication].idleTimerDisabled = YES;
 	} else {
 		_state = TRACK_BUFFERING;
-		[self _pushDataChunk];
+		if(!_connection)
+			[self connection:nil didReceiveData:nil];
 	}
 	return YES;
 }
