@@ -1338,7 +1338,12 @@ int tagSort(id tag1, id tag2, void *context) {
 		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
 		t.delegate = self;
 		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
-		t.topTags = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
+		t.artistTopTags = [[[LastFMService sharedInstance] topTagsForArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
+		t.albumTopTags = [[[LastFMService sharedInstance] topTagsForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
+		t.trackTopTags = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
+		[t setArtistTags: [[LastFMService sharedInstance] tagsForArtist:[trackInfo objectForKey:@"creator"]]];
+		[t setAlbumTags: [[LastFMService sharedInstance] tagsForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"]]];
+		[t setTrackTags: [[LastFMService sharedInstance] tagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]]];
 		[self presentModalViewController:t animated:YES];
 		[t release];
 	}
@@ -1390,12 +1395,36 @@ int tagSort(id tag1, id tag2, void *context) {
 -(void)tagEditorDidCancel {
 	[self dismissModalViewControllerAnimated:YES];
 }
--(void)tagEditorCommitTags:(NSArray *)t {
-	[self dismissModalViewControllerAnimated:YES];
+- (void)tagEditorAddArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags {
 	NSDictionary *trackInfo = [[LastFMRadio sharedInstance] trackInfo];
-	[[LastFMService sharedInstance] tagTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"] withTags:t];
+	[[LastFMService sharedInstance] addTags:artistTags toArtist:[trackInfo objectForKey:@"creator"]];
 	if([LastFMService sharedInstance].error)
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	[[LastFMService sharedInstance] addTags:albumTags toAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"]];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	[[LastFMService sharedInstance] addTags:trackTags toTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	[self dismissModalViewControllerAnimated:YES];
+}
+- (void)tagEditorRemoveArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags {
+	NSDictionary *trackInfo = [[LastFMRadio sharedInstance] trackInfo];
+	for(NSString *tag in artistTags) {
+		[[LastFMService sharedInstance] removeTag:tag fromArtist:[trackInfo objectForKey:@"creator"]];
+		if([LastFMService sharedInstance].error)
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	}
+	for(NSString *tag in albumTags) {
+		[[LastFMService sharedInstance] removeTag:tag fromAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"]];
+		if([LastFMService sharedInstance].error)
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	}
+	for(NSString *tag in trackTags) {
+		[[LastFMService sharedInstance] removeTag:tag fromTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]];
+		if([LastFMService sharedInstance].error)
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	}
 }
 -(void)loveButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) loveButtonPressed:sender];	

@@ -19,6 +19,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class TagEditorViewController;
+
 @interface TagView : UIImageView {
 	NSString *tag;
 }
@@ -31,16 +33,19 @@
 	IBOutlet UITextField *textField;
 	TagView *lastTag;
 	IBOutlet UILabel *instructions;
+	TagEditorViewController *delegate;
 }
-- (void)addTag:(NSString *)tag;
+- (void)addTag:(NSString *)tag animated:(BOOL)animated;
 - (void)removeTag:(TagView *)tag;
 - (BOOL)hasTag:(NSString *)tag;
 - (NSArray *)tags;
+- (void)setTags:(NSArray *)tags;
 @end
 
 @protocol TagEditorViewControllerDelegate
 - (void)tagEditorDidCancel;
-- (void)tagEditorCommitTags:(NSArray *)tags;
+- (void)tagEditorAddArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags;
+- (void)tagEditorRemoveArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags;
 @end
 
 @interface TagEditorViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITabBarDelegate,UITextFieldDelegate> {
@@ -48,16 +53,27 @@
 	IBOutlet UITabBar *tabBar;
 	IBOutlet UITableView *table;
 	IBOutlet UITextField *textField;
-	NSArray *topTags;
+	IBOutlet UISegmentedControl *tagType;
+	NSArray *artistTopTags, *albumTopTags, *trackTopTags;
 	NSArray *myTags;
+	NSArray *topTags;
+	NSMutableDictionary *artistTagActions, *albumTagActions, *trackTagActions;
+	NSMutableDictionary *tagActions;
 	id<TagEditorViewControllerDelegate> delegate;
 }
-@property (retain, nonatomic) NSArray *tags;
-@property (retain, nonatomic) NSArray *topTags;
+@property (retain, nonatomic) NSArray *artistTopTags;
+@property (retain, nonatomic) NSArray *albumTopTags;
+@property (retain, nonatomic) NSArray *trackTopTags;
 @property (retain, nonatomic) NSArray *myTags;
 @property (retain, nonatomic) id<TagEditorViewControllerDelegate> delegate;
 - (IBAction)tagButtonPressed:(id)sender;
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
+- (IBAction)tagTypeChanged:(id)sender;
+- (void)tagAdded:(NSString *)tag;
+- (void)tagRemoved:(NSString *)tag;
 - (void)reload;
+- (void)setAlbumTags:(NSArray *)tags;
+- (void)setArtistTags:(NSArray *)tags;
+- (void)setTrackTags:(NSArray *)tags;
 @end

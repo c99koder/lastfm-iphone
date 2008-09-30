@@ -68,17 +68,16 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	[super touchesEnded:touches withEvent:event];
 	[textField resignFirstResponder];
 }
-- (void)_updateTags {
+- (void)_updateTags:(BOOL)animated {
 	int x=4,y=4,height=0;
 
 	[self scrollRectToVisible:[lastTag frame] animated:YES];
 	[lastTag release];
 	lastTag = nil;
 	
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration: 0.5];
-	[UIView setAnimationDelegate:self];
-	[UIView setAnimationDidStopSelector:@selector(_animationStopped)];
+	if(animated)
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration: 0.5];
 	
 	for(TagView *tag in tags) {
 		CGSize size = tag.frame.size;
@@ -95,10 +94,11 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 		instructions.alpha = 0;
 	else
 		instructions.alpha = 1;
-	[UIView commitAnimations];
+	if(animated)
+		[UIView commitAnimations];
 	self.contentSize = CGSizeMake(320,y+height+2);
 }
-- (void)addTag:(NSString *)tag {
+- (void)addTag:(NSString *)tag animated:(BOOL)animated {
 	int x=4,y=4;
 	CGSize size;
 	TagView *t;
@@ -124,12 +124,16 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	t.alpha = 0;
 	[lastTag release];
 	lastTag = t;
-	[self _updateTags];
+	if(animated) {
+		[(TagEditorViewController *)(self.delegate) tagAdded:tag];
+		[self _updateTags:animated];
+	}
 }
 - (void)removeTag:(TagView *)tag {
+	[(TagEditorViewController *)(self.delegate) tagRemoved:tag.tag];
 	[tags removeObject:tag];
 	[tag removeFromSuperview];
-	[self _updateTags];
+	[self _updateTags:YES];
 	[(TagEditorViewController *)(self.delegate) reload];
 }
 - (BOOL)hasTag:(NSString *)tag {
@@ -142,6 +146,14 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 - (NSArray *)tags {
 	return [NSArray arrayWithArray:tags];
 }
+- (void)setTags:(NSArray *)newTags {
+	[tags makeObjectsPerformSelector:@selector(removeFromSuperview)];
+	[tags removeAllObjects];
+	for(NSString *tag in newTags) {
+		[self addTag:tag animated:NO];
+	}
+	[self _updateTags:NO];
+}
 - (void)dealloc {
 	[tags release];
 	[super dealloc];
@@ -149,15 +161,16 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 @end
 
 @implementation TagEditorViewController
-@synthesize myTags, topTags, delegate;
+@synthesize myTags, artistTopTags, albumTopTags, trackTopTags, delegate;
 
-- (NSArray *)tags {
-	return [tagEditorView tags];
+- (void)tagAdded:(NSString *)tag {
+	if([tagActions objectForKey:tag])
+		[tagActions setObject:[NSNumber numberWithInt:[[tagActions objectForKey:tag] intValue]+1] forKey:tag];
+	else
+		[tagActions setObject:[NSNumber numberWithInt:1] forKey:tag];
 }
-- (void)setTags:(NSArray *)tags {
-	for(NSString *tag in tags) {
-		[tagEditorView addTag: tag];
-	}
+- (void)tagRemoved:(NSString *)tag {
+	[tagActions setObject:[NSNumber numberWithInt:[[tagActions objectForKey:tag] intValue]-1] forKey:tag];
 }
 - (void)reload {
 	[table reloadData];
@@ -167,6 +180,52 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 - (void)viewDidLoad {
 	tabBar.selectedItem = [tabBar.items objectAtIndex:0];
+	tagType.tintColor = [UIColor grayColor];
+	[self tagTypeChanged:tagType];
+}
+- (void)tagTypeChanged:(id)sender {
+	switch(tagType.selectedSegmentIndex) {
+		case 0:
+			topTags = trackTopTags;
+			tagActions = trackTagActions;
+			break;
+		case 1:
+			topTags = artistTopTags;
+			tagActions = artistTagActions;
+			break;
+		case 2:
+			topTags = albumTopTags;
+			tagActions = albumTagActions;
+			break;
+	}
+	NSMutableArray *tags = [NSMutableArray array];
+	for(NSString *tag in tagActions) {
+		if([[tagActions objectForKey:tag] intValue] > -1)
+			[tags addObject:tag];
+	}
+	[tagEditorView setTags:tags];
+	[table reloadData];
+}
+- (void)setAlbumTags:(NSArray *)tags {
+	[albumTagActions release];
+	albumTagActions = [[NSMutableDictionary alloc] init];
+	for(NSDictionary *tag in tags) {
+		[albumTagActions setObject:[NSNumber numberWithInteger:0] forKey:[tag objectForKey:@"name"]];
+	}
+}
+- (void)setArtistTags:(NSArray *)tags {
+	[artistTagActions release];
+	artistTagActions = [[NSMutableDictionary alloc] init];
+	for(NSDictionary *tag in tags) {
+		[artistTagActions setObject:[NSNumber numberWithInteger:0] forKey:[tag objectForKey:@"name"]];
+	}
+}
+- (void)setTrackTags:(NSArray *)tags {
+	[trackTagActions release];
+	trackTagActions = [[NSMutableDictionary alloc] init];
+	for(NSDictionary *tag in tags) {
+		[trackTagActions setObject:[NSNumber numberWithInteger:0] forKey:[tag objectForKey:@"name"]];
+	}
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
@@ -179,7 +238,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	[tagEditorView addTag:[tableView cellForRowAtIndexPath:newIndexPath].text];
+	[tagEditorView addTag:[tableView cellForRowAtIndexPath:newIndexPath].text animated:YES];
 	[tableView reloadData];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -199,7 +258,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 - (IBAction)tagButtonPressed:(id)sender {
 	if([textField.text length]) {
-		[tagEditorView addTag:textField.text];
+		[tagEditorView addTag:textField.text animated:YES];
 		textField.text = @"";
 	}
 }
@@ -207,12 +266,43 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	[delegate tagEditorDidCancel];
 }
 - (IBAction)doneButtonPressed:(id)sender {
-	NSMutableArray *tags = [[NSMutableArray alloc] init];
-	for(TagView *tagView in [tagEditorView tags]) {
-		[tags addObject:tagView.tag];
+	NSMutableArray *albumtags = [NSMutableArray array];
+	NSMutableArray *artisttags = [NSMutableArray array];
+	NSMutableArray *tracktags = [NSMutableArray array];
+	
+	for(NSString *tag in albumTagActions) {
+		if([[albumTagActions objectForKey:tag] intValue] == 1)
+			[albumtags addObject:tag];
 	}
-	[delegate tagEditorCommitTags:[NSArray arrayWithArray:tags]];
-	[tags release];
+	for(NSString *tag in artistTagActions) {
+		if([[artistTagActions objectForKey:tag] intValue] == 1)
+			[artisttags addObject:tag];
+	}
+	for(NSString *tag in trackTagActions) {
+		if([[trackTagActions objectForKey:tag] intValue] == 1)
+			[tracktags addObject:tag];
+	}
+
+	[delegate tagEditorAddArtistTags:artisttags albumTags:albumtags trackTags:tracktags];
+	
+	[albumtags removeAllObjects];
+	[artisttags removeAllObjects];
+	[tracktags removeAllObjects];
+
+	for(NSString *tag in albumTagActions) {
+		if([[albumTagActions objectForKey:tag] intValue] == -1)
+			[albumtags addObject:tag];
+	}
+	for(NSString *tag in artistTagActions) {
+		if([[artistTagActions objectForKey:tag] intValue] == -1)
+			[artisttags addObject:tag];
+	}
+	for(NSString *tag in trackTagActions) {
+		if([[trackTagActions objectForKey:tag] intValue] == -1)
+			[tracktags addObject:tag];
+	}
+	
+	[delegate tagEditorRemoveArtistTags:artisttags albumTags:albumtags trackTags:tracktags];
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)t {
 	[self tagButtonPressed:t];

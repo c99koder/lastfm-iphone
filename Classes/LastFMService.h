@@ -67,10 +67,18 @@ enum eventStatus {
 - (NSArray *)eventsForArtist:(NSString *)artist;
 - (NSArray *)artistsSimilarTo:(NSString *)artist;
 - (NSArray *)searchForArtist:(NSString *)artist;
+- (NSArray *)topTagsForArtist:(NSString *)artist;
+- (void)addTags:(NSArray *)tags toArtist:(NSString *)artist;
+- (void)removeTag:(NSString *)tag fromArtist:(NSString *)artist;
+- (NSArray *)tagsForArtist:(NSString *)artist;
 
 #pragma mark Album methods
 
 - (NSDictionary *)metadataForAlbum:(NSString *)album byArtist:(NSString *)artist inLanguage:(NSString *)lang;
+- (NSArray *)topTagsForAlbum:(NSString *)track byArtist:(NSString *)artist;
+- (void)addTags:(NSArray *)tags toAlbum:(NSString *)album byArtist:(NSString *)artist;
+- (void)removeTag:(NSString *)tag fromAlbum:(NSString *)album byArtist:(NSString *)artist;
+- (NSArray *)tagsForAlbum:(NSString *)album byArtist:(NSString *)artist;
 
 #pragma mark Track methods
 
@@ -79,7 +87,9 @@ enum eventStatus {
 - (NSArray *)fansOfTrack:(NSString *)track byArtist:(NSString *)artist;
 - (NSArray *)topTagsForTrack:(NSString *)track byArtist:(NSString *)artist;
 - (void)recommendTrack:(NSString *)track byArtist:(NSString *)artist toEmailAddress:(NSString *)emailAddress;
-- (void)tagTrack:(NSString *)title byArtist:(NSString *)artist withTags:(NSArray *)tags;
+- (void)addTags:(NSArray *)tags toTrack:(NSString *)track byArtist:(NSString *)artist;
+- (void)removeTag:(NSString *)tag fromTrack:(NSString *)track byArtist:(NSString *)artist;
+- (NSArray *)tagsForTrack:(NSString *)track byArtist:(NSString *)artist;
 
 #pragma mark User methods
 

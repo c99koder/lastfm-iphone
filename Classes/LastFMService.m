@@ -220,6 +220,26 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", nil]];
 }
+- (NSArray *)topTagsForArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"artist.getTopTags" maxCacheAge:7*DAYS XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./count", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"count", nil]];
+}
+- (void)addTags:(NSArray *)tags toArtist:(NSString *)artist {
+	[self doMethod:@"artist.addTags" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+	 [NSString stringWithFormat:@"tags=%@", [[tags componentsJoinedByString:@","] URLEscaped]], nil];
+}
+- (void)removeTag:(NSString *)tag fromArtist:(NSString *)artist {
+	[self doMethod:@"artist.removeTag" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+	 [NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
+}
+- (NSArray *)tagsForArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"artist.getTags" maxCacheAge:0 XPath:@"./tags/tag" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", nil]];
+}
 
 #pragma mark Album methods
 
@@ -233,6 +253,26 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 													forKeys:[NSArray arrayWithObjects:@"name", @"image", nil]];
 	}
 	return metadata;
+}
+- (NSArray *)topTagsForAlbum:(NSString *)album byArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"album.getTopTags" maxCacheAge:7*DAYS XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./count", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"count", nil]];
+}
+- (void)addTags:(NSArray *)tags toAlbum:(NSString *)album byArtist:(NSString *)artist {
+	[self doMethod:@"album.addTags" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+	 [NSString stringWithFormat:@"tags=%@", [[tags componentsJoinedByString:@","] URLEscaped]], nil];
+}
+- (void)removeTag:(NSString *)tag fromAlbum:(NSString *)album byArtist:(NSString *)artist {
+	[self doMethod:@"album.removeTag" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+	 [NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
+}
+- (NSArray *)tagsForAlbum:(NSString *)album byArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"album.getTags" maxCacheAge:0 XPath:@"./tags/tag" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", nil]];
 }
 
 #pragma mark Track methods
@@ -261,9 +301,19 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	 [NSString stringWithFormat:@"recipient=%@", [emailAddress URLEscaped]],
 	 nil];
 }
-- (void)tagTrack:(NSString *)title byArtist:(NSString *)artist withTags:(NSArray *)tags {
-	[self doMethod:@"track.addTags" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+- (void)addTags:(NSArray *)tags toTrack:(NSString *)track byArtist:(NSString *)artist {
+	[self doMethod:@"track.addTags" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [track URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
 	 [NSString stringWithFormat:@"tags=%@", [[tags componentsJoinedByString:@","] URLEscaped]], nil];
+}
+- (void)removeTag:(NSString *)tag fromTrack:(NSString *)track byArtist:(NSString *)artist {
+	[self doMethod:@"track.removeTag" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [track URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+	 [NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
+}
+- (NSArray *)tagsForTrack:(NSString *)track byArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"track.getTags" maxCacheAge:0 XPath:@"./tags/tag" withParameters:[NSString stringWithFormat:@"track=%@", [track URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", nil]];
 }
 
 #pragma mark User methods
