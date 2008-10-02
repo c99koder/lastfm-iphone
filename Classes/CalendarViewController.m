@@ -258,7 +258,6 @@ UIImage *calendarDaySelected;
 	UIGraphicsBeginImageContext(_transitionImage.bounds.size);
 	[_days.layer renderInContext:UIGraphicsGetCurrentContext()];
 	_transitionImage.image = UIGraphicsGetImageFromCurrentImageContext();
-	[UIImagePNGRepresentation(_transitionImage.image) writeToFile:CACHE_FILE(@"tmp.png") atomically:YES];
 	UIGraphicsEndImageContext();
 	[_days addSubview:_transitionImage];
 	[_days sendSubviewToBack:_transitionImage];
