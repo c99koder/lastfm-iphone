@@ -76,7 +76,7 @@
 	[_lock lock];
 	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
 		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
-		[self showLoadingView];
+		[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 		[self performSelectorOnMainThread:@selector(_updateCells:) withObject:[[LastFMService sharedInstance] artistsSimilarTo:[trackInfo objectForKey:@"creator"]] waitUntilDone:YES];
 		[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	}
@@ -150,7 +150,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_lock lock];
 	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
 		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
-		[self showLoadingView];
+		[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 		[_data release];
 		_data = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 		_data = [[_data subarrayWithRange:NSMakeRange(0,([_data count]>10)?10:[_data count])] retain];
