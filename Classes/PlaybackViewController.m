@@ -333,6 +333,45 @@ int tagSort(id tag1, id tag2, void *context) {
 	else
 		return [NSString stringWithFormat:@"%02i:%02i", m, s];
 }
+- (void)_showMetadata {
+	_trackTitle.textAlignment = UITextAlignmentLeft;
+	_artist.textAlignment = UITextAlignmentLeft;
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.6];
+	_trackTitle.alpha = 1;
+	_artist.alpha = 1;
+	_artist.frame = CGRectMake(30,96,280,18);
+	_trackTitle.frame = CGRectMake(30,117,280,18);
+	[UIView commitAnimations];
+	[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:4];
+}
+- (void)_hideMetadata {
+	if(_artworkView.frame.size.width == 320) {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.6];
+		_trackTitle.alpha = 0;
+		_artist.alpha = 0;
+		_artist.frame = CGRectMake(30,196,280,18);
+		_trackTitle.frame = CGRectMake(30,217,280,18);
+		_fullscreenMetadataView.alpha = 0;
+		[UIView commitAnimations];
+	}
+}
+- (void)_showGradient {
+	_showedMetadata = YES;
+	_trackTitle.alpha = 0;
+	_artist.alpha = 0;
+	_artist.frame = CGRectMake(30,196,280,18);
+	_trackTitle.frame = CGRectMake(30,217,280,18);
+	_fullscreenMetadataView.frame = CGRectMake(0,161,320,159);
+	_fullscreenMetadataView.alpha = 0;
+	_fullscreenMetadataView.image = [UIImage imageNamed:@"metadatagradient.png"];
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:1.0];
+	_fullscreenMetadataView.alpha = 1;
+	[UIView commitAnimations];
+	[self performSelector:@selector(_showMetadata) withObject:nil afterDelay:0.5];
+}
 - (void)_updateProgress:(NSTimer *)timer {
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
 		float duration = [[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"duration"] floatValue]/1000.0f;
@@ -351,6 +390,9 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView setAnimationDuration:10];
 		_bufferPercentage.alpha = 1;
 		[UIView commitAnimations];
+		if(_artworkView.frame.size.width == 320 && !_showedMetadata) {
+			[self _showGradient];
+		}
 	}
 	if([[LastFMRadio sharedInstance] state] != TRACK_BUFFERING && _loadingView.alpha == 1) {
 		_bufferPercentage.alpha = 0;
@@ -403,55 +445,15 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView beginAnimations:nil context:nil];
 		_noArtworkView.alpha = 0;
 		[UIView commitAnimations];
-		if(_artworkView.frame.size.width == 320) {
-			[self performSelectorOnMainThread:@selector(_showGradient) withObject:nil waitUntilDone:YES];
-		}
 	}
 	[_lock unlock];
 	[trackInfo release];
 	[pool release];
 }
-- (void)_showMetadata {
-	_trackTitle.textAlignment = UITextAlignmentLeft;
-	_artist.textAlignment = UITextAlignmentLeft;
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.6];
-	_trackTitle.alpha = 1;
-	_artist.alpha = 1;
-	_artist.frame = CGRectMake(30,96,280,18);
-	_trackTitle.frame = CGRectMake(30,117,280,18);
-	[UIView commitAnimations];
-	[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:4];
-}
-- (void)_hideMetadata {
-	if(_artworkView.frame.size.width == 320) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.6];
-		_trackTitle.alpha = 0;
-		_artist.alpha = 0;
-		_artist.frame = CGRectMake(30,196,280,18);
-		_trackTitle.frame = CGRectMake(30,217,280,18);
-		_fullscreenMetadataView.alpha = 0;
-		[UIView commitAnimations];
-	}
-}
-- (void)_showGradient {
-	_trackTitle.alpha = 0;
-	_artist.alpha = 0;
-	_artist.frame = CGRectMake(30,196,280,18);
-	_trackTitle.frame = CGRectMake(30,217,280,18);
-	_fullscreenMetadataView.frame = CGRectMake(0,161,320,159);
-	_fullscreenMetadataView.alpha = 0;
-	_fullscreenMetadataView.image = [UIImage imageNamed:@"metadatagradient.png"];
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:1.0];
-	_fullscreenMetadataView.alpha = 1;
-	[UIView commitAnimations];
-	[self performSelector:@selector(_showMetadata) withObject:nil afterDelay:0.5];
-}
 - (void)_trackDidChange:(NSNotification *)notification {
 	NSDictionary *trackInfo = [notification userInfo];
 	
+	_showedMetadata = NO;
 	_trackTitle.text = [trackInfo objectForKey:@"title"];
 	_artist.text = [trackInfo objectForKey:@"creator"];
 	_elapsed.text = @"0:00";

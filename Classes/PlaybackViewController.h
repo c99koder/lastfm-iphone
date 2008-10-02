@@ -71,6 +71,7 @@
 	UIImage *artwork;
 	UIImageView *_noArtworkView;
 	NSLock *_lock;
+	BOOL _showedMetadata;
 }
 -(IBAction)artworkButtonPressed:(id)sender;
 @property (nonatomic, readonly) UIImage *artwork;
