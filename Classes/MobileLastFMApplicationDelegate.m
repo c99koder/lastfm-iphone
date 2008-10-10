@@ -93,6 +93,7 @@ NSString *kUserAgent;
 																														 @"YES", @"scrobbling",
 																														 @"YES", @"disableautolock",
 																														 @"YES", @"showontour",
+																														 @"NO", @"showneighborradio",
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];

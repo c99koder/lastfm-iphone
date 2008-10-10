@@ -56,6 +56,32 @@
 			<key>FalseValue</key>
 			<string>NO</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Show Neighborhood</string>
+			<key>Key</key>
+			<string>showneighborradio</string>
+			<key>DefaultValue</key>
+			<string>NO</string>
+			<key>TrueValue</key>
+			<string>YES</string>
+			<key>FalseValue</key>
+			<string>NO</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Disable auto lock will prevent your iPhone / iPod Touch&apos;s screen from going to sleep while music is playing.</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Neighbor radio will play music that people with similar music tastes to you enjoy.</string>
+		</dict>
 	</array>
 </dict>
 </plist>

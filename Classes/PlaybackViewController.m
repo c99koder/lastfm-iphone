@@ -188,9 +188,10 @@ int tagSort(id tag1, id tag2, void *context) {
 																	repeats:NO];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
-	if([_data count])
+	if([_data count]) {
+		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 		[self playRadioStation:[NSString stringWithFormat:@"lastfm://globaltags/%@", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"name"] URLEscaped]]];
+	}
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

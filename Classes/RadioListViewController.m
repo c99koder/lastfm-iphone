@@ -154,14 +154,19 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	return 6;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	int count;
+	
 	switch(section) {
 		case 0:
 			return 1;
 		case 1:
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
-				return 5;
+				count = 5;
 			else
-				return 3;
+				count = 3;
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"showneighborradio"] isEqualToString:@"YES"])
+				count++;
+			return count;
 		case 2:
 			return [_commonArtists count]?[_commonArtists count]+1:0;			
 		case 3:
@@ -208,6 +213,10 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	}
 }
 -(void)_rowSelected:(NSIndexPath *)newIndexPath {
+	int row = [newIndexPath row];
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"showneighborradio"] isEqualToString:@"YES"] && [newIndexPath section] == 1 && row > 2) {
+		row++;
+	}
 	if([newIndexPath section] > 0 && [newIndexPath section] != 5 && [newIndexPath row] == 0)
 		return;
 	
@@ -219,7 +228,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 			}
 			break;
 		case 1:
-			switch([newIndexPath row]-1) {
+			switch(row-1) {
 				case 0:
 					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/personal", _username]];
 					break;
@@ -227,9 +236,12 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username]];
 					break;
 				case 2:
-					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/loved", _username]];
+					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username]];
 					break;
 				case 3:
+					[self playRadioStation:[NSString stringWithFormat:@"lastfm://user/%@/loved", _username]];
+					break;
+				case 4:
 				{
 					TagRadioViewController *tags = [[TagRadioViewController alloc] initWithUsername:_username];
 					if(tags) {
@@ -270,7 +282,11 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	UIImageView *v;
 	UILabel *l;
 	UIImageView *img;
-
+	int row = [indexPath row];
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"showneighborradio"] isEqualToString:@"YES"] && [indexPath section] == 1 && row > 2) {
+		row++;
+	}
+	
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
@@ -340,7 +356,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 			}
 			break;
 		case 1:
-			switch([indexPath row]) {
+			switch(row) {
 				case 0:
 					v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rounded_table_cell_header.png"]];
 					cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -367,9 +383,12 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 					cell.text = NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station");
 					break;
 				case 3:
-					cell.text = NSLocalizedString(@"Loved Tracks", @"Loved Tracks station");
+					cell.text = NSLocalizedString(@"My Neighborhood Radio", @"Neighborhood Radio station");
 					break;
 				case 4:
+					cell.text = NSLocalizedString(@"Loved Tracks", @"Loved Tracks station");
+					break;
+				case 5:
 					cell.text = NSLocalizedString(@"Tag Radio", @"Tag Radio station");
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					break;
