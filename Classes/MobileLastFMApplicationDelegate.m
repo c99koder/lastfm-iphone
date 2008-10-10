@@ -542,4 +542,13 @@ NSString *kUserAgent;
 	[window release];
 	[super dealloc];
 }
+-(NSString *)publisherId {
+	return @"";
+}
+-(UIColor *)adBackgroundColor {
+	return [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+}
+- (BOOL)useTestAd {
+	return YES;
+}
 @end

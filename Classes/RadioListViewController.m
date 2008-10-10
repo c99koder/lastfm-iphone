@@ -28,6 +28,8 @@
 #import "ArtworkCell.h"
 #import </usr/include/objc/objc-class.h>
 #import "DebugViewController.h"
+#import "AdMobView.h"
+#import "MobileLastFMApplicationDelegate.h"
 
 @implementation UIColor (TableHax)
 + (UIColor *)pinStripeColorHax {
@@ -146,6 +148,11 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	}
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+		ad = [AdMobView requestAdWithDelegate:(MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate];
+		ad.frame = CGRectMake(0, 432, 320, 48);
+		self.tableView.tableHeaderView = ad;
+	}
 }
 - (void)viewDidLoad {
 	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;

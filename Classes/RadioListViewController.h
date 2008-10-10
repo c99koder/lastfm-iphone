@@ -19,6 +19,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
+#import "AdMobView.h"
 
 @interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSString *_username;
@@ -26,6 +27,7 @@
 	NSArray *_recent;
 	NSThread *_loadingThread;
 	NSArray *_commonArtists;
+	AdMobView *ad;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

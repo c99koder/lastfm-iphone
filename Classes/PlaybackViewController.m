@@ -1125,11 +1125,19 @@ int tagSort(id tag1, id tag2, void *context) {
 	[contentView addSubview:trackView.view];
 	[contentView sendSubviewToBack:trackView.view];
 	
-	artistBio.view.frame = CGRectMake(0,0,320,369);
-	tags.view.frame = CGRectMake(0,0,320,369);
-	similarArtists.view.frame = CGRectMake(0,0,320,369);
-	fans.view.frame = CGRectMake(0,0,320,369);
-	events.view.frame = CGRectMake(0,0,320,369);
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+		artistBio.view.frame = CGRectMake(0,0,320,369);
+		tags.view.frame = CGRectMake(0,0,320,369);
+		similarArtists.view.frame = CGRectMake(0,0,320,369);
+		fans.view.frame = CGRectMake(0,0,320,369);
+		events.view.frame = CGRectMake(0,0,320,369);
+	} else {
+		artistBio.view.frame = CGRectMake(0,0,320,321);
+		tags.view.frame = CGRectMake(0,0,320,321);
+		similarArtists.view.frame = CGRectMake(0,0,320,321);
+		fans.view.frame = CGRectMake(0,0,320,321);
+		events.view.frame = CGRectMake(0,4,320,321);
+	}
 	
 	CGRect frame = volumeView.frame;
 	frame.origin.y -= 2;
@@ -1169,6 +1177,12 @@ int tagSort(id tag1, id tag2, void *context) {
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
 	loveBtn.alpha = 1;
 	banBtn.alpha = 1;
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+		[ad removeFromSuperview];
+		[ad release];
+		ad = [[AdMobView requestAdWithDelegate:(MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate] retain];
+		ad.frame = CGRectMake(0, 0, 320, 48);
+	}
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -1205,8 +1219,13 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView setAnimationDuration:0.75];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:contentView cache:YES];
 		[[contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+		if(ad)
+			[contentView addSubview: ad];
 		[contentView addSubview: detailsViewContainer];
-		detailsViewContainer.frame = CGRectMake(0,0,320,416);
+		if(ad)
+			detailsViewContainer.frame = CGRectMake(0,48,320,368);
+		else
+			detailsViewContainer.frame = CGRectMake(0,0,320,416);
 		tabBar.selectedItem = [tabBar.items objectAtIndex:0];
 		[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
 		[UIView commitAnimations];
