@@ -837,12 +837,14 @@ int tagSort(id tag1, id tag2, void *context) {
 	switch([(UISegmentedControl *)sender selectedSegmentIndex]) {
 		case 1:
 			_table.frame = CGRectMake(0,372,320,0);
+			_shadow.frame = CGRectMake(0,372,320,0);
 			break;
 		case 0:
 			if(_username)
 				_table.frame = CGRectMake(0,0,320,372);
 			else
 				_table.frame = CGRectMake(0,0,320,326);
+			_shadow.frame = CGRectMake(0,372,320,0);
 			[_data release];
 			_data = nil;
 			[_table reloadData];
