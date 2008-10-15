@@ -27,7 +27,6 @@
 	NSArray *_recent;
 	NSThread *_loadingThread;
 	NSArray *_commonArtists;
-	AdMobView *ad;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

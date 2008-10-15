@@ -1127,20 +1127,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	[contentView addSubview:trackView.view];
 	[contentView sendSubviewToBack:trackView.view];
 	
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
-		artistBio.view.frame = CGRectMake(0,0,320,369);
-		tags.view.frame = CGRectMake(0,0,320,369);
-		similarArtists.view.frame = CGRectMake(0,0,320,369);
-		fans.view.frame = CGRectMake(0,0,320,369);
-		events.view.frame = CGRectMake(0,0,320,369);
-	} else {
-		artistBio.view.frame = CGRectMake(0,0,320,321);
-		tags.view.frame = CGRectMake(0,0,320,321);
-		similarArtists.view.frame = CGRectMake(0,0,320,321);
-		fans.view.frame = CGRectMake(0,0,320,321);
-		events.view.frame = CGRectMake(0,4,320,321);
-	}
-	
 	CGRect frame = volumeView.frame;
 	frame.origin.y -= 2;
 	frame.size.height += 10;
@@ -1172,6 +1158,22 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+	
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+		artistBio.view.frame = CGRectMake(0,0,320,369);
+		tags.view.frame = CGRectMake(0,0,320,369);
+		similarArtists.view.frame = CGRectMake(0,0,320,369);
+		fans.view.frame = CGRectMake(0,0,320,369);
+		events.view.frame = CGRectMake(0,0,320,369);
+		[ad release];
+		ad = nil;
+	} else {
+		artistBio.view.frame = CGRectMake(0,0,320,321);
+		tags.view.frame = CGRectMake(0,0,320,321);
+		similarArtists.view.frame = CGRectMake(0,0,320,321);
+		fans.view.frame = CGRectMake(0,0,320,321);
+		events.view.frame = CGRectMake(0,4,320,321);
+	}	
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	if([[detailView subviews] count])
