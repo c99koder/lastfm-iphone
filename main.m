@@ -27,14 +27,46 @@ void uncaughtExceptionHandler(NSException *exception) {
 	NSLog(@"Unhandled %@ exception encountered\n", [exception name]);
 	NSLog(@"Reason: %@\n", [exception reason]);
 	
+	NSArray *callStackArray = [exception callStackReturnAddresses];
+	void *backtraceFrames[[callStackArray count]];
+	int frameCount = [callStackArray count];
+	
+	for (int i=0; i<[callStackArray count]; i++) {
+		backtraceFrames[i] = (void *)[[callStackArray objectAtIndex:i] unsignedIntegerValue];
+	}
+  char **frameStrings = backtrace_symbols(&backtraceFrames[0], frameCount);
+	
+  if(frameStrings != NULL) {
+		NSLog(@"Stack trace:\n");
+    int x = 0;
+    for(x = 0; x < frameCount; x++) {
+      if(frameStrings[x] == NULL) { break; }
+      NSLog(@"%s\n", frameStrings[x]);
+    }
+    free(frameStrings);
+  }
+	
 	[[NSData dataWithContentsOfFile:CACHE_FILE(@"debug.log")] writeToFile:CACHE_FILE(@"crash.log") atomically:YES];
 	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"crashed"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 void mysighandler(int sig, siginfo_t *info, void *context) {
-	NSMutableString *report = [NSMutableString string];
 	NSLog(@"Caught signal %i (%s)\n", info->si_signo, sys_signame[sig]);
+
+  void *backtraceFrames[128];
+  int frameCount = backtrace(&backtraceFrames[0], 128);
+  char **frameStrings = backtrace_symbols(&backtraceFrames[0], frameCount);
+	
+  if(frameStrings != NULL) {
+		NSLog(@"Stack trace:\n");
+    int x = 0;
+    for(x = 0; x < frameCount; x++) {
+      if(frameStrings[x] == NULL) { break; }
+      NSLog(@"%s\n", frameStrings[x]);
+    }
+    free(frameStrings);
+  }
 	
 	[[NSData dataWithContentsOfFile:CACHE_FILE(@"debug.log")] writeToFile:CACHE_FILE(@"crash.log") atomically:YES];
 	[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"crashed"];
