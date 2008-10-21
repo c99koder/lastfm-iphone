@@ -123,5 +123,6 @@ enum eventStatus {
 #pragma mark Playlist methods
 
 - (void)addTrack:(NSString *)track byArtist:(NSString *)artist toPlaylist:(int)playlist;
+- (NSDictionary *)createPlaylist:(NSString *)title;
 
 @end

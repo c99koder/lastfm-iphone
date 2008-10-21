@@ -53,18 +53,24 @@
 }
 - (void)_doneButtonPressed:(id)sender {
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
-	[_data insertObject:[NSDictionary dictionaryWithObjectsAndKeys:_newPlaylist.text,@"title",nil] atIndex:0];
-	[self.tableView beginUpdates];
-	[self.tableView setEditing:NO animated:YES];
-	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
-	[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
-	[self.tableView endUpdates];
+	NSDictionary *playlist = [[LastFMService sharedInstance] createPlaylist:_newPlaylist.text];
+	if(playlist) {
+		[_data insertObject:playlist atIndex:0];
+		[self.tableView beginUpdates];
+		[self.tableView setEditing:NO animated:YES];
+		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
+		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
+		[self.tableView endUpdates];
+	} else {
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+		[self.tableView setEditing:NO animated:YES];
+		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:NO];
+	}
 	[_newPlaylist resignFirstResponder];
 	[_newPlaylist removeFromSuperview];
 	[_newPlaylist release];
 	_newPlaylist = nil;
 	self.tableView.scrollEnabled = YES;
-	//TODO: Create the new playlist here when web service becomes available
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
 	return NO;
@@ -91,10 +97,7 @@
 - (void)viewDidLoad {
 	self.title = NSLocalizedString(@"Select a Playlist", @"Playlist selector title");
 	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(_cancelButtonPressed:)] autorelease];
-//TODO: Re-enable this when Anil adds a webservice to create a playlist
-#if 0
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
-#endif
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillAppear:) name:UIKeyboardDidShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillDisappear:) name:UIKeyboardWillHideNotification object:nil];
 	_newPlaylist = nil;

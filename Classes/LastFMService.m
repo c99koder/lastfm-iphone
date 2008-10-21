@@ -501,5 +501,16 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (void)addTrack:(NSString *)track byArtist:(NSString *)artist toPlaylist:(int)playlist {
 	[self doMethod:@"playlist.addTrack" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [track URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], [NSString stringWithFormat:@"playlistID=%i", playlist], nil];
 }
+- (NSDictionary *)createPlaylist:(NSString *)title {
+	NSDictionary *playlist = nil;
+	NSArray *nodes = [self doMethod:@"playlist.create" maxCacheAge:0 XPath:@"./playlists/playlist" withParameters:[NSString stringWithFormat:@"title=%@", [title URLEscaped]], @"description=", nil];
+	if([nodes count]) {
+		CXMLNode *node = [nodes objectAtIndex:0];
+		playlist = [self _convertNode:node
+					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./id", @"./title", nil]
+													forKeys:[NSArray arrayWithObjects:@"id", @"title", nil]];
+	}
+	return playlist;
+}
 
 @end
