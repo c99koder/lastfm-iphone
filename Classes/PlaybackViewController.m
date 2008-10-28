@@ -1223,8 +1223,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView setAnimationDuration:0.75];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:contentView cache:YES];
 		[[contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-		if(ad)
-			[contentView addSubview: ad];
 		[contentView addSubview: detailsViewContainer];
 		if(ad)
 			detailsViewContainer.frame = CGRectMake(0,48,320,368);
@@ -1269,6 +1267,13 @@ int tagSort(id tag1, id tag2, void *context) {
 			[detailView addSubview:fans.view];
 			_titleLabel.text = NSLocalizedString(@"Top Listeners", @"Top Listeners tab title");
 			break;
+	}
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+		[ad removeFromSuperview];
+		[ad release];
+		ad = [[AdMobView requestAdWithDelegate:(MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate] retain];
+		ad.frame = CGRectMake(0, 0, 320, 48);
+		[contentView addSubview: ad];
 	}
 }
 - (void)shareToAddressBook {
