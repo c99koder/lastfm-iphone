@@ -379,8 +379,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)eventsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./startDate", @"./image[@size=\"medium\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"startDate", @"image", nil]];
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./startDate", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"startDate", @"image", nil]];
 }
 - (NSDictionary *)profileForUser:(NSString *)username {
 	NSDictionary *metadata = nil;

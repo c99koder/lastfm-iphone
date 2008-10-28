@@ -825,13 +825,13 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_trackDidChange:(NSNotification*)notification {
 	[NSThread detachNewThreadSelector:@selector(_fetchEvents:) toTarget:self withObject:[notification userInfo]];
 }
-- (BOOL)isAttendingEvent:(NSString *)event_id {
-	for(NSString *event in _attendingEvents) {
-		if([event isEqualToString:event_id]) {
-			return YES;
+- (int)isAttendingEvent:(NSString *)event_id {
+	for(NSDictionary *event in _attendingEvents) {
+		if([[event objectForKey:@"id"] isEqualToString:event_id]) {
+			return [[event objectForKey:@"status"] intValue];
 		}
 	}
-	return NO;
+	return eventStatusNotAttending;
 }
 - (void)viewTypeToggled:(id)sender {
 	switch([(UISegmentedControl *)sender selectedSegmentIndex]) {
@@ -910,10 +910,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		_table.dataSource = self;
 		[self.view addSubview:_table];
 		NSArray *events = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-		_attendingEvents = [[NSMutableArray alloc] init];
-		for(NSDictionary *event in events) {
-			[_attendingEvents addObject:[event objectForKey:@"id"]];
-		}
+		_attendingEvents = [[NSMutableArray alloc] initWithArray:events];
 		events = [[LastFMService sharedInstance] eventsForUser:_username];
 
 		if([LastFMService sharedInstance].error) {
@@ -1021,11 +1018,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController presentModalViewController:e animated:YES];
 		else
 			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).playbackViewController presentModalViewController:e animated:YES];
-		if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
-			[e setAttendance:eventStatusAttending];
-		} else {
-			[e setAttendance:eventStatusNotAttending];
-		}
+		[e setAttendance:[self isAttendingEvent:[e.event objectForKey:@"id"]]];
 		[e release];
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	}
@@ -1088,8 +1081,13 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)doneButtonPressed:(id)sender {
 	EventDetailViewController *e = (EventDetailViewController *)sender;
+	for(NSDictionary *event in _attendingEvents) {
+		if([[event objectForKey:@"id"] isEqualToString:[e.event objectForKey:@"id"]]) {
+			[_attendingEvents removeObject:event];
+			break;
+		}
+	}
 	if([e attendance] == eventStatusNotAttending) {
-		[_attendingEvents removeObject:[e.event objectForKey:@"id"]];
 		if(_username) {
 			NSMutableArray *events = [[NSMutableArray alloc] init];
 			for(NSDictionary *event in _events) {
@@ -1100,7 +1098,8 @@ int tagSort(id tag1, id tag2, void *context) {
 			[events release];
 		}
 	} else {
-		[_attendingEvents addObject:[e.event objectForKey:@"id"]];
+		[_attendingEvents addObject:[NSDictionary dictionaryWithObjectsAndKeys:[e.event objectForKey:@"id"], @"id", 
+																 [NSNumber numberWithInt:[e attendance]], @"status", nil]];
 	}
 	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController dismissModalViewControllerAnimated:YES];
 	if([_data count]) {
