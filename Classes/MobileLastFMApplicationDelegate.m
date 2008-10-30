@@ -548,7 +548,10 @@ NSString *kUserAgent;
 -(UIColor *)adBackgroundColor {
 	return [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
 }
-- (BOOL)useTestAd {
-	return YES;
+- (void)didReceiveAd:(AdMobView *)adView {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"AdMob_didReceiveAd" object:adView];
+}
+- (void)didFailToReceiveAd:(AdMobView *)adView {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"AdMob_sucks" object:nil];
 }
 @end

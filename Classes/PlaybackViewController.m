@@ -323,6 +323,33 @@ int tagSort(id tag1, id tag2, void *context) {
 	_noArtworkView.opaque = NO;
 	[_artworkView addSubview: _noArtworkView];
 }
+- (void)viewWillAppear:(BOOL)hasAd {
+	_trackTitle.textAlignment = UITextAlignmentCenter;
+	_artist.textAlignment = UITextAlignmentCenter;
+	_artist.frame = CGRectMake(20,13,280,18);
+	_trackTitle.frame = CGRectMake(20,30,280,18);
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || hasAd == NO) {
+		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
+		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
+		_artworkView.frame = CGRectMake(47,10,226,226);
+		_noArtworkView.frame = CGRectMake(0,0,226,226);
+		_badge.frame = CGRectMake(234,0,86,86);
+	} else {
+		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
+		_reflectedArtworkView.frame = CGRectMake(47+24,236,226-48,226-48);
+		_artworkView.frame = CGRectMake(47+24,10+48,226-48,226-48);
+		_noArtworkView.frame = CGRectMake(0,0,226-48,226-48);
+		_badge.frame = CGRectMake(234,48,86,86);
+	}
+	_fullscreenMetadataView.frame = CGRectMake(0,236,320,87);
+	_fullscreenMetadataView.alpha = 1;
+	_fullscreenMetadataView.image = nil;
+	_trackTitle.alpha = 1;
+	_artist.alpha = 1;
+	_progress.alpha = 1;
+	_elapsed.alpha = 1;
+	_remaining.alpha = 1;
+}
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
 		return @"00:00";
@@ -1154,8 +1181,35 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([[detailView subviews] count])
 		[self detailsButtonPressed:self];
 }
+- (void)_didReceiveAd:(NSNotification *)notification {
+	detailsViewContainer.frame = CGRectMake(0,48,320,368);
+	artistBio.view.frame = CGRectMake(0,0,320,321);
+	tags.view.frame = CGRectMake(0,0,320,321);
+	similarArtists.view.frame = CGRectMake(0,0,320,321);
+	fans.view.frame = CGRectMake(0,0,320,321);
+	events.view.frame = CGRectMake(0,4,320,321);
+	[trackView viewWillAppear:YES];
+}
+- (void)_adMobSucks:(NSNotification *)notification {
+	detailsViewContainer.frame = CGRectMake(0,0,320,416);
+	artistBio.view.frame = CGRectMake(0,0,320,369);
+	tags.view.frame = CGRectMake(0,0,320,369);
+	similarArtists.view.frame = CGRectMake(0,0,320,369);
+	fans.view.frame = CGRectMake(0,0,320,369);
+	events.view.frame = CGRectMake(0,0,320,369);
+	[ad release];
+	ad = nil;
+	[trackView viewWillAppear:NO];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"AdMob_didReceiveAd" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"AdMob_sucks" object:nil];
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didReceiveAd:) name:@"AdMob_didReceiveAd" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_adMobSucks:) name:@"AdMob_sucks" object:nil];
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
 	
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
@@ -1173,6 +1227,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		fans.view.frame = CGRectMake(0,0,320,321);
 		events.view.frame = CGRectMake(0,4,320,321);
 	}	
+	[trackView viewWillAppear:YES];
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	if([[detailView subviews] count])
@@ -1185,6 +1240,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[ad release];
 		ad = [[AdMobView requestAdWithDelegate:(MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate] retain];
 		ad.frame = CGRectMake(0, 0, 320, 48);
+		[trackView.view addSubview: ad];
 	}
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
