@@ -1088,6 +1088,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			[self tableView:_table didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 	}
 	[_table reloadData];
+	[formatter release];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([_events count]) {
