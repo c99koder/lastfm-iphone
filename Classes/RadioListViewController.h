@@ -19,7 +19,6 @@
 
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
-#import "AdMobView.h"
 
 @interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSString *_username;

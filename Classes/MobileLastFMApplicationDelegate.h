@@ -25,14 +25,13 @@
 #import "FirstRunViewController.h"
 #import "PlaybackViewController.h"
 #import "SearchViewController.h"
-#import "AdMobDelegateProtocol.h"
 
 @interface UIApplication (Undocumented)
 -(void)showNetworkPromptsIfNecessary:(BOOL)fp8;
 -(void)setUsesBackgroundNetwork:(BOOL)fp8;
 @end
 
-@interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate,AdMobDelegate> {
+@interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate> {
   IBOutlet UIWindow *window;
 	Scrobbler *_scrobbler;
 	FirstRunViewController *firstRunView;

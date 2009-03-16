@@ -94,6 +94,7 @@ NSString *kUserAgent;
 																														 @"YES", @"disableautolock",
 																														 @"YES", @"showontour",
 																														 @"NO", @"showneighborradio",
+																														 @"64", @"bitrate",
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
@@ -157,7 +158,7 @@ NSString *kUserAgent;
 	
 	theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 
-	if([theResponse statusCode] == 200) {
+	if([theResponse statusCode] == 200 || [theResponse statusCode] == 404) {
 		[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"crash.log") error:nil];
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"crashed"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
@@ -541,17 +542,5 @@ NSString *kUserAgent;
 - (void)dealloc {
 	[window release];
 	[super dealloc];
-}
--(NSString *)publisherId {
-	return @"";
-}
--(UIColor *)adBackgroundColor {
-	return [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
-}
-- (void)didReceiveAd:(AdMobView *)adView {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"AdMob_didReceiveAd" object:adView];
-}
-- (void)didFailToReceiveAd:(AdMobView *)adView {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"AdMob_sucks" object:nil];
 }
 @end

@@ -134,7 +134,6 @@
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
 		229122800E6C34F500F9C17C /* tagareabg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291227F0E6C34F500F9C17C /* tagareabg.png */; };
-		2291244A0E6D7CC700F9C17C /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 229124490E6D7CC700F9C17C /* Entitlements.plist */; };
 		229130CE0E1C153F007F5E63 /* blueBackBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 229130CD0E1C153F007F5E63 /* blueBackBtn.png */; };
 		2291317F0E1C2441007F5E63 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291317E0E1C2441007F5E63 /* Default.png */; };
 		229808CF0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CA0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png */; };
@@ -145,8 +144,6 @@
 		22ABB3030DAE68FC00D2871E /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB3020DAE68FC00D2871E /* ChartsViewController.m */; };
 		22ABB41E0DB10C3100D2871E /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB41D0DB10C3100D2871E /* SearchViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
-		22B4443F0E9FB1020079C52E /* libAdMobDevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B4443C0E9FB1020079C52E /* libAdMobDevice.a */; };
-		22B444400E9FB1020079C52E /* libAdMobSimulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B4443E0E9FB1020079C52E /* libAdMobSimulator.a */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
 		22BA0DDF0DC3731100DBE5BD /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA0DDE0DC3731100DBE5BD /* stop.png */; };
 		22C03A2E0E5DA7E600EBF062 /* tag-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A2D0E5DA7E600EBF062 /* tag-bg.png */; };
@@ -381,10 +378,6 @@
 		22ABB41D0DB10C3100D2871E /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NowPlayingButton.h"; sourceTree = "<group>"; };
 		22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NowPlayingButton.m"; sourceTree = "<group>"; };
-		22B4443B0E9FB1020079C52E /* AdMobView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMobView.h; sourceTree = "<group>"; };
-		22B4443C0E9FB1020079C52E /* libAdMobDevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdMobDevice.a; sourceTree = "<group>"; };
-		22B4443D0E9FB1020079C52E /* AdMobDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMobDelegateProtocol.h; sourceTree = "<group>"; };
-		22B4443E0E9FB1020079C52E /* libAdMobSimulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libAdMobSimulator.a; sourceTree = "<group>"; };
 		22B444410E9FB1300079C52E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		22BA0DDE0DC3731100DBE5BD /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
 		22C03A2D0E5DA7E600EBF062 /* tag-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag-bg.png"; sourceTree = "<group>"; };
@@ -479,8 +472,6 @@
 				225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */,
 				221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */,
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
-				22B4443F0E9FB1020079C52E /* libAdMobDevice.a in Frameworks */,
-				22B444400E9FB1020079C52E /* libAdMobSimulator.a in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -800,10 +791,6 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				22B4443B0E9FB1020079C52E /* AdMobView.h */,
-				22B4443C0E9FB1020079C52E /* libAdMobDevice.a */,
-				22B4443D0E9FB1020079C52E /* AdMobDelegateProtocol.h */,
-				22B4443E0E9FB1020079C52E /* libAdMobSimulator.a */,
 				222F3DF80E59E87600F2BBD5 /* apikey.h */,
 				22E42B680E4F4E05009167EA /* pldb */,
 				22CBE1B10DCE441200AE5DE0 /* TouchXML */,
@@ -1010,7 +997,6 @@
 				22EB5F6C0E6492920021751A /* info_button_behind.png in Resources */,
 				22EB5FC00E6499C80021751A /* ontourbadge.png in Resources */,
 				229122800E6C34F500F9C17C /* tagareabg.png in Resources */,
-				2291244A0E6D7CC700F9C17C /* Entitlements.plist in Resources */,
 				229808CF0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png in Resources */,
 				229808D00E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png in Resources */,
 				229808D10E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png in Resources */,
@@ -1200,7 +1186,7 @@
 		223AB58C0E2000EC002E06F2 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
@@ -1257,7 +1243,7 @@
 		229124430E6D7C8000F9C17C /* Distribution (ad-hoc) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -1317,7 +1303,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(NATIVE_ARCH)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
@@ -1348,7 +1334,7 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(NATIVE_ARCH)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;

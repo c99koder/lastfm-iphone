@@ -127,6 +127,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		error = [theError retain];
 		return nil;
 	}
+	
 	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
 	if(theError) {
 		error = [theError retain];
@@ -359,7 +360,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 										 forKeys:[NSArray arrayWithObjects:@"name", @"count", nil]];
 }
 - (NSArray *)playlistsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getPlaylists" maxCacheAge:5*MINUTES XPath:@"./playlists/playlist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"user.getPlaylists" maxCacheAge:0 XPath:@"./playlists/playlist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./title", @"./size", @"./streamable", nil]
 										 forKeys:[NSArray arrayWithObjects:@"id", @"title", @"size", @"streamable", nil]];
@@ -367,7 +368,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./artist", @"./name", @"./date", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./artist/name", @"./name", @"./date", nil]
 										 forKeys:[NSArray arrayWithObjects:@"artist", @"name", @"date", nil]];
 }
 - (NSArray *)friendsOfUser:(NSString *)username {
@@ -448,7 +449,25 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 }
 - (NSDictionary *)getPlaylist {
 	NSMutableArray *playlist = nil;
-	NSArray *nodes = [[[[[self doMethod:@"radio.getPlaylist" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"mobile_net=%@",[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?@"wifi":@"wwan"], nil] objectAtIndex:0] children] objectAtIndex:1] children];
+	NSString *bitrate;
+	NSString *network;
+	NSString *speed;
+	
+	if([((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]) {
+		network = @"wifi";
+		bitrate = @"128";
+		speed = @"2";
+	} else {
+		network = @"wwan";
+		bitrate = [[NSUserDefaults standardUserDefaults] objectForKey:@"bitrate"];
+		speed = @"1";
+	}
+	
+	NSArray *nodes = [[[[[self doMethod:@"radio.getPlaylist" maxCacheAge:0 XPath:@"." withParameters:
+												[NSString stringWithFormat:@"mobile_net=%@",network],
+												[NSString stringWithFormat:@"bitrate=%@", bitrate],
+												[NSString stringWithFormat:@"speed_multiplier=%@", speed],
+												nil] objectAtIndex:0] children] objectAtIndex:1] children];
 	NSString *title = nil;
 	
 	if([nodes count]) {

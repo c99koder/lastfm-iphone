@@ -28,7 +28,6 @@
 #import "ArtworkCell.h"
 #import </usr/include/objc/objc-class.h>
 #import "DebugViewController.h"
-#import "AdMobView.h"
 #import "MobileLastFMApplicationDelegate.h"
 
 @implementation UIColor (TableHax)
@@ -128,15 +127,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	_PerformSwizzle([UIColor class], @selector(pinStripeColor),@selector(pinStripeColorHax), NO);
 	return self;
 }
-- (void)_adMobSucks:(NSNotification *)notification {
-	self.tableView.tableHeaderView = nil;
-}
-- (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 - (void)viewWillAppear:(BOOL)animated {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_adMobSucks:) name:@"AdMob_sucks" object:nil];
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[_playlists release];
@@ -156,11 +147,6 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	}
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
-	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
-		AdMobView *ad = [[AdMobView requestAdWithDelegate:(MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate] retain];
-		ad.frame = CGRectMake(0, 432, 320, 48);
-		self.tableView.tableHeaderView = ad;
-	}
 }
 - (void)viewDidLoad {
 	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -301,7 +287,7 @@ BOOL _PerformSwizzle(Class klass, SEL origSel, SEL altSel, BOOL forInstance) {
 	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"showneighborradio"] isEqualToString:@"YES"] && [indexPath section] == 1 && row > 2) {
 		row++;
 	}
-	
+
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	

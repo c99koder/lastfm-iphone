@@ -29,11 +29,11 @@ void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	if(inInterruptionState == kAudioSessionBeginInterruption) {
 		NSLog(@"interruption detected! stopping playback/recording\n");
 		//the queue will stop itself on an interruption, we just need to update the AI
-		[[LastFMRadio sharedInstance] stop];
 		[LastFMRadio sharedInstance].playbackWasInterrupted = YES;
+		[[LastFMRadio sharedInstance] stop];
 	}	else if ((inInterruptionState == kAudioSessionEndInterruption) && [LastFMRadio sharedInstance].playbackWasInterrupted) {
 		// we were playing back when we were interrupted, so reset and resume now
-		[[LastFMRadio sharedInstance] play];
+		[[LastFMRadio sharedInstance] skip];
 	}
 }
 
@@ -176,6 +176,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)dealloc {
 	if(queue) {
+		AudioQueueFlush(queue);
 		AudioQueueDispose(queue, true);
 		AudioFileStreamClose(parser);
 	}
@@ -185,6 +186,30 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[_audioBufferCountLock release];
 	[_bufferLock release];
 	[super dealloc];
+}
+-(void)_waitForPlaybackToFinish {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	UInt32 isRunning = 0;
+	UInt32 size = sizeof(isRunning);
+	
+	@synchronized(self) {
+		OSStatus error = AudioQueueGetProperty(queue, kAudioQueueProperty_IsRunning, &isRunning, &size);
+		if(!error && isRunning && queue) {
+			if(queue) {
+				AudioQueueFlush(queue);
+				AudioQueueStop(queue, false);
+			}
+			NSLog(@"Waiting for stream to finish\n");
+			do {
+				CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.25, false);
+				error = AudioQueueGetProperty(queue, kAudioQueueProperty_IsRunning, &isRunning, &size);
+			} while(!error && isRunning && queue);
+			NSLog(@"Done!");
+		}
+		if([LastFMRadio sharedInstance].state == TRACK_PLAYING)
+			[self performSelectorOnMainThread:@selector(_notifyTrackFinishedPlaying) withObject:nil waitUntilDone:NO];
+	}
+	[pool release];
 }
 -(void)_notifyTrackFinishedLoading {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishLoading object:self userInfo:nil];
@@ -224,9 +249,11 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)stop {
 	if(queue) {
-		AudioQueueDispose(queue, true);
-		AudioFileStreamClose(parser);
-		queue = nil;
+		@synchronized(self) {
+			AudioQueueDispose(queue, true);
+			AudioFileStreamClose(parser);
+			queue = nil;
+		}
 	}
 	[_connection cancel];
 	if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)]) {
@@ -276,13 +303,13 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[_audioBufferCountLock lock];
 	_audioBufferCount--;
 	[_audioBufferCountLock unlock];	
-	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 16) {
+	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 32) {
 		[self _pushDataChunk];
 	}
 	if(_state == TRACK_PLAYING && _peakBufferCount > 4) {
 		if(_audioBufferCount < 1 && [_receivedData length] < 8192) {
 			if(_fileDidFinishLoading) {
-				[self performSelectorOnMainThread:@selector(_notifyTrackFinishedPlaying) withObject:nil waitUntilDone:NO];
+				[NSThread detachNewThreadSelector:@selector(_waitForPlaybackToFinish) toTarget:self withObject:nil];
 			} else {
 				[self pause];
 				_state = TRACK_BUFFERING;
@@ -299,8 +326,9 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[self performSelectorOnMainThread:@selector(_notifyTrackFailed) withObject:self waitUntilDone:NO];
 	} else {
 		_fileDidFinishLoading = YES;
-		if(_state != TRACK_PAUSED)
+		if(_state != TRACK_PAUSED) {
 			[self performSelectorOnMainThread:@selector(_notifyTrackFinishedLoading) withObject:self waitUntilDone:NO];
+		}
 	}
 }
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse {
@@ -310,8 +338,10 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response {
 	[_receivedData setLength:0];
 	NSLog(@"HTTP status code: %i\n", [response statusCode]);
-	if([response statusCode] != 200)
+	if([response statusCode] != 200) {
 		NSLog(@"HTTP headers: %@", [response allHeaderFields]);
+		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
+	}
 }
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	if(data) {
@@ -319,7 +349,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_receivedData appendData:data];
 		[_bufferLock unlock];
 	}
-	if(_state != TRACK_PAUSED && ([_receivedData length] > 196608 && _state == TRACK_BUFFERING) || _state == TRACK_PLAYING) {
+	if(_state != TRACK_PAUSED && ([_receivedData length] > 98304 && _state == TRACK_BUFFERING) || _state == TRACK_PLAYING) {
 		while(_audioBufferCount < 6 && [_receivedData length] > 8192)
 			[self _pushDataChunk];
 	}
@@ -346,8 +376,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		return NO;
 }
 -(float)bufferProgress {
-	if(_state == TRACK_BUFFERING && [_receivedData length] < 196608)
-		return ((float)[_receivedData length]) / 196608.0f;
+	if(_state == TRACK_BUFFERING && [_receivedData length] < 98304)
+		return ((float)[_receivedData length]) / 98304.0f;
 	else
 		return 1;
 }
@@ -497,12 +527,13 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)_trackDidFail:(NSNotification *)notification {
 	if(notification.object == [_tracks objectAtIndex:0]) {
-		if(_errorSkipCounter++ > 1) {
+		if(_errorSkipCounter++ > 3) {
 			 [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
 			 [self stop];
 		 } else {
 			 [_playlist release];
 			 _playlist = nil;
+			 [NSThread sleepForTimeInterval:2];
 			 [self skip];
 		 }
 	}
@@ -569,7 +600,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	int x;
 	if(!_playlist || [_playlist count] < 1 || _station == nil) {
 		NSLog(@"Fetching playlist");
-		for(x=0; x<5; x++) {
+		for(x=0; x<10; x++) {
 			NSDictionary *playlist = [[LastFMService sharedInstance] getPlaylist];
 			if([[playlist objectForKey:@"playlist"] count]) {
 				if(!_playlist) {
@@ -579,10 +610,12 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 				}
 				break;
 			} else {
-				if([LastFMService sharedInstance].error && !([LastFMService sharedInstance].error.code == 8 || [LastFMService sharedInstance].error.code == 16))
+				if([LastFMService sharedInstance].error && [[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain] && !([LastFMService sharedInstance].error.code == 8 || [LastFMService sharedInstance].error.code == 16))
 					break;
-				else
+				else {
 					NSLog(@"Server busy, retrying...\n");
+					[NSThread sleepForTimeInterval:2];
+				}
 			}
 		}
 	}

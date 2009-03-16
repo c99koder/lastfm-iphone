@@ -25,7 +25,6 @@
 #import "CalendarViewController.h"
 #import "TagEditorViewController.h"
 #import "PlaylistsViewController.h"
-#import "AdMobView.h"
 
 @interface PlaybackSubview : UIViewController {
 	IBOutlet UIView *_loadingView;
@@ -161,7 +160,6 @@
 	IBOutlet UIButton *loveBtn;
 	IBOutlet UIButton *banBtn;
 	IBOutlet UITabBar *tabBar;
-	AdMobView *ad;
 }
 -(void)backButtonPressed:(id)sender;
 -(void)detailsButtonPressed:(id)sender;

@@ -72,6 +72,20 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>High Quality Audio</string>
+			<key>Key</key>
+			<string>bitrate</string>
+			<key>DefaultValue</key>
+			<string>64</string>
+			<key>TrueValue</key>
+			<string>128</string>
+			<key>FalseValue</key>
+			<string>64</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Disable auto lock will prevent your iPhone / iPod Touch&apos;s screen from going to sleep while music is playing.</string>
@@ -81,6 +95,12 @@
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Neighbor radio will play music that people with similar music tastes to you enjoy.</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>High Quaility Audio will use higher quality audio over your cellular connection, however tracks will take longer to buffer.  High quality is always used for WiFi networks.</string>
 		</dict>
 	</array>
 </dict>
