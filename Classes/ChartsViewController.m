@@ -89,10 +89,10 @@ int tagSort(id tag1, id tag2, void *context);
 	date.highlighted = selected;
 }
 - (void)dealloc {
-	[super dealloc];
 	[title release];
 	[subtitle release];
 	[date release];
+	[super dealloc];
 }
 @end
 
