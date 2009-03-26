@@ -227,16 +227,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
 		AudioSessionSetActive(true);
 		[LastFMRadio sharedInstance].playbackWasInterrupted = NO;
-		if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)]) {
-			[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
-																																							 title:[_trackInfo objectForKey:@"title"]
-																																							artist:[_trackInfo objectForKey:@"creator"]
-																																							 album:[_trackInfo objectForKey:@"album"]
-																																					 isPlaying:YES
-																																				hasImageData:NO
-																																			additionalInfo:nil];
-			[[SystemNowPlayingController sharedInstance] disableMediaHUD];
-		}
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"disableautolock"] isEqualToString:@"YES"])
 			[UIApplication sharedApplication].idleTimerDisabled = YES;
@@ -256,15 +246,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 	}
 	[_connection cancel];
-	if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)]) {
-		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
-																																						 title:nil
-																																						artist:nil
-																																						 album:nil
-																																				 isPlaying:NO
-																																			hasImageData:NO
-																																		additionalInfo:nil];
-	}
 	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
 	[UIApplication sharedApplication].idleTimerDisabled = NO;
 }

@@ -1172,8 +1172,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	[volumeView sizeToFit];
 	[trackView.view addSubview: volumeView];
 #endif
-	if([[SystemNowPlayingController sharedInstance] respondsToSelector:@selector(postNowPlayingInfoForSongWithPath:title:artist:album:isPlaying:hasImageData:additionalInfo:)])
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 	self.hidesBottomBarWhenPushed = YES;
 }
 - (void)_systemVolumeChanged:(NSNotification *)notification {
