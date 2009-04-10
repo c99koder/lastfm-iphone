@@ -24,6 +24,7 @@
 #import "NSString+URLEscaped.h"
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
+#import "Beacon.h"
 
 void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	if(inInterruptionState == kAudioSessionBeginInterruption) {
@@ -573,6 +574,24 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		_errorSkipCounter = 0;
 		[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
 		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [[_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] capitalizedString], nil];
+		if([_stationURL hasPrefix:@"lastfm://globaltags/"]) {
+			_radioType = @"global tags";
+		} else if([_stationURL hasPrefix:@"lastfm://usertags/"]) {
+			_radioType = @"user tags";
+		} else if([_stationURL hasPrefix:@"lastfm://artist/"]) {
+			_radioType = @"artist";
+		} else if([_stationURL hasSuffix:@"/personal"]) {
+			_radioType = @"library";
+		} else if([_stationURL hasSuffix:@"/recommended"]) {
+			_radioType = @"recs";
+		} else if([_stationURL hasSuffix:@"/neighbours"]) {
+			_radioType = @"neighborhood";
+		} else if([_stationURL hasSuffix:@"/loved"]) {
+			_radioType = @"loved tracks";
+		} else {
+			_radioType = @"radio";
+		}
+		[[Beacon shared] startSubBeaconWithName:_radioType timeSession:YES];
 		return TRUE;
 	}
 	return FALSE;
@@ -606,6 +625,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
 		else
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
+		[[Beacon shared] startSubBeaconWithName:@"NEC error" timeSession:NO];
 		return FALSE;
 	}
 
@@ -631,6 +651,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)stop {
 	[_busyLock lock];
+	[[Beacon shared] endSubBeaconWithName:_radioType];
 	NSLog(@"Stopping playback\n");
 	if([_tracks count]) {
 		[[_tracks objectAtIndex: 0] stop];

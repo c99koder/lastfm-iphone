@@ -74,6 +74,7 @@ NSString *kTrackDidFailToStream;
 @interface LastFMRadio : NSObject {
 	NSString *_station;
 	NSString *_stationURL;
+	NSString *_radioType;
 	NSMutableArray *_playlist;
 	NSMutableArray *_tracks;
 	PLSqliteDatabase *_db;

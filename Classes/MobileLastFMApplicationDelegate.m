@@ -26,6 +26,7 @@
 #include <SystemConfiguration/SCNetworkReachability.h>
 #import "NSString+URLEscaped.h"
 #import "NSData+Compress.h"
+#import "Beacon.h"
 
 void powerCallback(void *refCon, io_service_t service, natural_t messageType, void *messageArgument) {	
 	[(MobileLastFMApplicationDelegate *)refCon powerMessageReceived: messageType withArgument: messageArgument];
@@ -56,7 +57,7 @@ NSString *kUserAgent;
 	}
 }
 - (void)applicationWillTerminate:(UIApplication *)application {
-	
+	[[Beacon shared] endBeacon];
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE)
 		[[LastFMRadio sharedInstance] stop];
 	
@@ -308,6 +309,7 @@ NSString *kUserAgent;
 	[_loadingView removeFromSuperview];
 }
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
+	[Beacon initAndStartBeaconWithApplicationCode:PINCHMEDIA_ID useCoreLocation:NO useOnlyWiFi:NO];
 	[[UIApplication sharedApplication] showNetworkPromptsIfNecessary:YES];
 	IONotificationPortRef notificationPort;
   root_port = IORegisterForSystemPower(self, &notificationPort, powerCallback, &notifier);
@@ -347,6 +349,7 @@ NSString *kUserAgent;
 	[window makeKeyAndVisible];
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {
+	[[Beacon shared] startSubBeaconWithName:@"love" timeSession:NO];
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
 		if(sender.alpha == 1) {
@@ -371,6 +374,7 @@ NSString *kUserAgent;
 	}
 }
 - (IBAction)banButtonPressed:(UIButton *)sender {
+	[[Beacon shared] startSubBeaconWithName:@"ban" timeSession:NO];
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
 		[_scrobbler rateTrack:[track objectForKey:@"title"]
@@ -385,6 +389,7 @@ NSString *kUserAgent;
 	[[LastFMRadio sharedInstance] skip];
 }
 - (IBAction)skipButtonPressed:(id)sender {
+	[[Beacon shared] startSubBeaconWithName:@"skip" timeSession:NO];
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
 		[_scrobbler rateTrack:[track objectForKey:@"title"]

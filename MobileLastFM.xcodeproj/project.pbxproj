@@ -117,6 +117,7 @@
 		2244DAFE0E3A55C700C4F40B /* reflectionmask.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFA0E3A55C700C4F40B /* reflectionmask.png */; };
 		2244DAFF0E3A55C700C4F40B /* cog_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFB0E3A55C700C4F40B /* cog_button.png */; };
 		2244DB0F0E3A569700C4F40B /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244DB0E0E3A569700C4F40B /* CalendarViewController.m */; };
+		224793080F8123C100EE0C52 /* libPMAnalytics-r39.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */; };
 		224EFDAF0E3E2FAC007F293F /* calendarday.png in Resources */ = {isa = PBXBuildFile; fileRef = 224EFDAD0E3E2FAC007F293F /* calendarday.png */; };
 		225157980E09A67B00943078 /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 225157970E09A67B00943078 /* backBtn.png */; };
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
@@ -341,6 +342,8 @@
 		2244DB0B0E3A563800C4F40B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CalendarView.xib; sourceTree = "<group>"; };
 		2244DB0D0E3A569700C4F40B /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
 		2244DB0E0E3A569700C4F40B /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
+		224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r39.a"; sourceTree = "<group>"; };
+		224793070F8123C100EE0C52 /* Beacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beacon.h; sourceTree = "<group>"; };
 		224EFDAD0E3E2FAC007F293F /* calendarday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarday.png; sourceTree = "<group>"; };
 		225157970E09A67B00943078 /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
 		2259349A0DA85CD30035A1AA /* LastFMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMService.m; sourceTree = "<group>"; };
@@ -473,6 +476,7 @@
 				221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */,
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
+				224793080F8123C100EE0C52 /* libPMAnalytics-r39.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +539,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
 				221747140E48B6930058C0C3 /* IOKit.framework */,
@@ -768,6 +773,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				224793070F8123C100EE0C52 /* Beacon.h */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				221748120E48BDED0058C0C3 /* IOKIT_README */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
@@ -1154,6 +1160,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/mobclix.lib/ARM\"",
+					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;
@@ -1176,6 +1184,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/mobclix.lib/ARM\"",
+					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;
@@ -1232,6 +1242,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/mobclix.lib/ARM\"",
+					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;
@@ -1291,6 +1303,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/mobclix.lib/ARM\"",
+					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;

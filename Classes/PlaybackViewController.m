@@ -27,6 +27,7 @@
 #import "UIViewController+NowPlayingButton.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "NSString+MD5.h"
+#import "Beacon.h"
 
 @implementation PlaybackSubview
 - (void)showLoadingView {
@@ -418,6 +419,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha < 1) {
 		_loadingView.alpha = 1;
+		[[Beacon shared] startSubBeaconWithName:@"buffering" timeSession:YES];
 	}
 	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
 		[UIView beginAnimations:nil context:nil];
@@ -433,6 +435,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView commitAnimations];
 		if(!_showedMetadata && _artworkView.frame.size.width == 320)
 			[self _showGradient];
+		[[Beacon shared] endSubBeaconWithName:@"buffering"];
 	}
 }
 - (void)_fetchArtwork:(NSDictionary *)trackInfo {
@@ -797,6 +800,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	_address.text = address;
 	[address release];
 	[NSThread detachNewThreadSelector:@selector(_fetchImage:) toTarget:self withObject:[event objectForKey:@"image"]];
+	[[Beacon shared] startSubBeaconWithName:@"eventdetails" timeSession:YES];
 }
 - (IBAction)willAttendButtonPressed:(id)sender {
 	self.attendance = eventStatusAttending;
@@ -833,6 +837,7 @@ int tagSort(id tag1, id tag2, void *context) {
 													 toTarget:self
 												 withObject:[NSDictionary dictionaryWithObjectsAndKeys:[event objectForKey:@"id"], @"id", nil]];
 	[delegate doneButtonPressed:self];
+	[[Beacon shared] endSubBeaconWithName:@"eventdetails"];
 }
 - (IBAction)mapsButtonPressed:(id)sender {
 	NSMutableString *query =[[NSMutableString alloc] init];
@@ -851,6 +856,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([[event objectForKey:@"country"] length]) {
 		[query appendFormat:@" %@", [event objectForKey:@"country"]];
 	}
+	[[Beacon shared] startSubBeaconWithName:@"map" timeSession:NO];
+	[[Beacon shared] endSubBeaconWithName:@"eventdetails"];
 	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?f=q&q=%@&ie=UTF8&om=1&iwloc=addr", [query URLEscaped]]]];
 }
 @end
@@ -1228,6 +1235,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[contentView addSubview: trackView.view];
 		[UIView commitAnimations];
 		_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+		[[Beacon shared] endSubBeaconWithName:@"details"];
 	} else {
 		detailsBtn.frame = CGRectMake(1,1,28,28);
 		[UIView beginAnimations:nil context:nil];
@@ -1245,12 +1253,14 @@ int tagSort(id tag1, id tag2, void *context) {
 		tabBar.selectedItem = [tabBar.items objectAtIndex:0];
 		[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
 		[UIView commitAnimations];
+		[[Beacon shared] startSubBeaconWithName:@"details" timeSession:YES];
 	}
 }
 -(void)onTourButtonPressed:(id)sender {
 	[self detailsButtonPressed:sender];
 	tabBar.selectedItem = [tabBar.items objectAtIndex: 3];
 	[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
+	[[Beacon shared] startSubBeaconWithName:@"on-tour-strap" timeSession:NO];
 }
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];

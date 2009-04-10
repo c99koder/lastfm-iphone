@@ -22,6 +22,7 @@
 #import <ucontext.h>
 #import <UIKit/UIKit.h>
 #import "version.h"
+#import "Mobclix.h"
 
 void uncaughtExceptionHandler(NSException *exception) {
 	NSLog(@"Unhandled %@ exception encountered\n", [exception name]);
