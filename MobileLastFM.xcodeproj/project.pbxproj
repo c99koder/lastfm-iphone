@@ -1347,7 +1347,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Steele";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
@@ -1366,7 +1366,7 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = DefaultProfileUuid;
+				PROVISIONING_PROFILE = "B39742D5-51DC-404B-AE07-9DD6B487EE4A";
 				SDKROOT = iphoneos2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};

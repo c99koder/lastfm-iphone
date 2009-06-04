@@ -1,5 +1,7 @@
 /* NSData+Compress.m - Compress an NSData object using zlib
- * Copyright (C) 2008 Sam Steele
+ * 
+ * Copyright 2009 Last.fm Ltd.
+ *   - Primarily authored by Sam Steele <sam@last.fm>
  *
  * This file is part of MobileLastFM.
  *

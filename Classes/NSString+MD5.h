@@ -1,5 +1,7 @@
 /* NSString+MD5.h - md5sum additions to NSString class
- * Copyright (C) 2008 Sam Steele
+ * 
+ * Copyright 2009 Last.fm Ltd.
+ *   - Primarily authored by Sam Steele <sam@last.fm>
  *
  * This file is part of MobileLastFM.
  *

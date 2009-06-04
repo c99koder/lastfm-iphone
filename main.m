@@ -1,5 +1,7 @@
 /* main.m - Application entry point
- * Copyright (C) 2008 Sam Steele
+ * 
+ * Copyright 2009 Last.fm Ltd.
+ *   - Primarily authored by Sam Steele <sam@last.fm>
  *
  * This file is part of MobileLastFM.
  *
@@ -22,7 +24,6 @@
 #import <ucontext.h>
 #import <UIKit/UIKit.h>
 #import "version.h"
-#import "Mobclix.h"
 
 void uncaughtExceptionHandler(NSException *exception) {
 	NSLog(@"Unhandled %@ exception encountered\n", [exception name]);

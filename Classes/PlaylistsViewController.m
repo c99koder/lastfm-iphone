@@ -1,14 +1,16 @@
 /* PlaylistsViewController.m - Display Last.fm user playlists
- * CopyrightableView (C) 2008 Sam Steele
+ * 
+ * Copyright 2009 Last.fm Ltd.
+ *   - Primarily authored by Sam Steele <sam@last.fm>
  *
- * This file is partableView of MobileLastFM.
+ * This file is part of MobileLastFM.
  *
- * MobileLastFM is free software; you can redistribute itableView and/or modify
- * itableView under the terms of the GNU General Public License version 2
+ * MobileLastFM is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2
  * as published by the Free Software Foundation.
  *
- * MobileLastFM is distributed in the hope thatableView itableView will be useful,
- * butableView WITHOUtableView ANY WARRANTY; withoutableView even the implied warranty of
+ * MobileLastFM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -36,20 +38,6 @@
 		_newPlaylist = nil;
 	}
 	return self;
-}
-- (void)_keyboardWillAppear:(NSNotification *)notification {
-	CGRect frame = self.tableView.frame;
-	CGRect keyboardFrame;
-	[[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardFrame];
-	frame.size.height -= keyboardFrame.size.height;
-	self.tableView.frame = frame;
-}
-- (void)_keyboardWillDisappear:(NSNotification *)notification {
-	CGRect frame = self.tableView.frame;
-	CGRect keyboardFrame;
-	[[notification.userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardFrame];
-	frame.size.height += keyboardFrame.size.height;
-	self.tableView.frame = frame;
 }
 - (void)_doneButtonPressed:(id)sender {
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
@@ -98,8 +86,6 @@
 	self.title = NSLocalizedString(@"Select a Playlist", @"Playlist selector title");
 	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(_cancelButtonPressed:)] autorelease];
 	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(_addButtonPressed:)] autorelease];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillAppear:) name:UIKeyboardDidShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillDisappear:) name:UIKeyboardWillHideNotification object:nil];
 	_newPlaylist = nil;
 }
 - (NSInteger)numberOfSectionsIntableView:(UITableView *)tableViewableView {

@@ -1,5 +1,7 @@
 /* ChartsViewController.m - Charts views and controllers
- * Copyright (C) 2008 Sam Steele
+ * 
+ * Copyright 2009 Last.fm Ltd.
+ *   - Primarily authored by Sam Steele <sam@last.fm>
  *
  * This file is part of MobileLastFM.
  *
@@ -25,6 +27,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "NSString+URLEscaped.h"
 #import "UIApplication+openURLWithWarning.h"
+#import "Beacon.h"
 
 int tagSort(id tag1, id tag2, void *context);
 
@@ -113,6 +116,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (void)buyButtonPressed:(UIButton *)sender {
+	[[Beacon shared] startSubBeaconWithName:@"top-buy" timeSession:NO];
 	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@+%@&s=143444&partnerId=2003&affToken=www.last.fm", 
 											 [[_data objectAtIndex:sender.tag] objectForKey:@"artist"],
 											 [[_data objectAtIndex:sender.tag] objectForKey:@"name"]];
@@ -452,6 +456,7 @@ int tagSort(id tag1, id tag2, void *context);
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend")]) {
 		[self shareToFriend];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button")]) {
+		[[Beacon shared] startSubBeaconWithName:@"recent-buy" timeSession:NO];
 		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@+%@&s=143444&partnerId=2003&affToken=www.last.fm", 
 												 [_selectedTrack objectForKey:@"artist"],
 												 [_selectedTrack objectForKey:@"name"]];
@@ -463,6 +468,7 @@ int tagSort(id tag1, id tag2, void *context);
 		
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:URL]];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Share", @"Share button")]) {
+		[[Beacon shared] startSubBeaconWithName:@"recent-share" timeSession:NO];
 		UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
 																											 delegate:self
 																							cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
@@ -471,6 +477,7 @@ int tagSort(id tag1, id tag2, void *context);
 		[sheet showInView:self.view];
 		[sheet release];	
 	} if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Tag", @"Tag button")]) {
+		[[Beacon shared] startSubBeaconWithName:@"recent-tag" timeSession:NO];
 		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
 		t.delegate = self;
 		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
@@ -483,6 +490,7 @@ int tagSort(id tag1, id tag2, void *context);
 		[self presentModalViewController:t animated:YES];
 		[t release];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
+		[[Beacon shared] startSubBeaconWithName:@"recent-add-playlist" timeSession:NO];
 		PlaylistsViewController *p = [[PlaylistsViewController alloc] init];
 		p.delegate = self;
 		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
@@ -490,8 +498,10 @@ int tagSort(id tag1, id tag2, void *context);
 		[p release];
 		[n release];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Love", @"Love Track")]) {
+		[[Beacon shared] startSubBeaconWithName:@"recent-love" timeSession:NO];
 		[self performSelector:@selector(_love:) withObject:_selectedTrack afterDelay:0.5];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Ban", @"Ban Track")]) {
+		[[Beacon shared] startSubBeaconWithName:@"recent-ban" timeSession:NO];
 		[self performSelector:@selector(_ban:) withObject:_selectedTrack afterDelay:0.5];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Ban Track", @"Ban Track (long)")]) {
 		if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
