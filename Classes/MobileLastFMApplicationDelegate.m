@@ -178,7 +178,7 @@ NSString *kUserAgent;
 	if(animated) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:_mainView cache:YES];
-		[UIView setAnimationDuration:0.75];
+		[UIView setAnimationDuration:0.4];
 	}
 	[[_mainView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[_mainView addSubview:[tabBarController view]];
@@ -204,7 +204,7 @@ NSString *kUserAgent;
 	if(animated) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:_mainView cache:YES];
-		[UIView setAnimationDuration:0.75];
+		[UIView setAnimationDuration:0.4];
 	}
 	[[_mainView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[_mainView addSubview:firstRunView.view];

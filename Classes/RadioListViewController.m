@@ -64,6 +64,7 @@
 		case 3:
 			return [_playlists count]?[_playlists count]+1:0;
 	}
+	return 0;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0 || [indexPath row] > 0)

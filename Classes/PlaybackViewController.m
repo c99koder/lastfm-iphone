@@ -58,6 +58,7 @@
 }
 - (void)_fetchSimilarArtists:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[trackInfo retain];
 	[_lock lock];
 	[self showLoadingView];
 	[_data release];
@@ -78,6 +79,7 @@
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
+	[trackInfo release];
 	[pool release];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -141,6 +143,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)_fetchTags:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[trackInfo retain];
 	[_lock lock];
 	[self showLoadingView];
 	[_data release];
@@ -150,6 +153,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_table scrollRectToVisible:[_table frame] animated:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
+	[trackInfo release];
 	[pool release];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -216,6 +220,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)_fetchFans:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[trackInfo retain];
 	[_lock lock];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_data release];
@@ -234,6 +239,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[_table visibleCells] waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
+	[trackInfo release];
 	[pool release];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -323,6 +329,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)_fetchArtwork:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[trackInfo retain];
 	NSDictionary *albumData = [[LastFMService sharedInstance] metadataForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
 	NSString *artworkURL = nil;
 	UIImage *artworkImage;
@@ -353,6 +360,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	_reflectedArtworkView.image = artworkImage;
 	[artwork release];
 	artwork = artworkImage;
+	[trackInfo release];
 	[pool release];
 }
 - (void)_trackDidChange:(NSNotification *)notification {
@@ -412,6 +420,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)_fetchBio:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[trackInfo retain];
 	[_lock lock];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_bio release];
@@ -427,6 +436,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self performSelectorOnMainThread:@selector(refresh) withObject:nil waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
+	[trackInfo release];
 	[pool release];
 }
 - (void)refresh {
@@ -578,6 +588,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)_fetchEvents:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[trackInfo retain];
 	[_lock lock];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
 	[_attendingEvents release];
@@ -589,6 +600,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self performSelectorOnMainThread:@selector(_processEvents:) withObject:[[LastFMService sharedInstance] eventsForArtist:[trackInfo objectForKey:@"creator"]] waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
+	[trackInfo release];
 	[pool release];
 }
 - (NSString *)formatDate:(NSString *)input {
@@ -765,6 +777,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		case 2:
 			return eventStatusAttending;
 	}
+	return -1;
 }
 - (void)setAttendance:(int)status {
 	switch(status) {
@@ -860,6 +873,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_fetchEvents:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[trackInfo retain];
 	[_lock lock];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy"];
 	[self performSelectorOnMainThread:@selector(showLoadingView) withObject:nil waitUntilDone:YES];
@@ -904,7 +918,34 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_calendar performSelectorOnMainThread:@selector(setEventDates:) withObject:_eventDates waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(hideLoadingView) withObject:nil waitUntilDone:YES];
 	[_lock unlock];
+	[trackInfo release];
 	[pool release];
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	if(_data)
+		return [_data count];
+	else
+		return 0;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 42;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
+	e.event = [_data objectAtIndex:[newIndexPath row]];
+	e.delegate = self;
+	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).tabBarController presentModalViewController:e animated:YES];
+	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
+		[e setAttendance:eventStatusAttending];
+	} else {
+		[e setAttendance:eventStatusNotAttending];
+	}
+	[e release];
+	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
 - (void)calendarViewController:(CalendarViewController *)c didSelectDate:(NSDate *)d {
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -938,32 +979,6 @@ int tagSort(id tag1, id tag2, void *context) {
 			[self tableView:_table didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 	}
 	[_table reloadData];
-}
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(_data)
-		return [_data count];
-	else
-		return 0;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 42;
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	EventDetailViewController *e = [[EventDetailViewController alloc] initWithNibName:@"EventDetailsView" bundle:nil];
-	e.event = [_data objectAtIndex:[newIndexPath row]];
-	e.delegate = self;
-	[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).tabBarController presentModalViewController:e animated:YES];
-	if([self isAttendingEvent:[e.event objectForKey:@"id"]]) {
-		[e setAttendance:eventStatusAttending];
-	} else {
-		[e setAttendance:eventStatusNotAttending];
-	}
-	[e release];
-	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];

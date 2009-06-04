@@ -103,6 +103,7 @@ NSString *kTrackDidBecomeAvailable = @"LastFMRadio_TrackDidBecomeAvailable";
 NSString *kTrackDidFinishLoading = @"LastFMRadio_TrackDidFinishLoading";
 NSString *kTrackDidFinishPlaying = @"LastFMRadio_TrackDidFinishPlaying";
 NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
+NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 
 @implementation LastFMTrack
 
@@ -112,6 +113,7 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	if(self = [super init]) {
 		_trackInfo = [trackInfo retain];
 		_audioBufferCountLock = [[NSLock alloc] init];
+		_bufferLock = [[NSLock alloc] init];
 		NSURL *trackURL = [NSURL URLWithString:[_trackInfo objectForKey:@"location"]];
 		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:trackURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
@@ -132,7 +134,6 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	return self;
 }
 -(void)dealloc {
-	[super dealloc];
 	if(queue) {
 		AudioQueueDispose(queue, true);
 		AudioFileStreamClose(parser);
@@ -141,6 +142,20 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	[_connection release];
 	[_receivedData release];
 	[_audioBufferCountLock release];
+	[_bufferLock release];
+	[super dealloc];
+}
+-(void)_notifyTrackChange {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:_trackInfo];
+}
+-(void)_notifyTrackFinishedLoading {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishLoading object:self userInfo:nil];
+}
+-(void)_notifyTrackFinishedPlaying {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishPlaying object:self userInfo:nil];
+}
+-(void)_notifyTrackFailed {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
 }
 -(BOOL)play {
 	OSStatus error;
@@ -155,7 +170,6 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
 		AudioSessionSetActive(true);
 		[LastFMRadio sharedInstance].playbackWasInterrupted = NO;
-		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:_trackInfo];
 		[[SystemNowPlayingController sharedInstance] postNowPlayingInfoForSongWithPath:nil
 																																						 title:[_trackInfo objectForKey:@"title"]
 																																						artist:[_trackInfo objectForKey:@"creator"]
@@ -167,8 +181,12 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		[UIApplication sharedApplication].idleTimerDisabled = YES;
 		_state = TRACK_PLAYING;
+		[self performSelectorOnMainThread:@selector(_notifyTrackChange) withObject:nil waitUntilDone:NO];
 	} else {
 		_state = TRACK_BUFFERING;
+		//kick start the audio stream
+		if(!_connection)
+			[self connection:nil didReceiveData:nil];
 	}
 	return YES;
 }
@@ -199,11 +217,9 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	[_audioBufferCountLock lock];
 	_audioBufferCount--;
 	if(_state == TRACK_PLAYING && _peakBufferCount > 10) {
-		if(_audioBufferCount < 1) {
+		if(_audioBufferCount < 1 && [_receivedData length] < 8192) {
 			if(_fileDidFinishLoading) {
-				[_audioBufferCountLock unlock];
-				[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishPlaying object:self userInfo:nil];
-				return;
+				[self performSelectorOnMainThread:@selector(_notifyTrackFinishedPlaying) withObject:nil waitUntilDone:NO];
 			} else {
 				[self pause];
 				_state = TRACK_BUFFERING;
@@ -215,32 +231,49 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	[_audioBufferCountLock unlock];	
 }
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	[_connection release];
+	_connection = nil;
 	if([_receivedData length] == 0 && _state == TRACK_BUFFERING) {
-		/*if(_errorSkipCounter++) {
-			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
-			[self stop];
-		} else {
-			[self skip];
-		}*/
-		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
+		[self performSelectorOnMainThread:@selector(_notifyTrackFailed) withObject:self waitUntilDone:NO];
 	} else {
 		_fileDidFinishLoading = YES;
-		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishLoading object:self userInfo:nil];
+		if(_state != TRACK_PAUSED)
+			[self performSelectorOnMainThread:@selector(_notifyTrackFinishedLoading) withObject:self waitUntilDone:NO];
 	}
 }
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	[_receivedData setLength:0];
 }
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[_receivedData appendData:data];
+	NSData *extraData = nil;
+	[_bufferLock lock];
+	
+	if(data)
+		[_receivedData appendData:data];
 	if(_state != TRACK_PAUSED && ([_receivedData length] > 196608 || _state == TRACK_PLAYING)) {
-		OSStatus error = AudioFileStreamParseBytes(parser, [_receivedData length], [_receivedData bytes], 0);
-		if(error) {
-			NSLog(@"Got an error pushing the data! :(");
-		} else {
-			[_receivedData setLength:0];
+		if(_state == TRACK_BUFFERING) {
+			AudioQueueStart(queue, NULL);
+			_state = TRACK_PLAYING;
+		}
+		while([_receivedData length]) {
+			if([_receivedData length] > 16384) {
+				extraData = [NSData dataWithBytes:[_receivedData bytes]+16384 length:[_receivedData length]-16384];
+				[_receivedData setLength: 16384];
+			}
+			OSStatus error = AudioFileStreamParseBytes(parser, [_receivedData length], [_receivedData bytes], 0);
+			if(error) {
+				NSLog(@"Got an error pushing the data! :(");
+			} else {
+				[_receivedData setLength:0];
+			}
+			if(extraData) {
+				[_receivedData appendData:extraData];
+				extraData = nil;
+				CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.1, false);
+			}
 		}
 	}
+	[_bufferLock unlock];
 }
 -(void)pause {
 	if(queue) {
@@ -263,7 +296,7 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 		return NO;
 }
 -(float)bufferProgress {
-	if(_state == TRACK_BUFFERING)
+	if(_state == TRACK_BUFFERING && [_receivedData length] < 196608)
 		return ((float)[_receivedData length]) / 196608.0f;
 	else
 		return 1;
@@ -275,13 +308,13 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	return _state;
 }
 -(NSDictionary *)trackInfo {
-	return _trackInfo;
+	return [[_trackInfo copy] autorelease];
 }
 -(int)trackPosition {
 	AudioTimeStamp t;
 	Boolean b;
 	
-	if(_state != TRACK_PLAYING || AudioQueueGetCurrentTime(queue, NULL, &t, &b) < 0)
+	if(!(_state == TRACK_PLAYING || _state == TRACK_BUFFERING) || AudioQueueGetCurrentTime(queue, NULL, &t, &b) < 0)
 		return 0;
 	else
 		return t.mSampleTime / dataFormat.mSampleRate;
@@ -334,19 +367,12 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 -(id)init {
 	self = [super init];
 	
-	_db = [[FMDatabase databaseWithPath:CACHE_FILE(@"recent.db")] retain];
+	_db = [[PLSqliteDatabase databaseWithPath:CACHE_FILE(@"recent.db")] retain];
 	if (![_db open]) {
     NSLog(@"Could not open recent db.");
 	}
 	
 	[_db executeUpdate:@"create table recent_radio (timestamp integer, url text, name text)", nil];
-
-	FMResultSet *rs = [_db executeQuery:@"select * from recent_radio order by timestamp desc limit 1",  nil];
-						
-	if([rs next]) _stationURL = [[rs stringForColumn:@"url"] retain];
-	
-	[rs close];
-	[_db close];
 	
 	_busyLock = [[NSLock alloc] init];
 	_tracks = [[NSMutableArray alloc] init];
@@ -354,6 +380,7 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidBecomeAvailable:) name:kTrackDidBecomeAvailable object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishPlaying:) name:kTrackDidFinishPlaying object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishLoading:) name:kTrackDidFinishLoading object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFail:) name:kTrackDidFailToStream object:nil];
 	return self;
 }
 -(void)_trackDidBecomeAvailable:(NSNotification *)notification {
@@ -362,45 +389,68 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	}
 }
 -(void)_trackDidFinishPlaying:(NSNotification *)notification {
-	[_tracks removeObject:notification.object];
+	[_busyLock lock];
+	//For some reason [_tracks removeObjectAtIndex:0] doesn't deallocate us properly, so we'll do it ourselves
+	LastFMTrack *t = [[_tracks objectAtIndex: 0] retain];
+	[_tracks removeObjectAtIndex:0];
+	[t release];
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];
 	} else {
 		[self play];
 	}
+	[_busyLock unlock];
+}
+-(void)_softSkip {
+	[_playlist removeObjectAtIndex:0];
+	[self play];
+	[[_tracks lastObject] pause];
 }
 -(void)_trackDidFinishLoading:(NSNotification *)notification {
+	[_busyLock lock];
 	if(notification.object == [_tracks objectAtIndex:0]) {
-		[_playlist removeObjectAtIndex:0];
-		[self play];
-		[[_tracks lastObject] pause];
+		float duration = [[[notification.object trackInfo] objectForKey:@"duration"] floatValue]/1000.0f;
+		float elapsed = [notification.object trackPosition];
+		if(duration-elapsed < 30) {
+			[self _softSkip];
+		} else {
+			[self performSelector:@selector(_softSkip) withObject:nil afterDelay:(duration-elapsed-30)];
+		}
 	}
+	[_busyLock unlock];
+}
+-(void)_trackDidFail:(NSNotification *)notification {
+	if(notification.object == [_tracks objectAtIndex:0]) {
+		if(_errorSkipCounter++) {
+			 [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
+			 [self stop];
+		 } else {
+			 [_playlist release];
+			 _playlist = nil;
+			 [self skip];
+		 }
+	}
+	[_tracks removeObject:notification.object];
 }
 -(void)purgeRecentURLs {
-	[_db open];
 	[_db executeUpdate:@"delete from recent_radio", nil];
-	[_db close];
 }
 -(void)removeRecentURL:(NSString *)url {
-	[_db open];
 	[_db executeUpdate:@"delete from recent_radio where url = ?", url, nil];
-	[_db close];
 }
 -(NSArray *)recentURLs {
 	NSMutableArray *URLs = [[NSMutableArray alloc] init];
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setDateFormat:@"dd MMM yyyy, HH:mm"];
-	[_db open];
-	FMResultSet *rs = [_db executeQuery:@"select * from recent_radio order by timestamp desc",  nil];
+	PLSqliteResultSet *rs = (PLSqliteResultSet *)[_db executeQuery:@"select * from recent_radio order by timestamp desc",  nil];
 	
 	while([rs next]) {
 		[URLs addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 										 [rs stringForColumn:@"url"], @"url",
 										 [rs stringForColumn:@"name"], @"name",
-										 [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[rs doubleForColumn:@"timestamp"]]], @"date",
+										 [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[rs intForColumn:@"timestamp"]]], @"date",
 										 nil]];
 	}
-	[_db close];
 	[formatter release];
 	return [URLs autorelease];
 }
@@ -423,6 +473,9 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 		[_station release];
 		_station = [[tune objectForKey:@"name"] retain];
 		_errorSkipCounter = 0;
+		[self removeRecentURL: _stationURL];
+		[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
+		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [[_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] capitalizedString], nil];
 		return TRUE;
 	}
 	return FALSE;
@@ -445,17 +498,11 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 		}
 	}
 
-	LastFMTrack *track = [[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]];
+	LastFMTrack *track = [[[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]] autorelease];
 	
 	if(track) {
 		[_tracks addObject:track];
-		[[_playlist objectAtIndex:0] setObject:[NSString stringWithFormat:@"%i", (long)[[NSDate date] timeIntervalSince1970]] forKey:@"startTime"];
-		[self removeRecentURL: _stationURL];
-		[_db open];
-		[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
-		 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], _stationURL, [[_station stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"] capitalizedString], nil];
-		[_db close];
-		[track release];
+		//[[_playlist objectAtIndex:0] setObject:[NSString stringWithFormat:@"%i", (long)[[NSDate date] timeIntervalSince1970]] forKey:@"startTime"];
 		return TRUE;
 	} else {
 		return FALSE;
@@ -486,12 +533,12 @@ NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 	NSLog(@"Skipping to next track\n");
 	[[_tracks objectAtIndex: 0] stop];
 	[_tracks removeObjectAtIndex: 0];
-	[_busyLock unlock];
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];
 	} else {
 		[_playlist removeObjectAtIndex:0];
 		[self play];
 	}
+	[_busyLock unlock];
 }
 @end

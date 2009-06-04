@@ -106,9 +106,6 @@
 		2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */; };
 		221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */ = {isa = PBXBuildFile; fileRef = 221E6B030DC2BD300006E74C /* Scrobbler.m */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
-		222340CC0D8DA75D0040486A /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 222340C70D8DA75D0040486A /* FMDatabase.m */; };
-		222340CD0D8DA75D0040486A /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 222340C90D8DA75D0040486A /* FMDatabaseAdditions.m */; };
-		222340CE0D8DA75D0040486A /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 222340CB0D8DA75D0040486A /* FMResultSet.m */; };
 		222340DB0D8DAB140040486A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222340DA0D8DAB140040486A /* AudioToolbox.framework */; };
 		2223428A0D8DE8FC0040486A /* PlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 222342890D8DE8FC0040486A /* PlaybackViewController.m */; };
 		222903430E4B39A10024294D /* month_arrow_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903410E4B39A10024294D /* month_arrow_left.png */; };
@@ -169,6 +166,10 @@
 		22DB15640E426D6B002D66BE /* calendargradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB15620E426D6B002D66BE /* calendargradient.png */; };
 		22DB15650E426D6B002D66BE /* calendarday-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB15630E426D6B002D66BE /* calendarday-selected.png */; };
 		22DB15CA0E427B63002D66BE /* shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB15C90E427B63002D66BE /* shadow.png */; };
+		22E42B780E4F4E05009167EA /* PlausibleDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E42B6A0E4F4E05009167EA /* PlausibleDatabase.m */; };
+		22E42B7A0E4F4E05009167EA /* PLSqliteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E42B700E4F4E05009167EA /* PLSqliteDatabase.m */; };
+		22E42B7C0E4F4E05009167EA /* PLSqlitePreparedStatement.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E42B730E4F4E05009167EA /* PLSqlitePreparedStatement.m */; };
+		22E42B7E0E4F4E05009167EA /* PLSqliteResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E42B760E4F4E05009167EA /* PLSqliteResultSet.m */; };
 		22EE86290E22587F00EBFF65 /* avatarplaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EE86280E22587F00EBFF65 /* avatarplaceholder.png */; };
 		22F2FE050E31045B000DDCDC /* noartplaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE040E31045A000DDCDC /* noartplaceholder.png */; };
 		22F2FE0B0E31046D000DDCDC /* rounded_table_cell_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE060E31046D000DDCDC /* rounded_table_cell_bottom.png */; };
@@ -299,12 +300,6 @@
 		22233F640D8D86410040486A /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		22233F650D8D86410040486A /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		22233F920D8D929B0040486A /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
-		222340C60D8DA75D0040486A /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
-		222340C70D8DA75D0040486A /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
-		222340C80D8DA75D0040486A /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
-		222340C90D8DA75D0040486A /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
-		222340CA0D8DA75D0040486A /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
-		222340CB0D8DA75D0040486A /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		222340DA0D8DAB140040486A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		222342880D8DE8FC0040486A /* PlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaybackViewController.h; sourceTree = "<group>"; };
 		222342890D8DE8FC0040486A /* PlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackViewController.m; sourceTree = "<group>"; };
@@ -384,6 +379,17 @@
 		22DB15620E426D6B002D66BE /* calendargradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendargradient.png; sourceTree = "<group>"; };
 		22DB15630E426D6B002D66BE /* calendarday-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calendarday-selected.png"; sourceTree = "<group>"; };
 		22DB15C90E427B63002D66BE /* shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shadow.png; sourceTree = "<group>"; };
+		22E42B690E4F4E05009167EA /* PlausibleDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlausibleDatabase.h; sourceTree = "<group>"; };
+		22E42B6A0E4F4E05009167EA /* PlausibleDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlausibleDatabase.m; sourceTree = "<group>"; };
+		22E42B6C0E4F4E05009167EA /* PLDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLDatabase.h; sourceTree = "<group>"; };
+		22E42B6D0E4F4E05009167EA /* PLPreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLPreparedStatement.h; sourceTree = "<group>"; };
+		22E42B6E0E4F4E05009167EA /* PLResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLResultSet.h; sourceTree = "<group>"; };
+		22E42B6F0E4F4E05009167EA /* PLSqliteDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLSqliteDatabase.h; sourceTree = "<group>"; };
+		22E42B700E4F4E05009167EA /* PLSqliteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLSqliteDatabase.m; sourceTree = "<group>"; };
+		22E42B720E4F4E05009167EA /* PLSqlitePreparedStatement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLSqlitePreparedStatement.h; sourceTree = "<group>"; };
+		22E42B730E4F4E05009167EA /* PLSqlitePreparedStatement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLSqlitePreparedStatement.m; sourceTree = "<group>"; };
+		22E42B750E4F4E05009167EA /* PLSqliteResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLSqliteResultSet.h; sourceTree = "<group>"; };
+		22E42B760E4F4E05009167EA /* PLSqliteResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLSqliteResultSet.m; sourceTree = "<group>"; };
 		22EE86280E22587F00EBFF65 /* avatarplaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatarplaceholder.png; sourceTree = "<group>"; };
 		22F2FE040E31045A000DDCDC /* noartplaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noartplaceholder.png; sourceTree = "<group>"; };
 		22F2FE060E31046D000DDCDC /* rounded_table_cell_bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rounded_table_cell_bottom.png; sourceTree = "<group>"; };
@@ -573,19 +579,6 @@
 			path = "lastfm-animated";
 			sourceTree = "<group>";
 		};
-		222340C50D8DA75D0040486A /* fmdb */ = {
-			isa = PBXGroup;
-			children = (
-				222340C60D8DA75D0040486A /* FMDatabase.h */,
-				222340C70D8DA75D0040486A /* FMDatabase.m */,
-				222340C80D8DA75D0040486A /* FMDatabaseAdditions.h */,
-				222340C90D8DA75D0040486A /* FMDatabaseAdditions.m */,
-				222340CA0D8DA75D0040486A /* FMResultSet.h */,
-				222340CB0D8DA75D0040486A /* FMResultSet.m */,
-			);
-			path = fmdb;
-			sourceTree = "<group>";
-		};
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -666,6 +659,24 @@
 			path = TouchXML;
 			sourceTree = "<group>";
 		};
+		22E42B680E4F4E05009167EA /* pldb */ = {
+			isa = PBXGroup;
+			children = (
+				22E42B690E4F4E05009167EA /* PlausibleDatabase.h */,
+				22E42B6A0E4F4E05009167EA /* PlausibleDatabase.m */,
+				22E42B6C0E4F4E05009167EA /* PLDatabase.h */,
+				22E42B6D0E4F4E05009167EA /* PLPreparedStatement.h */,
+				22E42B6E0E4F4E05009167EA /* PLResultSet.h */,
+				22E42B6F0E4F4E05009167EA /* PLSqliteDatabase.h */,
+				22E42B700E4F4E05009167EA /* PLSqliteDatabase.m */,
+				22E42B720E4F4E05009167EA /* PLSqlitePreparedStatement.h */,
+				22E42B730E4F4E05009167EA /* PLSqlitePreparedStatement.m */,
+				22E42B750E4F4E05009167EA /* PLSqliteResultSet.h */,
+				22E42B760E4F4E05009167EA /* PLSqliteResultSet.m */,
+			);
+			path = pldb;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
@@ -689,8 +700,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				22E42B680E4F4E05009167EA /* pldb */,
 				22CBE1B10DCE441200AE5DE0 /* TouchXML */,
-				222340C50D8DA75D0040486A /* fmdb */,
 				22233F920D8D929B0040486A /* version.h */,
 				32CA4F630368D1EE00C91783 /* MobileLastFM_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
@@ -891,9 +902,6 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* MobileLastFMApplicationDelegate.m in Sources */,
 				22233F660D8D86410040486A /* ProfileViewController.m in Sources */,
-				222340CC0D8DA75D0040486A /* FMDatabase.m in Sources */,
-				222340CD0D8DA75D0040486A /* FMDatabaseAdditions.m in Sources */,
-				222340CE0D8DA75D0040486A /* FMResultSet.m in Sources */,
 				2223428A0D8DE8FC0040486A /* PlaybackViewController.m in Sources */,
 				2213D1B40D9F113100914A50 /* FriendsViewController.m in Sources */,
 				2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */,
@@ -919,6 +927,10 @@
 				2244DB0F0E3A569700C4F40B /* CalendarViewController.m in Sources */,
 				2212D23C0E40B36B0099DB03 /* RadioListViewController.m in Sources */,
 				221746FB0E48A9710058C0C3 /* NSData+Compress.m in Sources */,
+				22E42B780E4F4E05009167EA /* PlausibleDatabase.m in Sources */,
+				22E42B7A0E4F4E05009167EA /* PLSqliteDatabase.m in Sources */,
+				22E42B7C0E4F4E05009167EA /* PLSqlitePreparedStatement.m in Sources */,
+				22E42B7E0E4F4E05009167EA /* PLSqliteResultSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -979,6 +991,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					PL_DB_PRIVATE,
 				);
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
@@ -1028,6 +1041,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					PL_DB_PRIVATE,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1036,6 +1050,8 @@
 					TouchXML,
 					/usr/include/libxml2,
 				);
+				IBC_NOTICES = NO;
+				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1058,6 +1074,7 @@
 				CODE_SIGN_IDENTITY = "Sam Steele";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					PL_DB_PRIVATE,
 				);
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (

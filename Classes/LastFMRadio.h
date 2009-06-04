@@ -20,7 +20,7 @@
 #import <Foundation/Foundation.h>
 #include <AudioToolbox/AudioToolbox.h>
 #import "CXMLDocument.h"
-#import "FMDatabase.h"
+#import "PlausibleDatabase.h"
 
 #define RADIO_IDLE 0
 #define TRACK_BUFFERING 1
@@ -40,6 +40,7 @@ NSString *kTrackDidFailToStream;
 	NSMutableData *_receivedData;
 	BOOL _fileDidFinishLoading;
 	NSLock *_audioBufferCountLock;
+	NSLock *_bufferLock;
 	int _audioBufferCount;
 	int _peakBufferCount;
 	AudioFileStreamID parser;
@@ -71,7 +72,7 @@ NSString *kTrackDidFailToStream;
 	NSString *_stationURL;
 	NSMutableArray *_playlist;
 	NSMutableArray *_tracks;
-	FMDatabase *_db;
+	PLSqliteDatabase *_db;
 	NSLock *_busyLock;
 	BOOL playbackWasInterrupted;
 	NSTimeInterval _startTime;

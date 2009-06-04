@@ -27,7 +27,6 @@
 @implementation PlaylistsViewController
 
 - (id)initWithUsername:(NSString *)username {
-	int i;
 	if (self = [super init]) {
 		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Playlists", @"Playlists view title"), username];
 		_username = [username retain];
