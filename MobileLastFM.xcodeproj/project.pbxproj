@@ -320,6 +320,7 @@
 		222903420E4B39A10024294D /* month_arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_arrow_right.png; sourceTree = "<group>"; };
 		222903450E4B39EE0024294D /* month_heading_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_heading_panel.png; sourceTree = "<group>"; };
 		222905260E4C92390024294D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		222F3DF80E59E87600F2BBD5 /* apikey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = apikey.h; sourceTree = "<group>"; };
 		223128F60DFF1ECB00EC3BF0 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		223129310DFF21A500EC3BF0 /* FirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstRunViewController.h; sourceTree = "<group>"; };
 		223129320DFF21A500EC3BF0 /* FirstRunViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstRunViewController.m; sourceTree = "<group>"; };
@@ -741,6 +742,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				222F3DF80E59E87600F2BBD5 /* apikey.h */,
 				22E42B680E4F4E05009167EA /* pldb */,
 				22CBE1B10DCE441200AE5DE0 /* TouchXML */,
 				22233F920D8D929B0040486A /* version.h */,
@@ -1045,9 +1047,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					PL_DB_PRIVATE,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
@@ -1095,9 +1095,7 @@
 				ARCHS = "$(NATIVE_ARCH)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					PL_DB_PRIVATE,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1129,9 +1127,7 @@
 				CODE_SIGN_IDENTITY = "Sam Steele";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					PL_DB_PRIVATE,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,

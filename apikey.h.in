@@ -1,0 +1,8 @@
+//
+// API Key Configuration
+// Enter your API key and secret below
+//
+
+#define API_URL "http://ws.audioscrobbler.com/2.0/"
+#define API_KEY ""
+#define API_SECRET ""

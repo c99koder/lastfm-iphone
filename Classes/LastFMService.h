@@ -19,14 +19,7 @@
 
 #import <Foundation/Foundation.h>
 #import "CXMLDocument.h"
-
-#ifndef API_KEY
-#error Please set API_KEY in the project preprocessor macros
-#endif
-
-#ifndef API_SECRET
-#error Please set API_SECRET in the project preprocessor macros
-#endif
+#import "apikey.h"
 
 #define LastFMServiceErrorDomain @"LastFMServiceErrorDomain"
 
