@@ -553,9 +553,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"API_URL=\\\"http://ws.audioscrobbler.com/2.0/\\\"",
-					"API_SECRET=\\\"1ce89c8e24e1fbbf87fd6c784064abab\\\"",
-					"API_KEY=\\\"c63898950a6bac07afb590f784950123\\\"",
 				);
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
@@ -604,9 +601,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"API_URL=\\\"http://ws.audioscrobbler.com/2.0/\\\"",
-					"API_SECRET=\\\"1ce89c8e24e1fbbf87fd6c784064abab\\\"",
-					"API_KEY=\\\"c63898950a6bac07afb590f784950123\\\"",
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -637,9 +631,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"API_URL=\\\"http://ws.audioscrobbler.com/2.0/\\\"",
-					"API_SECRET=\\\"1ce89c8e24e1fbbf87fd6c784064abab\\\"",
-					"API_KEY=\\\"c63898950a6bac07afb590f784950123\\\"",
 				);
 				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
