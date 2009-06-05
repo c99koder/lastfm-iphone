@@ -22,6 +22,8 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "LastFMRadio.h"
 
+NSURL *__redirectURL;
+
 @interface URLWarningDelegate : NSObject<UIAlertViewDelegate> {
 	NSURL *_url;
 }
@@ -55,7 +57,18 @@
 																					 otherButtonTitles:NSLocalizedString(@"Continue", @"Continue"), nil] autorelease];
 		[alert show];
 	} else {
-		[self openURL:url];
+		NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:url] delegate:self startImmediately:YES];
+		[conn release];
 	}
+}
+
+- (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response {
+	[__redirectURL release];
+	__redirectURL = [[response URL] retain];
+	return request;
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	[[UIApplication sharedApplication] openURL:__redirectURL];
 }
 @end
