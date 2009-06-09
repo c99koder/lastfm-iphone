@@ -1198,14 +1198,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Last.fm";
 				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DISTRIBUTION,
 					PL_DB_PRIVATE,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
 					/usr/include/libxml2,
@@ -1221,6 +1221,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "DE873345-A0C0-446A-A24D-49A6723BE99F";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "34148A55-BA8E-4F12-9466-1D68221ED030";
 				SDKROOT = iphoneos2.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
@@ -1320,7 +1321,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1348,10 +1349,10 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Steele";
-				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
 					/usr/include/libxml2,
@@ -1367,7 +1368,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "B39742D5-51DC-404B-AE07-9DD6B487EE4A";
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphoneos3.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Release;

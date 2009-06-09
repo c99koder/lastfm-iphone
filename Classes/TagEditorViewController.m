@@ -127,16 +127,16 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	[lastTag release];
 	lastTag = t;
 	if(animated) {
-		[(TagEditorViewController *)(self.delegate) tagAdded:tag];
+		[(TagEditorViewController *)[self delegate] tagAdded:tag];
 		[self _updateTags:animated];
 	}
 }
 - (void)removeTag:(TagView *)tag {
-	[(TagEditorViewController *)(self.delegate) tagRemoved:tag.tag];
+	[(TagEditorViewController *)[self delegate] tagRemoved:tag.tag];
 	[tags removeObject:tag];
 	[tag removeFromSuperview];
 	[self _updateTags:YES];
-	[(TagEditorViewController *)(self.delegate) reload];
+	[(TagEditorViewController *)[self delegate] reload];
 }
 - (BOOL)hasTag:(NSString *)tag {
 	for(TagView *t in tags) {
