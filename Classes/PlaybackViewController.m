@@ -1295,13 +1295,49 @@ int tagSort(id tag1, id tag2, void *context) {
 			break;
 	}
 }
+- (void)mailComposeController:(id)controller didFinishWithResult:(int)result error:(NSError*)error {
+	[self dismissModalViewControllerAnimated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+}
 - (void)shareToAddressBook {
-	ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
-	peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
-	peoplePicker.peoplePickerDelegate = self;
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController presentModalViewController:peoplePicker animated:YES];
-	[peoplePicker release];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	if(NSClassFromString(@"MFMailComposeViewController") != nil && [NSClassFromString(@"MFMailComposeViewController") canSendMail]) {
+		NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
+		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+		id mail = [[NSClassFromString(@"MFMailComposeViewController") alloc] init];
+		[mail setMailComposeDelegate:self];
+		[mail setSubject:[NSString stringWithFormat:@"Last.fm: %@ shared %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"], [trackInfo objectForKey:@"title"]]];
+		[mail setMessageBody:[NSString stringWithFormat:@"Hi there,<br/>\
+<br/>\
+%@ at Last.fm wants to share this with you:<br/>\
+<br/>\
+<a href='http://www.last.fm/music/%@/_/%@'>%@</a><br/>\
+<br/>\
+If you like this, add it to your Library. <br/>\
+This will make it easier to find, and will tell your Last.fm profile a bit more\
+about your music taste. This improves your recommendations and your Last.fm\
+Radio.<br/>\
+<br/>\
+The more good music you add to your Last.fm Profile, the better it becomes :)<br/>\
+<br/>\
+Best Regards,<br/>\
+The Last.fm Team<br/>\
+--<br/>\
+Visit Last.fm for personal radio, tons of recommended music, and free downloads.<br/>\
+Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
+													[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"],
+													[[trackInfo objectForKey:@"creator"] URLEscaped],
+													[[trackInfo objectForKey:@"title"] URLEscaped],
+													[trackInfo objectForKey:@"title"]
+													] isHTML:YES];
+		[self presentModalViewController:mail animated:YES];
+	} else {
+		ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
+		peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
+		peoplePicker.peoplePickerDelegate = self;
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:peoplePicker animated:YES];
+		[peoplePicker release];
+		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	}
 }
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person {
 	return YES;
@@ -1375,11 +1411,20 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
 
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Share", @"Share button")]) {
-		UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
-																											 delegate:self
-																							cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
-																				 destructiveButtonTitle:nil
-																							otherButtonTitles:NSLocalizedString(@"Contacts", @"Share to Address Book"), NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
+		UIActionSheet *sheet;
+		if(NSClassFromString(@"MFMailComposeViewController") != nil && [NSClassFromString(@"MFMailComposeViewController") canSendMail]) {
+			sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
+																												 delegate:self
+																								cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+																					 destructiveButtonTitle:nil
+																								otherButtonTitles:@"E-mail Address", NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
+		} else {
+			sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
+																					delegate:self
+																 cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+														destructiveButtonTitle:nil
+																 otherButtonTitles:NSLocalizedString(@"Contacts", @"Share to Address Book"), NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
+		}
 		[sheet showInView:self.view];
 		[sheet release];	
 	}
@@ -1420,7 +1465,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:URL]];
 	}
 	
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")]) {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
+		[[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"E-mail Address"]) {
 		[self shareToAddressBook];
 	}
 

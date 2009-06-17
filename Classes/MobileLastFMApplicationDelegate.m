@@ -49,9 +49,9 @@ NSString *kUserAgent;
 			IOAllowPowerChange(root_port, (long)messageArgument);  
 			break;
 		case kIOMessageCanSystemSleep:
-			if([[LastFMRadio sharedInstance] state] != RADIO_IDLE)
-				IOCancelPowerChange(root_port, (long)messageArgument);
-			else
+			//if([[LastFMRadio sharedInstance] state] != RADIO_IDLE)
+			//	IOCancelPowerChange(root_port, (long)messageArgument);
+			//else
 				IOAllowPowerChange(root_port, (long)messageArgument);  
 			break; 
 		case kIOMessageSystemHasPoweredOn:
@@ -89,6 +89,8 @@ NSString *kUserAgent;
 }
 - (id)init {
 	if (self = [super init]) {
+		//Take advantage of some fancy new 3.0 features, if available
+		[[NSBundle bundleWithPath:@"/System/Library/Frameworks/MessageUI.framework"] load];
 		kUserAgent = [[NSString alloc] initWithFormat:@"MobileLastFM/%@ (%@; %@; %@ %@)", VERSION, [UIDevice currentDevice].model, [[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0], [UIDevice currentDevice].systemName, [UIDevice currentDevice].systemVersion];
 		NSLog(@"%@", kUserAgent);
 		[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
