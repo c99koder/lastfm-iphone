@@ -464,7 +464,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	} else {
 		network = @"wwan";
 		bitrate = [[NSUserDefaults standardUserDefaults] objectForKey:@"bitrate"];
-		speed = @"1";
+		speed = @"2";
 	}
 	
 	NSArray *nodes = [[[[[self doMethod:@"radio.getPlaylist" maxCacheAge:0 XPath:@"." withParameters:
