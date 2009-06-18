@@ -20,8 +20,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <IOKit/pwr_mgt/IOPMLib.h>
-#import <IOKit/IOMessage.h>
 #import "LastFMRadio.h"
 #import "Scrobbler.h"
 #import "FirstRunViewController.h"
@@ -45,8 +43,6 @@
 	NSString *_launchURL;
 	UIAlertView *_pendingAlert;
 	BOOL _locked;
-	io_connect_t root_port;
-	io_object_t notifier;
 }
 
 @property (nonatomic, retain) UIWindow *window;

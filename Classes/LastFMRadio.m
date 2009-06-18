@@ -230,7 +230,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
 		AudioSessionSetActive(true);
 		[LastFMRadio sharedInstance].playbackWasInterrupted = NO;
-		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"disableautolock"] isEqualToString:@"YES"])
 			[UIApplication sharedApplication].idleTimerDisabled = YES;
 	} else {
@@ -249,7 +248,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 	}
 	[_connection cancel];
-	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
 	[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 - (void)_pushDataChunk {
@@ -628,12 +626,14 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		else
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
 		[[Beacon shared] startSubBeaconWithName:@"NEC error" timeSession:NO];
+		[self stop];
 		return FALSE;
 	}
 
 	LastFMTrack *track = [[[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]] autorelease];
 	
 	if(track) {
+		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		[_tracks addObject:track];
 		if([_tracks count] == 1)
 			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
@@ -661,6 +661,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		AudioSessionSetActive(FALSE);
 	}
 	NSLog(@"Playback stopped");
+	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
 	[_busyLock unlock];
 }
 -(void)skip {

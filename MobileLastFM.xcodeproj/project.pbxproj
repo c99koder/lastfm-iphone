@@ -97,7 +97,6 @@
 		221744640E44D5FA0058C0C3 /* volume-min.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744620E44D5FA0058C0C3 /* volume-min.png */; };
 		221744650E44D5FA0058C0C3 /* volume-max.png in Resources */ = {isa = PBXBuildFile; fileRef = 221744630E44D5FA0058C0C3 /* volume-max.png */; };
 		221746FB0E48A9710058C0C3 /* NSData+Compress.m in Sources */ = {isa = PBXBuildFile; fileRef = 221746FA0E48A9710058C0C3 /* NSData+Compress.m */; };
-		221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 221747140E48B6930058C0C3 /* IOKit.framework */; };
 		2219DEC50E2CF70C009EE6E4 /* PlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */; };
 		221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */ = {isa = PBXBuildFile; fileRef = 221E6B030DC2BD300006E74C /* Scrobbler.m */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
@@ -311,8 +310,6 @@
 		221744630E44D5FA0058C0C3 /* volume-max.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "volume-max.png"; sourceTree = "<group>"; };
 		221746F90E48A9710058C0C3 /* NSData+Compress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Compress.h"; sourceTree = "<group>"; };
 		221746FA0E48A9710058C0C3 /* NSData+Compress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Compress.m"; sourceTree = "<group>"; };
-		221747140E48B6930058C0C3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		221748120E48BDED0058C0C3 /* IOKIT_README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = IOKIT_README; sourceTree = "<group>"; };
 		2219DEC30E2CF70C009EE6E4 /* PlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaylistsViewController.m; sourceTree = "<group>"; };
 		2219DEC40E2CF70C009EE6E4 /* PlaylistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaylistsViewController.h; sourceTree = "<group>"; };
 		221E6B020DC2BD300006E74C /* Scrobbler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scrobbler.h; sourceTree = "<group>"; };
@@ -473,7 +470,6 @@
 				22CBDFAF0DCE0AA300AE5DE0 /* AddressBookUI.framework in Frameworks */,
 				22CBDFBE0DCE0BCE00AE5DE0 /* AddressBook.framework in Frameworks */,
 				225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */,
-				221747150E48B6930058C0C3 /* IOKit.framework in Frameworks */,
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
 				224793080F8123C100EE0C52 /* libPMAnalytics-r39.a in Frameworks */,
@@ -542,7 +538,6 @@
 				224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
-				221747140E48B6930058C0C3 /* IOKit.framework */,
 				225ECD430DFF882600323F42 /* MediaPlayer.framework */,
 				22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */,
 				22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */,
@@ -775,7 +770,6 @@
 			children = (
 				224793070F8123C100EE0C52 /* Beacon.h */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
-				221748120E48BDED0058C0C3 /* IOKIT_README */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
 				22EB603B0E65A8B20021751A /* SearchView.xib */,
