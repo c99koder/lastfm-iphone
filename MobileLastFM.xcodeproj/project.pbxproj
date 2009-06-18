@@ -1199,7 +1199,7 @@
 					DISTRIBUTION,
 					PL_DB_PRIVATE,
 				);
-				GCC_VERSION = 4.2;
+				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
 					/usr/include/libxml2,
@@ -1346,7 +1346,7 @@
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
-				GCC_VERSION = 4.2;
+				GCC_VERSION = 4.0;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
 					/usr/include/libxml2,

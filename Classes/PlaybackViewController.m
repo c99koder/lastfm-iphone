@@ -506,6 +506,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	_artist.frame = CGRectMake(20,13,280,18);
 	[self _updateProgress:nil];
 
+	if([[LastFMRadio sharedInstance] state] != TRACK_BUFFERING && !_showedMetadata && _artworkView.frame.size.width == 320)
+		[self _showGradient];
+	
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:[notification userInfo]];
 }
 -(IBAction)artworkButtonPressed:(id)sender {
