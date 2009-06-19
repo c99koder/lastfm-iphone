@@ -51,7 +51,6 @@
 @property (nonatomic, retain) UINavigationController *rootViewController;
 
 -(UITabBarController *)profileViewForUser:(NSString *)username;
--(void)powerMessageReceived:(natural_t)messageType withArgument:(void *) messageArgument;
 -(BOOL)hasNetworkConnection;
 -(BOOL)hasWiFiConnection;
 -(BOOL)playRadioStation:(NSString *)station animated:(BOOL)animated;
