@@ -84,6 +84,7 @@ NSString *kTrackDidFailToStream;
 	BOOL playbackWasInterrupted;
 	NSTimeInterval _startTime;
 	int _errorSkipCounter;
+	NSTimer *_softSkipTimer;
 }
 
 @property BOOL playbackWasInterrupted;

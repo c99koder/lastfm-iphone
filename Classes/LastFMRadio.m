@@ -470,12 +470,14 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	return self;
 }
 -(void)_trackDidBecomeAvailable:(NSNotification *)notification {
+	NSLog(@"Track did become available");
 	if(notification.object == [_tracks objectAtIndex:0]) {
 		[notification.object play];
 		_errorSkipCounter = 0;
 	}
 }
 -(void)_trackDidFinishPlaying:(NSNotification *)notification {
+	NSLog(@"Track did finish playing");
 	[_busyLock lock];
 	//For some reason [_tracks removeObjectAtIndex:0] doesn't deallocate us properly, so we'll do it ourselves
 	LastFMTrack *t = [[_tracks objectAtIndex: 0] retain];
@@ -489,25 +491,35 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	}
 	[_busyLock unlock];
 }
--(void)_softSkip {
+-(void)_softSkip:(NSTimer *)timer {
+	NSLog(@"Soft skipping to prebuffer next track");
+	_softSkipTimer = nil;
 	[_playlist removeObjectAtIndex:0];
 	[self play];
 	[[_tracks lastObject] pause];
 }
 -(void)_trackDidFinishLoading:(NSNotification *)notification {
+	NSLog(@"Track did finish loading");
 	[_busyLock lock];
 	if(notification.object == [_tracks objectAtIndex:0]) {
 		float duration = [[[notification.object trackInfo] objectForKey:@"duration"] floatValue]/1000.0f;
 		float elapsed = [notification.object trackPosition];
 		if(duration-elapsed < 30) {
-			[self _softSkip];
+			[self _softSkip:nil];
 		} else {
-			[self performSelector:@selector(_softSkip) withObject:nil afterDelay:(duration-elapsed-30)];
+			if(_softSkipTimer)
+				[_softSkipTimer invalidate];
+			_softSkipTimer = [NSTimer scheduledTimerWithTimeInterval:(duration-elapsed-30)
+																												target:self
+																											selector:@selector(_softSkip:)
+																											userInfo:nil
+																											 repeats:NO];
 		}
 	}
 	[_busyLock unlock];
 }
 -(void)_trackDidFail:(NSNotification *)notification {
+	NSLog(@"Track did fail");
 	if(notification.object == [_tracks objectAtIndex:0]) {
 		if(_errorSkipCounter++ > 3) {
 			 [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
@@ -598,6 +610,10 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(BOOL)play {
 	int x;
+	if(_softSkipTimer)
+		[_softSkipTimer invalidate];
+	_softSkipTimer = nil;
+	
 	if(!_playlist || [_playlist count] < 1 || _station == nil) {
 		NSLog(@"Fetching playlist");
 		for(x=0; x<10; x++) {
