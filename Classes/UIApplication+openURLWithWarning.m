@@ -39,6 +39,7 @@ NSURL *__redirectURL;
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if(buttonIndex == 1) {
 		NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:_url] delegate:[UIApplication sharedApplication] startImmediately:YES];
+		__redirectURL = [_url retain];
 		[conn release];
 	}
 }
@@ -50,6 +51,7 @@ NSURL *__redirectURL;
 
 @implementation UIApplication (openURLWithWarning)
 -(void)openURLWithWarning:(NSURL *)url {
+	NSLog(@"%@", url);
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
 		URLWarningDelegate *delegate = [[URLWarningDelegate alloc] initWithURL:url];
 		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"EXTERNAL_LINK_TITLE", @"External link title")
@@ -60,17 +62,22 @@ NSURL *__redirectURL;
 		[alert show];
 	} else {
 		NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:url] delegate:self startImmediately:YES];
+		__redirectURL = [url retain];
 		[conn release];
 	}
 }
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response {
-	[__redirectURL release];
-	__redirectURL = [[response URL] retain];
+	if([response URL]) {
+		NSLog(@"Redirected to: %@", [response URL]);
+		[__redirectURL release];
+		__redirectURL = [[response URL] retain];
+	}
 	return request;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSLog(@"Launching: %@", __redirectURL);
 	[[UIApplication sharedApplication] openURL:__redirectURL];
 }
 @end
