@@ -37,9 +37,6 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		self.title = [username retain];
 		_username = [username retain];
-		self.tableView.sectionHeaderHeight = 0;
-		self.tableView.sectionFooterHeight = 0;
-		self.tableView.backgroundColor = [UIColor blackColor];
 	}
 	return self;
 }
@@ -66,6 +63,9 @@
 }
 - (void)viewDidLoad {
 	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+	self.tableView.sectionHeaderHeight = 0;
+	self.tableView.sectionFooterHeight = 0;
+	self.tableView.backgroundColor = [UIColor blackColor];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 6;
