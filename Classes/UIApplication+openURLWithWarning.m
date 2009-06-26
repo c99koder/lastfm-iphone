@@ -37,8 +37,10 @@ NSURL *__redirectURL;
 	return self;
 }
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	if(buttonIndex == 1)
-		[[UIApplication sharedApplication] openURL:_url];
+	if(buttonIndex == 1) {
+		NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:_url] delegate:[UIApplication sharedApplication] startImmediately:YES];
+		[conn release];
+	}
 }
 - (void)dealloc {
 	[super dealloc];
