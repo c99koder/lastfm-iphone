@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AddressBookUI/AddressBookUI.h>
+#import <MessageUI/MessageUI.h>
 #import "LastFMService.h"
 #import "ArtworkCell.h"
 #import "FriendsViewController.h"
@@ -143,7 +144,7 @@
 - (IBAction)notAttendButtonPressed:(id)sender;
 @end
 
-@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,PlaylistsViewControllerDelegate> {
+@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,PlaylistsViewControllerDelegate,MFMailComposeViewControllerDelegate> {
 	IBOutlet UILabel *_titleLabel;
 	IBOutlet UIToolbar *toolbar;
 	IBOutlet UIView *contentView;

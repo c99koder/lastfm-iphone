@@ -125,6 +125,7 @@
 		225934E70DA85DA60035A1AA /* skip.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934D70DA85DA60035A1AA /* skip.png */; };
 		225934EA0DA85DA60035A1AA /* ban.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DA0DA85DA60035A1AA /* ban.png */; };
 		225934EB0DA85DA60035A1AA /* love.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DB0DA85DA60035A1AA /* love.png */; };
+		225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225A901D0FFA8C4400DC5798 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225ECD430DFF882600323F42 /* MediaPlayer.framework */; };
 		22624B1B0E6EF39200072BB4 /* daygradient-disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 22624B1A0E6EF39200072BB4 /* daygradient-disabled.png */; };
 		22624B1D0E6EF3A000072BB4 /* daygradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 22624B1C0E6EF3A000072BB4 /* daygradient.png */; };
@@ -352,6 +353,7 @@
 		225934DA0DA85DA60035A1AA /* ban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ban.png; sourceTree = "<group>"; };
 		225934DB0DA85DA60035A1AA /* love.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love.png; sourceTree = "<group>"; };
 		225934F20DA85DBE0035A1AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		225A901D0FFA8C4400DC5798 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		225ECD430DFF882600323F42 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		22624B1A0E6EF39200072BB4 /* daygradient-disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daygradient-disabled.png"; sourceTree = "<group>"; };
 		22624B1C0E6EF3A000072BB4 /* daygradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = daygradient.png; sourceTree = "<group>"; };
@@ -473,6 +475,7 @@
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
 				224793080F8123C100EE0C52 /* libPMAnalytics-r39.a in Frameworks */,
+				225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +538,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
@@ -1193,13 +1197,12 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Last.fm";
-				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DISTRIBUTION,
 					PL_DB_PRIVATE,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
 					/usr/include/libxml2,
@@ -1208,6 +1211,7 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
@@ -1216,7 +1220,7 @@
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "DE873345-A0C0-446A-A24D-49A6723BE99F";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "34148A55-BA8E-4F12-9466-1D68221ED030";
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphoneos3.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Distribution;
@@ -1252,15 +1256,14 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Last.fm";
 				COPY_PHASE_STRIP = YES;
-				FRAMEWORK_SEARCH_PATHS = /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/library/PrivateFrameworks;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DISTRIBUTION,
 					PL_DB_PRIVATE,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
 					/usr/include/libxml2,
@@ -1269,6 +1272,7 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",
@@ -1276,7 +1280,8 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "09B94101-C6D6-46A9-888C-9B035EE50019";
-				SDKROOT = iphoneos2.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "34148A55-BA8E-4F12-9466-1D68221ED030";
+				SDKROOT = iphoneos3.0;
 				STRIP_INSTALLED_PRODUCT = YES;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
@@ -1315,7 +1320,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1326,6 +1331,7 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -1333,7 +1339,7 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphoneos3.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Debug;
@@ -1343,10 +1349,9 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Steele";
-				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
-				GCC_VERSION = 4.0;
+				GCC_VERSION = 4.2;
 				HEADER_SEARCH_PATHS = (
 					TouchXML,
 					/usr/include/libxml2,
@@ -1355,6 +1360,7 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lxml2",

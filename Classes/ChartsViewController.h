@@ -20,9 +20,10 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <AddressBookUI/AddressBookUI.h>
+#import <MessageUI/MessageUI.h>
 #import "PlaylistsViewController.h"
 #import "LastFMService.h"
-#import <AddressBookUI/AddressBookUI.h>
 #import "FriendsViewController.h"
 #import "TagEditorViewController.h"
 #import "PlaylistsViewController.h"
@@ -44,7 +45,7 @@
 - (void)setData:(NSArray *)data;
 @end
 
-@interface RecentChartViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface RecentChartViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate> {
 	NSMutableArray *_data;
 	NSDictionary *_selectedTrack;
 }

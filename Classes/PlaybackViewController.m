@@ -1298,15 +1298,16 @@ int tagSort(id tag1, id tag2, void *context) {
 			break;
 	}
 }
-- (void)mailComposeController:(id)controller didFinishWithResult:(int)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+	[self becomeFirstResponder];
 	[self dismissModalViewControllerAnimated:YES];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 - (void)shareToAddressBook {
-	if(NSClassFromString(@"MFMailComposeViewController") != nil && [NSClassFromString(@"MFMailComposeViewController") canSendMail]) {
-		NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
+	if(NSClassFromString(@"MFMailComposeViewController") != nil && [MFMailComposeViewController canSendMail]) {
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-		id mail = [[NSClassFromString(@"MFMailComposeViewController") alloc] init];
+		MFMailComposeViewController *mail = [[MFMailComposeViewController alloc] init];
+		NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
 		[mail setMailComposeDelegate:self];
 		[mail setSubject:[NSString stringWithFormat:@"Last.fm: %@ shared %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"], [trackInfo objectForKey:@"title"]]];
 		[mail setMessageBody:[NSString stringWithFormat:@"Hi there,<br/>\
@@ -1333,6 +1334,7 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 													[trackInfo objectForKey:@"title"]
 													] isHTML:YES];
 		[self presentModalViewController:mail animated:YES];
+		[mail release];
 	} else {
 		ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
 		peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];

@@ -360,14 +360,15 @@ int tagSort(id tag1, id tag2, void *context);
 	[self dismissModalViewControllerAnimated:YES];
 	[NSThread detachNewThreadSelector:@selector(_addToPlaylist:) toTarget:self withObject:[NSNumber numberWithInt:playlist]];
 }
-- (void)mailComposeController:(id)controller didFinishWithResult:(int)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+	[self becomeFirstResponder];
 	[self dismissModalViewControllerAnimated:YES];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 - (void)shareToAddressBook {
-	if(NSClassFromString(@"MFMailComposeViewController") != nil && [NSClassFromString(@"MFMailComposeViewController") canSendMail]) {
+	if(NSClassFromString(@"MFMailComposeViewController") != nil && [MFMailComposeViewController canSendMail]) {
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-		id mail = [[NSClassFromString(@"MFMailComposeViewController") alloc] init];
+		MFMailComposeViewController *mail = [[MFMailComposeViewController alloc] init];
 		[mail setMailComposeDelegate:self];
 		[mail setSubject:[NSString stringWithFormat:@"Last.fm: %@ shared %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"], [_selectedTrack objectForKey:@"name"]]];
 		[mail setMessageBody:[NSString stringWithFormat:@"Hi there,<br/>\
@@ -394,6 +395,8 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		 [_selectedTrack objectForKey:@"name"]
 		] isHTML:YES];
 		[self presentModalViewController:mail animated:YES];
+		[mail becomeFirstResponder];
+		[mail release];
 	} else {
 		ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
 		peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
