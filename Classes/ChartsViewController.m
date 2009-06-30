@@ -378,9 +378,8 @@ int tagSort(id tag1, id tag2, void *context);
 <a href='http://www.last.fm/music/%@/_/%@'>%@</a><br/>\
 <br/>\
 If you like this, add it to your Library. <br/>\
-This will make it easier to find, and will tell your Last.fm profile a bit more\
-about your music taste. This improves your recommendations and your Last.fm\
-Radio.<br/>\
+This will make it easier to find, and will tell your Last.fm profile a bit more<br/>\
+about your music taste. This improves your recommendations and your Last.fm Radio.<br/>\
 <br/>\
 The more good music you add to your Last.fm Profile, the better it becomes :)<br/>\
 <br/>\
@@ -395,7 +394,6 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		 [_selectedTrack objectForKey:@"name"]
 		] isHTML:YES];
 		[self presentModalViewController:mail animated:YES];
-		[mail becomeFirstResponder];
 		[mail release];
 	} else {
 		ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
