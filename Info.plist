@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2.0.2</string>
+	<string>2.1.0</string>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
 	<key>UIRequiresPersistentWiFi</key>

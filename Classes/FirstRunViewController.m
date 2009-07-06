@@ -24,6 +24,7 @@
 #import "NSString+MD5.h"
 #import "NSString+URLEscaped.h"
 #import "version.h"
+#import "Beacon.h"
 
 @implementation FirstRunViewController
 -(void)_authenticateUser {
@@ -76,6 +77,7 @@
 		_password.text = _regpassword.text;
 		[self cancelButtonPressed:nil];
 		[self loginButtonPressed:nil];
+		[[Beacon shared] startSubBeaconWithName:@"signup" timeSession:NO];
 	}	
 }
 -(IBAction)createButtonPressed:(id)sender {
