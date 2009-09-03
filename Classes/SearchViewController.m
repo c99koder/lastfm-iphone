@@ -45,7 +45,6 @@
 - (void)_showProfile:(NSString *)text {
 	UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:text];
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
-	[tabBarController release];
 }	
 - (void)_searchThread:(NSString *)text {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

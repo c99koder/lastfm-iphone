@@ -82,7 +82,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BasicCell"];
 	if (cell == nil) {
-		cell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"BasicCell"];
+		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"BasicCell"] autorelease];
 	}
 	cell.text = [_data objectAtIndex:[indexPath row]];
 	[cell showProgress: NO];

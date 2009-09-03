@@ -137,7 +137,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
 	}
 
-	if([artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
+	if(artworkURL && [artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
 		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@"MZZZ" withString:@"LZZZ"];
 	}
 	

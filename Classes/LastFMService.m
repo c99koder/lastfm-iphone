@@ -114,6 +114,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 		[theRequest setHTTPMethod:@"POST"];
 		[theRequest setHTTPBody:[[NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]] dataUsingEncoding:NSUTF8StringEncoding]];
+		//NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
 		
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 		if(seconds)
@@ -121,6 +122,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	} else {
 		error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:0 userInfo:nil];
+		[signature release];
 		return nil;
 	}
 	[signature release];
@@ -129,8 +131,6 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		error = [theError retain];
 		return nil;
 	}
-	
-	//NSLog(@"%s", [theResponseData bytes]);
 	
 	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
 	if(theError) {

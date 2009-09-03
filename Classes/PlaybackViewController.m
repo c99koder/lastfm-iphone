@@ -285,7 +285,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
 	UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:[timer userInfo]];
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
-	[tabBarController release];
 	[_table reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
@@ -460,7 +459,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
 	}
 	
-	if([artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
+	if(artworkURL && [artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
 		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@"MZZZ" withString:@"LZZZ"];
 	}
 	
@@ -470,7 +469,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		artworkImage = [[UIImage alloc] initWithData:imageData];
 		[imageData release];
 	} else {
-		artworkURL = [NSString stringWithFormat:@"file:///%@/noartplaceholder.png", [[NSBundle mainBundle] bundlePath]];
 		artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
 	}
 
@@ -483,6 +481,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView beginAnimations:nil context:nil];
 		_noArtworkView.alpha = 0;
 		[UIView commitAnimations];
+	} else {
+		[artworkImage release];
 	}
 	[_lock unlock];
 	[trackInfo release];
@@ -864,6 +864,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[[Beacon shared] startSubBeaconWithName:@"map" timeSession:NO];
 	[[Beacon shared] endSubBeaconWithName:@"eventdetails"];
 	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?f=q&q=%@&ie=UTF8&om=1&iwloc=addr", [query URLEscaped]]]];
+	[query release];
 }
 @end
 
@@ -1348,12 +1349,15 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 }
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
 	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
-	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(ABRecordCopyValue(person, property), ABMultiValueGetIndexForIdentifier(ABRecordCopyValue(person, property), identifier));
+	ABMultiValueRef value = ABRecordCopyValue(person, property);
+	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(value, ABMultiValueGetIndexForIdentifier(value, identifier));
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
 	
 	[[LastFMService sharedInstance] recommendTrack:[trackInfo objectForKey:@"title"]
 																				byArtist:[trackInfo objectForKey:@"creator"]
 																	toEmailAddress:email];
+	[email release];
+	CFRelease(value);
 	
 	if([LastFMService sharedInstance].error)
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];

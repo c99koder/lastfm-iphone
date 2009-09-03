@@ -98,7 +98,6 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	} else {
 		UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
-		[tabBarController release];
 
 		[[self.tableView cellForRowAtIndexPath:newIndexPath] showProgress:NO];
 	}
@@ -115,7 +114,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]];
 	if (cell == nil)
-		cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]];
+		cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
 	cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"username"];
 	cell.title.backgroundColor = [UIColor whiteColor];
 	cell.title.opaque = YES;

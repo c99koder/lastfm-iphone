@@ -296,6 +296,7 @@
 	
 	if([postData length] == [[NSString stringWithFormat:@"s=%@",_sess] length]) {
 		NSLog(@"Not sending any tracks");
+		[postData release];
 		[_queue removeAllObjects];
 		_queueTimerInterval = 15;
 	} else {
@@ -380,6 +381,7 @@
 			[self saveQueue];
 			break;
 	}
+	[scrobblerResult release];
 	if(_scrobblerState != SCROBBLER_OFFLINE) {
 		if(_scrobblerState != SCROBBLER_NOWPLAYING && [_queue count]) {
 			_scrobblerState = SCROBBLER_READY;

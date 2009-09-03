@@ -408,12 +408,15 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 	return YES;
 }
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
-	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(ABRecordCopyValue(person, property), ABMultiValueGetIndexForIdentifier(ABRecordCopyValue(person, property), identifier));
+	ABMultiValueRef value = ABRecordCopyValue(person, property);
+	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(value, ABMultiValueGetIndexForIdentifier(value, identifier));
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
 	
 	[[LastFMService sharedInstance] recommendTrack:[_selectedTrack objectForKey:@"name"]
 																				byArtist:[_selectedTrack objectForKey:@"artist"]
 																	toEmailAddress:email];
+	[email release];
+	CFRelease(value);
 	
 	if([LastFMService sharedInstance].error)
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];

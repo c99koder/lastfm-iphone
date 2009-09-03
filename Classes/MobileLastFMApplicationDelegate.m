@@ -140,7 +140,7 @@ NSString *kUserAgent;
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody:body];
 	
-	theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
+	[NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 
 	if([theResponse statusCode] == 200 || [theResponse statusCode] == 404) {
 		[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"crash.log") error:nil];
@@ -178,41 +178,11 @@ NSString *kUserAgent;
 	p.tabBarItem = t;
 	[t release];
 
-	/*UINavigationController *radioNavController = [[UINavigationController alloc] initWithRootViewController:r];
-	radioNavController.tabBarItem = t;
-	radioNavController.navigationBar.barStyle = UIBarStyleBlackOpaque;*/
-
-	/*UINavigationController *profileNavController = [[UINavigationController alloc] initWithRootViewController:p];
-	profileNavController.tabBarItem = t;
-	profileNavController.navigationBar.barStyle = UIBarStyleBlackOpaque;*/
-
 	tabBarController.viewControllers = [NSArray arrayWithObjects:r, p, nil];
-	//[radioNavController release];
-	//[profileNavController release];
-
-	/*if(subview) {
-		tabBarController.hidesBottomBarWhenPushed = YES;
-		UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Back", @"Back Button")
-																																		 style:UIBarButtonItemStylePlain 
-																																		target:self
-																																		action:@selector(hidePlaybackView)];	
-		for(UINavigationController *n in tabBarController.viewControllers) { 
-			n.topViewController.navigationItem.leftBarButtonItem = backButton;
-		}
-		
-		[backButton release];
-	} else {
-		for(UINavigationController *n in tabBarController.viewControllers) { 
-			n.topViewController.navigationItem.leftBarButtonItem = logoutButton;
-		}
-		
-		[logoutButton release];
-	}*/
-	
 	[r release];
 	[p release];
 	
-	return tabBarController;
+	return [tabBarController autorelease];
 }
 - (void)showProfileView:(BOOL)animated {
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];

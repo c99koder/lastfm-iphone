@@ -142,6 +142,7 @@
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
 				SearchViewController *controller = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
 				[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+				[controller release];
 			}
 			break;
 		case 1:
@@ -182,6 +183,7 @@
 		{
 			DebugViewController *controller = [[DebugViewController alloc] initWithNibName:@"DebugView" bundle:nil];
 			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+			[controller release];
 		}
 			break;
 	}
@@ -229,7 +231,7 @@
 				ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 				if(profilecell == nil) {
 					NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
-					profilecell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"];
+					profilecell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"] autorelease];
 					profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 					v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_panel.png"]];
 					profilecell.backgroundView = v;

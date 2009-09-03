@@ -36,8 +36,6 @@ UIImage *calendarDaySelected;
 	[components setDay:1];
 	NSDate *monthStart = [[NSCalendar currentCalendar] dateFromComponents:components];
 	
-	components = [[NSCalendar currentCalendar] components:NSWeekdayCalendarUnit fromDate:monthStart];
-	
 	components = [[NSDateComponents alloc] init];
 	[components setMonth:1];
 	NSDate *nextMonth = [[NSCalendar currentCalendar] dateByAddingComponents:components toDate:monthStart options:0];
