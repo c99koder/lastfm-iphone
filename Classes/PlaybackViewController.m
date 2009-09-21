@@ -883,10 +883,6 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewTypeToggled:(id)sender {
 	switch([(UISegmentedControl *)sender selectedSegmentIndex]) {
 		case 1:
-			_table.frame = CGRectMake(0,372,320,0);
-			_shadow.frame = CGRectMake(0,372,320,0);
-			break;
-		case 0:
 			if(_username)
 				_table.frame = CGRectMake(0,0,320,372);
 			else
@@ -895,6 +891,10 @@ int tagSort(id tag1, id tag2, void *context) {
 			[_data release];
 			_data = nil;
 			[_table reloadData];
+			break;
+		case 0:
+			_table.frame = CGRectMake(0,372,320,0);
+			_shadow.frame = CGRectMake(0,372,320,0);
 			break;
 	}
 }
@@ -943,7 +943,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		segment = [[[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Calendar",@"List",nil]] autorelease];
 		segment.frame = CGRectMake(0,0,207,30);
 		segment.segmentedControlStyle = UISegmentedControlStyleBar;
-		segment.selectedSegmentIndex = 1;
+		segment.selectedSegmentIndex = 0;
 		[segment addTarget:self action:@selector(viewTypeToggled:) forControlEvents:UIControlEventValueChanged];
 		UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0,372,320,44)];
 		toolbar.barStyle = UIBarStyleBlackOpaque;
