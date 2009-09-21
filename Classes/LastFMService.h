@@ -107,6 +107,7 @@ enum eventStatus {
 - (NSArray *)eventsForUser:(NSString *)username;
 - (NSDictionary *)profileForUser:(NSString *)username;
 - (NSDictionary *)compareArtistsOfUser:(NSString *)username withUser:(NSString *)username2;
+- (NSArray *)recentStationsForUser:(NSString *)username;
 
 #pragma mark Tag methods
 

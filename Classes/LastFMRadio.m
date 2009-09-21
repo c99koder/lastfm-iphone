@@ -556,6 +556,16 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[formatter release];
 	return [URLs autorelease];
 }
+-(void)fetchRecentURLs {
+	NSArray *stations = [[LastFMService sharedInstance] recentStationsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	if([stations count]) {
+		[self purgeRecentURLs];
+		for(NSDictionary *station in stations) {
+			[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
+			 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], [station objectForKey:@"url"], [station objectForKey:@"name"], nil];
+		}
+	}
+}
 -(BOOL)selectStation:(NSString *)station {
 	int x;
 	NSDictionary *tune;

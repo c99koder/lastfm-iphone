@@ -51,6 +51,7 @@
 			[_playlists addObject:playlist];
 	}
 	[_recent release];
+	[[LastFMRadio sharedInstance] fetchRecentURLs];
 	_recent = [[[LastFMRadio sharedInstance] recentURLs] retain];
 	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
 		_commonArtists = [[[[LastFMService sharedInstance] compareArtistsOfUser:_username withUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] objectForKey:@"artists"] retain];

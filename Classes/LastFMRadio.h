@@ -93,6 +93,7 @@ NSString *kTrackDidFailToStream;
 -(void)purgeRecentURLs;
 -(void)removeRecentURL:(NSString *)url;
 -(NSArray *)recentURLs;
+-(void)fetchRecentURLs;
 -(BOOL)selectStation:(NSString *)station;
 -(BOOL)play;
 -(void)stop;

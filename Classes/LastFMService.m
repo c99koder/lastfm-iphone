@@ -423,6 +423,13 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	return metadata;
 }
 
+- (NSArray *)recentStationsForUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getRecentStations" maxCacheAge:0 XPath:@"./recentstations/station" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./url", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"url", nil]];
+}
+
 #pragma mark Tag methods
 
 - (NSArray *)tagsSimilarTo:(NSString *)tag {
