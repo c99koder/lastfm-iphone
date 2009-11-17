@@ -113,6 +113,7 @@ enum eventStatus {
 
 - (NSArray *)tagsSimilarTo:(NSString *)tag;
 - (NSArray *)searchForTag:(NSString *)tag;
+- (NSArray *)topArtistsForTag:(NSString *)tag;
 
 #pragma mark Radio methods
 

@@ -43,4 +43,5 @@
 @property BOOL shouldCacheArtwork;
 -(void)fetchImage;
 -(void)addStreamIcon;
+-(void)hideArtwork:(BOOL)hidden;
 @end

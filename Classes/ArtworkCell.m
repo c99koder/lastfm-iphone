@@ -92,6 +92,9 @@ UIImage *avatarPlaceholder = nil;
 	[super layoutSubviews];
 	
 	CGRect frame = [self.contentView bounds];
+	if(self.accessoryView != nil)
+		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
+	
 	if(imageURL)
 		_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	if([subtitle.text length]) {
@@ -105,6 +108,14 @@ UIImage *avatarPlaceholder = nil;
 		_bar.frame = CGRectMake(0,0,barWidth*([self frame].size.width - 20),[self frame].size.height);
 		_bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];
 		_bar.opaque = NO;
+	}
+}
+- (void)hideArtwork:(BOOL)hidden {
+	CGRect frame = [self.contentView bounds];
+	if(hidden) {
+		_artwork.frame = CGRectMake(4, 0, 0, 0);
+	} else {
+		_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	}
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

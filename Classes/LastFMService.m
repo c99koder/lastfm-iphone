@@ -222,8 +222,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)searchForArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.search" maxCacheAge:1*HOURS XPath:@"./results/artistmatches/artist" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", nil]
-										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", nil]];
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"image", nil]];
 }
 - (NSArray *)topTagsForArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.getTopTags" maxCacheAge:7*DAYS XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
@@ -443,6 +443,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", nil]];
+}
+- (NSArray *)topArtistsForTag:(NSString *)tag {
+	NSArray *nodes = [self doMethod:@"tag.getTopArtists" maxCacheAge:7*DAYS XPath:@"./topartists/artist" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", nil]];
 }
 
 #pragma mark Radio methods

@@ -79,8 +79,31 @@
 		if([results count]) {
 			_data = [[NSMutableArray alloc] init];
 			for(NSDictionary *result in results) {
-				if([result objectForKey:@"streamable"] == nil || [[result objectForKey:@"streamable"] intValue])
-					[(NSMutableArray *)_data addObject:[result objectForKey:@"name"]];
+				if([result objectForKey:@"streamable"] == nil || [[result objectForKey:@"streamable"] intValue]) {
+					NSMutableDictionary *entry = [[NSMutableDictionary alloc] initWithDictionary:result];
+					if([[result objectForKey:@"streamable"] intValue]) {
+						NSArray *artists = [[LastFMService sharedInstance] artistsSimilarTo:[result objectForKey:@"name"]];
+						if([artists count] >= 3) {
+							NSString *subtitle = [[NSString alloc] initWithFormat:@"%@, %@, %@", [[artists objectAtIndex:0] objectForKey:@"name"], 
+																		[[artists objectAtIndex:1] objectForKey:@"name"], [[artists objectAtIndex:2] objectForKey:@"name"]];
+							[entry setObject:subtitle forKey:@"subtitle"];
+							[subtitle release];
+						}
+					} else {
+						NSArray *artists = [[LastFMService sharedInstance] topArtistsForTag:[result objectForKey:@"name"]];
+						if([artists count] >= 3) {
+							NSString *subtitle = [[NSString alloc] initWithFormat:@"%@, %@, %@", [[artists objectAtIndex:0] objectForKey:@"name"], 
+																		[[artists objectAtIndex:1] objectForKey:@"name"], [[artists objectAtIndex:2] objectForKey:@"name"]];
+							[entry setObject:subtitle forKey:@"subtitle"];
+							[subtitle release];
+						}
+					}
+					[(NSMutableArray *)_data addObject:entry];
+					[entry release];
+					
+					if([_data count] >= 4)
+						break;
+				}
 			}
 			if([_data count] < 1) {
 				[_data release];
@@ -92,6 +115,7 @@
 		
 		[_table reloadData];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+		[self loadContentForCells:[_table visibleCells]];
 	}
 	[_searchThread release];
 	_searchThread = nil;
@@ -177,7 +201,7 @@
 	return _data?[_data count]:0;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 46;
+	return 58;
 }
 - (void)_rowSelected:(NSTimer *)timer {
 	NSIndexPath *newIndexPath = [timer userInfo];
@@ -212,17 +236,33 @@
 																	repeats:NO];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
+	ArtworkCell *cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"simplecell"] autorelease];
+		cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]] autorelease];
 	}
+	cell.title.text = [[[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"] stringByAppendingString:@" Radio"] capitalizedString];
+	cell.subtitle.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"subtitle"];
+	if([[_data objectAtIndex:[indexPath row]] objectForKey:@"image"])
+		cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
+	else
+		[cell hideArtwork:YES];
+	cell.shouldCacheArtwork = YES;
 	
-	cell.text = [_data objectAtIndex:[indexPath row]];
-	[cell showProgress: NO];
-	UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-	img.opaque = YES;
-	cell.accessoryView = img;
-	[img release];
+	NSString *radioURL = [NSString stringWithFormat:@"lastfm://artist/%@/similarartists",
+												[[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"] URLEscaped]];
+	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE &&
+		 [[[LastFMRadio sharedInstance] stationURL] isEqualToString:radioURL]) {
+		[self showNowPlayingButton:NO];
+		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 64, 30)];
+		[btn setBackgroundImage:[UIImage imageNamed:@"now_playing_list.png"] forState:UIControlStateNormal];
+		btn.adjustsImageWhenHighlighted = YES;
+		[btn addTarget:self action:@selector(nowPlayingButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+		cell.accessoryView = btn;
+		[btn release];
+		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+	} else {
+		[cell addStreamIcon];
+	}
 	return cell;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
