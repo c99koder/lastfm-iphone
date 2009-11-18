@@ -1,6 +1,6 @@
 //
-//  Beacon.h r39
-//  PinchMedia
+//  Beacon.h r69
+//  Pinch Media Analytics Library
 //
 //  Created by Jesse Rohland on 4/6/08.
 //  Copyright 2008 PinchMedia. All rights reserved.
@@ -9,18 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface Beacon : NSObject <CLLocationManagerDelegate> {
-	NSString			*applicationCode;
-	BOOL				beaconStarted;
-	BOOL				uploading;
-	BOOL				pathFlag;
-	BOOL				useWiFi;
-	BOOL				useCoreLocation;
-	CLLocationManager	*locationManager;
-	NSURLConnection		*connection;
-	NSMutableData		*receivedData;
-}
+// This is the key we respect in the user's preferences (NSUserDefaults)
+// See http://resources.pinchmedia.com/ for more information.
+#define kEnablePinchMediaStatsCollection @"kEnablePinchMediaStatsCollection"
 
+@interface Beacon : NSObject <CLLocationManagerDelegate> {}
 
 + (id)initAndStartBeaconWithApplicationCode:(NSString *)theApplicationCode useCoreLocation:(BOOL)coreLocation useOnlyWiFi:(BOOL)wifiState;
 + (void)endBeacon;

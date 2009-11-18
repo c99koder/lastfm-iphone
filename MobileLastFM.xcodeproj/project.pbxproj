@@ -106,6 +106,7 @@
 		222903440E4B39A10024294D /* month_arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903420E4B39A10024294D /* month_arrow_right.png */; };
 		222903460E4B39EE0024294D /* month_heading_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903450E4B39EE0024294D /* month_heading_panel.png */; };
 		222905270E4C92390024294D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222905260E4C92390024294D /* QuartzCore.framework */; };
+		222C98B510B478F20008767B /* libPMAnalytics-r69.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 222C98B410B478F20008767B /* libPMAnalytics-r69.a */; };
 		223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223129320DFF21A500EC3BF0 /* FirstRunViewController.m */; };
 		22327C140E700B1F002016DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22327C130E700B1F002016DD /* Settings.bundle */; };
 		22362B9B0E13E4600034F91A /* btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 22362B9A0E13E4600034F91A /* btn.png */; };
@@ -116,7 +117,6 @@
 		2244DAFE0E3A55C700C4F40B /* reflectionmask.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFA0E3A55C700C4F40B /* reflectionmask.png */; };
 		2244DAFF0E3A55C700C4F40B /* cog_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFB0E3A55C700C4F40B /* cog_button.png */; };
 		2244DB0F0E3A569700C4F40B /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2244DB0E0E3A569700C4F40B /* CalendarViewController.m */; };
-		224793080F8123C100EE0C52 /* libPMAnalytics-r39.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */; };
 		224EFDAF0E3E2FAC007F293F /* calendarday.png in Resources */ = {isa = PBXBuildFile; fileRef = 224EFDAD0E3E2FAC007F293F /* calendarday.png */; };
 		225157980E09A67B00943078 /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 225157970E09A67B00943078 /* backBtn.png */; };
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
@@ -327,6 +327,7 @@
 		222903420E4B39A10024294D /* month_arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_arrow_right.png; sourceTree = "<group>"; };
 		222903450E4B39EE0024294D /* month_heading_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_heading_panel.png; sourceTree = "<group>"; };
 		222905260E4C92390024294D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		222C98B410B478F20008767B /* libPMAnalytics-r69.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r69.a"; sourceTree = "<group>"; };
 		222F3DF80E59E87600F2BBD5 /* apikey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = apikey.h; sourceTree = "<group>"; };
 		223128F60DFF1ECB00EC3BF0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		223129310DFF21A500EC3BF0 /* FirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstRunViewController.h; sourceTree = "<group>"; };
@@ -342,7 +343,6 @@
 		2244DB0B0E3A563800C4F40B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CalendarView.xib; sourceTree = "<group>"; };
 		2244DB0D0E3A569700C4F40B /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
 		2244DB0E0E3A569700C4F40B /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
-		224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r39.a"; sourceTree = "<group>"; };
 		224793070F8123C100EE0C52 /* Beacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beacon.h; sourceTree = "<group>"; };
 		224EFDAD0E3E2FAC007F293F /* calendarday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarday.png; sourceTree = "<group>"; };
 		225157970E09A67B00943078 /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
@@ -478,10 +478,10 @@
 				225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */,
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
-				224793080F8123C100EE0C52 /* libPMAnalytics-r39.a in Frameworks */,
 				225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */,
 				225A911110026ADF00DC5798 /* libxml2-2.6.30-arm.a in Frameworks */,
 				225A913010026F0B00DC5798 /* libxml2-2.6.30-i686.a in Frameworks */,
+				222C98B510B478F20008767B /* libPMAnalytics-r69.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,10 +544,10 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				222C98B410B478F20008767B /* libPMAnalytics-r69.a */,
 				225A912F10026F0B00DC5798 /* libxml2-2.6.30-i686.a */,
 				225A911010026ADF00DC5798 /* libxml2-2.6.30-arm.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
-				224793060F8123C100EE0C52 /* libPMAnalytics-r39.a */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
 				225ECD430DFF882600323F42 /* MediaPlayer.framework */,
