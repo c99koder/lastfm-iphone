@@ -97,7 +97,7 @@ void NSLog(NSString *format, ...) {
 }
 
 int main(int argc, char *argv[]) {
-	struct sigaction newsigaction;
+	/*struct sigaction newsigaction;
 	newsigaction.sa_sigaction = mysighandler;
 	newsigaction.sa_flags = SA_SIGINFO;
 	sigemptyset(&newsigaction.sa_mask);
@@ -113,19 +113,19 @@ int main(int argc, char *argv[]) {
 	sigaction(SIGPIPE, &newsigaction, NULL);
 	sigaction(SIGALRM, &newsigaction, NULL);
 	sigaction(SIGXCPU, &newsigaction, NULL);
-	sigaction(SIGXFSZ, &newsigaction, NULL);
+	sigaction(SIGXFSZ, &newsigaction, NULL);*/
 	
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	int retVal;
 	
 	[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"debug.log") error:nil];
 	
-	@try {
+	//@try {
 		retVal = UIApplicationMain(argc, argv, nil, nil);
-	}
+	/*}
 	@catch (NSException *exception) {
 		uncaughtExceptionHandler(exception);
-	}
+	}*/
 	
 	[pool release];
 	return retVal;
