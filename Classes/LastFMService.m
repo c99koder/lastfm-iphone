@@ -132,6 +132,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 	}
 	
+	//NSLog(@"Response: %s\n", [theResponseData bytes]);
+	
 	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
 	if(theError) {
 		error = [theError retain];

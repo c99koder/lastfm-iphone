@@ -1215,7 +1215,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([[detailView subviews] count])
 		[self detailsButtonPressed:nil];
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
-	loveBtn.alpha = 1;
+	if([[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"loved"] isEqualToString:@"1"])
+		loveBtn.alpha = 0.4;
+	else
+		loveBtn.alpha = 1;
 	banBtn.alpha = 1;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
