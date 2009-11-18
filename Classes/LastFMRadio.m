@@ -332,7 +332,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_bufferLock unlock];
 	}
 	if(_state != TRACK_PAUSED && ([_receivedData length] > 98304 && _state == TRACK_BUFFERING) || _state == TRACK_PLAYING) {
-		while(_audioBufferCount < 6 && [_receivedData length] > 8192)
+		while(_audioBufferCount < 6 && [_receivedData length] >= 8192)
 			[self _pushDataChunk];
 	}
 }

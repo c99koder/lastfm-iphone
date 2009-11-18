@@ -1203,8 +1203,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Last.fm";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DISTRIBUTION,
@@ -1225,8 +1224,7 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "DE873345-A0C0-446A-A24D-49A6723BE99F";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "34148A55-BA8E-4F12-9466-1D68221ED030";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos3.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
