@@ -53,7 +53,7 @@ NSURL *__redirectURL;
 -(void)openURLWithWarning:(NSURL *)url {
 	NSLog(@"%@", url);
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
-		URLWarningDelegate *delegate = [[[URLWarningDelegate alloc] initWithURL:url] autorelease];
+		URLWarningDelegate *delegate = [[URLWarningDelegate alloc] initWithURL:url];
 		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"EXTERNAL_LINK_TITLE", @"External link title")
 																										 message:NSLocalizedString(@"EXTERNAL_LINK", @"External link")
 																										delegate:delegate 
