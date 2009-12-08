@@ -263,7 +263,6 @@ NSString *kUserAgent;
 }
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 	[Beacon initAndStartBeaconWithApplicationCode:PINCHMEDIA_ID useCoreLocation:NO useOnlyWiFi:NO];
-	[[UIApplication sharedApplication] showNetworkPromptsIfNecessary:YES];
 	_mainView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	[window addSubview:_mainView];
 

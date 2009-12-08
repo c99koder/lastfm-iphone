@@ -209,10 +209,10 @@
 	
 	switch(_searchType.selectedSegmentIndex) {
 		case 0:
-			url = [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [[_data objectAtIndex:[newIndexPath row]] URLEscaped]];
+			url = [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"name"] URLEscaped]];
 			break;
 		case 1:
-			url = [NSString stringWithFormat:@"lastfm://globaltags/%@", [[_data objectAtIndex:[newIndexPath row]] URLEscaped]];
+			url = [NSString stringWithFormat:@"lastfm://globaltags/%@", [[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"name"] URLEscaped]];
 			break;
 	}
 	

@@ -659,7 +659,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	LastFMTrack *track = [[[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]] autorelease];
 	
 	if(track) {
-		[[UIApplication sharedApplication] setUsesBackgroundNetwork:YES];
 		[_tracks addObject:track];
 		if([_tracks count] == 1)
 			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
@@ -687,7 +686,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		AudioSessionSetActive(FALSE);
 	}
 	NSLog(@"Playback stopped");
-	[[UIApplication sharedApplication] setUsesBackgroundNetwork:NO];
 	[_busyLock unlock];
 }
 -(void)skip {
