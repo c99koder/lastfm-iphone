@@ -162,6 +162,7 @@
 		22CBE1C10DCE441200AE5DE0 /* CXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBE1B90DCE441200AE5DE0 /* CXMLNode.m */; };
 		22CBE1C20DCE441200AE5DE0 /* CXMLNode_PrivateExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBE1BB0DCE441200AE5DE0 /* CXMLNode_PrivateExtensions.m */; };
 		22CBE1C30DCE441200AE5DE0 /* CXMLNode_XPathExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBE1BD0DCE441200AE5DE0 /* CXMLNode_XPathExtensions.m */; };
+		22CD7143117E05E300493A96 /* EventsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CD7142117E05E200493A96 /* EventsTabViewController.m */; };
 		22D1DEB30E5C61F700D1068D /* rounded_table_cell.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D1DEB20E5C61F600D1068D /* rounded_table_cell.png */; };
 		22DB14A90E422455002D66BE /* radio_icon_tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB14A70E422455002D66BE /* radio_icon_tab.png */; };
 		22DB14AA0E422455002D66BE /* profile_icon_tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB14A80E422455002D66BE /* profile_icon_tab.png */; };
@@ -354,7 +355,7 @@
 		225934D70DA85DA60035A1AA /* skip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skip.png; sourceTree = "<group>"; };
 		225934DA0DA85DA60035A1AA /* ban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ban.png; sourceTree = "<group>"; };
 		225934DB0DA85DA60035A1AA /* love.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love.png; sourceTree = "<group>"; };
-		225934F20DA85DBE0035A1AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		225934F20DA85DBE0035A1AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		225A901D0FFA8C4400DC5798 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		225A911010026ADF00DC5798 /* libxml2-2.6.30-arm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libxml2-2.6.30-arm.a"; sourceTree = "<group>"; };
 		225A912F10026F0B00DC5798 /* libxml2-2.6.30-i686.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libxml2-2.6.30-i686.a"; sourceTree = "<group>"; };
@@ -407,6 +408,8 @@
 		22CBE1BB0DCE441200AE5DE0 /* CXMLNode_PrivateExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLNode_PrivateExtensions.m; sourceTree = "<group>"; };
 		22CBE1BC0DCE441200AE5DE0 /* CXMLNode_XPathExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLNode_XPathExtensions.h; sourceTree = "<group>"; };
 		22CBE1BD0DCE441200AE5DE0 /* CXMLNode_XPathExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLNode_XPathExtensions.m; sourceTree = "<group>"; };
+		22CD7141117E05E200493A96 /* EventsTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsTabViewController.h; sourceTree = "<group>"; };
+		22CD7142117E05E200493A96 /* EventsTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsTabViewController.m; sourceTree = "<group>"; };
 		22D1DEB20E5C61F600D1068D /* rounded_table_cell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rounded_table_cell.png; sourceTree = "<group>"; };
 		22DB14A70E422455002D66BE /* radio_icon_tab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_icon_tab.png; sourceTree = "<group>"; };
 		22DB14A80E422455002D66BE /* profile_icon_tab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_icon_tab.png; sourceTree = "<group>"; };
@@ -499,6 +502,8 @@
 				2244DB0E0E3A569700C4F40B /* CalendarViewController.m */,
 				22631F150E813B5700DC2D09 /* DebugViewController.h */,
 				22631F160E813B5700DC2D09 /* DebugViewController.m */,
+				22CD7141117E05E200493A96 /* EventsTabViewController.h */,
+				22CD7142117E05E200493A96 /* EventsTabViewController.m */,
 				223129310DFF21A500EC3BF0 /* FirstRunViewController.h */,
 				223129320DFF21A500EC3BF0 /* FirstRunViewController.m */,
 				2213D1B20D9F113100914A50 /* FriendsViewController.h */,
@@ -1064,6 +1069,7 @@
 				22E42B7E0E4F4E05009167EA /* PLSqliteResultSet.m in Sources */,
 				22E6E8610E533F08009FD470 /* TagEditorViewController.m in Sources */,
 				22631F170E813B5700DC2D09 /* DebugViewController.m in Sources */,
+				22CD7143117E05E300493A96 /* EventsTabViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1351,7 +1357,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Sam Steele";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
 				GCC_VERSION = 4.2;
@@ -1369,7 +1375,7 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "B39742D5-51DC-404B-AE07-9DD6B487EE4A";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos3.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};

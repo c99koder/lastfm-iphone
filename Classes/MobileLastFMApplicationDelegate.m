@@ -24,6 +24,7 @@
 #import "ProfileViewController.h"
 #import "RadioListViewController.h"
 #import "PlaybackViewController.h"
+#import "EventsTabViewController.h"
 #include "version.h"
 #include <SystemConfiguration/SCNetworkReachability.h>
 #import "NSString+URLEscaped.h"
@@ -178,9 +179,15 @@ NSString *kUserAgent;
 	p.tabBarItem = t;
 	[t release];
 
-	tabBarController.viewControllers = [NSArray arrayWithObjects:r, p, nil];
+	EventsTabViewController *e = [[EventsTabViewController alloc] initWithUsername:username];
+	t = [[UITabBarItem alloc] initWithTitle:@"Events" image:[UIImage imageNamed:@"events.png"] tag:2];
+	e.tabBarItem = t;
+	[t release];
+	
+	tabBarController.viewControllers = [NSArray arrayWithObjects:r, p, e, nil];
 	[r release];
 	[p release];
+	[e release];
 	
 	return [tabBarController autorelease];
 }

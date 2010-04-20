@@ -115,6 +115,7 @@
 	NSString *_username;
 }
 - (id)initWithUsername:(NSString *)user;
+- (id)initWithUsername:(NSString *)user withEvents:(NSArray *)events;
 - (void)doneButtonPressed:(id)sender;
 - (void)viewTypeToggled:(id)sender;
 @end

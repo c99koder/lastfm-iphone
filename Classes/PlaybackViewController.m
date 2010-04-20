@@ -958,8 +958,13 @@ int tagSort(id tag1, id tag2, void *context) {
 		[self.view addSubview:_table];
 		NSArray *events = [[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 		_attendingEvents = [[NSMutableArray alloc] initWithArray:events];
-		events = [[LastFMService sharedInstance] eventsForUser:_username];
-
+		if(_events) {
+			events = _events;
+			_events = nil;
+		} else {
+			events = [[LastFMService sharedInstance] eventsForUser:_username];
+		}
+		
 		if([LastFMService sharedInstance].error) {
 			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
 			[self release];
@@ -975,6 +980,14 @@ int tagSort(id tag1, id tag2, void *context) {
 	if(self = [super init]) {
 		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Events", @"User events title"), user];
 		_username = [user retain];
+	}
+	return self;
+}
+- (id)initWithUsername:(NSString *)user withEvents:(NSArray *)events {
+	if(self = [super init]) {
+		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Events", @"User events title"), user];
+		_username = [user retain];
+		_events = [events retain];
 	}
 	return self;
 }

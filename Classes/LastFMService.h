@@ -105,6 +105,7 @@ enum eventStatus {
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username;
 - (NSArray *)playlistsForUser:(NSString *)username;
 - (NSArray *)eventsForUser:(NSString *)username;
+- (NSArray *)recommendedEventsForUser:(NSString *)username;
 - (NSDictionary *)profileForUser:(NSString *)username;
 - (NSDictionary *)compareArtistsOfUser:(NSString *)username withUser:(NSString *)username2;
 - (NSArray *)recentStationsForUser:(NSString *)username;
@@ -123,6 +124,7 @@ enum eventStatus {
 #pragma mark Event methods
 
 - (void)attendEvent:(int)event status:(int)status;
+- (NSArray *)eventsForLatitude:(float)latitude longitude:(float)longitude radius:(int)radius;
 
 #pragma mark Playlist methods
 
