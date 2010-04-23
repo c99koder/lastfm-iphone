@@ -626,7 +626,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	
 	if(!_playlist || [_playlist count] < 1 || _station == nil) {
 		NSLog(@"Fetching playlist");
-		for(x=0; x<10; x++) {
+		for(x=0; x<3; x++) {
 			NSDictionary *playlist = [[LastFMService sharedInstance] getPlaylist];
 			if([[playlist objectForKey:@"playlist"] count]) {
 				if(!_playlist) {
