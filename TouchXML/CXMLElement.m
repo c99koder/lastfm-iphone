@@ -1,9 +1,9 @@
 //
 //  CXMLElement.m
-//  TouchXML
+//  TouchCode
 //
 //  Created by Jonathan Wight on 03/07/08.
-//  Copyright (c) 2008 Jonathan Wight
+//  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -45,7 +45,7 @@ while (theCurrentNode != NULL)
 	{
 	if (theCurrentNode->type == XML_ELEMENT_NODE && xmlStrcmp(theName, theCurrentNode->name) == 0)
 		{
-		CXMLNode *theNode = [CXMLNode nodeWithLibXMLNode:(xmlNodePtr)theCurrentNode];
+		CXMLNode *theNode = [CXMLNode nodeWithLibXMLNode:(xmlNodePtr)theCurrentNode freeOnDealloc:NO];
 		[theElements addObject:theNode];
 		}
 	theCurrentNode = theCurrentNode->next;
@@ -61,7 +61,7 @@ NSMutableArray *theAttributes = [NSMutableArray array];
 xmlAttrPtr theCurrentNode = _node->properties;
 while (theCurrentNode != NULL)
 	{
-	CXMLNode *theAttribute = [CXMLNode nodeWithLibXMLNode:(xmlNodePtr)theCurrentNode];
+	CXMLNode *theAttribute = [CXMLNode nodeWithLibXMLNode:(xmlNodePtr)theCurrentNode freeOnDealloc:NO];
 	[theAttributes addObject:theAttribute];
 	theCurrentNode = theCurrentNode->next;
 	}
@@ -78,7 +78,7 @@ while (theCurrentNode != NULL)
 	{
 	if (xmlStrcmp(theName, theCurrentNode->name) == 0)
 		{
-		CXMLNode *theAttribute = [CXMLNode nodeWithLibXMLNode:(xmlNodePtr)theCurrentNode];
+		CXMLNode *theAttribute = [CXMLNode nodeWithLibXMLNode:(xmlNodePtr)theCurrentNode freeOnDealloc:NO];
 		return(theAttribute);
 		}
 	theCurrentNode = theCurrentNode->next;
@@ -92,45 +92,45 @@ return(NULL);
 //- (CXMLNode *)resolveNamespaceForName:(NSString *)name;
 //- (NSString *)resolvePrefixForNamespaceURI:(NSString *)namespaceURI;
 
-- (NSString*)_XMLStringWithOptions:(NSUInteger)options appendingToString:(NSMutableString*)str
-{
-NSString* name = [self name];
-[str appendString:[NSString stringWithFormat:@"<%@", name]];
-
-for (id attribute in [self attributes] )
-	{
-	[attribute _XMLStringWithOptions:options appendingToString:str];
-	}
-
-if ( ! _node->children )
-	{
-	bool isEmpty = NO;
-	NSArray *emptyTags = [NSArray arrayWithObjects: @"br", @"area", @"link", @"img", @"param", @"hr", @"input", @"col", @"base", @"meta", nil ];
-	for (id s in emptyTags)
-		{
-		if ( [s isEqualToString:@"base"] )
-			{
-			isEmpty = YES;
-			break;
-			}
-		}
-	if ( isEmpty )
-		{
-		[str appendString:@"/>"];
-		return str;
-		}
-	}
-
-[str appendString:@">"];
-	
-if ( _node->children )
-	{
-	for (id child in [self children])
-		[child _XMLStringWithOptions:options appendingToString:str];
-	}
-[str appendString:[NSString stringWithFormat:@"</%@>", name]];
-return str;
-}
+//- (NSString*)_XMLStringWithOptions:(NSUInteger)options appendingToString:(NSMutableString*)str
+//{
+//NSString* name = [self name];
+//[str appendString:[NSString stringWithFormat:@"<%@", name]];
+//
+//for (id attribute in [self attributes] )
+//	{
+//	[attribute _XMLStringWithOptions:options appendingToString:str];
+//	}
+//
+//if ( ! _node->children )
+//	{
+//	bool isEmpty = NO;
+//	NSArray *emptyTags = [NSArray arrayWithObjects: @"br", @"area", @"link", @"img", @"param", @"hr", @"input", @"col", @"base", @"meta", nil ];
+//	for (id s in emptyTags)
+//		{
+//		if ( [s isEqualToString:@"base"] )
+//			{
+//			isEmpty = YES;
+//			break;
+//			}
+//		}
+//	if ( isEmpty )
+//		{
+//		[str appendString:@"/>"];
+//		return str;
+//		}
+//	}
+//
+//[str appendString:@">"];
+//	
+//if ( _node->children )
+//	{
+//	for (id child in [self children])
+//		[child _XMLStringWithOptions:options appendingToString:str];
+//	}
+//[str appendString:[NSString stringWithFormat:@"</%@>", name]];
+//return str;
+//}
 
 - (NSString *)description
 {

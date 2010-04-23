@@ -1,9 +1,9 @@
 //
 //  CXMLNode_PrivateExtensions.m
-//  TouchXML
+//  TouchCode
 //
 //  Created by Jonathan Wight on 03/07/08.
-//  Copyright (c) 2008 Jonathan Wight
+//  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -38,16 +38,17 @@
 
 
 
-- (id)initWithLibXMLNode:(xmlNodePtr)inLibXMLNode;
+- (id)initWithLibXMLNode:(xmlNodePtr)inLibXMLNode freeOnDealloc:(BOOL)infreeOnDealloc
 {
 if ((self = [super init]) != NULL)
 	{
 	_node = inLibXMLNode;
+	_freeNodeOnRelease = infreeOnDealloc;
 	}
 return(self);
 }
 
-+ (id)nodeWithLibXMLNode:(xmlNodePtr)inLibXMLNode
++ (id)nodeWithLibXMLNode:(xmlNodePtr)inLibXMLNode freeOnDealloc:(BOOL)infreeOnDealloc
 {
 // TODO more checking.
 if (inLibXMLNode->_private)
@@ -72,7 +73,7 @@ switch (inLibXMLNode->type)
 		return(NULL);
 	}
 
-CXMLNode *theNode = [[[theClass alloc] initWithLibXMLNode:inLibXMLNode] autorelease];
+CXMLNode *theNode = [[[theClass alloc] initWithLibXMLNode:inLibXMLNode freeOnDealloc:infreeOnDealloc] autorelease];
 
 
 if (inLibXMLNode->doc != NULL)

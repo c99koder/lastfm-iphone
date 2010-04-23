@@ -1,9 +1,9 @@
 //
 //  CXMLNode.m
-//  TouchXML
+//  TouchCode
 //
 //  Created by Jonathan Wight on 03/07/08.
-//  Copyright (c) 2008 Jonathan Wight
+//  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -35,6 +35,11 @@
 
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
+#include <libxml/xmlIO.h>
+
+static int MyXmlOutputWriteCallback(void * context, const char * buffer, int len);
+static int MyXmlOutputCloseCallback(void * context);
+
 
 @implementation CXMLNode
 
@@ -44,6 +49,12 @@ if (_node)
 	{
 	if (_node->_private == self)
 		_node->_private = NULL;
+
+	if (_freeNodeOnRelease)
+		{
+		xmlFreeNode(_node);
+		}
+
 	_node = NULL;
 	}
 //
@@ -53,7 +64,7 @@ if (_node)
 - (id)copyWithZone:(NSZone *)zone;
 {
 xmlNodePtr theNewNode = xmlCopyNode(_node, 1);
-CXMLNode *theNode = [[[self class] alloc] initWithLibXMLNode:theNewNode];
+CXMLNode *theNode = [[[self class] alloc] initWithLibXMLNode:theNewNode freeOnDealloc:YES];
 theNewNode->_private = theNode;
 return(theNode);
 }
@@ -80,17 +91,23 @@ else
 {
 NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
 xmlChar *theXMLString;
-if ( _node->type == CXMLTextKind ) 
+BOOL theFreeReminderFlag = NO;
+if (_node->type == XML_TEXT_NODE || _node->type == XML_CDATA_SECTION_NODE) 
 	theXMLString = _node->content;
 else
+	{
 	theXMLString = xmlNodeListGetString(_node->doc, _node->children, YES);
+	theFreeReminderFlag = YES;
+	}
 
 NSString *theStringValue = NULL;
 if (theXMLString != NULL)
 	{
 	theStringValue = [NSString stringWithUTF8String:(const char *)theXMLString];
-	if ( _node->type != CXMLTextKind )
+	if (theFreeReminderFlag == YES)
+		{
 		xmlFree(theXMLString);
+		}
 	}
 
 return(theStringValue);
@@ -154,7 +171,7 @@ NSMutableArray *theChildren = [NSMutableArray array];
 xmlNodePtr theCurrentNode = _node->children;
 while (theCurrentNode != NULL)
 	{
-	CXMLNode *theNode = [CXMLNode nodeWithLibXMLNode:theCurrentNode];
+	CXMLNode *theNode = [CXMLNode nodeWithLibXMLNode:theCurrentNode freeOnDealloc:NO];
 	[theChildren addObject:theNode];
 	theCurrentNode = theCurrentNode->next;
 	}
@@ -170,7 +187,7 @@ NSUInteger N;
 for (N = 0; theCurrentNode != NULL && N != index; ++N, theCurrentNode = theCurrentNode->next)
 	;
 if (theCurrentNode)
-	return([CXMLNode nodeWithLibXMLNode:theCurrentNode]);
+	return([CXMLNode nodeWithLibXMLNode:theCurrentNode freeOnDealloc:NO]);
 return(NULL);
 }
 
@@ -181,7 +198,7 @@ NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
 if (_node->prev == NULL)
 	return(NULL);
 else
-	return([CXMLNode nodeWithLibXMLNode:_node->prev]);
+	return([CXMLNode nodeWithLibXMLNode:_node->prev freeOnDealloc:NO]);
 }
 
 - (CXMLNode *)nextSibling
@@ -191,7 +208,7 @@ NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
 if (_node->next == NULL)
 	return(NULL);
 else
-	return([CXMLNode nodeWithLibXMLNode:_node->next]);
+	return([CXMLNode nodeWithLibXMLNode:_node->next freeOnDealloc:NO]);
 }
 
 //- (CXMLNode *)previousNode;
@@ -240,34 +257,21 @@ return([NSString stringWithFormat:@"<%@ %p [%p] %@ %@>", NSStringFromClass([self
 return([self XMLStringWithOptions:0]);
 }
 
-- (NSString*)_XMLStringWithOptions:(NSUInteger)options appendingToString:(NSMutableString*)str
-{
-#pragma unused (options)
-
-id value = NULL;
-switch([self kind])
-	{
-	case CXMLAttributeKind:
-		value = [NSMutableString stringWithString:[self stringValue]];
-		[value replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:0 range:NSMakeRange(0, [value length])];
-		[str appendFormat:@" %@=\"%@\"", [self name], value];
-		break;
-	case CXMLTextKind:
-		[str appendString:[self stringValue]];
-		break;
-	case XML_COMMENT_NODE:
-	case XML_CDATA_SECTION_NODE:
-		// TODO: NSXML does not have XML_CDATA_SECTION_NODE correspondent.
-		break;
-	default:
-		NSAssert1(NO, @"TODO not implemented type (%d).",  [self kind]);
-	}
-return str;
-}
-
 - (NSString *)XMLStringWithOptions:(NSUInteger)options
 {
-return [self _XMLStringWithOptions:options appendingToString:[NSMutableString string]];
+NSMutableData *theData = [[NSMutableData alloc] init];
+
+xmlOutputBufferPtr theOutputBuffer = xmlOutputBufferCreateIO(MyXmlOutputWriteCallback, MyXmlOutputCloseCallback, theData, NULL);
+
+xmlNodeDumpOutput(theOutputBuffer, _node->doc, _node, 0, 0, "utf-8");
+
+xmlOutputBufferFlush(theOutputBuffer);
+
+NSString *theString = [[[NSString alloc] initWithData:theData encoding:NSUTF8StringEncoding] autorelease];
+
+xmlOutputBufferClose(theOutputBuffer);
+
+return(theString);
 }
 //- (NSString *)canonicalXMLStringPreservingComments:(BOOL)comments;
 
@@ -284,6 +288,12 @@ theXPathContext->node = _node;
 
 // TODO considering putting xmlChar <-> UTF8 into a NSString category
 xmlXPathObjectPtr theXPathObject = xmlXPathEvalExpression((const xmlChar *)[xpath UTF8String], theXPathContext);
+if (theXPathObject == NULL)
+	{
+	if (error)
+		*error = [NSError errorWithDomain:@"TODO_DOMAIN" code:-1 userInfo:NULL];
+	return(NULL);
+	}
 if (xmlXPathNodeSetIsEmpty(theXPathObject->nodesetval))
 	theResult = [NSArray array]; // TODO better to return NULL?
 else
@@ -293,7 +303,7 @@ else
 	for (N = 0; N < theXPathObject->nodesetval->nodeNr; N++)
 		{
 		xmlNodePtr theNode = theXPathObject->nodesetval->nodeTab[N];
-		[theArray addObject:[CXMLNode nodeWithLibXMLNode:theNode]];
+		[theArray addObject:[CXMLNode nodeWithLibXMLNode:theNode freeOnDealloc:NO]];
 		}
 		
 	theResult = theArray;
@@ -309,3 +319,17 @@ return(theResult);
 
 
 @end
+
+static int MyXmlOutputWriteCallback(void * context, const char * buffer, int len)
+{
+NSMutableData *theData = context;
+[theData appendBytes:buffer length:len];
+return(len);
+}
+
+static int MyXmlOutputCloseCallback(void * context)
+{
+NSMutableData *theData = context;
+[theData release];
+return(0);
+}

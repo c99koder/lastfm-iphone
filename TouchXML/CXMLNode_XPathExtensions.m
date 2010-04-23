@@ -1,9 +1,9 @@
 //
 //  CXMLNode_XPathExtensions.m
-//  TouchXML
+//  TouchCode
 //
 //  Created by Jonathan Wight on 04/01/08.
-//  Copyright (c) 2008 Jonathan Wight
+//  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -64,7 +64,7 @@ else
 	for (N = 0; N < theXPathObject->nodesetval->nodeNr; N++)
 		{
 		xmlNodePtr theNode = theXPathObject->nodesetval->nodeTab[N];
-		[theArray addObject:[CXMLNode nodeWithLibXMLNode:theNode]];
+		[theArray addObject:[CXMLNode nodeWithLibXMLNode:theNode freeOnDealloc:NO]];
 		}
 		
 	theResult = theArray;
@@ -74,6 +74,11 @@ xmlXPathFreeObject(theXPathObject);
 
 xmlXPathFreeContext(theXPathContext);
 return(theResult);
+}
+
+- (CXMLNode *)nodeForXPath:(NSString *)xpath error:(NSError **)outError
+{
+return([[self nodesForXPath:xpath error:outError] lastObject]);
 }
 
 @end

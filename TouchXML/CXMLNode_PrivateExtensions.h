@@ -1,9 +1,9 @@
 //
 //  CXMLNode_PrivateExtensions.h
-//  TouchXML
+//  TouchCode
 //
 //  Created by Jonathan Wight on 03/07/08.
-//  Copyright (c) 2008 Jonathan Wight
+//  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -33,8 +33,8 @@
 
 @property (readonly, nonatomic, assign) xmlNodePtr node;
 
-- (id)initWithLibXMLNode:(xmlNodePtr)inLibXMLNode;
+- (id)initWithLibXMLNode:(xmlNodePtr)inLibXMLNode freeOnDealloc:(BOOL)infreeOnDealloc;
 
-+ (id)nodeWithLibXMLNode:(xmlNodePtr)inLibXMLNode;
++ (id)nodeWithLibXMLNode:(xmlNodePtr)inLibXMLNode freeOnDealloc:(BOOL)infreeOnDealloc;
 
 @end

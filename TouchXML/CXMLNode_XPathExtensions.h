@@ -1,9 +1,9 @@
 //
 //  CXMLNode_XPathExtensions.h
-//  TouchXML
+//  TouchCode
 //
 //  Created by Jonathan Wight on 04/01/08.
-//  Copyright (c) 2008 Jonathan Wight
+//  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -32,5 +32,6 @@
 @interface CXMLNode (CXMLNode_XPathExtensions)
 
 - (NSArray *)nodesForXPath:(NSString *)xpath namespaceMappings:(NSDictionary *)inNamespaceMappings error:(NSError **)error;
+- (CXMLNode *)nodeForXPath:(NSString *)xpath error:(NSError **)outError;
 
 @end
