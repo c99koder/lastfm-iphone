@@ -51,8 +51,12 @@ NSURL *__redirectURL;
 
 @implementation UIApplication (openURLWithWarning)
 -(void)openURLWithWarning:(NSURL *)url {
-	NSLog(@"%@", url);
-	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
+	UIDevice* device = [UIDevice currentDevice];
+	BOOL backgroundSupported = NO;
+	if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+		backgroundSupported = device.multitaskingSupported;
+	
+	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE && !backgroundSupported) {
 		URLWarningDelegate *delegate = [[URLWarningDelegate alloc] initWithURL:url];
 		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"EXTERNAL_LINK_TITLE", @"External link title")
 																										 message:NSLocalizedString(@"EXTERNAL_LINK", @"External link")

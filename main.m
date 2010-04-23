@@ -21,7 +21,6 @@
 
 #import <execinfo.h>
 #import <signal.h>
-#import <ucontext.h>
 #import <UIKit/UIKit.h>
 #import "version.h"
 
