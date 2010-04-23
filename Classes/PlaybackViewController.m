@@ -898,6 +898,15 @@ int tagSort(id tag1, id tag2, void *context) {
 			break;
 	}
 }
+- (NSString *)stripTime:(NSString *)date {
+	NSRange range = [date rangeOfString:@":"];
+	
+	if(range.location != NSNotFound) {
+		return [date substringToIndex:range.location - 3];
+	} else {
+		return date;
+	}
+}
 - (void)_processEvents:(NSArray *)events {
 	int i=0,lasti=0;
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -913,10 +922,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	_eventDateCounts = [[NSMutableArray alloc] init];
 	
 	if([_events count]) {
-		NSDate *date, *lastDate = [formatter dateFromString:[[_events objectAtIndex:0] objectForKey:@"startDate"]];
+		NSDate *date, *lastDate = [formatter dateFromString:[self stripTime:[[_events objectAtIndex:0] objectForKey:@"startDate"]]];
 		
 		for(NSDictionary *event in _events) {
-			date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+			date = [formatter dateFromString:[self stripTime:[event objectForKey:@"startDate"]]];
+
 			if(![lastDate isEqualToDate:date]) {
 				[_eventDateOffsets addObject:[NSNumber numberWithInt:lasti]];
 				[_eventDateCounts addObject:[NSNumber numberWithInt:i - lasti]];
