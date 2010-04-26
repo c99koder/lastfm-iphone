@@ -1191,6 +1191,9 @@ int tagSort(id tag1, id tag2, void *context) {
 @end
 
 @implementation PlaybackViewController
+- (BOOL)canBecomeFirstResponder {
+	return YES;
+}
 - (void)viewDidLoad {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	trackView.view.frame = CGRectMake(0,0,320,416);
@@ -1233,6 +1236,36 @@ int tagSort(id tag1, id tag2, void *context) {
 	fans.view.frame = CGRectMake(0,0,320,369);
 	events.view.frame = CGRectMake(0,0,320,369);
 	[trackView viewWillAppear:YES];
+	[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+	[self becomeFirstResponder];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+	[self resignFirstResponder];
+}
+- (void)remoteControlReceivedWithEvent:(UIEvent*)theEvent {
+
+	if (theEvent.type == UIEventTypeRemoteControl) {
+		switch(theEvent.subtype) {
+			case UIEventSubtypeRemoteControlPlay:
+				break;
+			case UIEventSubtypeRemoteControlPause:
+				break;
+			case UIEventSubtypeRemoteControlTogglePlayPause:
+			case UIEventSubtypeRemoteControlStop:
+				[self stopButtonPressed:nil];
+				break;
+			case UIEventSubtypeRemoteControlNextTrack:
+				[self skipButtonPressed:nil];
+				break;
+			case UIEventSubtypeRemoteControlEndSeekingBackward:
+				[self loveButtonPressed:loveBtn];
+				break;
+			default:
+				return;
+		}
+	}
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	if([[detailView subviews] count])
