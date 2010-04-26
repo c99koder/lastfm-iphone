@@ -1262,6 +1262,9 @@ int tagSort(id tag1, id tag2, void *context) {
 			case UIEventSubtypeRemoteControlEndSeekingBackward:
 				[self loveButtonPressed:loveBtn];
 				break;
+			case UIEventSubtypeRemoteControlEndSeekingForward:
+				[self banButtonPressed:banBtn];
+				break;
 			default:
 				return;
 		}
