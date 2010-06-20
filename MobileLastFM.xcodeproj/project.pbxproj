@@ -1376,7 +1376,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos4.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Release;

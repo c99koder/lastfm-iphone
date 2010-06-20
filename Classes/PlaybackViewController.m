@@ -1236,13 +1236,16 @@ int tagSort(id tag1, id tag2, void *context) {
 	fans.view.frame = CGRectMake(0,0,320,369);
 	events.view.frame = CGRectMake(0,0,320,369);
 	[trackView viewWillAppear:YES];
-	[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-	[self becomeFirstResponder];
 }
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 	[self resignFirstResponder];
+}
+-(void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+	[self becomeFirstResponder];
 }
 - (void)remoteControlReceivedWithEvent:(UIEvent*)theEvent {
 
