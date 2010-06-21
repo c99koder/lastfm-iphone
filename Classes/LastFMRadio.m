@@ -26,7 +26,9 @@
 #import "NSString+URLEscaped.h"
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
+#if !(TARGET_IPHONE_SIMULATOR)
 #import "Beacon.h"
+#endif
 
 void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	if(inInterruptionState == kAudioSessionBeginInterruption) {
@@ -613,7 +615,9 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		} else {
 			_radioType = @"radio";
 		}
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:_radioType timeSession:YES];
+#endif
 		return TRUE;
 	}
 	return FALSE;
@@ -651,7 +655,9 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
 		else
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"NEC error" timeSession:NO];
+#endif
 		[self stop];
 		return FALSE;
 	}
@@ -678,7 +684,9 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)stop {
 	[_busyLock lock];
+#if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] endSubBeaconWithName:_radioType];
+#endif
 	NSLog(@"Stopping playback\n");
 	if([_tracks count]) {
 		[[_tracks objectAtIndex: 0] stop];

@@ -27,7 +27,9 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "NSString+URLEscaped.h"
 #import "UIApplication+openURLWithWarning.h"
+#if !(TARGET_IPHONE_SIMULATOR)
 #import "Beacon.h"
+#endif
 
 int tagSort(id tag1, id tag2, void *context);
 
@@ -116,7 +118,9 @@ int tagSort(id tag1, id tag2, void *context);
 	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (void)buyButtonPressed:(UIButton *)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"top-buy" timeSession:NO];
+#endif
 	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 											 [[_data objectAtIndex:sender.tag] objectForKey:@"artist"],
 											 [[_data objectAtIndex:sender.tag] objectForKey:@"name"]];
@@ -496,7 +500,9 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend")]) {
 		[self shareToFriend];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button")]) {
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"recent-buy" timeSession:NO];
+#endif
 		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 												 [_selectedTrack objectForKey:@"artist"],
 												 [_selectedTrack objectForKey:@"name"]];
@@ -508,7 +514,9 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:URL]];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Share", @"Share button")]) {
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"recent-share" timeSession:NO];
+#endif
 		UIActionSheet *sheet;
 		if(NSClassFromString(@"MFMailComposeViewController") != nil && [NSClassFromString(@"MFMailComposeViewController") canSendMail]) {
 			sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share sheet title")
@@ -526,7 +534,9 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		[sheet showInView:self.view];
 		[sheet release];	
 	} if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Tag", @"Tag button")]) {
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"recent-tag" timeSession:NO];
+#endif
 		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
 		t.delegate = self;
 		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
@@ -539,7 +549,9 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		[self presentModalViewController:t animated:YES];
 		[t release];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"recent-add-playlist" timeSession:NO];
+#endif
 		PlaylistsViewController *p = [[PlaylistsViewController alloc] init];
 		p.delegate = self;
 		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
@@ -547,10 +559,14 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		[p release];
 		[n release];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Love", @"Love Track")]) {
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"recent-love" timeSession:NO];
+#endif
 		[self performSelector:@selector(_love:) withObject:_selectedTrack afterDelay:0.5];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Ban", @"Ban Track")]) {
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"recent-ban" timeSession:NO];
+#endif
 		[self performSelector:@selector(_ban:) withObject:_selectedTrack afterDelay:0.5];
 	} else if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Ban Track", @"Ban Track (long)")]) {
 		if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {

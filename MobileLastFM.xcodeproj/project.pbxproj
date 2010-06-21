@@ -106,7 +106,6 @@
 		222903440E4B39A10024294D /* month_arrow_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903420E4B39A10024294D /* month_arrow_right.png */; };
 		222903460E4B39EE0024294D /* month_heading_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 222903450E4B39EE0024294D /* month_heading_panel.png */; };
 		222905270E4C92390024294D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222905260E4C92390024294D /* QuartzCore.framework */; };
-		222C98B510B478F20008767B /* libPMAnalytics-r69.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 222C98B410B478F20008767B /* libPMAnalytics-r69.a */; };
 		223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223129320DFF21A500EC3BF0 /* FirstRunViewController.m */; };
 		22327C140E700B1F002016DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22327C130E700B1F002016DD /* Settings.bundle */; };
 		22362B9B0E13E4600034F91A /* btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 22362B9A0E13E4600034F91A /* btn.png */; };
@@ -144,6 +143,7 @@
 		229808D10E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */; };
 		229808D20E6DAA44009CEDF9 /* profile_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CD0E6DAA44009CEDF9 /* profile_panel.png */; };
 		229808D30E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */; };
+		229F8EBD11CFDF1C00AF5D6A /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 229F8EBC11CFDF1C00AF5D6A /* libPMAnalytics-r91.a */; };
 		22ABB3030DAE68FC00D2871E /* ChartsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB3020DAE68FC00D2871E /* ChartsViewController.m */; };
 		22ABB41E0DB10C3100D2871E /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB41D0DB10C3100D2871E /* SearchViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
@@ -328,7 +328,6 @@
 		222903420E4B39A10024294D /* month_arrow_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_arrow_right.png; sourceTree = "<group>"; };
 		222903450E4B39EE0024294D /* month_heading_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = month_heading_panel.png; sourceTree = "<group>"; };
 		222905260E4C92390024294D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		222C98B410B478F20008767B /* libPMAnalytics-r69.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r69.a"; sourceTree = "<group>"; };
 		222F3DF80E59E87600F2BBD5 /* apikey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = apikey.h; sourceTree = "<group>"; };
 		223128F60DFF1ECB00EC3BF0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		223129310DFF21A500EC3BF0 /* FirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstRunViewController.h; sourceTree = "<group>"; };
@@ -379,6 +378,7 @@
 		229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_dark_bkg_lower.png; sourceTree = "<group>"; };
 		229808CD0E6DAA44009CEDF9 /* profile_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_panel.png; sourceTree = "<group>"; };
 		229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_upper.png; sourceTree = "<group>"; };
+		229F8EBC11CFDF1C00AF5D6A /* libPMAnalytics-r91.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r91.a"; sourceTree = "<group>"; };
 		22ABB3010DAE68FB00D2871E /* ChartsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartsViewController.h; sourceTree = "<group>"; };
 		22ABB3020DAE68FC00D2871E /* ChartsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartsViewController.m; sourceTree = "<group>"; };
 		22ABB41C0DB10C3100D2871E /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
@@ -484,7 +484,7 @@
 				225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */,
 				225A911110026ADF00DC5798 /* libxml2-2.6.30-arm.a in Frameworks */,
 				225A913010026F0B00DC5798 /* libxml2-2.6.30-i686.a in Frameworks */,
-				222C98B510B478F20008767B /* libPMAnalytics-r69.a in Frameworks */,
+				229F8EBD11CFDF1C00AF5D6A /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,7 +549,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				222C98B410B478F20008767B /* libPMAnalytics-r69.a */,
+				229F8EBC11CFDF1C00AF5D6A /* libPMAnalytics-r91.a */,
 				225A912F10026F0B00DC5798 /* libxml2-2.6.30-i686.a */,
 				225A911010026ADF00DC5798 /* libxml2-2.6.30-arm.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
@@ -1196,8 +1196,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/mobclix.lib/ARM\"",
-					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;
@@ -1231,7 +1229,7 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos4.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Distribution;

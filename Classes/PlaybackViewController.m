@@ -29,7 +29,9 @@
 #import "UIViewController+NowPlayingButton.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "NSString+MD5.h"
+#if !(TARGET_IPHONE_SIMULATOR)
 #import "Beacon.h"
+#endif
 
 @implementation PlaybackSubview
 - (void)showLoadingView {
@@ -420,7 +422,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha < 1) {
 		_loadingView.alpha = 1;
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"buffering" timeSession:YES];
+#endif
 	}
 	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
 		[UIView beginAnimations:nil context:nil];
@@ -436,7 +440,9 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView commitAnimations];
 		if(!_showedMetadata && _artworkView.frame.size.width == 320)
 			[self _showGradient];
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] endSubBeaconWithName:@"buffering"];
+#endif
 	}
 }
 - (void)_fetchArtwork:(NSDictionary *)trackInfo {
@@ -805,7 +811,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	_address.text = address;
 	[address release];
 	[NSThread detachNewThreadSelector:@selector(_fetchImage:) toTarget:self withObject:[event objectForKey:@"image"]];
+#if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"eventdetails" timeSession:YES];
+#endif
 }
 - (IBAction)willAttendButtonPressed:(id)sender {
 	self.attendance = eventStatusAttending;
@@ -842,7 +850,9 @@ int tagSort(id tag1, id tag2, void *context) {
 													 toTarget:self
 												 withObject:[NSDictionary dictionaryWithObjectsAndKeys:[event objectForKey:@"id"], @"id", nil]];
 	[delegate doneButtonPressed:self];
+#if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] endSubBeaconWithName:@"eventdetails"];
+#endif
 }
 - (IBAction)mapsButtonPressed:(id)sender {
 	NSMutableString *query =[[NSMutableString alloc] init];
@@ -861,8 +871,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([[event objectForKey:@"country"] length]) {
 		[query appendFormat:@" %@", [event objectForKey:@"country"]];
 	}
+#if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"map" timeSession:NO];
 	[[Beacon shared] endSubBeaconWithName:@"eventdetails"];
+#endif
 	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?f=q&q=%@&ie=UTF8&om=1&iwloc=addr", [query URLEscaped]]]];
 	[query release];
 }
@@ -1306,7 +1318,9 @@ int tagSort(id tag1, id tag2, void *context) {
 		[contentView addSubview: trackView.view];
 		[UIView commitAnimations];
 		_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] endSubBeaconWithName:@"details"];
+#endif
 	} else {
 		detailsBtn.frame = CGRectMake(1,1,28,28);
 		[UIView beginAnimations:nil context:nil];
@@ -1324,14 +1338,18 @@ int tagSort(id tag1, id tag2, void *context) {
 		tabBar.selectedItem = [tabBar.items objectAtIndex:0];
 		[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
 		[UIView commitAnimations];
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"details" timeSession:YES];
+#endif
 	}
 }
 -(void)onTourButtonPressed:(id)sender {
 	[self detailsButtonPressed:sender];
 	tabBar.selectedItem = [tabBar.items objectAtIndex: 3];
 	[self tabBar:tabBar didSelectItem:tabBar.selectedItem];
+#if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"on-tour-strap" timeSession:NO];
+#endif
 }
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	[[detailView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -1526,7 +1544,9 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 	}
 	
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button")]) {
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"nowplaying-buy" timeSession:NO];
+#endif
 		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 												 [trackInfo objectForKey:@"creator"],
 												 [trackInfo objectForKey:@"title"]];

@@ -24,7 +24,9 @@
 #import "NSString+MD5.h"
 #import "NSString+URLEscaped.h"
 #import "version.h"
+#if !(TARGET_IPHONE_SIMULATOR)
 #import "Beacon.h"
+#endif
 
 @implementation FirstRunViewController
 -(void)_authenticateUser {
@@ -77,7 +79,9 @@
 		_password.text = _regpassword.text;
 		[self cancelButtonPressed:nil];
 		[self loginButtonPressed:nil];
+#if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"signup" timeSession:NO];
+#endif
 	}	
 }
 -(IBAction)createButtonPressed:(id)sender {
