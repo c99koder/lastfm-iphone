@@ -47,7 +47,7 @@
 	_queue = [[NSMutableArray alloc] initWithCapacity:250];
 	_queueTimer = nil;
 	_scrobblerState = SCROBBLER_OFFLINE;
-	_queueTimerInterval = 60;
+	_queueTimerInterval = 2;
 	_maxSubmissionCount = 50;
 	_connection = nil;
 	_submitted = NO;
@@ -215,8 +215,8 @@
 																							 repeats:NO];
 		NSLog(@"Queue scheduled to be flushed in %i seconds\n", _queueTimerInterval);
 		_queueTimerInterval *= 2;
-		if(_queueTimerInterval < 60) {
-			_queueTimerInterval = 60;
+		if(_queueTimerInterval < 2) {
+			_queueTimerInterval = 2;
 		} else if(_queueTimerInterval > 240) {
 			_sess = nil;
 		}
@@ -269,7 +269,7 @@
 		return;
 	
 	if(_connection) {
-		_queueTimerInterval = 30;
+		_queueTimerInterval = 2;
 		[self doQueueTimer];
 		return;
 	}	
@@ -308,7 +308,7 @@
 		NSLog(@"Not sending any tracks");
 		[postData release];
 		[_queue removeAllObjects];
-		_queueTimerInterval = 15;
+		_queueTimerInterval = 2;
 	} else {
 		_submissionCount = i;
 		NSLog(@"Sending %i / %i tracks...\n", i, [_queue count]);
@@ -353,7 +353,7 @@
 				_scrobbleURL = [[list objectAtIndex: 3] retain];
 				_scrobblerState = SCROBBLER_READY;
 				NSLog(@"Authenticated. Session: %@\n", _sess);
-				_queueTimerInterval = 15;
+				_queueTimerInterval = 2;
 			} else {
 				[_sess release];
 				_sess = nil;
@@ -367,7 +367,7 @@
 		case SCROBBLER_SCROBBLING:
 			if([scrobblerResult isEqualToString:@"OK"]) {
 				NSLog(@"Scrobble succeeded!\n");
-				_queueTimerInterval = 15;
+				_queueTimerInterval = 2;
 				for(i=0; [_queue count] > 0 && i < _submissionCount; i++) {
 					NSDictionary *track = [_queue objectAtIndex: 0];
 					if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
