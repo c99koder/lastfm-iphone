@@ -171,13 +171,23 @@
 		if([[track objectForKey:@"title"] isEqualToString:(title==nil)?@"":title] &&
 			 [[track objectForKey:@"artist"] isEqualToString:(artist==nil)?@"":artist] &&
 			 [[track objectForKey:@"album"] isEqualToString:(album==nil)?@"":album]) {
-			[track setObject:rating forKey:@"rating"];
+			if(![rating isEqualToString:@"S"])
+				[track setObject:rating forKey:@"rating"];
 			return;
 		}
 	}
 	//If we got here, there was no match. Queue it and repeat!
 	if([self scrobbleTrack:title byArtist:artist onAlbum:album withStartTime:startTime withDuration:duration fromSource:source])
-		[self rateTrack:title byArtist:artist onAlbum:album withStartTime:startTime withDuration:duration fromSource:source rating:rating];	
+	{
+		for(NSMutableDictionary *track in _queue) {
+			if([[track objectForKey:@"title"] isEqualToString:(title==nil)?@"":title] &&
+				 [[track objectForKey:@"artist"] isEqualToString:(artist==nil)?@"":artist] &&
+				 [[track objectForKey:@"album"] isEqualToString:(album==nil)?@"":album]) {
+				[track setObject:rating forKey:@"rating"];
+				return;
+			}
+		}
+	}
 }
 - (BOOL)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withStartTime:(int)startTime withDuration:(int)duration fromSource:(NSString *)source {
 	if([[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastScrobble"] objectForKey:@"startTime"] intValue] != startTime ||
