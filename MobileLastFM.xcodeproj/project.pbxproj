@@ -1207,7 +1207,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Last.fm";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DISTRIBUTION,
@@ -1222,13 +1222,13 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1B37DCB5-FEE8-4168-8D30-2B11E7C21682";
 				SDKROOT = iphoneos4.0;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
@@ -1264,7 +1264,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Last.fm";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Last.fm";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
@@ -1287,9 +1287,9 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "09B94101-C6D6-46A9-888C-9B035EE50019";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "34148A55-BA8E-4F12-9466-1D68221ED030";
-				SDKROOT = iphoneos3.0;
+				PROVISIONING_PROFILE = "E944BF2F-985D-4074-8820-BE1BAF2012BF";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E944BF2F-985D-4074-8820-BE1BAF2012BF";
+				SDKROOT = iphoneos4.0;
 				STRIP_INSTALLED_PRODUCT = YES;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};

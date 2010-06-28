@@ -272,7 +272,7 @@ NSString *kUserAgent;
 	[self showProfileView:YES];
 	[_loadingView removeFromSuperview];
 }
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 #if !(TARGET_IPHONE_SIMULATOR)
 	[Beacon initAndStartBeaconWithApplicationCode:PINCHMEDIA_ID useCoreLocation:NO useOnlyWiFi:NO];
 #endif
@@ -309,6 +309,7 @@ NSString *kUserAgent;
 	}
 	
 	[window makeKeyAndVisible];
+	return YES;
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
