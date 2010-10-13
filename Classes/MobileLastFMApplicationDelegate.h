@@ -38,6 +38,7 @@
 	NSString *_launchURL;
 	UIAlertView *_pendingAlert;
 	BOOL _locked;
+	BOOL _hidPlaybackDueToLowMemory;
 }
 
 @property (nonatomic, retain) UIWindow *window;

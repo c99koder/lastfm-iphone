@@ -114,11 +114,46 @@ NSString *kUserAgent;
 }
 - (void)applicationWillResignActive:(UIApplication *)application {
 	_locked = YES;
+	if(playbackViewController != nil)
+		[playbackViewController resignActive];
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 	_locked = NO;
 	if(_pendingAlert)
 		[_pendingAlert show];
+	if(_hidPlaybackDueToLowMemory) {
+		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
+			if([object isKindOfClass:[PlaybackViewController class]]) {
+				playbackViewController = [object retain];
+				break;
+			}
+		}
+		if(!playbackViewController) {
+			NSLog(@"Failed to load playback view!\n");
+		}
+		[rootViewController pushViewController:playbackViewController animated:NO];
+		_hidPlaybackDueToLowMemory = NO;
+	}
+	if(playbackViewController != nil)
+		[playbackViewController becomeActive];
+}
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+	if(playbackViewController != nil) {
+		NSLog(@"Low memory, releasing details view controller");
+		if([playbackViewController releaseDetailsView])
+			return;
+	}
+	NSLog(@"Low memory, cancelling prebuffering");
+	if([[LastFMRadio sharedInstance] cancelPrebuffering])
+		return;
+	
+	if(_locked && playbackViewController) {
+		NSLog(@"Low memory, popping playback view as last resort");
+		[rootViewController popViewControllerAnimated:NO];
+		[playbackViewController release];
+		playbackViewController = nil;
+		_hidPlaybackDueToLowMemory = YES;
+	}
 }
 - (void)sendCrashReport {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -279,16 +314,6 @@ NSString *kUserAgent;
 	_mainView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	[window addSubview:_mainView];
 
-	for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
-		if([object isKindOfClass:[PlaybackViewController class]]) {
-			playbackViewController = [object retain];
-			break;
-		}
-	}
-	if(!playbackViewController) {
-		NSLog(@"Failed to load playback view!\n");
-	}	
-	
 	if([[[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"] length] > 0) {
 		NSMutableArray *frames = [[NSMutableArray alloc] init];
 		int i;
@@ -481,12 +506,26 @@ NSString *kUserAgent;
 	return TRUE;
 }
 -(void)showPlaybackView {
+	if(playbackViewController == nil) {
+		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
+			if([object isKindOfClass:[PlaybackViewController class]]) {
+				playbackViewController = [object retain];
+				break;
+			}
+		}
+		if(!playbackViewController) {
+			NSLog(@"Failed to load playback view!\n");
+		}
+	}
+
 	[playbackViewController hideDetailsView];
 	[rootViewController pushViewController:playbackViewController animated:YES];
 }
 -(void)hidePlaybackView {
 	[rootViewController popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
+	[playbackViewController release];
+	playbackViewController = nil;
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
 	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];

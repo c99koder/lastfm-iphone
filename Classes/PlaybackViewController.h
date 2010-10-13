@@ -28,36 +28,7 @@
 #import "CalendarViewController.h"
 #import "TagEditorViewController.h"
 #import "PlaylistsViewController.h"
-
-@interface PlaybackSubview : UIViewController {
-	IBOutlet UIView *_loadingView;
-}
-- (void)showLoadingView;
-- (void)hideLoadingView;
-@end
-
-@interface SimilarArtistsViewController : PlaybackSubview<UITableViewDelegate, UITableViewDataSource> {
-	NSArray *_data;
-	NSMutableArray *_cells;
-	IBOutlet UITableView *_table;
-	NSLock *_lock;
-}
-@end
-
-@interface TagsViewController : PlaybackSubview<UITableViewDelegate, UITableViewDataSource> {
-	NSArray *_data;
-	IBOutlet UITableView *_table;
-	NSLock *_lock;
-}
-@end
-
-@interface FansViewController : PlaybackSubview<UITableViewDelegate, UITableViewDataSource> {
-	NSArray *_data;
-	NSMutableArray *_cells;
-	IBOutlet UITableView *_table;
-	NSLock *_lock;
-}
-@end
+#import "DetailsViewController.h"
 
 @interface TrackViewController : PlaybackSubview {
 	IBOutlet UIImageView *_artworkView;
@@ -74,96 +45,28 @@
 	UIImage *artwork;
 	UIImageView *_noArtworkView;
 	NSLock *_lock;
+	NSTimer *_timer;
 	BOOL _showedMetadata;
 }
 -(IBAction)artworkButtonPressed:(id)sender;
+-(void)resignActive;
+-(void)becomeActive;
 @property (nonatomic, readonly) UIImage *artwork;
-@end
-
-@interface ArtistBioView : PlaybackSubview {
-	IBOutlet UIWebView *_webView;
-	NSString *_bio;
-	NSString *_img, *_listeners, *_playcount;
-	NSLock *_lock;
-}
-- (void)refresh;
-@end
-
-@interface EventCell : UITableViewCell {
-	UILabel *_eventTitle;
-	UILabel *_artists;
-	UILabel *_venue;
-	UILabel *_location;
-}
-- (void)setEvent:(NSDictionary *)event;
-@end
-
-@interface EventsViewController : PlaybackSubview<CalendarViewControllerDelegate,UITableViewDelegate,UITableViewDataSource> {
-	IBOutlet CalendarViewController *_calendar;
-	IBOutlet UITableView *_table;
-	IBOutlet UIButton *_badge;
-	IBOutlet UIImageView *_shadow;
-	IBOutlet UILabel *_artistLabel;
-	IBOutlet UISegmentedControl *segment;
-	NSArray *_events;
-	NSMutableArray *_eventDates;
-	NSMutableArray *_eventDateCounts;
-	NSMutableArray *_eventDateOffsets;
-	NSMutableArray *_attendingEvents;
-	NSMutableArray *_data;
-	NSLock *_lock;
-	NSString *_username;
-}
-- (id)initWithUsername:(NSString *)user;
-- (id)initWithUsername:(NSString *)user withEvents:(NSArray *)events;
-- (void)doneButtonPressed:(id)sender;
-- (void)viewTypeToggled:(id)sender;
-@end
-
-@interface EventDetailViewController : UIViewController {
-	NSDictionary *event;
-	IBOutlet UILabel *_eventTitle;
-	IBOutlet UILabel *_artists;
-	IBOutlet UILabel *_month;
-	IBOutlet UILabel *_day;
-	IBOutlet UILabel *_venue;
-	IBOutlet UILabel *_address;
-	IBOutlet UIImageView *_image;
-	IBOutlet UIButton *_willAttendBtn;
-	IBOutlet UIButton *_mightAttendBtn;
-	IBOutlet UIButton *_notAttendBtn;
-	int attendance;
-	EventsViewController *delegate;
-}
-@property (nonatomic, retain) NSDictionary *event;
-@property (nonatomic, retain) EventsViewController *delegate;
-@property int attendance;
-- (IBAction)doneButtonPressed:(id)sender;
-- (IBAction)mapsButtonPressed:(id)sender;
-- (IBAction)willAttendButtonPressed:(id)sender;
-- (IBAction)mightAttendButtonPressed:(id)sender;
-- (IBAction)notAttendButtonPressed:(id)sender;
 @end
 
 @interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,PlaylistsViewControllerDelegate,MFMailComposeViewControllerDelegate> {
 	IBOutlet UILabel *_titleLabel;
 	IBOutlet UIToolbar *toolbar;
 	IBOutlet UIView *contentView;
-	IBOutlet UIView *detailsViewContainer;
-	IBOutlet UIView *detailView;
 	IBOutlet UISegmentedControl *detailType;
 	IBOutlet TrackViewController *trackView;
-	IBOutlet ArtistBioView *artistBio;
-	IBOutlet SimilarArtistsViewController *similarArtists;
-	IBOutlet EventsViewController *events;
-	IBOutlet TagsViewController *tags;
-	IBOutlet FansViewController *fans;
 	IBOutlet UIView *volumeView;
 	IBOutlet UIView *detailsBtnContainer;
 	IBOutlet UIButton *detailsBtn;
 	IBOutlet UIButton *loveBtn;
 	IBOutlet UIButton *banBtn;
-	IBOutlet UITabBar *tabBar;
+	
+	DetailsViewController *detailsViewController;
 }
 -(void)backButtonPressed:(id)sender;
 -(void)detailsButtonPressed:(id)sender;
@@ -172,7 +75,9 @@
 -(void)banButtonPressed:(id)sender;
 -(void)stopButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
--(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
 -(void)onTourButtonPressed:(id)sender;
 -(void)hideDetailsView;
+-(void)resignActive;
+-(void)becomeActive;
+-(BOOL)releaseDetailsView;
 @end

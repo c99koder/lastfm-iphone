@@ -153,6 +153,8 @@
 		22C03A8F0E5DB19900EBF062 /* top_tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A8E0E5DB19900EBF062 /* top_tags.png */; };
 		22C03C620E5F138300EBF062 /* buy.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03C610E5F138300EBF062 /* buy.png */; };
 		22C54F750DEEF9A30087322B /* TagRadioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C54F740DEEF9A30087322B /* TagRadioViewController.m */; };
+		22CAC580125F891100250917 /* DetailsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22CAC57E125F891100250917 /* DetailsView.xib */; };
+		22CAC59D125F8B3400250917 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CAC59C125F8B3400250917 /* DetailsViewController.m */; };
 		22CBDFAF0DCE0AA300AE5DE0 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */; };
 		22CBDFBE0DCE0BCE00AE5DE0 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */; };
 		22CBE1360DCE3C9B00AE5DE0 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBE1350DCE3C9B00AE5DE0 /* NSString+MD5.m */; };
@@ -392,6 +394,9 @@
 		22C03C610E5F138300EBF062 /* buy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buy.png; sourceTree = "<group>"; };
 		22C54F730DEEF9A30087322B /* TagRadioViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagRadioViewController.h; sourceTree = "<group>"; };
 		22C54F740DEEF9A30087322B /* TagRadioViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagRadioViewController.m; sourceTree = "<group>"; };
+		22CAC57F125F891100250917 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/DetailsView.xib; sourceTree = "<group>"; };
+		22CAC59B125F8B3400250917 /* DetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailsViewController.h; sourceTree = "<group>"; };
+		22CAC59C125F8B3400250917 /* DetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailsViewController.m; sourceTree = "<group>"; };
 		22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		22CBE1340DCE3C9B00AE5DE0 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -502,6 +507,8 @@
 				2244DB0E0E3A569700C4F40B /* CalendarViewController.m */,
 				22631F150E813B5700DC2D09 /* DebugViewController.h */,
 				22631F160E813B5700DC2D09 /* DebugViewController.m */,
+				22CAC59B125F8B3400250917 /* DetailsViewController.h */,
+				22CAC59C125F8B3400250917 /* DetailsViewController.m */,
 				22CD7141117E05E200493A96 /* EventsTabViewController.h */,
 				22CD7142117E05E200493A96 /* EventsTabViewController.m */,
 				223129310DFF21A500EC3BF0 /* FirstRunViewController.h */,
@@ -785,6 +792,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				22CAC57E125F891100250917 /* DetailsView.xib */,
 				224793070F8123C100EE0C52 /* Beacon.h */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
@@ -854,7 +862,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MobileLastFM" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1025,6 +1040,7 @@
 				22327C140E700B1F002016DD /* Settings.bundle in Resources */,
 				22F255210E75771E000965FA /* metadatagradient.png in Resources */,
 				22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */,
+				22CAC580125F891100250917 /* DetailsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1070,6 +1086,7 @@
 				22E6E8610E533F08009FD470 /* TagEditorViewController.m in Sources */,
 				22631F170E813B5700DC2D09 /* DebugViewController.m in Sources */,
 				22CD7143117E05E300493A96 /* EventsTabViewController.m in Sources */,
+				22CAC59D125F8B3400250917 /* DetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1090,6 +1107,14 @@
 				22631EF90E81395200DC2D09 /* English */,
 			);
 			name = DebugView.xib;
+			sourceTree = "<group>";
+		};
+		22CAC57E125F891100250917 /* DetailsView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22CAC57F125F891100250917 /* English */,
+			);
+			name = DetailsView.xib;
 			sourceTree = "<group>";
 		};
 		22EB60390E65A8B20021751A /* MainWindow.xib */ = {
@@ -1207,7 +1232,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Last.fm";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DISTRIBUTION,
@@ -1228,8 +1254,10 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "1B37DCB5-FEE8-4168-8D30-2B11E7C21682";
-				SDKROOT = iphoneos4.0;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Distribution;
@@ -1264,8 +1292,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Last.fm";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Last.fm";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1287,10 +1315,11 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "E944BF2F-985D-4074-8820-BE1BAF2012BF";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E944BF2F-985D-4074-8820-BE1BAF2012BF";
-				SDKROOT = iphoneos4.0;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
+				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = "Distribution (ad-hoc)";
@@ -1325,6 +1354,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
@@ -1346,7 +1376,9 @@
 					"-lsqlite3",
 				);
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.0;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Debug;
@@ -1356,6 +1388,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = PL_DB_PRIVATE;
 				GCC_VERSION = 4.2;
@@ -1374,7 +1407,8 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos4.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv6 i386 ppc";
 			};
 			name = Release;

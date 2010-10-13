@@ -85,6 +85,7 @@ NSString *kTrackDidFailToStream;
 	NSTimeInterval _startTime;
 	int _errorSkipCounter;
 	NSTimer *_softSkipTimer;
+	BOOL prebuffering;
 }
 
 @property BOOL playbackWasInterrupted;
@@ -106,4 +107,5 @@ NSString *kTrackDidFailToStream;
 -(NSTimeInterval)startTime;
 -(float)bufferProgress;
 -(LastFMTrack *)currentTrack;
+-(BOOL)cancelPrebuffering;
 @end

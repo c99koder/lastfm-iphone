@@ -250,6 +250,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 	}
 	[_connection cancel];
+	[_receivedData setLength:0];
 	[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 - (void)_pushDataChunk {
@@ -488,6 +489,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];
 		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
+		prebuffering = NO;
 	} else {
 		[self play];
 	}
@@ -499,6 +501,15 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[_playlist removeObjectAtIndex:0];
 	[self play];
 	[[_tracks lastObject] pause];
+	prebuffering = YES;
+}
+-(BOOL)cancelPrebuffering {
+	if(prebuffering) {
+		[[_tracks objectAtIndex: 1] stop];
+		return YES;
+	} else {
+		return NO;
+	}
 }
 -(void)_trackDidFinishLoading:(NSNotification *)notification {
 	NSLog(@"Track did finish loading");
@@ -668,6 +679,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_tracks addObject:track];
 		if([_tracks count] == 1)
 			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
+		prebuffering = NO;
 		return TRUE;
 	} else {
 		return FALSE;
