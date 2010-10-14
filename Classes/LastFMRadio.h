@@ -25,10 +25,11 @@
 #import "PlausibleDatabase.h"
 
 #define RADIO_IDLE 0
-#define TRACK_BUFFERING 1
-#define TRACK_READY 2
-#define TRACK_PLAYING 3
-#define TRACK_PAUSED 4
+#define RADIO_TUNING 1
+#define TRACK_BUFFERING 2
+#define TRACK_READY 3
+#define TRACK_PLAYING 4
+#define TRACK_PAUSED 5
 
 NSString *kTrackDidBecomeAvailable;
 NSString *kTrackDidFinishLoading;
@@ -86,6 +87,7 @@ NSString *kTrackDidFailToStream;
 	int _errorSkipCounter;
 	NSTimer *_softSkipTimer;
 	BOOL prebuffering;
+	BOOL tuning;
 }
 
 @property BOOL playbackWasInterrupted;

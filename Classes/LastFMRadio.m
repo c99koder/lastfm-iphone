@@ -435,6 +435,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(int)state {
 	if([_tracks count])
 		return [[_tracks objectAtIndex:0] state];
+	else if(tuning)
+		return RADIO_TUNING;
 	else
 		return RADIO_IDLE;
 }
@@ -626,6 +628,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		} else {
 			_radioType = @"radio";
 		}
+		tuning = YES;
 #if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:_radioType timeSession:YES];
 #endif
@@ -680,6 +683,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		if([_tracks count] == 1)
 			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
 		prebuffering = NO;
+		tuning = NO;
 		return TRUE;
 	} else {
 		return FALSE;
@@ -705,6 +709,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_tracks removeAllObjects];
 		AudioSessionSetActive(FALSE);
 	}
+	tuning = NO;
+	prebuffering = NO;
 	NSLog(@"Playback stopped");
 	[_busyLock unlock];
 }

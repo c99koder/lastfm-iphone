@@ -37,8 +37,11 @@
 	UINavigationController *rootViewController;
 	NSString *_launchURL;
 	UIAlertView *_pendingAlert;
+	UIAlertView *_dmcaAlert;
+	NSString *_dmcaAlertStation;
 	BOOL _locked;
 	BOOL _hidPlaybackDueToLowMemory;
+	BOOL _dmcaCutoff;
 }
 
 @property (nonatomic, retain) UIWindow *window;

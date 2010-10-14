@@ -170,7 +170,7 @@
 		_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:duration-elapsed]];
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
 	}
-	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha < 1) {
+	if(([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING || [[LastFMRadio sharedInstance] state] == RADIO_TUNING) && _loadingView.alpha < 1) {
 		_loadingView.alpha = 1;
 #if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"buffering" timeSession:YES];
@@ -182,7 +182,7 @@
 		_bufferPercentage.alpha = 1;
 		[UIView commitAnimations];
 	}
-	if([[LastFMRadio sharedInstance] state] != TRACK_BUFFERING && _loadingView.alpha == 1) {
+	if(([[LastFMRadio sharedInstance] state] != TRACK_BUFFERING && [[LastFMRadio sharedInstance] state] != RADIO_TUNING) && _loadingView.alpha == 1) {
 		_bufferPercentage.alpha = 0;
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.5];
