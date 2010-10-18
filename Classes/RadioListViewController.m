@@ -52,7 +52,7 @@
 	self.tableView.sectionFooterHeight = 0;
 	self.tableView.backgroundColor = [UIColor blackColor];
 
-	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"removePlaylists"] isEqualToString:@"YES"]) {
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"removePlaylists"] isEqualToString:@"YES"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
 		[_playlists release];
 		_playlists = [[NSMutableArray alloc] init];
 		NSArray *playlists = [[LastFMService sharedInstance] playlistsForUser:_username];
@@ -126,7 +126,7 @@
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recent Stations", @"Recent Stations heading"), stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	}
 
-	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"removePlaylists"] isEqualToString:@"YES"] && [_playlists count]) {
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"removePlaylists"] isEqualToString:@"YES"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] && [_playlists count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_playlists count]; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_playlists objectAtIndex:x] objectForKey:@"title"],
