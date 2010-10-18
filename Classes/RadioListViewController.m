@@ -88,6 +88,7 @@
 	NSMutableArray *stations = [[NSMutableArray alloc] init];
 	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library", @"My Library station"),[NSString stringWithFormat:@"lastfm://user/%@/personal", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
 	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station"),[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),[NSString stringWithFormat:@"lastfm://user/%@/mix", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
 	
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"showneighborradio"] isEqualToString:@"YES"])
 		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Neighborhood Radio", @"Neighborhood Radio station"),[NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
