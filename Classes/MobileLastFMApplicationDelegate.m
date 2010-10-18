@@ -29,6 +29,7 @@
 #include <SystemConfiguration/SCNetworkReachability.h>
 #import "NSString+URLEscaped.h"
 #import "NSData+Compress.h"
+#import "TagRadioViewController.h"
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "Beacon.h"
 #endif
@@ -87,7 +88,6 @@ NSString *kUserAgent;
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
-		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"hidedmcawarning"];
 		[NSThread detachNewThreadSelector:@selector(_cleanCache) toTarget:self withObject:nil];
 	}
 	return self;
@@ -210,7 +210,20 @@ NSString *kUserAgent;
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Don't Warn Again"]) {
 		[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"hidedmcawarning"];
 		[self _playRadioStation:_dmcaAlertStation animated:YES];
-	}	
+	}
+	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Remove Station"]) {
+		if([_dmcaAlertStation hasPrefix:@"lastfm://usertags/"]) {
+			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removeUserTags"];
+		} else if([_dmcaAlertStation hasPrefix:@"lastfm://playlist/"]) {
+			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removePlaylists"];
+		} else if([_dmcaAlertStation hasSuffix:@"/loved"]) {
+			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removeLovedTracks"];
+		}
+		[radioListViewController rebuildMenu];
+		if([[rootViewController topViewController] isKindOfClass:[TagRadioViewController class]]) {
+			[rootViewController popViewControllerAnimated:YES];
+		}
+	}
 
 	if(_pendingAlert) {
 		[_pendingAlert release];
@@ -226,9 +239,9 @@ NSString *kUserAgent;
 - (UITabBarController *)profileViewForUser:(NSString *)username {
 	UITabBarController *tabBarController = [[UITabBarController alloc] init];
 	tabBarController.title = username;
-	RadioListViewController *r = [[RadioListViewController alloc] initWithUsername:username];
+	radioListViewController = [[RadioListViewController alloc] initWithUsername:username];
 	UITabBarItem *t = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Radio", @"Radio tab label") image:[UIImage imageNamed:@"radio_icon_tab.png"] tag:0];
-	r.tabBarItem = t;
+	radioListViewController.tabBarItem = t;
 	[t release];
 	
 	ProfileViewController *p = [[ProfileViewController alloc] initWithUsername:username];
@@ -241,8 +254,8 @@ NSString *kUserAgent;
 	e.tabBarItem = t;
 	[t release];
 	
-	tabBarController.viewControllers = [NSArray arrayWithObjects:r, p, e, nil];
-	[r release];
+	tabBarController.viewControllers = [NSArray arrayWithObjects:radioListViewController, p, e, nil];
+	[radioListViewController release];
 	[p release];
 	[e release];
 	
@@ -496,40 +509,13 @@ NSString *kUserAgent;
 }
 - (BOOL)playRadioStation:(NSString *)station animated:(BOOL)animated {
 	NSLog(@"Playing radio station: %@\n", station);
-	if(playbackViewController == nil) {
-		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
-			if([object isKindOfClass:[PlaybackViewController class]]) {
-				playbackViewController = [object retain];
-				break;
-			}
-		}
-		if(!playbackViewController) {
-			NSLog(@"Failed to load playback view!\n");
-		}
-	}
-	
-	if(_dmcaCutoff) {
-		if([station hasPrefix:@"lastfm://usertags/"]) {
-			_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available" 
-																							message:@"Due to recent station changes, personal tag radio is no longer available.\n\n(Don't worry, your tags haven't changed)." 
-																						 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
-		} else if([station hasPrefix:@"lastfm://playlist/"]) {
-			_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available"
-																							message:@"Due to recent station changes, playlists are no longer available.\n\n(Don't worry, the list of tracks in your playlists haven't changed)." 
-																						 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
-		} else if([station hasSuffix:@"/loved"]) {
-			_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available" 
-																							message:@"Due to recent station changes, loved tracks radio is no longer available.\n\n(Don't worry, your list of loved tracks hasn't changed)." 
-																						 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
-		}		
-	}
 	
 	if(!_dmcaAlert && !(([[LastFMRadio sharedInstance] state] != RADIO_IDLE) && [[[LastFMRadio sharedInstance] stationURL] isEqualToString:station])) {
 		if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
 			[[LastFMRadio sharedInstance] stop];
 		}
 		if(![[LastFMRadio sharedInstance] selectStation:station]) {
-			if([[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain] && [LastFMService sharedInstance].error.code >= 20)
+			if([[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain] && [LastFMService sharedInstance].error.code >= 20) {
 				switch([LastFMService sharedInstance].error.code) {
 					case errorCodeNotEnoughContent:
 						[self displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content") withTitle:NSLocalizedString(@"ERROR_STATION_TITLE", @"Station unavailable title")];
@@ -543,18 +529,51 @@ NSString *kUserAgent;
 					case errorCodeNotEnoughNeighbours:
 						[self displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_NEIGHBOURS", @"Not enough neighbours") withTitle:NSLocalizedString(@"ERROR_STATION_TITLE", @"Station unavailable title")];
 						break;
+					case errorCodeDeprecated:
+						if([station hasPrefix:@"lastfm://usertags/"]) {
+							_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available" 
+																											message:@"Due to recent station changes, 'personal tag' radio is no longer available.\n\n(Don't worry, your tags haven't changed)." 
+																										 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
+						} else if([station hasPrefix:@"lastfm://playlist/"]) {
+							_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available"
+																											message:@"Due to recent station changes, playlists are no longer available.\n\n(Don't worry, the list of tracks in your playlists haven't changed)." 
+																										 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
+						} else if([station hasSuffix:@"/loved"]) {
+							_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available" 
+																											message:@"Due to recent station changes, 'loved tracks' radio is no longer available.\n\n(Don't worry, your list of loved tracks hasn't changed)." 
+																										 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
+						}
+						if(_dmcaAlert) {
+							_dmcaAlertStation = [station retain];
+							[_dmcaAlert show];
+						}
+						break;
 				}
+				return FALSE;
+			}
 			else
 				[self reportError:[LastFMService sharedInstance].error];
 			return FALSE;
 		}
 	}
 
-	if(!_dmcaCutoff && ![(NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hidedmcawarning"] isEqualToString:@"YES"]
+	if(![(NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hidedmcawarning"] isEqualToString:@"YES"]
 		 && ([station hasPrefix:@"lastfm://usertags/"] || [station hasPrefix:@"lastfm://playlist/"] || [station hasSuffix:@"/loved"])) {
 		_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"This Station is Changing" 
 																						message:@"This station will soon be discontinued due to changes coming to Last.fm radio." 
 																					 delegate:self cancelButtonTitle:@"Continue to Station" otherButtonTitles:@"Read About the Changes", @"Don't Warn Again", nil];
+	}
+	
+	if(playbackViewController == nil) {
+		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
+			if([object isKindOfClass:[PlaybackViewController class]]) {
+				playbackViewController = [object retain];
+				break;
+			}
+		}
+		if(!playbackViewController) {
+			NSLog(@"Failed to load playback view!\n");
+		}
 	}
 	
 	if(_dmcaAlert) {
@@ -562,10 +581,11 @@ NSString *kUserAgent;
 		[_dmcaAlert show];
 		return TRUE;
 	} else {
-		if(animated) {
+		BOOL result = [self _playRadioStation:station];
+		if(result && animated) {
 			[self showPlaybackView];
 		}
-		return [self _playRadioStation:station];
+		return result;
 	}
 }
 -(void)showPlaybackView {

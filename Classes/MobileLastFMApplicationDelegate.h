@@ -25,12 +25,14 @@
 #import "FirstRunViewController.h"
 #import "PlaybackViewController.h"
 #import "SearchViewController.h"
+#import "RadioListViewController.h"
 
 @interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate> {
   IBOutlet UIWindow *window;
 	Scrobbler *_scrobbler;
 	FirstRunViewController *firstRunView;
 	PlaybackViewController *playbackViewController;
+	RadioListViewController *radioListViewController;
 	UIView *_mainView;
 	IBOutlet UIView *_loadingView;
 	IBOutlet UIImageView *_loadingViewLogo;
@@ -41,7 +43,6 @@
 	NSString *_dmcaAlertStation;
 	BOOL _locked;
 	BOOL _hidPlaybackDueToLowMemory;
-	BOOL _dmcaCutoff;
 }
 
 @property (nonatomic, retain) UIWindow *window;

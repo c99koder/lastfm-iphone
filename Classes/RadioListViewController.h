@@ -28,6 +28,8 @@
 	NSArray *_recent;
 	NSThread *_loadingThread;
 	NSArray *_commonArtists;
+	NSArray *_data;
 }
 - (id)initWithUsername:(NSString *)username;
+- (void)rebuildMenu;
 @end

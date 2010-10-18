@@ -562,6 +562,17 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	PLSqliteResultSet *rs = (PLSqliteResultSet *)[_db executeQuery:@"select * from recent_radio order by timestamp desc limit 10",  nil];
 	
 	while([rs next]) {
+		NSString *url = [rs stringForColumn:@"url"];
+		
+		if([url hasSuffix:@"/loved"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removeLovedTracks"] isEqualToString:@"YES"])
+			continue;
+		
+		if([url hasPrefix:@"lastfm://playlist/"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removePlaylists"] isEqualToString:@"YES"])
+			continue;
+
+		if([url hasPrefix:@"lastfm://usertags/"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removeUserTags"] isEqualToString:@"YES"])
+			continue;
+
 		[URLs addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 										 [rs stringForColumn:@"url"], @"url",
 										 [rs stringForColumn:@"name"], @"name",
@@ -574,10 +585,11 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(void)fetchRecentURLs {
 	NSArray *stations = [[LastFMService sharedInstance] recentStationsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	if([stations count]) {
+		int i = 0;
 		[self purgeRecentURLs];
 		for(NSDictionary *station in stations) {
 			[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
-			 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent()], [station objectForKey:@"url"], [station objectForKey:@"name"], nil];
+			 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent() + i++], [station objectForKey:@"url"], [station objectForKey:@"name"], nil];
 		}
 	}
 }
@@ -587,14 +599,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[self removeRecentURL: station];
 	NSLog(@"Selecting station: %@\n", station);
 	NSLog(@"Network connection type: %@\n", [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasWiFiConnection]?@"WiFi":@"EDGE");
-	for(x=0; x<5; x++) {
-		tune = [[LastFMService sharedInstance] tuneRadioStation:station];
-		if((![LastFMService sharedInstance].error) || [LastFMService sharedInstance].error.code != 8 || [LastFMService sharedInstance].error.code != 16)
-			break;
-		else
-			NSLog(@"Server busy, retrying...\n");
-	}
-	if([LastFMService sharedInstance].error) {
+	tune = [[LastFMService sharedInstance] tuneRadioStation:station];
+	if(!tune || [LastFMService sharedInstance].error) {
 		[_playlist release];
 		[_stationURL release];
 		[_station release];

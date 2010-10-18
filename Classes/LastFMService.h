@@ -44,7 +44,8 @@ enum radioErrorCodes {
 	errorCodeNotEnoughContent = 20,
 	errorCodeNotEnoughMembers = 21,
 	errorCodeNotEnoughFans = 22,
-	errorCodeNotEnoughNeighbours = 23
+	errorCodeNotEnoughNeighbours = 23,
+	errorCodeDeprecated = 27
 };
 
 enum eventStatus {
