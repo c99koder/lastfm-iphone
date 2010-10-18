@@ -589,7 +589,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[self purgeRecentURLs];
 		for(NSDictionary *station in stations) {
 			[_db executeUpdate:@"insert into recent_radio (timestamp, url, name) values (?, ?, ?)",
-			 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent() + i++], [station objectForKey:@"url"], [station objectForKey:@"name"], nil];
+			 [NSString stringWithFormat:@"%qu", (u_int64_t)CFAbsoluteTimeGetCurrent() - i++], [station objectForKey:@"url"], [station objectForKey:@"name"], nil];
 		}
 	}
 }
