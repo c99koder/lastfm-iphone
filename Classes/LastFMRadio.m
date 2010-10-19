@@ -30,6 +30,25 @@
 #import "Beacon.h"
 #endif
 
+void audioRouteChangeListenerCallback(void *inUserData, AudioSessionPropertyID inPropertyID, UInt32 inPropertyValueSize, const void *inPropertyValue) {
+	if (inPropertyID != kAudioSessionProperty_AudioRouteChange)
+		return;
+	
+	if ([[LastFMRadio sharedInstance] state] == RADIO_IDLE) {
+		return;
+	} else {
+		CFDictionaryRef routeChangeDictionary = inPropertyValue;
+		CFNumberRef routeChangeReasonRef = CFDictionaryGetValue(routeChangeDictionary, CFSTR(kAudioSession_AudioRouteChangeKey_Reason));
+		
+		SInt32 routeChangeReason;
+		CFNumberGetValue(routeChangeReasonRef, kCFNumberSInt32Type, &routeChangeReason);
+		
+		if (routeChangeReason == kAudioSessionRouteChangeReason_OldDeviceUnavailable) {
+			[[LastFMRadio sharedInstance] stop];
+		}
+	}
+}
+
 void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	if(inInterruptionState == kAudioSessionBeginInterruption) {
 		NSLog(@"interruption detected! stopping playback/recording\n");
@@ -228,9 +247,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(BOOL)play {
 	if(queue) {
 		_startTime = [[NSDate date] timeIntervalSince1970];
-		UInt32 category = kAudioSessionCategory_MediaPlayback;
-		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
-		AudioSessionSetActive(true);
 		[LastFMRadio sharedInstance].playbackWasInterrupted = NO;
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"disableautolock"] isEqualToString:@"YES"])
 			[UIApplication sharedApplication].idleTimerDisabled = YES;
@@ -650,7 +666,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	
 	if(!_playlist || [_playlist count] < 1 || _station == nil) {
 		NSLog(@"Fetching playlist");
-		for(x=0; x<3; x++) {
+		for(x=0; x<2; x++) {
 			NSDictionary *playlist = [[LastFMService sharedInstance] getPlaylist];
 			if([[playlist objectForKey:@"playlist"] count]) {
 				if(!_playlist) {
@@ -685,6 +701,11 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	LastFMTrack *track = [[[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]] autorelease];
 	
 	if(track) {
+		AudioSessionSetActive(true);
+		UInt32 category = kAudioSessionCategory_MediaPlayback;
+		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
+		AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange,audioRouteChangeListenerCallback,nil);
+
 		[_tracks addObject:track];
 		if([_tracks count] == 1)
 			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];

@@ -169,6 +169,8 @@
 		_elapsed.text = [self formatTime:elapsed];
 		_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:duration-elapsed]];
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
+	} else {
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) stopButtonPressed:nil];	
 	}
 	if(([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING || [[LastFMRadio sharedInstance] state] == RADIO_TUNING) && _loadingView.alpha < 1) {
 		_loadingView.alpha = 1;
@@ -389,6 +391,7 @@
 	[super viewWillAppear:animated];
 	[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 	[self resignFirstResponder];
+	[self resignActive];
 }
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
