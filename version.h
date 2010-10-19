@@ -21,7 +21,7 @@
 
 #define SCROBBLER_ID @"aip"
 #define SCROBBLER_VERSION @"2.0"
-#define VERSION_STRING @"Mobile Last.fm 2.3.0"
-#define VERSION @"2.3.0"
+#define VERSION_STRING @"Mobile Last.fm 2.4.0"
+#define VERSION @"2.4.0"
 
 extern NSString *kUserAgent;
