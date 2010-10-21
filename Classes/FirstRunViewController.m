@@ -35,6 +35,9 @@
 		[[NSUserDefaults standardUserDefaults] setObject:_username.text forKey:@"lastfm_user"];
 		[[NSUserDefaults standardUserDefaults] setObject:[session objectForKey:@"key"] forKey:@"lastfm_session"];
 		[[NSUserDefaults standardUserDefaults] setObject:[session objectForKey:@"subscriber"] forKey:@"lastfm_subscriber"];
+		[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removeUserTags"];
+		[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removePlaylists"];
+		[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removeLovedTracks"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) showProfileView:YES];
 	} else {

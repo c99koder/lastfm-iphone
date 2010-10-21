@@ -40,7 +40,7 @@
 		}
 	}
 	
-	if(![_data count]) {
+	if(_data && ![_data count]) {
 		[self release];
 		return nil;
 	} else {
