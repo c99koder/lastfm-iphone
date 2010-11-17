@@ -100,6 +100,7 @@ enum eventStatus {
 - (NSDictionary *)getMobileSessionForUser:(NSString *)username password:(NSString *)password;
 - (NSArray *)friendsOfUser:(NSString *)username;
 - (NSArray *)topArtistsForUser:(NSString *)username;
+- (NSArray *)weeklyArtistsForUser:(NSString *)username;
 - (NSArray *)topAlbumsForUser:(NSString *)username;
 - (NSArray *)topTracksForUser:(NSString *)username;
 - (NSArray *)tagsForUser:(NSString *)username;

@@ -26,6 +26,7 @@
 #import "UIViewController+NowPlayingButton.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UITableViewCell+ProgressIndicator.h"
+#import "HomeViewController.h"
 #include "version.h"
 
 int usernameSort(id friend1, id friend2, void *reverse) {
@@ -65,7 +66,11 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	[delegate friendsViewControllerDidCancel:self];
 }
 - (void)viewDidLoad {
-	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+//	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
+	bar.placeholder = @"Search Friends";
+	self.tableView.tableHeaderView = bar;
+	[bar release];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -81,6 +86,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	}
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
+	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
@@ -96,8 +102,8 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	if(delegate) {
 		[delegate friendsViewController:self didSelectFriend:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
 	} else {
-		UITabBarController *tabBarController = [((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) profileViewForUser:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tabBarController animated:YES];
+		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:home animated:YES];
 
 		[[self.tableView cellForRowAtIndexPath:newIndexPath] showProgress:NO];
 	}

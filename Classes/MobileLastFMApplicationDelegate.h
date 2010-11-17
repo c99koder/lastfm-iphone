@@ -50,7 +50,6 @@
 @property (nonatomic, retain) PlaybackViewController *playbackViewController;
 @property (nonatomic, retain) UINavigationController *rootViewController;
 
--(UITabBarController *)profileViewForUser:(NSString *)username;
 -(BOOL)hasNetworkConnection;
 -(BOOL)hasWiFiConnection;
 -(BOOL)playRadioStation:(NSString *)station animated:(BOOL)animated;

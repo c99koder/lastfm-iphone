@@ -20,104 +20,156 @@
  */
 
 #import "ProfileViewController.h"
-#import "FriendsViewController.h"
-#import "ChartsViewController.h"
-#import "SearchViewController.h"
-#import "TagRadioViewController.h"
-#import "PlaylistsViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
+#import "ArtworkCell.h"
+#import "MobileLastFMApplicationDelegate.h"
 
 @implementation ProfileViewController
 - (id)initWithUsername:(NSString *)username {
-	if (self = [super initWithStyle:UITableViewStylePlain]) {
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		self.title = [username retain];
+		_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:username]] retain];
+		_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:username] retain];
 	}
 	return self;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	
+	[self rebuildMenu];
+}
+- (void)viewDidLoad {
+	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+	//self.tableView.sectionHeaderHeight = 0;
+	//self.tableView.sectionFooterHeight = 0;
+	//self.tableView.backgroundColor = [UIColor blackColor];
+	
+	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
+	//bar.barStyle = UIBarStyleBlackTranslucent;
+	//bar.backgroundColor = [UIColor grayColor];
+	bar.placeholder = @"Search Last.fm";
+	self.tableView.tableHeaderView = bar;
+	[bar release];
+}
+- (void)rebuildMenu {
+	if(_data)
+		[_data release];
+	
+	NSMutableArray *sections = [[NSMutableArray alloc] init];
+	
+	[sections addObject:@"profile"];
+	
+	NSMutableArray *stations;
+	
+	if([_recentTracks count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_recentTracks count] && x < 3; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
+																															 [NSString stringWithFormat:@"lastfm-track://%@/_/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	}
+	
+	if([_weeklyArtists count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_weeklyArtists count] && x < 5; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], [[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],
+																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	}
+	
+	_data = [sections retain];
+	
 	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
+	return [_data count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return 5;
+	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
+		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
+	else
+		return 1;
 }
+/*- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	if([self tableView:tableView numberOfRowsInSection:section] > 1)
+		return 10;
+	else
+		return 0;
+}*/
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	if(section > 0)
+		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
+	else
+		return nil;
+}
+/*- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	return [[[UIView alloc] init] autorelease];
+}*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 46;
+	return 52;
 }
--(void)_rowSelected:(NSIndexPath *)newIndexPath {
-	UINavigationController *controller = nil;
-	NSArray *data = nil;
-	
-	switch([newIndexPath row]) {
-		case 0:
-			controller = [[TopChartViewController alloc] initWithTitle:NSLocalizedString(@"Top Artists", @"Top Artists chart title")];
-			data = [[LastFMService sharedInstance] topArtistsForUser:_username];
-			break;
-		case 1:
-			controller = [[TopChartViewController alloc] initWithTitle:NSLocalizedString(@"Top Albums", @"Top Albums chart title")];
-			data = [[LastFMService sharedInstance] topAlbumsForUser:_username];
-			break;
-		case 2:
-			controller = [[TopChartViewController alloc] initWithTitle:NSLocalizedString(@"Top Tracks", @"Top Tracks chart title")];
-			data = [[LastFMService sharedInstance] topTracksForUser:_username];
-			break;
-		case 3:
-			controller = [[RecentlyPlayedChartViewController alloc] initWithUsername:_username];
-			data = [[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username];
-			break;
-		case 4:
-			controller = [[FriendsViewController alloc] initWithUsername:_username];
-			break;
+-(void)_rowSelected:(NSIndexPath *)indexPath {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
+		NSLog(@"Station: %@", station);
 	}
-	
-	if(controller) {
-		if([newIndexPath row] < 3 && data) {
-			[(TopChartViewController *)controller setData:data];
-		}
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
-		[controller release];
-	}
-	[[self tableView] reloadData];
+	[self.tableView reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
-	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.5];
+	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
+	if([newIndexPath row] > 0) {
+		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
+	}
+	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
-	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"simplecell"] autorelease];
-	}
-
-	switch([indexPath row]) {
-		case 0:
-			cell.text = NSLocalizedString(@"Top Artists", @"Top Artists chart title");
-			break;
-		case 1:
-			cell.text = NSLocalizedString(@"Top Albums", @"Top Albums chart title");
-			break;
-		case 2:
-			cell.text = NSLocalizedString(@"Top Tracks", @"Top Tracks chart title");
-			break;
-		case 3:
-			cell.text = NSLocalizedString(@"Recently Played", @"Recently Played Tracks chart title");
-			break;
-		case 4:
-			cell.text = NSLocalizedString(@"Friends", @"Friends profile item");
-			break;
-	}
+	ArtworkCell *cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"TrackCell"] autorelease];;
+	
 	[cell showProgress: NO];
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
+		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
+			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+		}
+		cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+
+	} else if([indexPath section] == 0) {
+		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
+		if(profilecell == nil) {
+			NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
+			profilecell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"] autorelease];
+			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
+			//v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_panel.png"]];
+			//profilecell.backgroundView = v;
+			//[v release];
+			profilecell.imageURL = [profile objectForKey:@"avatar"];
+			if([[profile objectForKey:@"realname"] length])
+				profilecell.title.text = [profile objectForKey:@"realname"];
+			else
+				profilecell.title.text = _username;
+			
+			NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+			[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+			profilecell.subtitle.text = [NSString stringWithFormat:@"%@ %@ %@",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], NSLocalizedString(@"plays since", @"x plays since join date"), [profile objectForKey:@"registered"]];
+			[numberFormatter release];
+		}
+		return profilecell;
+	}
+	
+	if([indexPath section] > 0 && cell.accessoryType == UITableViewCellAccessoryNone) {
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	}
 	return cell;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -126,5 +178,8 @@
 - (void)dealloc {
 	[super dealloc];
 	[_username release];
+	[_recentTracks release];
+	[_weeklyArtists release];
+	[_data release];
 }
 @end

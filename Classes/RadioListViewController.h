@@ -24,10 +24,7 @@
 
 @interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSString *_username;
-	NSMutableArray *_playlists;
 	NSArray *_recent;
-	NSThread *_loadingThread;
-	NSArray *_commonArtists;
 	NSArray *_data;
 }
 - (id)initWithUsername:(NSString *)username;

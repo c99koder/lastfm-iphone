@@ -171,6 +171,8 @@
 		22CBE1360DCE3C9B00AE5DE0 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBE1350DCE3C9B00AE5DE0 /* NSString+MD5.m */; };
 		22CD7143117E05E300493A96 /* EventsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CD7142117E05E200493A96 /* EventsTabViewController.m */; };
 		22D1DEB30E5C61F700D1068D /* rounded_table_cell.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D1DEB20E5C61F600D1068D /* rounded_table_cell.png */; };
+		22D219501294524F00B3E520 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D2194E1294524F00B3E520 /* HomeViewController.m */; };
+		22D21AE01294827400B3E520 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22D21ADE1294827400B3E520 /* HomeViewController.xib */; };
 		22DB14A90E422455002D66BE /* radio_icon_tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB14A70E422455002D66BE /* radio_icon_tab.png */; };
 		22DB14AA0E422455002D66BE /* profile_icon_tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB14A80E422455002D66BE /* profile_icon_tab.png */; };
 		22DB14BC0E4227B2002D66BE /* radio_icon_starter.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB14BB0E4227B2002D66BE /* radio_icon_starter.png */; };
@@ -432,6 +434,9 @@
 		22CD7141117E05E200493A96 /* EventsTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsTabViewController.h; sourceTree = "<group>"; };
 		22CD7142117E05E200493A96 /* EventsTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventsTabViewController.m; sourceTree = "<group>"; };
 		22D1DEB20E5C61F600D1068D /* rounded_table_cell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rounded_table_cell.png; sourceTree = "<group>"; };
+		22D2194D1294524F00B3E520 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
+		22D2194E1294524F00B3E520 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		22D21ADF1294827400B3E520 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/HomeViewController.xib; sourceTree = "<group>"; };
 		22DB14A70E422455002D66BE /* radio_icon_tab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_icon_tab.png; sourceTree = "<group>"; };
 		22DB14A80E422455002D66BE /* profile_icon_tab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_icon_tab.png; sourceTree = "<group>"; };
 		22DB14BB0E4227B2002D66BE /* radio_icon_starter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_icon_starter.png; sourceTree = "<group>"; };
@@ -531,6 +536,8 @@
 				223129320DFF21A500EC3BF0 /* FirstRunViewController.m */,
 				2213D1B20D9F113100914A50 /* FriendsViewController.h */,
 				2213D1B30D9F113100914A50 /* FriendsViewController.m */,
+				22D2194D1294524F00B3E520 /* HomeViewController.h */,
+				22D2194E1294524F00B3E520 /* HomeViewController.m */,
 				2259349D0DA85CD30035A1AA /* LastFMRadio.h */,
 				2259349C0DA85CD30035A1AA /* LastFMRadio.m */,
 				2259349B0DA85CD30035A1AA /* LastFMService.h */,
@@ -821,6 +828,7 @@
 			children = (
 				22CAC57E125F891100250917 /* DetailsView.xib */,
 				224793070F8123C100EE0C52 /* Beacon.h */,
+				22D21ADE1294827400B3E520 /* HomeViewController.xib */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
@@ -1068,6 +1076,7 @@
 				22F255210E75771E000965FA /* metadatagradient.png in Resources */,
 				22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */,
 				22CAC580125F891100250917 /* DetailsView.xib in Resources */,
+				22D21AE01294827400B3E520 /* HomeViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1119,6 +1128,7 @@
 				22738D291294444F001A2552 /* CXMLNode.m in Sources */,
 				22738D391294451B001A2552 /* CXMLNode_CreationExtensions.m in Sources */,
 				22738D3A1294451B001A2552 /* CXMLDocument_CreationExtensions.m in Sources */,
+				22D219501294524F00B3E520 /* HomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1147,6 +1157,14 @@
 				22CAC57F125F891100250917 /* English */,
 			);
 			name = DetailsView.xib;
+			sourceTree = "<group>";
+		};
+		22D21ADE1294827400B3E520 /* HomeViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22D21ADF1294827400B3E520 /* English */,
+			);
+			name = HomeViewController.xib;
 			sourceTree = "<group>";
 		};
 		22EB60390E65A8B20021751A /* MainWindow.xib */ = {

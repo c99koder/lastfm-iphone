@@ -348,6 +348,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"medium\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
 }
+- (NSArray *)weeklyArtistsForUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getWeeklyArtistChart" maxCacheAge:5*MINUTES XPath:@"./weeklyartistchart/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
+}
 - (NSArray *)topAlbumsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
@@ -375,8 +381,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./artist/name", @"./name", @"./date", nil]
-										 forKeys:[NSArray arrayWithObjects:@"artist", @"name", @"date", nil]];
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./artist/name", @"./name", @"./date", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"artist", @"name", @"date", @"image", nil]];
 }
 - (NSArray *)friendsOfUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getFriends" maxCacheAge:0 XPath:@"./friends/user" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];

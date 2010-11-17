@@ -24,6 +24,9 @@
 
 @interface ProfileViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSString *_username;
+	NSArray *_data;
+	NSArray *_recentTracks;
+	NSArray *_weeklyArtists;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

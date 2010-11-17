@@ -67,7 +67,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[super layoutSubviews];
 	CGFloat dateWidth;
 	
-	if(self.showingDeleteConfirmation || self.accessoryView) {
+	if(self.showingDeleteConfirmation || self.accessoryView || [date.text length] == 0) {
 		dateWidth = 0;
 		[date removeFromSuperview];
 	} else {

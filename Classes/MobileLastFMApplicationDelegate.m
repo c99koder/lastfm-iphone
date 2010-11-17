@@ -30,6 +30,7 @@
 #import "NSString+URLEscaped.h"
 #import "NSData+Compress.h"
 #import "TagRadioViewController.h"
+#import "HomeViewController.h"
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "Beacon.h"
 #endif
@@ -88,7 +89,6 @@ NSString *kUserAgent;
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
-		[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"removeLovedTracks"];
 		[NSThread detachNewThreadSelector:@selector(_cleanCache) toTarget:self withObject:nil];
 	}
 	return self;
@@ -237,33 +237,8 @@ NSString *kUserAgent;
 		_dmcaAlertStation = nil;
 	}
 }
-- (UITabBarController *)profileViewForUser:(NSString *)username {
-	UITabBarController *tabBarController = [[UITabBarController alloc] init];
-	tabBarController.title = username;
-	radioListViewController = [[RadioListViewController alloc] initWithUsername:username];
-	UITabBarItem *t = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Radio", @"Radio tab label") image:[UIImage imageNamed:@"radio_icon_tab.png"] tag:0];
-	radioListViewController.tabBarItem = t;
-	[t release];
-	
-	ProfileViewController *p = [[ProfileViewController alloc] initWithUsername:username];
-	t = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Profile", @"Profile tab label") image:[UIImage imageNamed:@"profile_icon_tab.png"] tag:1];
-	p.tabBarItem = t;
-	[t release];
-
-	EventsTabViewController *e = [[EventsTabViewController alloc] initWithUsername:username];
-	t = [[UITabBarItem alloc] initWithTitle:@"Events" image:[UIImage imageNamed:@"events.png"] tag:2];
-	e.tabBarItem = t;
-	[t release];
-	
-	tabBarController.viewControllers = [NSArray arrayWithObjects:radioListViewController, p, e, nil];
-	[radioListViewController release];
-	[p release];
-	[e release];
-	
-	return [tabBarController autorelease];
-}
 - (void)showProfileView:(BOOL)animated {
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	if(!_scrobbler) {
 		_scrobbler = [[Scrobbler alloc] init];
 	}
@@ -279,16 +254,17 @@ NSString *kUserAgent;
 		}
 	}
 	
-	UITabBarController *profile = [self profileViewForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+
+	[rootViewController release];
+	rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
 	UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
 																																	 style:UIBarButtonItemStylePlain 
-																																	target:self
+																																	target:[[UIApplication sharedApplication] delegate]
 																																	action:@selector(logoutButtonPressed:)];	
-	profile.navigationItem.leftBarButtonItem = logoutButton;
+	home.navigationItem.leftBarButtonItem = logoutButton;
 	[logoutButton release];
-	[rootViewController release];
-	rootViewController = [[UINavigationController alloc] initWithRootViewController:profile];
-	rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+	//rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 	
 	if(animated) {
 		[UIView beginAnimations:nil context:nil];
@@ -604,12 +580,16 @@ NSString *kUserAgent;
 
 	[playbackViewController hideDetailsView];
 	[rootViewController pushViewController:playbackViewController animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[rootViewController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
 }
 -(void)hidePlaybackView {
 	[rootViewController popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 	[playbackViewController release];
 	playbackViewController = nil;
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	[rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
 	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
