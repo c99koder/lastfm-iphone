@@ -32,6 +32,7 @@
 #import "CXMLNode_PrivateExtensions.h"
 #import "CXMLDocument.h"
 #import "CXMLElement.h"
+#import "CXMLNode_CreationExtensions.h"
 
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
@@ -63,6 +64,7 @@ if (_node)
 
 - (id)copyWithZone:(NSZone *)zone;
 {
+#pragma unused (zone)
 xmlNodePtr theNewNode = xmlCopyNode(_node, 1);
 CXMLNode *theNode = [[[self class] alloc] initWithLibXMLNode:theNewNode freeOnDealloc:YES];
 theNewNode->_private = theNode;
@@ -79,38 +81,37 @@ return(_node->type); // TODO this isn't 100% accurate!
 
 - (NSString *)name
 {
-NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
-// TODO use xmlCheckUTF8 to check name
-if (_node->name == NULL)
-	return(NULL);
-else
-	return([NSString stringWithUTF8String:(const char *)_node->name]);
+	NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
+	// TODO use xmlCheckUTF8 to check name
+	if (_node->name == NULL)
+		return(NULL);
+	
+	NSString *localName = [NSString stringWithUTF8String:(const char *)_node->name];
+	
+	if (_node->ns == NULL || _node->ns->prefix == NULL)
+		return localName;
+	
+	return [NSString stringWithFormat:@"%@:%@",	[NSString stringWithUTF8String:(const char *)_node->ns->prefix], localName];
 }
 
 - (NSString *)stringValue
 {
-NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
-xmlChar *theXMLString;
-BOOL theFreeReminderFlag = NO;
-if (_node->type == XML_TEXT_NODE || _node->type == XML_CDATA_SECTION_NODE) 
-	theXMLString = _node->content;
-else
-	{
-	theXMLString = xmlNodeListGetString(_node->doc, _node->children, YES);
-	theFreeReminderFlag = YES;
-	}
+	NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
+	
+	if (_node->type == XML_TEXT_NODE || _node->type == XML_CDATA_SECTION_NODE) 
+		return [NSString stringWithUTF8String:(const char *)_node->content];
+	
+	if (_node->type == XML_ATTRIBUTE_NODE)
+		return [NSString stringWithUTF8String:(const char *)_node->children->content];
 
-NSString *theStringValue = NULL;
-if (theXMLString != NULL)
+	NSMutableString *theStringValue = [[[NSMutableString alloc] init] autorelease];
+	
+	for (CXMLNode *child in [self children])
 	{
-	theStringValue = [NSString stringWithUTF8String:(const char *)theXMLString];
-	if (theFreeReminderFlag == YES)
-		{
-		xmlFree(theXMLString);
-		}
+		[theStringValue appendString:[child stringValue]];
 	}
-
-return(theStringValue);
+	
+	return theStringValue;
 }
 
 - (NSUInteger)index
@@ -154,28 +155,35 @@ else
 
 - (NSUInteger)childCount
 {
-NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
-
-xmlNodePtr theCurrentNode = _node->children;
-NSUInteger N;
-for (N = 0; theCurrentNode != NULL; ++N, theCurrentNode = theCurrentNode->next)
-	;
-return(N);
+	NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
+	
+	if (_node->type == CXMLAttributeKind)
+		return 0; // NSXMLNodes of type NSXMLAttributeKind can't have children
+		
+	xmlNodePtr theCurrentNode = _node->children;
+	NSUInteger N;
+	for (N = 0; theCurrentNode != NULL; ++N, theCurrentNode = theCurrentNode->next)
+		;
+	return(N);
 }
 
 - (NSArray *)children
 {
-NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
-
-NSMutableArray *theChildren = [NSMutableArray array];
-xmlNodePtr theCurrentNode = _node->children;
-while (theCurrentNode != NULL)
+	NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
+	
+	NSMutableArray *theChildren = [NSMutableArray array];
+	
+	if (_node->type != CXMLAttributeKind) // NSXML Attribs don't have children.
 	{
-	CXMLNode *theNode = [CXMLNode nodeWithLibXMLNode:theCurrentNode freeOnDealloc:NO];
-	[theChildren addObject:theNode];
-	theCurrentNode = theCurrentNode->next;
+		xmlNodePtr theCurrentNode = _node->children;
+		while (theCurrentNode != NULL)
+		{
+			CXMLNode *theNode = [CXMLNode nodeWithLibXMLNode:theCurrentNode freeOnDealloc:NO];
+			[theChildren addObject:theNode];
+			theCurrentNode = theCurrentNode->next;
+		}
 	}
-return(theChildren);      
+	return(theChildren);      
 }
 
 - (CXMLNode *)childAtIndex:(NSUInteger)index
@@ -222,15 +230,15 @@ NSAssert(_node != NULL, @"CXMLNode does not have attached libxml2 _node.");
 if (_node->name == NULL)
 	return(NULL);
 else
-	return([NSString stringWithUTF8String:(const char *)_node->name]); // TODO this is the same as name. What's up with thaat?
+	return([NSString stringWithUTF8String:(const char *)_node->name]);
 }
 
 - (NSString *)prefix
 {
-if (_node->ns)
+if (_node->ns && _node->ns->prefix)
 	return([NSString stringWithUTF8String:(const char *)_node->ns->prefix]);
 else
-	return(NULL);
+	return(@"");
 }
 
 - (NSString *)URI
@@ -241,9 +249,42 @@ else
 	return(NULL);
 }
 
-//+ (NSString *)localNameForName:(NSString *)name;
-//+ (NSString *)prefixForName:(NSString *)name;
-//+ (CXMLNode *)predefinedNamespaceForPrefix:(NSString *)name;
++ (NSString *)localNameForName:(NSString *)name
+{
+	NSRange split = [name rangeOfString:@":"];
+	
+	if (split.length > 0)
+		return [name substringFromIndex:split.location + 1];
+	
+	return name;
+}
+
++ (NSString *)prefixForName:(NSString *)name
+{
+	NSRange split = [name rangeOfString:@":"];
+	
+	if (split.length > 0)
+		return [name substringToIndex:split.location];
+	
+	return @"";
+}
+
++ (CXMLNode *)predefinedNamespaceForPrefix:(NSString *)name
+{
+	if ([name isEqualToString:@"xml"])
+		return [CXMLNode namespaceWithName:@"xml" stringValue:@"http://www.w3.org/XML/1998/namespace"];
+	
+	if ([name isEqualToString:@"xs"])
+		return [CXMLNode namespaceWithName:@"xs" stringValue:@"http://www.w3.org/2001/XMLSchema"];
+	
+	if ([name isEqualToString:@"xsi"])
+		return [CXMLNode namespaceWithName:@"xsi" stringValue:@"http://www.w3.org/2001/XMLSchema-instance"];
+	
+	if ([name isEqualToString:@"xmlns"]) // Not in Cocoa, but should be as it's reserved by W3C
+		return [CXMLNode namespaceWithName:@"xmlns" stringValue:@"http://www.w3.org/2000/xmlns/"];
+	
+	return nil;
+}
 
 - (NSString *)description
 {
@@ -259,7 +300,9 @@ return([self XMLStringWithOptions:0]);
 
 - (NSString *)XMLStringWithOptions:(NSUInteger)options
 {
-NSMutableData *theData = [[NSMutableData alloc] init];
+#pragma unused (options)
+
+NSMutableData *theData = [[[NSMutableData alloc] init] autorelease];
 
 xmlOutputBufferPtr theOutputBuffer = xmlOutputBufferCreateIO(MyXmlOutputWriteCallback, MyXmlOutputCloseCallback, theData, NULL);
 
@@ -329,7 +372,5 @@ return(len);
 
 static int MyXmlOutputCloseCallback(void * context)
 {
-NSMutableData *theData = context;
-[theData release];
 return(0);
 }

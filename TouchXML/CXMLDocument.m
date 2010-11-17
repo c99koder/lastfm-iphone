@@ -42,6 +42,7 @@
 
 - (id)initWithXMLString:(NSString *)inString options:(NSUInteger)inOptions error:(NSError **)outError
 {
+#pragma unused (inOptions)
 if ((self = [super init]) != NULL)
 	{
 	NSError *theError = NULL;
@@ -97,6 +98,7 @@ return(self);
 
 - (id)initWithData:(NSData *)inData encoding:(NSStringEncoding)encoding options:(NSUInteger)inOptions error:(NSError **)outError
 {
+#pragma unused (inOptions)
 if ((self = [super init]) != NULL)
 	{
 	NSError *theError = NULL;
@@ -208,6 +210,7 @@ return([self XMLDataWithOptions:0]);
 
 - (NSData *)XMLDataWithOptions:(NSUInteger)options
 {
+#pragma unused (options)
 xmlChar *theBuffer = NULL;
 int theBufferSize = 0;
 xmlDocDumpMemory((xmlDocPtr)self->_node, &theBuffer, &theBufferSize);
@@ -226,7 +229,7 @@ return(theData);
 {
 id root = [self rootElement];
 NSMutableString* xmlString = [NSMutableString string];
-[root _XMLStringWithOptions:options appendingToString:xmlString];
+[xmlString appendString:[root XMLStringWithOptions:options]];
 return xmlString;
 }
 

@@ -34,10 +34,6 @@
 
 @implementation CXMLNode (CXMLNode_PrivateExtensions)
 
-@dynamic node;
-
-
-
 - (id)initWithLibXMLNode:(xmlNodePtr)inLibXMLNode freeOnDealloc:(BOOL)infreeOnDealloc
 {
 if ((self = [super init]) != NULL)

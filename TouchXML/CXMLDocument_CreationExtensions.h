@@ -1,8 +1,8 @@
 //
-//  CXMLElement.h
+//  CXMLDocument_CreationExtensions.h
 //  TouchCode
 //
-//  Created by Jonathan Wight on 03/07/08.
+//  Created by Jonathan Wight on 11/11/08.
 //  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
@@ -27,24 +27,21 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "CXMLNode.h"
+#import "CXMLDocument.h"
 
-// NSXMLElement
-@interface CXMLElement : CXMLNode {
+@interface CXMLDocument (CXMLDocument_CreationExtensions)
 
-}
+//- (void)setVersion:(NSString *)version; //primitive
+//- (void)setStandalone:(BOOL)standalone; //primitive
+//- (void)setDocumentContentKind:(CXMLDocumentContentKind)kind; //primitive
+//- (void)setMIMEType:(NSString *)MIMEType; //primitive
+//- (void)setDTD:(CXMLDTD *)documentTypeDeclaration; //primitive
+//- (void)setRootElement:(CXMLNode *)root;
+- (void)insertChild:(CXMLNode *)child atIndex:(NSUInteger)index;
+//- (void)insertChildren:(NSArray *)children atIndex:(NSUInteger)index;
+//- (void)removeChildAtIndex:(NSUInteger)index; //primitive
+//- (void)setChildren:(NSArray *)children; //primitive
+- (void)addChild:(CXMLNode *)child;
+//- (void)replaceChildAtIndex:(NSUInteger)index withNode:(CXMLNode *)node;
 
-- (NSArray *)elementsForName:(NSString *)name;
-- (NSArray *)elementsForLocalName:(NSString *)localName URI:(NSString *)URI;
-
-- (NSArray *)attributes;
-- (CXMLNode *)attributeForName:(NSString *)name;
-- (CXMLNode *)attributeForLocalName:(NSString *)localName URI:(NSString *)URI;
-
-- (NSArray *)namespaces; 
-- (CXMLNode *)namespaceForPrefix:(NSString *)name;
-- (CXMLNode *)resolveNamespaceForName:(NSString *)name;
-- (NSString *)resolvePrefixForNamespaceURI:(NSString *)namespaceURI;
-
-//- (NSString*)_XMLStringWithOptions:(NSUInteger)options appendingToString:(NSMutableString*)str;
 @end

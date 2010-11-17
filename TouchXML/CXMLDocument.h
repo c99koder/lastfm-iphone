@@ -30,8 +30,8 @@
 #import "CXMLNode.h"
 
 enum {
-	CXMLDocumentTidyHTML, // Based on NSXMLDocumentTidyHTML
-	CXMLDocumentTidyXML, // Based on NSXMLDocumentTidyXML
+	CXMLDocumentTidyHTML = 1 << 9, // Based on NSXMLDocumentTidyHTML
+	CXMLDocumentTidyXML = 1 << 10, // Based on NSXMLDocumentTidyXML
 };
 
 @class CXMLElement;

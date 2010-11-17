@@ -1,8 +1,8 @@
 //
-//  CXMLElement.h
+//  CXMLNode_CreationExtensions.h
 //  TouchCode
 //
-//  Created by Jonathan Wight on 03/07/08.
+//  Created by Jonathan Wight on 04/01/08.
 //  Copyright 2008 toxicsoftware.com. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
@@ -29,22 +29,26 @@
 
 #import "CXMLNode.h"
 
-// NSXMLElement
-@interface CXMLElement : CXMLNode {
+@class CXMLElement;
 
-}
+@interface CXMLNode (CXMLNode_CreationExtensions)
 
-- (NSArray *)elementsForName:(NSString *)name;
-- (NSArray *)elementsForLocalName:(NSString *)localName URI:(NSString *)URI;
+//- (id)initWithKind:(NSXMLNodeKind)kind;
+//- (id)initWithKind:(NSXMLNodeKind)kind options:(NSUInteger)options; //primitive
++ (id)document;
++ (id)documentWithRootElement:(CXMLElement *)element;
++ (id)elementWithName:(NSString *)name;
++ (id)elementWithName:(NSString *)name URI:(NSString *)URI;
++ (id)elementWithName:(NSString *)name stringValue:(NSString *)string;
+//+ (id)elementWithName:(NSString *)name children:(NSArray *)children attributes:(NSArray *)attributes;
+//+ (id)attributeWithName:(NSString *)name stringValue:(NSString *)stringValue;
+//+ (id)attributeWithName:(NSString *)name URI:(NSString *)URI stringValue:(NSString *)stringValue;
++ (id)namespaceWithName:(NSString *)name stringValue:(NSString *)stringValue;
++ (id)processingInstructionWithName:(NSString *)name stringValue:(NSString *)stringValue;
+//+ (id)commentWithStringValue:(NSString *)stringValue;
+//+ (id)textWithStringValue:(NSString *)stringValue;
+//+ (id)DTDNodeWithXMLString:(NSString *)string;
 
-- (NSArray *)attributes;
-- (CXMLNode *)attributeForName:(NSString *)name;
-- (CXMLNode *)attributeForLocalName:(NSString *)localName URI:(NSString *)URI;
+- (void)setStringValue:(NSString *)inStringValue;
 
-- (NSArray *)namespaces; 
-- (CXMLNode *)namespaceForPrefix:(NSString *)name;
-- (CXMLNode *)resolveNamespaceForName:(NSString *)name;
-- (NSString *)resolvePrefixForNamespaceURI:(NSString *)namespaceURI;
-
-//- (NSString*)_XMLStringWithOptions:(NSUInteger)options appendingToString:(NSMutableString*)str;
 @end
