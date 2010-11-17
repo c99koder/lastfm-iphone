@@ -125,8 +125,6 @@
 		225934EA0DA85DA60035A1AA /* ban.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DA0DA85DA60035A1AA /* ban.png */; };
 		225934EB0DA85DA60035A1AA /* love.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DB0DA85DA60035A1AA /* love.png */; };
 		225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225A901D0FFA8C4400DC5798 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		225A911110026ADF00DC5798 /* libxml2-2.6.30-arm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 225A911010026ADF00DC5798 /* libxml2-2.6.30-arm.a */; };
-		225A913010026F0B00DC5798 /* libxml2-2.6.30-i686.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 225A912F10026F0B00DC5798 /* libxml2-2.6.30-i686.a */; };
 		225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225ECD430DFF882600323F42 /* MediaPlayer.framework */; };
 		22624B1B0E6EF39200072BB4 /* daygradient-disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 22624B1A0E6EF39200072BB4 /* daygradient-disabled.png */; };
 		22624B1D0E6EF3A000072BB4 /* daygradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 22624B1C0E6EF3A000072BB4 /* daygradient.png */; };
@@ -365,8 +363,6 @@
 		225934DB0DA85DA60035A1AA /* love.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love.png; sourceTree = "<group>"; };
 		225934F20DA85DBE0035A1AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		225A901D0FFA8C4400DC5798 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		225A911010026ADF00DC5798 /* libxml2-2.6.30-arm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libxml2-2.6.30-arm.a"; sourceTree = "<group>"; };
-		225A912F10026F0B00DC5798 /* libxml2-2.6.30-i686.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libxml2-2.6.30-i686.a"; sourceTree = "<group>"; };
 		225ECD430DFF882600323F42 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		22624B1A0E6EF39200072BB4 /* daygradient-disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "daygradient-disabled.png"; sourceTree = "<group>"; };
 		22624B1C0E6EF3A000072BB4 /* daygradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = daygradient.png; sourceTree = "<group>"; };
@@ -508,8 +504,6 @@
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
 				225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */,
-				225A911110026ADF00DC5798 /* libxml2-2.6.30-arm.a in Frameworks */,
-				225A913010026F0B00DC5798 /* libxml2-2.6.30-i686.a in Frameworks */,
 				229F8EBD11CFDF1C00AF5D6A /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,8 +574,6 @@
 			isa = PBXGroup;
 			children = (
 				229F8EBC11CFDF1C00AF5D6A /* libPMAnalytics-r91.a */,
-				225A912F10026F0B00DC5798 /* libxml2-2.6.30-i686.a */,
-				225A911010026ADF00DC5798 /* libxml2-2.6.30-arm.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
@@ -1300,8 +1292,9 @@
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_LDFLAGS = (
-					"-lz",
+					"-lxml2",
 					"-lsqlite3",
+					"-lz",
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
@@ -1361,8 +1354,9 @@
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				OTHER_LDFLAGS = (
-					"-lz",
+					"-lxml2",
 					"-lsqlite3",
+					"-lz",
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
@@ -1422,8 +1416,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
-					"-lz",
+					"-lxml2",
 					"-lsqlite3",
+					"-lz",
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
@@ -1452,8 +1447,9 @@
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				OTHER_LDFLAGS = (
-					"-lz",
+					"-lxml2",
 					"-lsqlite3",
+					"-lz",
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
