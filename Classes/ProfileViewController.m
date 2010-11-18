@@ -66,22 +66,22 @@
 	
 	NSMutableArray *stations;
 	
-	if([_recentTracks count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_recentTracks count] && x < 3; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-track://%@/_/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	}
-	
 	if([_weeklyArtists count]) {
 		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_weeklyArtists count] && x < 5; x++) {
+		for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], [[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],
 																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	}
+	
+	if([_recentTracks count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_recentTracks count] && x < 5; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
+																															 [NSString stringWithFormat:@"lastfm-track://%@/_/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	}
 	
 	_data = [sections retain];
