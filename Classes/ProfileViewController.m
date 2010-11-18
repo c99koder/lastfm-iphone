@@ -131,7 +131,7 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ArtworkCell *cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"TrackCell"] autorelease];;
+	ArtworkCell *cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"TrackCell"] autorelease];
 	
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
@@ -143,7 +143,11 @@
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
-		cell.shouldRoundCorners = YES;
+		cell.shouldFillHeight = YES;
+		if([indexPath row] == 0)
+			cell.shouldRoundTop = YES;
+		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
+			cell.shouldRoundBottom = YES;
 
 	} else if([indexPath section] == 0) {
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
@@ -151,11 +155,9 @@
 			NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
 			profilecell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"] autorelease];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
-			//v = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_panel.png"]];
-			//profilecell.backgroundView = v;
-			//[v release];
 			profilecell.imageURL = [profile objectForKey:@"avatar"];
-			profilecell.shouldRoundCorners = YES;
+			profilecell.shouldRoundTop = YES;
+			profilecell.shouldRoundBottom = YES;
 			if([[profile objectForKey:@"realname"] length])
 				profilecell.title.text = [profile objectForKey:@"realname"];
 			else

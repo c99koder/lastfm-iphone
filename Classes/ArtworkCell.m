@@ -52,7 +52,72 @@ UIImage *avatarPlaceholder = nil;
 
 @implementation ArtworkCell
 
-@synthesize title, subtitle, barWidth, imageURL, shouldCacheArtwork, shouldRoundCorners;
+@synthesize title, subtitle, barWidth, imageURL, shouldCacheArtwork, shouldFillHeight;
+
+-(void)setShouldRoundTop:(BOOL)round {
+	shouldRoundTop = round;
+	_artwork.image = [self roundedImage:avatarPlaceholder];
+}
+-(BOOL)shouldRoundTop {
+	return shouldRoundTop;
+}
+-(void)setShouldRoundBottom:(BOOL)round {
+	shouldRoundBottom = round;
+	_artwork.image = [self roundedImage:avatarPlaceholder];
+}
+-(BOOL)shouldRoundBottom {
+	return shouldRoundBottom;
+}
+
+-(UIImage *)roundedImage:(UIImage *)image
+{
+	UIImage *img = image;
+	int w = self.frame.size.height;
+	int h = self.frame.size.height;
+	
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
+	
+	CGRect rect = CGRectMake(0, 0, w, h);
+	float radius = 10.0f;
+	
+	if(shouldRoundTop) {
+		CGContextBeginPath(context);
+		CGContextMoveToPoint(context, rect.origin.x, rect.origin.y + radius);
+		CGContextAddLineToPoint(context, rect.origin.x, rect.origin.y + rect.size.height - radius);
+		CGContextAddArc(context, rect.origin.x + radius, rect.origin.y + rect.size.height - radius, 
+										radius, M_PI / 4, M_PI / 2, 1);
+		CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, 
+														rect.origin.y + rect.size.height);
+		CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, rect.origin.y);
+		CGContextAddLineToPoint(context, rect.origin.x, rect.origin.y);
+		CGContextClosePath(context);
+		CGContextClip(context);
+	}
+
+	if(shouldRoundBottom) {
+		CGContextBeginPath(context);
+		CGContextMoveToPoint(context, rect.origin.x, rect.origin.y);
+		CGContextAddLineToPoint(context, rect.origin.x, rect.origin.y + rect.size.height);
+		CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, 
+														rect.origin.y + rect.size.height);
+		CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, rect.origin.y);
+		CGContextAddLineToPoint(context, rect.origin.x + radius, rect.origin.y);
+		CGContextAddArc(context, rect.origin.x + radius, rect.origin.y + radius, radius, 
+										-M_PI / 2, M_PI, 1);
+		CGContextClosePath(context);
+		CGContextClip(context);
+	}
+	
+	CGContextDrawImage(context, rect, img.CGImage);
+	
+	CGImageRef imageMasked = CGBitmapContextCreateImage(context);
+	CGContextRelease(context);
+	CGColorSpaceRelease(colorSpace);
+	
+	return [UIImage imageWithCGImage:imageMasked];
+}
+
 
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
@@ -97,10 +162,9 @@ UIImage *avatarPlaceholder = nil;
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
 	
 	if(imageURL)
-		if(shouldRoundCorners) {
+		if(shouldRoundTop || shouldRoundBottom || shouldFillHeight)
 			_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
-			_artwork.layer.cornerRadius = 5.0f;
-		} else
+		else
 			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	if([subtitle.text length]) {
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 6, frame.size.width - _artwork.frame.size.width - 6, 22);
@@ -151,9 +215,11 @@ UIImage *avatarPlaceholder = nil;
 		if(shouldCacheArtwork)
 			[imageData writeToFile:CACHE_FILE([imageURL md5sum]) atomically: YES];
 	}
-	UIImage *image = [[UIImage alloc] initWithData:imageData];
+	UIImage *image = [UIImage imageWithData:imageData];
+	if(shouldRoundTop || shouldRoundBottom) {
+		image = [self roundedImage:image];
+	}
 	[self performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:YES];
-	[image release];
 	[imageData release];
 	_imageLoaded = YES;
 	[pool release];
