@@ -108,6 +108,8 @@ enum eventStatus {
 - (NSArray *)playlistsForUser:(NSString *)username;
 - (NSArray *)eventsForUser:(NSString *)username;
 - (NSArray *)recommendedEventsForUser:(NSString *)username;
+- (NSArray *)recommendedArtistsForUser:(NSString *)username;
+- (NSArray *)recommendedReleasesForUser:(NSString *)username;
 - (NSDictionary *)profileForUser:(NSString *)username;
 - (NSDictionary *)compareArtistsOfUser:(NSString *)username withUser:(NSString *)username2;
 - (NSArray *)recentStationsForUser:(NSString *)username;

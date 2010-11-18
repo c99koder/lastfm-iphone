@@ -1,4 +1,4 @@
-/* ProfileViewController.m - Display a Last.fm profile
+/* RecsViewController.m - Display recs
  * 
  * Copyright 2009 Last.fm Ltd.
  *   - Primarily authored by Sam Steele <sam@last.fm>
@@ -19,7 +19,7 @@
  * along with MobileLastFM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import "ProfileViewController.h"
+#import "RecsViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
@@ -28,19 +28,27 @@
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 
-@implementation ProfileViewController
+@implementation RecsViewController
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:username]] retain];
-		_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:username] retain];
-		self.title = @"Last.fm";
+		_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:username] retain];
+		_releases = [[[LastFMService sharedInstance] recommendedReleasesForUser:username] retain];
+		/*UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
+		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
+		toggle.selectedSegmentIndex = 0;
+		[toggle addTarget:self
+							 action:@selector(rebuildMenu)
+		 forControlEvents:UIControlEventValueChanged];
+		self.navigationItem.titleView = toggle;*/
+		self.title = @"Recommendations";
 	}
 	return self;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 	
 	[self rebuildMenu];
 }
@@ -53,7 +61,7 @@
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	//bar.barStyle = UIBarStyleBlackTranslucent;
 	//bar.backgroundColor = [UIColor grayColor];
-	bar.placeholder = @"Search Last.fm";
+	bar.placeholder = @"Search Recommendations";
 	self.tableView.tableHeaderView = bar;
 	[bar release];
 }
@@ -62,29 +70,34 @@
 		[_data release];
 	
 	NSMutableArray *sections = [[NSMutableArray alloc] init];
-	
-	[sections addObject:@"profile"];
-	
 	NSMutableArray *stations;
 	
-	if([_weeklyArtists count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], [[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	}
+	//UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	
-	if([_recentTracks count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_recentTracks count] && x < 10; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-track://%@/_/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	}
+	//if(toggle.selectedSegmentIndex == 0) {
+	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
+																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", @"lastfm://...", nil]
+																																																									forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
+																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
+	if([_artists count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_artists count] && x < 3; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
+																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_artists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	}
+	//} else {
+	if([_releases count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_releases count] && x < 3; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"],
+																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_releases objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	}
+	//}
 	_data = [sections retain];
 	
 	[self.tableView reloadData];
@@ -100,20 +113,17 @@
 		return 1;
 }
 /*- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	if([self tableView:tableView numberOfRowsInSection:section] > 1)
-		return 10;
-	else
-		return 0;
-}*/
+ if([self tableView:tableView numberOfRowsInSection:section] > 1)
+ return 10;
+ else
+ return 0;
+ }*/
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if(section > 0)
-		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
-	else
-		return nil;
+	return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
 }
 /*- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-	return [[[UIView alloc] init] autorelease];
-}*/
+ return [[[UIView alloc] init] autorelease];
+ }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return 52;
 }
@@ -134,8 +144,21 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"TrackCell"] autorelease];
 	
+	//UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
+	
+	if([indexPath section] == 0/* && toggle.selectedSegmentIndex == 0*/) {
+		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"StationCell"] autorelease];
+		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
+		stationCell.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
+		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
+		img.opaque = YES;
+		stationCell.accessoryView = img;
+		[img release];
+		return stationCell;
+	}
 	
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
@@ -149,27 +172,6 @@
 			cell.shouldRoundTop = YES;
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
-
-	} else if([indexPath section] == 0) {
-		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
-		if(profilecell == nil) {
-			NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
-			profilecell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"] autorelease];
-			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
-			profilecell.imageURL = [profile objectForKey:@"avatar"];
-			profilecell.shouldRoundTop = YES;
-			profilecell.shouldRoundBottom = YES;
-			if([[profile objectForKey:@"realname"] length])
-				profilecell.title.text = [profile objectForKey:@"realname"];
-			else
-				profilecell.title.text = _username;
-			
-			NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-			[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-			profilecell.subtitle.text = [NSString stringWithFormat:@"%@ %@ %@",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[profile objectForKey:@"playcount"] intValue]]], NSLocalizedString(@"plays since", @"x plays since join date"), [profile objectForKey:@"registered"]];
-			[numberFormatter release];
-		}
-		return profilecell;
 	}
 	
 	if([indexPath section] > 0 && cell.accessoryType == UITableViewCellAccessoryNone) {
@@ -183,8 +185,8 @@
 - (void)dealloc {
 	[super dealloc];
 	[_username release];
-	[_recentTracks release];
-	[_weeklyArtists release];
+	[_artists release];
+	[_releases release];
 	[_data release];
 }
 @end

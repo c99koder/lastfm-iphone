@@ -26,6 +26,7 @@
 	_eventsController = [[EventsTabViewController alloc] initWithUsername:_username];
 	_radioController = [[RadioListViewController alloc] initWithUsername:_username];
 	_friendsController = [[FriendsViewController alloc] initWithUsername:_username];
+	_recsController = [[RecsViewController alloc] initWithUsername:_username];
 	
 	_tabBar.selectedItem = [_tabBar.items objectAtIndex:0];
 	[self tabBar:_tabBar didSelectItem:_tabBar.selectedItem];
@@ -36,28 +37,36 @@
 	
 	switch(item.tag) {
 		case 0:
-			self.title = @"Last.fm";
+			self.title = _profileController.title;
+			self.navigationItem.titleView = nil;
 			[_profileController viewWillAppear:NO];
 			_profileController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_profileController.view];
 			break;
 		case 1:
-			self.title = @"Recommendations";
+			//self.navigationItem.titleView = _recsController.navigationItem.titleView;
+			self.title = _recsController.title;
+			[_recsController viewWillAppear:NO];
+			_recsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
+			[_contentView addSubview:_recsController.view];
 			break;
 		case 2:
-			self.title = @"Events";
+			self.title = _eventsController.title;
+			self.navigationItem.titleView = nil;
 			[_eventsController viewWillAppear:NO];
 			_eventsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_eventsController.view];
 			break;
 		case 3:
-			self.title = @"Radio";
+			self.title = _radioController.title;
+			self.navigationItem.titleView = nil;
 			[_radioController viewWillAppear:NO];
 			_radioController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_radioController.view];
 			break;
 		case 4:
-			self.title = @"Friends";
+			self.title = _friendsController.title;
+			self.navigationItem.titleView = nil;
 			[_friendsController viewWillAppear:NO];
 			_friendsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_friendsController.view];

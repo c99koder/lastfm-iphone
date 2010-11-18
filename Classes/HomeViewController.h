@@ -11,13 +11,14 @@
 #import "EventsTabViewController.h"
 #import "RadioListViewController.h"
 #import "FriendsViewController.h"
+#import "RecsViewController.h"
 
 @interface HomeViewController : UIViewController<UITabBarDelegate> {
 	IBOutlet UIView *_contentView;
 	IBOutlet UITabBar *_tabBar;
 	
 	ProfileViewController *_profileController;
-	//RecsViewController *recs;
+	RecsViewController *_recsController;
 	EventsTabViewController *_eventsController;
 	RadioListViewController *_radioController;
 	FriendsViewController *_friendsController;
