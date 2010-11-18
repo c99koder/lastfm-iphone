@@ -77,7 +77,7 @@
 	
 	if([_recentTracks count]) {
 		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_recentTracks count] && x < 5; x++) {
+		for(int x=0; x<[_recentTracks count] && x < 10; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
 																															 [NSString stringWithFormat:@"lastfm-track://%@/_/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
 		}
