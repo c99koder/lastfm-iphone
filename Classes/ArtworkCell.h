@@ -35,12 +35,14 @@
 	NSString *imageURL;
 	BOOL _imageLoaded;
 	BOOL shouldCacheArtwork;
+	BOOL shouldRoundCorners;
 }
 @property (nonatomic, retain) UILabel *title;
 @property (nonatomic, retain) UILabel *subtitle;
 @property (nonatomic, retain) NSString *imageURL;
 @property float barWidth;
 @property BOOL shouldCacheArtwork;
+@property BOOL shouldRoundCorners;
 -(void)fetchImage;
 -(void)addStreamIcon;
 -(void)hideArtwork:(BOOL)hidden;

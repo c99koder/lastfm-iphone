@@ -19,6 +19,7 @@
  * along with MobileLastFM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#import <QuartzCore/QuartzCore.h>
 #import "ArtworkCell.h"
 #import "NSString+MD5.h"
 
@@ -51,7 +52,7 @@ UIImage *avatarPlaceholder = nil;
 
 @implementation ArtworkCell
 
-@synthesize title, subtitle, barWidth, imageURL, shouldCacheArtwork;
+@synthesize title, subtitle, barWidth, imageURL, shouldCacheArtwork, shouldRoundCorners;
 
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
@@ -96,7 +97,11 @@ UIImage *avatarPlaceholder = nil;
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
 	
 	if(imageURL)
-		_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
+		if(shouldRoundCorners) {
+			_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
+			_artwork.layer.cornerRadius = 5.0f;
+		} else
+			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	if([subtitle.text length]) {
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 6, frame.size.width - _artwork.frame.size.width - 6, 22);
 		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 26, frame.size.width - _artwork.frame.size.width - 6, 20);

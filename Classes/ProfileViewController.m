@@ -143,6 +143,7 @@
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		cell.shouldRoundCorners = YES;
 
 	} else if([indexPath section] == 0) {
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
@@ -154,6 +155,7 @@
 			//profilecell.backgroundView = v;
 			//[v release];
 			profilecell.imageURL = [profile objectForKey:@"avatar"];
+			profilecell.shouldRoundCorners = YES;
 			if([[profile objectForKey:@"realname"] length])
 				profilecell.title.text = [profile objectForKey:@"realname"];
 			else
