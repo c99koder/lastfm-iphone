@@ -38,6 +38,9 @@
 		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
+		CGRect frame = toggle.frame;
+		frame.size.width = self.view.frame.size.width - 20;
+		toggle.frame = frame;
 		[toggle addTarget:self
 							 action:@selector(rebuildMenu)
 		 forControlEvents:UIControlEventValueChanged];
@@ -56,6 +59,7 @@
 	//self.tableView.sectionHeaderHeight = 0;
 	//self.tableView.sectionFooterHeight = 0;
 	//self.tableView.backgroundColor = [UIColor blackColor];
+	self.tableView.scrollsToTop = NO;
 	
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	//bar.barStyle = UIBarStyleBlackTranslucent;
@@ -194,7 +198,7 @@
 			cell.shouldRoundBottom = YES;
 	}
 	
-	if([indexPath section] > 0 && cell.accessoryType == UITableViewCellAccessoryNone) {
+	if(cell.accessoryType == UITableViewCellAccessoryNone) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	return cell;
