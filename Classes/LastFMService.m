@@ -366,6 +366,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
+- (NSArray *)releasesForUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getNewReleases" maxCacheAge:5*MINUTES XPath:@"./albums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], @"userecs=0", nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
+}
 - (NSArray *)topAlbumsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes

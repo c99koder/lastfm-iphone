@@ -33,7 +33,8 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
 		_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:username] retain];
-		_releases = [[[LastFMService sharedInstance] recommendedReleasesForUser:username] retain];
+		_releases = [[[LastFMService sharedInstance] releasesForUser:username] retain];
+		_recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:username] retain];
 		/*UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
@@ -89,14 +90,20 @@
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	}
 	//} else {
+	stations = [[NSMutableArray alloc] init];
 	if([_releases count]) {
-		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_releases count] && x < 3; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"],
 																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_releases objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
 		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	}
+	if([_recommendedReleases count]) {
+		for(int x=0; x<[_recommendedReleases count] && x < 3; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"image"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"],
+																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_recommendedReleases objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
+		}
+	}
+	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	//}
 	_data = [sections retain];
 	

@@ -27,6 +27,7 @@
 	NSArray *_data;
 	NSArray *_artists;
 	NSArray *_releases;
+	NSArray *_recommendedReleases;
 }
 - (id)initWithUsername:(NSString *)username;
 @end
