@@ -143,6 +143,7 @@
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
+		cell.shouldCacheArtwork = YES;
 		cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		cell.shouldFillHeight = YES;
 		if([indexPath row] == 0)

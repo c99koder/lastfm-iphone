@@ -52,23 +52,39 @@ UIImage *avatarPlaceholder = nil;
 
 @implementation ArtworkCell
 
-@synthesize title, subtitle, barWidth, imageURL, shouldCacheArtwork, shouldFillHeight;
+@synthesize title, subtitle, barWidth, shouldCacheArtwork, shouldFillHeight;
 
 -(void)setShouldRoundTop:(BOOL)round {
 	shouldRoundTop = round;
-	_artwork.image = [self roundedImage:avatarPlaceholder];
+	_artwork.image = [self roundedImage:_artwork.image];
 }
 -(BOOL)shouldRoundTop {
 	return shouldRoundTop;
 }
 -(void)setShouldRoundBottom:(BOOL)round {
 	shouldRoundBottom = round;
-	_artwork.image = [self roundedImage:avatarPlaceholder];
+	_artwork.image = [self roundedImage:_artwork.image];
 }
 -(BOOL)shouldRoundBottom {
 	return shouldRoundBottom;
 }
-
+-(void)setImageURL:(NSString *)url {
+	imageURL = url;
+	NSData *imageData;
+	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS)) {
+		imageData = [[NSData alloc] initWithContentsOfFile:CACHE_FILE([imageURL md5sum])];
+		UIImage *image = [UIImage imageWithData:imageData];
+		if(shouldRoundTop || shouldRoundBottom) {
+			image = [self roundedImage:image];
+		}
+		[self performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:YES];
+		[imageData release];
+		_imageLoaded = YES;
+	}
+}
+-(NSString *)imageURL {
+	return imageURL;
+}
 -(UIImage *)roundedImage:(UIImage *)image
 {
 	UIImage *img = image;

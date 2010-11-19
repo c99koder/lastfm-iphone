@@ -126,8 +126,8 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	cell.title.opaque = YES;
 	cell.subtitle.backgroundColor = [UIColor whiteColor];
 	cell.subtitle.opaque = YES;
-	cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 	cell.shouldCacheArtwork = YES;
+	cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 	if(!delegate)
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	return cell;
