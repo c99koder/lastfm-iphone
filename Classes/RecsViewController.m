@@ -35,14 +35,14 @@
 		_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:username] retain];
 		_releases = [[[LastFMService sharedInstance] releasesForUser:username] retain];
 		_recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:username] retain];
-		/*UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
+		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
 		[toggle addTarget:self
 							 action:@selector(rebuildMenu)
 		 forControlEvents:UIControlEventValueChanged];
-		self.navigationItem.titleView = toggle;*/
-		self.title = @"Recommendations";
+		self.navigationItem.titleView = toggle;
+		//self.title = @"Recommendations";
 	}
 	return self;
 }
@@ -73,9 +73,9 @@
 	NSMutableArray *sections = [[NSMutableArray alloc] init];
 	NSMutableArray *stations;
 	
-	//UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	
-	//if(toggle.selectedSegmentIndex == 0) {
+	if(toggle.selectedSegmentIndex == 0) {
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
 																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", @"lastfm://...", nil]
 																																																									forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
@@ -83,30 +83,30 @@
 	
 	if([_artists count]) {
 		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_artists count] && x < 3; x++) {
+		for(int x=0; x<[_artists count] && x < 20; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
 																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_artists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 	}
-	//} else {
+	} else {
 	stations = [[NSMutableArray alloc] init];
 	if([_releases count]) {
-		for(int x=0; x<[_releases count] && x < 3; x++) {
+		for(int x=0; x<[_releases count] && x < 20; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"],
 																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_releases objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
 		}
 	}
 	if([_recommendedReleases count]) {
-		for(int x=0; x<[_recommendedReleases count] && x < 3; x++) {
+		for(int x=0; x<[_recommendedReleases count] && x < 20; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"image"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"],
 																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_recommendedReleases objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
 		}
 	}
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	[stations release];
-	//}
+	}
 	_data = [sections retain];
 	
 	[self.tableView reloadData];
@@ -153,12 +153,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"TrackCell"] autorelease];
 	
-	//UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 0/* && toggle.selectedSegmentIndex == 0*/) {
+	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];

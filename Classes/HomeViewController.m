@@ -39,13 +39,20 @@
 		case 0:
 			self.title = _profileController.title;
 			self.navigationItem.titleView = nil;
+			UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
+																																			 style:UIBarButtonItemStylePlain 
+																																			target:[[UIApplication sharedApplication] delegate]
+																																			action:@selector(logoutButtonPressed:)];	
+			self.navigationItem.leftBarButtonItem = logoutButton;
+			[logoutButton release];
 			[_profileController viewWillAppear:NO];
 			_profileController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_profileController.view];
 			break;
 		case 1:
-			//self.navigationItem.titleView = _recsController.navigationItem.titleView;
-			self.title = _recsController.title;
+			self.navigationItem.titleView = _recsController.navigationItem.titleView;
+			self.navigationItem.leftBarButtonItem = nil;
+			//self.title = _recsController.title;
 			[_recsController viewWillAppear:NO];
 			_recsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_recsController.view];

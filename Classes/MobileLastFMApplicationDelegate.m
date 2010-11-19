@@ -258,12 +258,6 @@ NSString *kUserAgent;
 
 	[rootViewController release];
 	rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
-	UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
-																																	 style:UIBarButtonItemStylePlain 
-																																	target:[[UIApplication sharedApplication] delegate]
-																																	action:@selector(logoutButtonPressed:)];	
-	home.navigationItem.leftBarButtonItem = logoutButton;
-	[logoutButton release];
 	[home release];
 	//rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 	
