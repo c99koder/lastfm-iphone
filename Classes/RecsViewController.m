@@ -88,6 +88,7 @@
 																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_artists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
 	}
 	//} else {
 	stations = [[NSMutableArray alloc] init];
@@ -104,6 +105,7 @@
 		}
 	}
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	[stations release];
 	//}
 	_data = [sections retain];
 	

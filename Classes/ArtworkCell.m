@@ -131,7 +131,9 @@ UIImage *avatarPlaceholder = nil;
 	CGContextRelease(context);
 	CGColorSpaceRelease(colorSpace);
 	
-	return [UIImage imageWithCGImage:imageMasked];
+	img = [UIImage imageWithCGImage:imageMasked];
+	CFRelease(imageMasked);
+	return img;
 }
 
 

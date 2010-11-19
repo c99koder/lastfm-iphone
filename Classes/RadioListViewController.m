@@ -90,6 +90,7 @@
 		heading = [NSString stringWithFormat:@"%@'s Stations", _username];
 	
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:heading, stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	[stations release];
 	
 	if([_recent count]) {
 		stations = [[NSMutableArray alloc] init];
@@ -97,6 +98,7 @@
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recent objectAtIndex:x] objectForKey:@"name"],[[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recent Stations", @"Recent Stations heading"), stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
 	}
 	
 #ifndef DISTRIBUTION	

@@ -74,6 +74,7 @@
 																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
 	}
 	
 	if([_recentTracks count]) {
@@ -83,6 +84,7 @@
 																															 [NSString stringWithFormat:@"lastfm-track://%@/_/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
 	}
 	
 	_data = [sections retain];

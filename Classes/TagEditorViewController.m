@@ -102,7 +102,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 - (void)addTag:(NSString *)tag animated:(BOOL)animated {
 	int x=4,y=4;
-	CGSize size;
+	CGSize size = CGSizeZero;
 	TagView *t;
 	for(t in tags) {
 		if([t.tag isEqualToString:tag])

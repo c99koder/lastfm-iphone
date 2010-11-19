@@ -264,6 +264,7 @@ NSString *kUserAgent;
 																																	action:@selector(logoutButtonPressed:)];	
 	home.navigationItem.leftBarButtonItem = logoutButton;
 	[logoutButton release];
+	[home release];
 	//rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 	
 	if(animated) {
