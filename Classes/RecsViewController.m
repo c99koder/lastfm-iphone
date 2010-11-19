@@ -151,7 +151,17 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ArtworkCell *cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"TrackCell"] autorelease];
+	ArtworkCell *cell = nil;
+	
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
+		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
+		if (cell == nil) {
+			cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
+		}
+	}
+	if(cell == nil)
+		cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ArtworkCell"] autorelease];
 	
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 
