@@ -69,7 +69,11 @@ UIImage *avatarPlaceholder = nil;
 	return shouldRoundBottom;
 }
 -(void)setImageURL:(NSString *)url {
-	imageURL = url;
+	if(imageURL) {
+		[imageURL release];
+		imageURL = nil;
+	}
+	imageURL = [url retain];
 	NSData *imageData;
 	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS)) {
 		imageData = [[NSData alloc] initWithContentsOfFile:CACHE_FILE([imageURL md5sum])];

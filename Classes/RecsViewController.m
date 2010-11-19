@@ -49,8 +49,6 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
-	
 	[self rebuildMenu];
 }
 - (void)viewDidLoad {
@@ -67,6 +65,8 @@
 	[bar release];
 }
 - (void)rebuildMenu {
+	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
+
 	if(_data)
 		[_data release];
 	
