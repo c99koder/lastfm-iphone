@@ -22,15 +22,6 @@
 #import <UIKit/UIKit.h>
 #import "CalendarViewController.h"
 
-int tagSort(id tag1, id tag2, void *context);
-
-@interface PlaybackSubview : UIViewController {
-	IBOutlet UIView *_loadingView;
-}
-- (void)showLoadingView;
-- (void)hideLoadingView;
-@end
-
 @interface SimilarArtistsViewController : PlaybackSubview<UITableViewDelegate, UITableViewDataSource> {
 	NSArray *_data;
 	NSMutableArray *_cells;

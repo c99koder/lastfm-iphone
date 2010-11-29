@@ -21,6 +21,9 @@
 
 #import "UIApplication+openURLWithWarning.h"
 #import "LastFMRadio.h"
+#import "MobileLastFMApplicationDelegate.h"
+#import "ArtistViewController.h"
+#import "NSString+URLEscaped.h"
 
 NSURL *__redirectURL;
 
@@ -51,6 +54,22 @@ NSURL *__redirectURL;
 
 @implementation UIApplication (openURLWithWarning)
 -(void)openURLWithWarning:(NSURL *)url {
+	if([[url scheme] isEqualToString:@"lastfm"]) {
+		if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
+			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_NONETWORK",@"No network available") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE",@"No network available title")];
+		} else {
+			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[url absoluteString] animated:YES];
+		}
+		return;
+	}
+	
+	if([[url scheme] isEqualToString:@"lastfm-artist"]) {
+		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[[url host] unURLEscape]];
+		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artist animated:YES];
+		[artist release];
+		return;
+	}
+	
 	UIDevice* device = [UIDevice currentDevice];
 	BOOL backgroundSupported = NO;
 	if ([device respondsToSelector:@selector(isMultitaskingSupported)])

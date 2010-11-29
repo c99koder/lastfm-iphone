@@ -19,6 +19,7 @@
  * along with MobileLastFM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#import "PlaybackViewController.h"
 #import "DetailsViewController.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UITableViewCell+ProgressIndicator.h"
@@ -208,7 +209,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		[img release];
 	} else {
-		cell.text = @"No Tags";
+		cell.textLabel.text = @"No Tags";
 	}
 	return cell;
 }
@@ -880,7 +881,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		return cell;
 	} else {
 		UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
-		cell.text = @"No Upcoming Events";
+		cell.textLabel.text = @"No Upcoming Events";
 		return cell;
 	}
 }

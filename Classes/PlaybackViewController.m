@@ -69,46 +69,12 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	_reflectedArtworkView.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 	_lock = [[NSLock alloc] init];
 	_noArtworkView = [[UIImageView alloc] initWithFrame:_artworkView.bounds];
 	_noArtworkView.image = [UIImage imageNamed:@"noartplaceholder.png"];
 	_noArtworkView.opaque = NO;
 	[_artworkView addSubview: _noArtworkView];
 	[self becomeActive];
-}
-- (void)viewWillAppear {
-	if(_artworkView.frame.size.width == 320) {
-		_reflectionGradientView.frame = CGRectMake(0,320,320,320);
-		_reflectedArtworkView.frame = CGRectMake(0,320,320,320);
-		_artworkView.frame = CGRectMake(0,0,320,320);
-		_noArtworkView.frame = CGRectMake(0,0,320,320);
-		_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
-		_fullscreenMetadataView.alpha = 0;
-		_trackTitle.alpha = 0;
-		_artist.alpha = 0;
-		_elapsed.alpha = 0;
-		_remaining.alpha = 0;
-		_progress.alpha = 0;
-	} else {
-		_trackTitle.textAlignment = UITextAlignmentCenter;
-		_artist.textAlignment = UITextAlignmentCenter;
-		_artist.frame = CGRectMake(20,13,280,18);
-		_trackTitle.frame = CGRectMake(20,30,280,18);
-		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
-		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
-		_artworkView.frame = CGRectMake(47,10,226,226);
-		_noArtworkView.frame = CGRectMake(0,0,226,226);
-		_badge.frame = CGRectMake(234,0,86,86);
-		_fullscreenMetadataView.frame = CGRectMake(0,236,320,87);
-		_fullscreenMetadataView.alpha = 1;
-		_fullscreenMetadataView.image = nil;
-		_trackTitle.alpha = 1;
-		_artist.alpha = 1;
-		_progress.alpha = 1;
-		_elapsed.alpha = 1;
-		_remaining.alpha = 1;
-	}
 }
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
@@ -120,45 +86,6 @@
 		return [NSString stringWithFormat:@"%02i:%02i:%02i", h, m, s];
 	else
 		return [NSString stringWithFormat:@"%02i:%02i", m, s];
-}
-- (void)_showMetadata {
-	_trackTitle.textAlignment = UITextAlignmentLeft;
-	_artist.textAlignment = UITextAlignmentLeft;
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.6];
-	_trackTitle.alpha = 1;
-	_artist.alpha = 1;
-	_artist.frame = CGRectMake(30,96,280,18);
-	_trackTitle.frame = CGRectMake(30,117,280,18);
-	[UIView commitAnimations];
-	[self performSelector:@selector(_hideMetadata) withObject:nil afterDelay:4];
-}
-- (void)_hideMetadata {
-	if(_artworkView.frame.size.width == 320) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.6];
-		_trackTitle.alpha = 0;
-		_artist.alpha = 0;
-		_artist.frame = CGRectMake(30,196,280,18);
-		_trackTitle.frame = CGRectMake(30,217,280,18);
-		_fullscreenMetadataView.alpha = 0;
-		[UIView commitAnimations];
-	}
-}
-- (void)_showGradient {
-	_showedMetadata = YES;
-	_trackTitle.alpha = 0;
-	_artist.alpha = 0;
-	_artist.frame = CGRectMake(30,196,280,18);
-	_trackTitle.frame = CGRectMake(30,217,280,18);
-	_fullscreenMetadataView.frame = CGRectMake(0,161,320,159);
-	_fullscreenMetadataView.alpha = 0;
-	_fullscreenMetadataView.image = [UIImage imageNamed:@"metadatagradient.png"];
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:1.0];
-	_fullscreenMetadataView.alpha = 1;
-	[UIView commitAnimations];
-	[self performSelector:@selector(_showMetadata) withObject:nil afterDelay:0.5];
 }
 - (void)_updateProgress:(NSTimer *)timer {
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
@@ -190,8 +117,6 @@
 		[UIView setAnimationDuration:0.5];
 		_loadingView.alpha = 0;
 		[UIView commitAnimations];
-		if(!_showedMetadata && _artworkView.frame.size.width == 320)
-			[self _showGradient];
 #if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] endSubBeaconWithName:@"buffering"];
 #endif
@@ -233,7 +158,6 @@
 	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
 		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
 		_artworkView.image = artworkImage;
-		_reflectedArtworkView.image = artworkImage;
 		[artwork release];
 		artwork = artworkImage;
 		[UIView beginAnimations:nil context:nil];
@@ -278,7 +202,6 @@
 	_progress.progress = 0;
 	[artwork release];
 	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
-	_reflectedArtworkView.image = artwork;
 	[UIView beginAnimations:nil context:nil];
 	_noArtworkView.alpha = 1;
 	_badge.alpha = 0;
@@ -286,52 +209,12 @@
 	_artist.frame = CGRectMake(20,13,280,18);
 	[self _updateProgress:nil];
 	
-	if([[LastFMRadio sharedInstance] state] != TRACK_BUFFERING && !_showedMetadata && _artworkView.frame.size.width == 320)
-		[self _showGradient];
-	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:trackInfo];
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	NSDictionary *trackInfo = [notification userInfo];
 	[self _displayTrackInfo:trackInfo];
-}
--(IBAction)artworkButtonPressed:(id)sender {
-	[UIView beginAnimations:nil context:nil];
-	[UIView setAnimationDuration:0.2];
-	if(_artworkView.frame.size.width == 320) {
-		_trackTitle.textAlignment = UITextAlignmentCenter;
-		_artist.textAlignment = UITextAlignmentCenter;
-		_artist.frame = CGRectMake(20,13,280,18);
-		_trackTitle.frame = CGRectMake(20,30,280,18);
-		_reflectionGradientView.frame = CGRectMake(0,236,320,180);
-		_reflectedArtworkView.frame = CGRectMake(47,236,226,226);
-		_artworkView.frame = CGRectMake(47,10,226,226);
-		_noArtworkView.frame = CGRectMake(0,0,226,226);
-		_fullscreenMetadataView.frame = CGRectMake(0,236,320,87);
-		_fullscreenMetadataView.alpha = 1;
-		_fullscreenMetadataView.image = nil;
-		_trackTitle.alpha = 1;
-		_artist.alpha = 1;
-		_progress.alpha = 1;
-		_elapsed.alpha = 1;
-		_remaining.alpha = 1;
-	} else {
-		_reflectionGradientView.frame = CGRectMake(0,320,320,320);
-		_reflectedArtworkView.frame = CGRectMake(0,320,320,320);
-		_artworkView.frame = CGRectMake(0,0,320,320);
-		_noArtworkView.frame = CGRectMake(0,0,320,320);
-		_fullscreenMetadataView.frame = CGRectMake(0,256,320,87);
-		_fullscreenMetadataView.alpha = 0;
-		_trackTitle.alpha = 0;
-		_artist.alpha = 0;
-		_elapsed.alpha = 0;
-		_remaining.alpha = 0;
-		_progress.alpha = 0;
-		_artworkView.image = artwork;
-		//[self performSelector:@selector(_showMetadata) withObject:nil afterDelay:0.6];
-	}
-	[UIView commitAnimations];
 }
 @end
 
@@ -357,7 +240,6 @@
 	[trackView.view addSubview: volumeView];
 #endif
 	self.hidesBottomBarWhenPushed = YES;
-	detailsViewController = [[DetailsViewController alloc] initWithNibName:@"DetailsView" bundle:nil];
 }
 - (void)_systemVolumeChanged:(NSNotification *)notification {
 	float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
@@ -369,16 +251,16 @@
 	}
 }
 - (BOOL)releaseDetailsView {
-	if(detailsViewController) {
-		[detailsViewController release];
-		detailsViewController = nil;
+	if(artistViewController) {
+		[artistViewController release];
+		artistViewController = nil;
 		return YES;
 	} else {
 		return NO;
 	}
 }
 - (void)hideDetailsView {
-	if(detailsViewController != nil && [detailsViewController.view superview])
+	if(artistViewController != nil && [artistViewController.view superview])
 		[self detailsButtonPressed:self];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -441,7 +323,7 @@
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hidePlaybackView];
 }
 - (void)detailsButtonPressed:(id)sender {
-	if(detailsViewController != nil && [detailsViewController.view superview]) {
+	if(artistViewController != nil && [artistViewController.view superview]) {
 		detailsBtn.frame = CGRectMake(0,0,30,30);
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.75];
@@ -459,10 +341,15 @@
 #if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] endSubBeaconWithName:@"details"];
 #endif
+		[artistViewController release];
+		artistViewController = nil;
 	} else {
-		if(!detailsViewController)
-			detailsViewController = [[DetailsViewController alloc] initWithNibName:@"DetailsView" bundle:nil];
-		[detailsViewController setTitleLabelView:_titleLabel];
+		artistViewController = [[ArtistViewController alloc] initWithArtist:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]];
+		[artistViewController paintItBlack];
+		[artistViewController loadView];
+		[artistViewController viewDidLoad];
+		[artistViewController viewWillAppear:YES];
+		artistViewController.view.frame = CGRectMake(0,0,contentView.frame.size.width, contentView.frame.size.height);
 		detailsBtn.frame = CGRectMake(1,1,28,28);
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.75];
@@ -474,9 +361,8 @@
 		[UIView setAnimationDuration:0.75];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:contentView cache:YES];
 		[[contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-		[contentView addSubview: detailsViewController.view];
+		[contentView addSubview: artistViewController.view];
 		[UIView commitAnimations];
-		[detailsViewController viewWillAppear:YES];
 #if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"details" timeSession:YES];
 #endif
@@ -484,7 +370,7 @@
 }
 -(void)onTourButtonPressed:(id)sender {
 	[self detailsButtonPressed:sender];
-	[detailsViewController jumpToEventsTab];
+	//[detailsViewController jumpToEventsTab];
 #if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"on-tour-strap" timeSession:NO];
 #endif
@@ -737,9 +623,9 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 }
 - (void)dealloc {
 	[super dealloc];
-	if(detailsViewController) {
-		[detailsViewController release];
-		detailsViewController = nil;
+	if(artistViewController) {
+		[artistViewController release];
+		artistViewController = nil;
 	}
 }
 - (void)becomeActive {

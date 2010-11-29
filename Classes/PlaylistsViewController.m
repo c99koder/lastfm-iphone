@@ -111,7 +111,7 @@
 			[cell.contentView addSubview:_newPlaylist];
 		}
 	} else {
-		cell.text = [[_data objectAtIndex:tableView.editing?[indexPath row]-1:[indexPath row]] objectForKey:@"title"];
+		cell.textLabel.text = [[_data objectAtIndex:tableView.editing?[indexPath row]-1:[indexPath row]] objectForKey:@"title"];
 	}
 	return cell;
 }

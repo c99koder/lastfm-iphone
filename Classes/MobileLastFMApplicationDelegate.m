@@ -89,6 +89,10 @@ NSString *kUserAgent;
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
+		
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		
+		
 		[NSThread detachNewThreadSelector:@selector(_cleanCache) toTarget:self withObject:nil];
 	}
 	return self;

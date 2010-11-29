@@ -786,22 +786,22 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 	
 	switch([indexPath row]) {
 		case 0:
-			cell.text = NSLocalizedString(@"Top Artists", @"Top Artists chart title");
+			cell.textLabel.text = NSLocalizedString(@"Top Artists", @"Top Artists chart title");
 			break;
 		case 1:
-			cell.text = NSLocalizedString(@"Top Albums", @"Top Albums chart title");
+			cell.textLabel.text = NSLocalizedString(@"Top Albums", @"Top Albums chart title");
 			break;
 		case 2:
-			cell.text = NSLocalizedString(@"Top Tracks", @"Top Tracks chart title");
+			cell.textLabel.text = NSLocalizedString(@"Top Tracks", @"Top Tracks chart title");
 			break;
 		case 3:
-			cell.text = NSLocalizedString(@"Recently Played", @"Recently Played Tracks chart title");
+			cell.textLabel.text = NSLocalizedString(@"Recently Played", @"Recently Played Tracks chart title");
 			break;
 		case 4:
-			cell.text = NSLocalizedString(@"Recently Loved", @"Recently Loved Tracks chart title");
+			cell.textLabel.text = NSLocalizedString(@"Recently Loved", @"Recently Loved Tracks chart title");
 			break;
 		case 5:
-			cell.text = NSLocalizedString(@"Recently Banned", @"Recently Banned Tracks chart title");
+			cell.textLabel.text = NSLocalizedString(@"Recently Banned", @"Recently Banned Tracks chart title");
 			break;
 	}
 	if(cell.accessoryView) {

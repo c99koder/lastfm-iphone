@@ -201,12 +201,13 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 
 - (NSDictionary *)metadataForArtist:(NSString *)artist inLanguage:(NSString *)lang {
 	NSDictionary *metadata = nil;
-	NSArray *nodes = [self doMethod:@"artist.getInfo" maxCacheAge:7*DAYS XPath:@"./artist" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"artist.getInfo" maxCacheAge:7*DAYS XPath:@"./artist" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], 
+										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], nil];
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		metadata = [self _convertNode:node
-					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./image[@size=\"large\"]", @"./bio/content", @"./stats/listeners", @"./stats/playcount", nil]
-													forKeys:[NSArray arrayWithObjects:@"name", @"image", @"bio", @"listeners", @"playcount", nil]];
+					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./image[@size=\"large\"]", @"./bio/summary", @"./bio/content", @"./stats/listeners", @"./stats/playcount", @"./stats/userplaycount", nil]
+													forKeys:[NSArray arrayWithObjects:@"name", @"image", @"summary", @"bio", @"listeners", @"playcount", @"userplaycount", nil]];
 	}
 	return metadata;
 }
@@ -281,6 +282,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", nil]];
+}
+- (NSArray *)topAlbumsForArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"artist.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 
 #pragma mark Track methods

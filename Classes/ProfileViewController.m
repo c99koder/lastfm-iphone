@@ -27,6 +27,8 @@
 #import "NSString+URLEscaped.h"
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
+#import "ArtistViewController.h"
+#import "UIApplication+openURLWithWarning.h"
 
 @implementation ProfileViewController
 - (id)initWithUsername:(NSString *)username {
@@ -71,7 +73,7 @@
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], [[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
@@ -123,6 +125,7 @@
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
+		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
 	}
 	[self.tableView reloadData];
 }

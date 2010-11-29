@@ -158,6 +158,7 @@
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
 		22BA0DDF0DC3731100DBE5BD /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA0DDE0DC3731100DBE5BD /* stop.png */; };
+		22BBC71112A3E0730018392B /* ArtistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22BBC71012A3E0730018392B /* ArtistViewController.m */; };
 		22C03A2E0E5DA7E600EBF062 /* tag-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A2D0E5DA7E600EBF062 /* tag-bg.png */; };
 		22C03A8F0E5DB19900EBF062 /* top_tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A8E0E5DB19900EBF062 /* top_tags.png */; };
 		22C03C620E5F138300EBF062 /* buy.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03C610E5F138300EBF062 /* buy.png */; };
@@ -416,6 +417,8 @@
 		22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NowPlayingButton.m"; sourceTree = "<group>"; };
 		22B444410E9FB1300079C52E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		22BA0DDE0DC3731100DBE5BD /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
+		22BBC70F12A3E0730018392B /* ArtistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtistViewController.h; sourceTree = "<group>"; };
+		22BBC71012A3E0730018392B /* ArtistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtistViewController.m; sourceTree = "<group>"; };
 		22C03A2D0E5DA7E600EBF062 /* tag-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag-bg.png"; sourceTree = "<group>"; };
 		22C03A8E0E5DB19900EBF062 /* top_tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top_tags.png; sourceTree = "<group>"; };
 		22C03C610E5F138300EBF062 /* buy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buy.png; sourceTree = "<group>"; };
@@ -519,6 +522,8 @@
 			children = (
 				227F6F420DB26F4900C11B22 /* ArtworkCell.h */,
 				227F6F430DB26F4900C11B22 /* ArtworkCell.m */,
+				22BBC70F12A3E0730018392B /* ArtistViewController.h */,
+				22BBC71012A3E0730018392B /* ArtistViewController.m */,
 				22ABB3010DAE68FB00D2871E /* ChartsViewController.h */,
 				22ABB3020DAE68FC00D2871E /* ChartsViewController.m */,
 				2244DB0D0E3A569700C4F40B /* CalendarViewController.h */,
@@ -1127,6 +1132,7 @@
 				22738D3A1294451B001A2552 /* CXMLDocument_CreationExtensions.m in Sources */,
 				22D219501294524F00B3E520 /* HomeViewController.m in Sources */,
 				22D21C241295C6FA00B3E520 /* RecsViewController.m in Sources */,
+				22BBC71112A3E0730018392B /* ArtistViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

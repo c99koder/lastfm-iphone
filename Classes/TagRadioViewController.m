@@ -84,10 +84,10 @@
 	if (cell == nil) {
 		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"BasicCell"] autorelease];
 	}
-	cell.text = [_data objectAtIndex:[indexPath row]];
+	cell.textLabel.text = [_data objectAtIndex:[indexPath row]];
 	[cell showProgress: NO];
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE &&
-		 [[[LastFMRadio sharedInstance] stationURL] isEqualToString:[NSString stringWithFormat:@"lastfm://globaltags/%@", [cell.text URLEscaped]]]) {
+		 [[[LastFMRadio sharedInstance] stationURL] isEqualToString:[NSString stringWithFormat:@"lastfm://globaltags/%@", [cell.textLabel.text URLEscaped]]]) {
 		[self showNowPlayingButton:NO];
 		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 64, 30)];
 		[btn setBackgroundImage:[UIImage imageNamed:@"now_playing_list.png"] forState:UIControlStateNormal];

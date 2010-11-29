@@ -28,12 +28,19 @@
 #import "CalendarViewController.h"
 #import "TagEditorViewController.h"
 #import "PlaylistsViewController.h"
-#import "DetailsViewController.h"
+#import "ArtistViewController.h"
+
+int tagSort(id tag1, id tag2, void *context);
+
+@interface PlaybackSubview : UIViewController {
+	IBOutlet UIView *_loadingView;
+}
+- (void)showLoadingView;
+- (void)hideLoadingView;
+@end
 
 @interface TrackViewController : PlaybackSubview {
 	IBOutlet UIImageView *_artworkView;
-	IBOutlet UIImageView *_reflectedArtworkView;
-	IBOutlet UIImageView *_reflectionGradientView;
 	IBOutlet UILabel *_trackTitle;
 	IBOutlet UILabel *_artist;
 	IBOutlet UILabel *_elapsed;
@@ -48,7 +55,6 @@
 	NSTimer *_timer;
 	BOOL _showedMetadata;
 }
--(IBAction)artworkButtonPressed:(id)sender;
 -(void)resignActive;
 -(void)becomeActive;
 @property (nonatomic, readonly) UIImage *artwork;
@@ -66,7 +72,7 @@
 	IBOutlet UIButton *loveBtn;
 	IBOutlet UIButton *banBtn;
 	
-	DetailsViewController *detailsViewController;
+	ArtistViewController *artistViewController;
 }
 -(void)backButtonPressed:(id)sender;
 -(void)detailsButtonPressed:(id)sender;

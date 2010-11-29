@@ -240,7 +240,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	[tagEditorView addTag:[tableView cellForRowAtIndexPath:newIndexPath].text animated:YES];
+	[tagEditorView addTag:[tableView cellForRowAtIndexPath:newIndexPath].textLabel.text animated:YES];
 	[tableView reloadData];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -248,13 +248,13 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 	if (cell == nil)
 		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"SimpleCell"] autorelease];
 	if(tabBar.selectedItem.tag == 0)
-		cell.text = [[topTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
+		cell.textLabel.text = [[topTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
 	else
-		cell.text = [[myTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
-	if([tagEditorView hasTag:cell.text])
-		cell.textColor = [UIColor grayColor];
+		cell.textLabel.text = [[myTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	if([tagEditorView hasTag:cell.textLabel.text])
+		cell.textLabel.textColor = [UIColor grayColor];
 	else
-		cell.textColor = [UIColor blackColor];
+		cell.textLabel.textColor = [UIColor blackColor];
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	return cell;
 }

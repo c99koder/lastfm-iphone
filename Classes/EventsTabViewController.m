@@ -25,6 +25,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
+#import "DetailsViewController.h"
 
 @implementation EventsTabViewController
 - (id)initWithUsername:(NSString *)username {
@@ -116,13 +117,13 @@
 	
 	switch([indexPath row]) {
 		case 0:
-			cell.text = @"My Events";
+			cell.textLabel.text = @"My Events";
 			break;
 		case 1:
-			cell.text = @"Recommended by Last.fm";
+			cell.textLabel.text = @"Recommended by Last.fm";
 			break;
 		case 2:
-			cell.text = @"Events Near Me";
+			cell.textLabel.text = @"Events Near Me";
 			break;
 	}
 	[cell showProgress: NO];
