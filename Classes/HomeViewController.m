@@ -7,7 +7,8 @@
 //
 
 #import "HomeViewController.h"
-
+#import "UIViewController+NowPlayingButton.h"
+#import "MobileLastFMApplicationDelegate.h"
 
 @implementation HomeViewController
 
@@ -18,7 +19,10 @@
 	}
 	return nil;
 }
-
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+}
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	

@@ -23,6 +23,7 @@
 #import "LastFMRadio.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "ArtistViewController.h"
+#import "PlaybackViewController.h"
 #import "NSString+URLEscaped.h"
 
 NSURL *__redirectURL;
@@ -65,6 +66,8 @@ NSURL *__redirectURL;
 	
 	if([[url scheme] isEqualToString:@"lastfm-artist"]) {
 		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[[url host] unURLEscape]];
+		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]])
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
 		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artist animated:YES];
 		[artist release];
 		return;
