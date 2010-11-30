@@ -75,6 +75,7 @@ enum eventStatus {
 - (void)removeTag:(NSString *)tag fromArtist:(NSString *)artist;
 - (NSArray *)tagsForArtist:(NSString *)artist;
 - (NSArray *)topAlbumsForArtist:(NSString *)artist;
+- (NSArray *)topTracksForArtist:(NSString *)artist;
 
 #pragma mark Album methods
 

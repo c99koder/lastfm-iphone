@@ -38,6 +38,7 @@
 	_tags = [[[LastFMService sharedInstance] topTagsForArtist:_artist] retain];
 	_metadata = [[[LastFMService sharedInstance] metadataForArtist:_artist inLanguage:@"en"] retain];
 	_albums = [[[LastFMService sharedInstance] topAlbumsForArtist:_artist] retain];
+	_tracks = [[[LastFMService sharedInstance] topTracksForArtist:_artist] retain];
 	_infoTabLoaded = YES;
 	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
 	[pool release];
@@ -111,6 +112,16 @@
 																															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 
 			[sections addObject:@"bio"];
+			
+			if([_tracks count]) {
+				stations = [[NSMutableArray alloc] init];
+				for(int x=0; x<[_tracks count] && x < 5; x++) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tracks objectAtIndex:x] objectForKey:@"name"], [[_tracks objectAtIndex:x] objectForKey:@"image"],
+																																	 [NSString stringWithFormat:@"lastfm-track://%@/%@", [_artist URLEscaped], [[[_tracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+				}
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Tracks", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+				[stations release];
+			}
 			
 			if([_albums count]) {
 				stations = [[NSMutableArray alloc] init];

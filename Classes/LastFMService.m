@@ -249,6 +249,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", nil]];
 }
+- (NSArray *)topTracksForArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"artist.getTopTracks" maxCacheAge:5*MINUTES XPath:@"./toptracks/track" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"image", nil]];
+}
 
 #pragma mark Album methods
 

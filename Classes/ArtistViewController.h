@@ -25,6 +25,7 @@
 @interface ArtistViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSString *_artist;
 	NSArray *_data;
+	NSArray *_tracks;
 	NSArray *_albums;
 	NSArray *_tags;
 	NSDictionary *_metadata;
