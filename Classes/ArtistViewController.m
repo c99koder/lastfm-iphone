@@ -309,8 +309,9 @@
 			biocell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"BioCell"] autorelease];
 			biocell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 			biocell.backgroundColor = [UIColor clearColor];
-			UITextView *bio = [[UITextView alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"bio"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height)];
+			UITextView *bio = [[UITextView alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"summary"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height)];
 			bio.text = [_metadata objectForKey:@"summary"];
+			bio.scrollEnabled = NO;
 			bio.backgroundColor = [UIColor clearColor];
 			if(_paintItBlack)
 				bio.textColor = [UIColor whiteColor];

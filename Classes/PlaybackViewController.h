@@ -39,7 +39,7 @@ int tagSort(id tag1, id tag2, void *context);
 - (void)hideLoadingView;
 @end
 
-@interface TrackViewController : PlaybackSubview {
+@interface TrackPlaybackViewController : PlaybackSubview {
 	IBOutlet UIImageView *_artworkView;
 	IBOutlet UILabel *_trackTitle;
 	IBOutlet UILabel *_artist;
@@ -65,7 +65,7 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UIToolbar *toolbar;
 	IBOutlet UIView *contentView;
 	IBOutlet UISegmentedControl *detailType;
-	IBOutlet TrackViewController *trackView;
+	IBOutlet TrackPlaybackViewController *trackView;
 	IBOutlet UIView *volumeView;
 	IBOutlet UIView *detailsBtnContainer;
 	IBOutlet UIButton *detailsBtn;

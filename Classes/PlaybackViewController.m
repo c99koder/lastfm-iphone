@@ -45,7 +45,7 @@
 }
 @end
 
-@implementation TrackViewController
+@implementation TrackPlaybackViewController
 @synthesize artwork;
 
 - (void)becomeActive {

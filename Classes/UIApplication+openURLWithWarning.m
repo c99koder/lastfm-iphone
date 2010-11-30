@@ -24,6 +24,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "ArtistViewController.h"
 #import "AlbumViewController.h"
+#import "TrackViewController.h"
 #import "PlaybackViewController.h"
 #import "NSString+URLEscaped.h"
 
@@ -81,7 +82,18 @@ NSURL *__redirectURL;
 		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]])
 			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
 		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:view animated:YES];
-		[artist release];
+		[view release];
+		return;
+	}
+	
+	if([[url scheme] isEqualToString:@"lastfm-track"]) {
+		NSString *artist = [[url host] unURLEscape];
+		NSString *track = [[[url path] substringFromIndex:1] unURLEscape];
+		TrackViewController *view = [[TrackViewController alloc] initWithTrack:track byArtist:artist];
+		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]])
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:view animated:YES];
+		[view release];
 		return;
 	}
 	

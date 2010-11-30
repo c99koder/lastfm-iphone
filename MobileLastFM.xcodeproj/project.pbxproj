@@ -132,6 +132,7 @@
 		22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22631EFC0E81395F00DC2D09 /* DebugView.xib */; };
 		22631F170E813B5700DC2D09 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22631F160E813B5700DC2D09 /* DebugViewController.m */; };
 		2263269012A51133006F34EA /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263268F12A51133006F34EA /* AlbumViewController.m */; };
+		2263275912A525AD006F34EA /* TrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263275812A525AD006F34EA /* TrackViewController.m */; };
 		22738D211294444F001A2552 /* CXMLDocument_PrivateExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D0F1294444F001A2552 /* CXMLDocument_PrivateExtensions.m */; };
 		22738D221294444F001A2552 /* CXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D111294444F001A2552 /* CXMLDocument.m */; };
 		22738D231294444F001A2552 /* CXMLElement_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D131294444F001A2552 /* CXMLElement_CreationExtensions.m */; };
@@ -375,6 +376,8 @@
 		22631F160E813B5700DC2D09 /* DebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugViewController.m; sourceTree = "<group>"; };
 		2263268E12A51133006F34EA /* AlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
 		2263268F12A51133006F34EA /* AlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
+		2263275712A525AD006F34EA /* TrackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackViewController.h; sourceTree = "<group>"; };
+		2263275812A525AD006F34EA /* TrackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackViewController.m; sourceTree = "<group>"; };
 		22738D0E1294444F001A2552 /* CXMLDocument_PrivateExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument_PrivateExtensions.h; sourceTree = "<group>"; };
 		22738D0F1294444F001A2552 /* CXMLDocument_PrivateExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLDocument_PrivateExtensions.m; sourceTree = "<group>"; };
 		22738D101294444F001A2552 /* CXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument.h; sourceTree = "<group>"; };
@@ -575,6 +578,8 @@
 				22E6E8600E533F08009FD470 /* TagEditorViewController.m */,
 				22C54F730DEEF9A30087322B /* TagRadioViewController.h */,
 				22C54F740DEEF9A30087322B /* TagRadioViewController.m */,
+				2263275712A525AD006F34EA /* TrackViewController.h */,
+				2263275812A525AD006F34EA /* TrackViewController.m */,
 				228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */,
 				228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */,
 				220CEBD10DCCB420007F888D /* UITableViewCell+ProgressIndicator.h */,
@@ -1139,6 +1144,7 @@
 				22D21C241295C6FA00B3E520 /* RecsViewController.m in Sources */,
 				22BBC71112A3E0730018392B /* ArtistViewController.m in Sources */,
 				2263269012A51133006F34EA /* AlbumViewController.m in Sources */,
+				2263275912A525AD006F34EA /* TrackViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
