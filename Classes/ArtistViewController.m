@@ -307,10 +307,15 @@
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
 			biocell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"BioCell"] autorelease];
+			biocell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+			biocell.backgroundColor = [UIColor clearColor];
 			UITextView *bio = [[UITextView alloc] initWithFrame:CGRectMake(0,6,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"bio"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height)];
 			bio.text = [_metadata objectForKey:@"summary"];
 			bio.backgroundColor = [UIColor clearColor];
-			bio.textColor = [UIColor  blackColor];
+			if(_paintItBlack)
+				bio.textColor = [UIColor whiteColor];
+			else
+				bio.textColor = [UIColor blackColor];
 			bio.editable = NO;
 			bio.font = [UIFont systemFontOfSize:12.0f];
 			[biocell.contentView addSubview:bio];
