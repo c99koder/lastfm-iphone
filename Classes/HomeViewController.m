@@ -43,12 +43,6 @@
 		case 0:
 			self.title = _profileController.title;
 			self.navigationItem.titleView = nil;
-			UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout Button")
-																																			 style:UIBarButtonItemStylePlain 
-																																			target:[[UIApplication sharedApplication] delegate]
-																																			action:@selector(logoutButtonPressed:)];	
-			self.navigationItem.leftBarButtonItem = logoutButton;
-			[logoutButton release];
 			[_profileController viewWillAppear:NO];
 			_profileController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_profileController.view];

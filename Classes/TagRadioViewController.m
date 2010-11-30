@@ -30,6 +30,7 @@
 
 - (id)initWithUsername:(NSString *)username {
 	int i;
+	
 	if (self = [super init]) {
 		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Tags", @"Tags view title"), username];
 		_username = [username retain];
@@ -38,14 +39,13 @@
 		for(i=0; i<[tags count]; i++) {
 			[_data addObject: [[tags objectAtIndex: i] objectForKey:@"name"]];
 		}
+		if(![_data count]) {
+			[self release];
+			return nil;
+		}
 	}
 	
-	if(_data != nil && ![_data count]) {
-		[self release];
-		return nil;
-	} else {
-		return self;
-	}
+	return self;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];

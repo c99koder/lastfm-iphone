@@ -89,6 +89,9 @@
 		[stations release];
 	}
 	
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+		[sections addObject:@"logout"];
+	
 	_data = [sections retain];
 	
 	[self.tableView reloadData];
@@ -110,7 +113,7 @@
 		return 0;
 }*/
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if(section > 0)
+	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
 	else
 		return nil;
@@ -126,6 +129,8 @@
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) logoutButtonPressed:nil];
 	}
 	[self.tableView reloadData];
 }
@@ -176,6 +181,11 @@
 			[numberFormatter release];
 		}
 		return profilecell;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
+		UITableViewCell *logoutcell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
+		logoutcell.textLabel.text = @"Logout";
+		logoutcell.textAlignment = UITextAlignmentCenter;
+		return logoutcell;
 	}
 	
 	if([indexPath section] > 0 && cell.accessoryType == UITableViewCellAccessoryNone) {

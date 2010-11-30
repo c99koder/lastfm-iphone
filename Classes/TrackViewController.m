@@ -183,15 +183,17 @@
 			
 			NSString *duration = @"";
 			int seconds = [[_metadata objectForKey:@"duration"] floatValue] / 1000.0f;
-			if(seconds <= 0)
+			if(seconds <= 0) {
 				duration = @"00:00";
-			int h = seconds / 3600;
-			int m = (seconds%3600) / 60;
-			int s = seconds%60;
-			if(h)
-				duration = [NSString stringWithFormat:@"%02i:%02i:%02i", h, m, s];
-			else
-				duration = [NSString stringWithFormat:@"%02i:%02i", m, s];
+			} else {
+				int h = seconds / 3600;
+				int m = (seconds%3600) / 60;
+				int s = seconds%60;
+				if(h)
+					duration = [NSString stringWithFormat:@"%02i:%02i:%02i", h, m, s];
+				else
+					duration = [NSString stringWithFormat:@"%02i:%02i", m, s];
+			}
 			
 			NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 			[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
