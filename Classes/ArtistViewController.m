@@ -116,7 +116,7 @@
 				stations = [[NSMutableArray alloc] init];
 				for(int x=0; x<[_albums count] && x < 5; x++) {
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_albums objectAtIndex:x] objectForKey:@"name"], [[_albums objectAtIndex:x] objectForKey:@"image"],
-																																	 [NSString stringWithFormat:@"lastfm-artost://%@", [[_albums objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[[_albums objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 				}
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Albums", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
@@ -309,7 +309,7 @@
 			biocell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"BioCell"] autorelease];
 			biocell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 			biocell.backgroundColor = [UIColor clearColor];
-			UITextView *bio = [[UITextView alloc] initWithFrame:CGRectMake(0,6,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"bio"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height)];
+			UITextView *bio = [[UITextView alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"bio"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height)];
 			bio.text = [_metadata objectForKey:@"summary"];
 			bio.backgroundColor = [UIColor clearColor];
 			if(_paintItBlack)

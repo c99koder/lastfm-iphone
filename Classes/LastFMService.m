@@ -254,12 +254,14 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 
 - (NSDictionary *)metadataForAlbum:(NSString *)album byArtist:(NSString *)artist inLanguage:(NSString *)lang {
 	NSDictionary *metadata = nil;
-	NSArray *nodes = [self doMethod:@"album.getInfo" maxCacheAge:7*DAYS XPath:@"./album" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"album.getInfo" maxCacheAge:7*DAYS XPath:@"./album" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], 
+										[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], nil];
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		metadata = [self _convertNode:node
-					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./image[@size=\"extralarge\"]", nil]
-													forKeys:[NSArray arrayWithObjects:@"name", @"image", nil]];
+					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./artist", @"./releasedate", @"./userplaycount", @"./image[@size=\"extralarge\"]", nil]
+													forKeys:[NSArray arrayWithObjects:@"name", @"artist", @"releasedate", @"userplaycount", @"image", nil]];
 	}
 	return metadata;
 }

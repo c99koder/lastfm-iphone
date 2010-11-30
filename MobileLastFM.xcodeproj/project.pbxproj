@@ -131,6 +131,7 @@
 		22624B4E0E6F01FE00072BB4 /* calendar-view-gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 22624B4D0E6F01FE00072BB4 /* calendar-view-gradient.png */; };
 		22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22631EFC0E81395F00DC2D09 /* DebugView.xib */; };
 		22631F170E813B5700DC2D09 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22631F160E813B5700DC2D09 /* DebugViewController.m */; };
+		2263269012A51133006F34EA /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263268F12A51133006F34EA /* AlbumViewController.m */; };
 		22738D211294444F001A2552 /* CXMLDocument_PrivateExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D0F1294444F001A2552 /* CXMLDocument_PrivateExtensions.m */; };
 		22738D221294444F001A2552 /* CXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D111294444F001A2552 /* CXMLDocument.m */; };
 		22738D231294444F001A2552 /* CXMLElement_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D131294444F001A2552 /* CXMLElement_CreationExtensions.m */; };
@@ -372,6 +373,8 @@
 		22631EF90E81395200DC2D09 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/DebugView.xib; sourceTree = "<group>"; };
 		22631F150E813B5700DC2D09 /* DebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
 		22631F160E813B5700DC2D09 /* DebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugViewController.m; sourceTree = "<group>"; };
+		2263268E12A51133006F34EA /* AlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
+		2263268F12A51133006F34EA /* AlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
 		22738D0E1294444F001A2552 /* CXMLDocument_PrivateExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument_PrivateExtensions.h; sourceTree = "<group>"; };
 		22738D0F1294444F001A2552 /* CXMLDocument_PrivateExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLDocument_PrivateExtensions.m; sourceTree = "<group>"; };
 		22738D101294444F001A2552 /* CXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument.h; sourceTree = "<group>"; };
@@ -520,6 +523,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2263268E12A51133006F34EA /* AlbumViewController.h */,
+				2263268F12A51133006F34EA /* AlbumViewController.m */,
 				227F6F420DB26F4900C11B22 /* ArtworkCell.h */,
 				227F6F430DB26F4900C11B22 /* ArtworkCell.m */,
 				22BBC70F12A3E0730018392B /* ArtistViewController.h */,
@@ -1133,6 +1138,7 @@
 				22D219501294524F00B3E520 /* HomeViewController.m in Sources */,
 				22D21C241295C6FA00B3E520 /* RecsViewController.m in Sources */,
 				22BBC71112A3E0730018392B /* ArtistViewController.m in Sources */,
+				2263269012A51133006F34EA /* AlbumViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
