@@ -69,7 +69,8 @@
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	//self.tableView.sectionHeaderHeight = 0;
 	//self.tableView.sectionFooterHeight = 0;
-	//self.tableView.backgroundColor = [UIColor blackColor];
+	if(_paintItBlack)
+		self.tableView.backgroundColor = [UIColor blackColor];
 	self.tableView.scrollsToTop = NO;
 	
 	_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Events", @"Similar Artists", nil]];
@@ -150,6 +151,47 @@
 	
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
+}
+#define SectionHeaderHeight 40
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	if ([[self tableView:tableView titleForHeaderInSection:section] length]) {
+		return SectionHeaderHeight;
+	}
+	else {
+		// If no section header title, no section header needed
+		return 0;
+	}
+}
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
+	if (![sectionTitle length]) {
+		return nil;
+	}
+	
+	// Create label with section title
+	UILabel *label = [[[UILabel alloc] init] autorelease];
+	label.frame = CGRectMake(20, 6, 300, 30);
+	label.backgroundColor = [UIColor clearColor];
+	if(_paintItBlack) {
+		label.textColor = [UIColor whiteColor];
+	} else {
+		label.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+		label.shadowColor = [UIColor whiteColor];
+		label.shadowOffset = CGSizeMake(0.0, 1.0);
+	}
+	label.font = [UIFont boldSystemFontOfSize:16];
+	label.text = sectionTitle;
+	
+	// Create header view and add label as a subview
+	UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, SectionHeaderHeight)];
+	[view autorelease];
+	[view addSubview:label];
+	
+	return view;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return [_data count];
