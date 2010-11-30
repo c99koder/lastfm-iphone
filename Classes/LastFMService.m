@@ -271,6 +271,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	}
 	return metadata;
 }
+- (NSArray *)tracksForAlbum:(NSString *)album byArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"album.getInfo" maxCacheAge:7*DAYS XPath:@"./album/tracks/track" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"artist", @"image", nil]];
+}
 - (NSArray *)topTagsForAlbum:(NSString *)album byArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"album.getTopTags" maxCacheAge:7*DAYS XPath:@"./toptags/tag" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
 	return [self _convertNodes:nodes

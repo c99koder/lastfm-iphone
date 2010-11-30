@@ -36,6 +36,7 @@
 		_album = [album retain];
 		_metadata = [[[LastFMService sharedInstance] metadataForAlbum:album byArtist:artist inLanguage:@"en"] retain];
 		_tags = [[[LastFMService sharedInstance] topTagsForAlbum:album byArtist:artist] retain]; 
+		_tracks = [[[LastFMService sharedInstance] tracksForAlbum:album byArtist:artist] retain];
 		self.title = album;
 	}
 	return self;
@@ -72,6 +73,16 @@
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
+	if([_tracks count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_tracks count]; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tracks objectAtIndex:x] objectForKey:@"name"], [[_tracks objectAtIndex:x] objectForKey:@"image"],
+																															 [NSString stringWithFormat:@"lastfm-track://%@/%@", [_artist URLEscaped], [[[_tracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Track Listings", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
+	}
+
 	if([_tags count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_tags count] && x < 10; x++) {
@@ -81,7 +92,7 @@
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Related Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 	}
-
+	
 	_data = [sections retain];
 	
 	[self.tableView reloadData];

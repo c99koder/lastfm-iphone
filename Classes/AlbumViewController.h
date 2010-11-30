@@ -27,6 +27,7 @@
 	NSString *_album;
 	NSArray *_data;
 	NSArray *_tags;
+	NSArray *_tracks;
 	NSDictionary *_metadata;
 }
 - (id)initWithAlbum:(NSString *)album byArtist:(NSString *)artist;
