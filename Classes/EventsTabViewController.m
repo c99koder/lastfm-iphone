@@ -31,7 +31,7 @@
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStylePlain]) {
 		_username = [username retain];
-		self.title = [username retain];
+		self.title = @"Events";
 	}
 	return self;
 }

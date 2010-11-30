@@ -180,7 +180,8 @@
 			profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 			profilecell.backgroundColor = [UIColor clearColor];
 			profilecell.title.text = _artist;
-			
+			[profilecell addBorder];
+
 			NSString *duration = @"";
 			int seconds = [[_metadata objectForKey:@"duration"] floatValue] / 1000.0f;
 			if(seconds <= 0) {

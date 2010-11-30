@@ -35,7 +35,7 @@
 @implementation RadioListViewController
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		self.title = [NSString stringWithFormat:@"%@'s Radio", username];
+		self.title = @"Radio";
 		_username = [username retain];
 		[[LastFMRadio sharedInstance] fetchRecentURLs];
 	}

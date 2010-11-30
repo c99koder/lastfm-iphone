@@ -36,7 +36,7 @@
 		_username = [username retain];
 		_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:username]] retain];
 		_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:username] retain];
-		self.title = @"Last.fm";
+		self.title = @"Profile";
 	}
 	return self;
 }

@@ -140,7 +140,10 @@ UIImage *avatarPlaceholder = nil;
 	return img;
 }
 
-
+-(void)addBorder {
+	[_artwork.layer setBorderColor: [[UIColor blackColor] CGColor]];
+	[_artwork.layer setBorderWidth: 2.0];
+}
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
 		_bar = [[UIView alloc] init];

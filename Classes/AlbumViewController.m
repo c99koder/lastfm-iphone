@@ -175,6 +175,7 @@
 			profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 			profilecell.backgroundColor = [UIColor clearColor];
 			profilecell.title.text = _artist;
+			[profilecell addBorder];
 			
 			NSString *releaseDate = @"";
 			NSRange range = [[_metadata objectForKey:@"releasedate"] rangeOfString:@", "];

@@ -50,4 +50,5 @@
 -(void)fetchImage;
 -(void)addStreamIcon;
 -(void)hideArtwork:(BOOL)hidden;
+-(void)addBorder;
 @end

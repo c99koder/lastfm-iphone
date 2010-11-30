@@ -54,7 +54,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 			[self release];
 			return nil;
 		}
-		self.title = [NSString stringWithFormat:NSLocalizedString(@"%@'s Friends", @"Friends view title"), username];
+		self.title = @"Friends";
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Friends", @"Friends back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
 		[backBarButtonItem release];
