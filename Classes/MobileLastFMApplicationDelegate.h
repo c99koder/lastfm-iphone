@@ -43,6 +43,7 @@
 	NSString *_dmcaAlertStation;
 	BOOL _locked;
 	BOOL _hidPlaybackDueToLowMemory;
+	BOOL _launched;
 }
 
 @property (nonatomic, retain) UIWindow *window;

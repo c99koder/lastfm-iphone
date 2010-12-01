@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="116"/>
+			<integer value="83"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -31,7 +31,7 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="IBUIViewController" id="187518303">
 				<object class="IBUIView" key="IBUIView" id="154394030">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">274</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -40,7 +40,6 @@
 							<int key="NSvFlags">274</int>
 							<string key="NSFrameSize">{320, 416}</string>
 							<reference key="NSSuperview" ref="154394030"/>
-							<reference key="NSWindow"/>
 							<object class="NSColor" key="IBUIBackgroundColor" id="320191201">
 								<int key="NSColorSpace">1</int>
 								<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -50,8 +49,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{320, 416}</string>
-					<reference key="NSSuperview"/>
-					<reference key="NSWindow"/>
 					<reference key="IBUIBackgroundColor" ref="320191201"/>
 					<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 					<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1246,7 +1243,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>TrackViewController</string>
+					<string>TrackPlaybackViewController</string>
 					<string>{{55, 239}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1409,7 +1406,7 @@
 							<string>UIView</string>
 							<string>UIButton</string>
 							<string>UIToolbar</string>
-							<string>TrackViewController</string>
+							<string>TrackPlaybackViewController</string>
 							<string>UIView</string>
 						</object>
 					</object>
@@ -1464,7 +1461,7 @@
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">trackView</string>
-								<string key="candidateClassName">TrackViewController</string>
+								<string key="candidateClassName">TrackPlaybackViewController</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">volumeView</string>
@@ -1483,7 +1480,7 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">TrackViewController</string>
+					<string key="className">TrackPlaybackViewController</string>
 					<string key="superclassName">PlaybackSubview</string>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1567,14 +1564,6 @@
 						</object>
 					</object>
 					<reference key="sourceIdentifier" ref="105668072"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">TrackViewController</string>
-					<string key="superclassName">PlaybackSubview</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
-					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">UIViewController</string>

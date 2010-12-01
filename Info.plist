@@ -28,9 +28,12 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>org.c99.${PRODUCT_NAME:identifier}.lastfmservice</string>
+			<string>fm.last.${PRODUCT_NAME:identifier}.lastfmservice</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>lastfm-track</string>
+				<string>lastfm-album</string>
+				<string>lastfm-artist</string>
 				<string>lastfm</string>
 			</array>
 		</dict>

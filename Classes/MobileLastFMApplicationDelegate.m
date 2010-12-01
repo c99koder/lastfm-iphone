@@ -341,6 +341,7 @@ NSString *kUserAgent;
 	}
 	
 	[window makeKeyAndVisible];
+	_launched = YES;
 	return YES;
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {
@@ -596,24 +597,22 @@ NSString *kUserAgent;
 		[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 }
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-	if([url.scheme isEqualToString:@"lastfm"]) {
-		if([url.host isEqualToString:@"registration"]) {
-			NSArray *args = [url.path componentsSeparatedByString:@"/"];
-			[[NSUserDefaults standardUserDefaults] setObject:[args objectAtIndex:1] forKey:@"lastfm_user"];
-			if([args count] == 3) {
-				[[NSUserDefaults standardUserDefaults] setObject:[args objectAtIndex:2] forKey:@"lastfm_session"];
-				[self showProfileView:NO];
-			} else {
-				[self showFirstRunView:NO];
-			}
-			[[NSUserDefaults standardUserDefaults] synchronize];
+	if([url.scheme isEqualToString:@"lastfm"] && [url.host isEqualToString:@"registration"]) {
+		NSArray *args = [url.path componentsSeparatedByString:@"/"];
+		[[NSUserDefaults standardUserDefaults] setObject:[args objectAtIndex:1] forKey:@"lastfm_user"];
+		if([args count] == 3) {
+			[[NSUserDefaults standardUserDefaults] setObject:[args objectAtIndex:2] forKey:@"lastfm_session"];
+			[self showProfileView:NO];
 		} else {
-			_launchURL = [[url absoluteString] retain];
+			[self showFirstRunView:NO];
 		}
-		return TRUE;
+		[[NSUserDefaults standardUserDefaults] synchronize];
 	} else {
-		return FALSE;
+		_launchURL = [[url absoluteString] retain];
+		if(_launched)
+			[[UIApplication sharedApplication] openURLWithWarning:url];
 	}
+	return TRUE;
 }
 - (void)dealloc {
 	[window release];
