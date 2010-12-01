@@ -23,9 +23,23 @@
 #import <CoreLocation/CoreLocation.h>
 #import "LastFMService.h"
 
+@interface MiniEventCell : UITableViewCell {
+	UIImageView *_datebg;
+	UILabel *title;
+	UILabel *location;
+	UILabel *month;
+	UILabel *day;
+}
+@property (nonatomic, retain) UILabel *title;
+@property (nonatomic, retain) UILabel *location;
+@property (nonatomic, retain) UILabel *month;
+@property (nonatomic, retain) UILabel *day;
+@end
+
 @interface EventsTabViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate> {
 	CLLocationManager *_locationManager;
 	NSString *_username;
+	NSArray *_events;
 }
 - (id)initWithUsername:(NSString *)username;
 @end
