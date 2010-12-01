@@ -23,7 +23,7 @@
 #import "ArtworkCell.h"
 #import "NSString+MD5.h"
 
-@implementation UIViewController (DynamicContent)
+@implementation UISearchDisplayController (DynamicContent)
 - (void)loadContentForCells:(NSArray *)cells {
 	if([cells count]) {
 		[cells retain];
@@ -40,6 +40,31 @@
 - (void)scrollViewDidEndDecelerating:(UITableView *)tableView {
 	if([tableView isKindOfClass:[UITableView class]])
 		 [self loadContentForCells: [tableView visibleCells]];
+}
+- (void)scrollViewDidEndDragging:(UITableView *)tableView willDecelerate:(BOOL)decelerate {
+	if ([tableView isKindOfClass:[UITableView class]] && !decelerate) {
+		[self loadContentForCells: [tableView visibleCells]];
+	}
+}
+@end
+
+@implementation UIViewController (DynamicContent)
+- (void)loadContentForCells:(NSArray *)cells {
+	if([cells count]) {
+		[cells retain];
+		for(UITableViewCell *cell in cells) {
+			[cell retain];
+			if ([cell isKindOfClass:[ArtworkCell class]])
+				[(ArtworkCell *)cell fetchImage];
+			[cell release];
+			cell = nil;
+		}
+		[cells release];
+	}
+}
+- (void)scrollViewDidEndDecelerating:(UITableView *)tableView {
+	if([tableView isKindOfClass:[UITableView class]])
+		[self loadContentForCells: [tableView visibleCells]];
 }
 - (void)scrollViewDidEndDragging:(UITableView *)tableView willDecelerate:(BOOL)decelerate {
 	if ([tableView isKindOfClass:[UITableView class]] && !decelerate) {

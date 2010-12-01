@@ -62,7 +62,26 @@
 	//bar.backgroundColor = [UIColor grayColor];
 	bar.placeholder = @"Search Last.fm";
 	self.tableView.tableHeaderView = bar;
+
+	_searchData = [[GlobalSearchDataSource alloc] init];
+	
+	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
+	searchController.delegate = self;
+	searchController.searchResultsDataSource = _searchData;
+	searchController.searchResultsDelegate = _searchData;
+
 	[bar release];
+}
+- (void)_search:(NSString *)query {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[_searchData search:query];
+	[self.searchDisplayController.searchResultsTableView reloadData];
+	[self.searchDisplayController loadContentForCells:[self.searchDisplayController.searchResultsTableView visibleCells]];
+	[pool release];
+}
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)string {
+	[NSThread detachNewThreadSelector:@selector(_search:) toTarget:self withObject:string];
+	return NO;
 }
 - (void)rebuildMenu {
 	if(_data)

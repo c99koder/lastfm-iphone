@@ -21,12 +21,14 @@
 
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
+#import "Search.h"
 
-@interface ProfileViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface ProfileViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
 	NSString *_username;
 	NSArray *_data;
 	NSArray *_recentTracks;
 	NSArray *_weeklyArtists;
+	GlobalSearchDataSource *_searchData;
 	NSMutableDictionary *_weeklyArtistImages;
 }
 - (id)initWithUsername:(NSString *)username;
