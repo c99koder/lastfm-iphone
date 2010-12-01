@@ -27,6 +27,7 @@
 	NSArray *_data;
 	NSArray *_recentTracks;
 	NSArray *_weeklyArtists;
+	NSMutableDictionary *_weeklyArtistImages;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

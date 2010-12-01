@@ -36,6 +36,11 @@
 		_username = [username retain];
 		_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:username]] retain];
 		_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:username] retain];
+		_weeklyArtistImages = [[NSMutableDictionary alloc] init];
+		for(int x = 0; x < [_weeklyArtists count] && x < 3; x++) {
+			NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
+			[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
+		}
 		self.title = @"Profile";
 	}
 	return self;
@@ -72,7 +77,8 @@
 	if([_weeklyArtists count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], [[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
+																															 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],
 																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
@@ -201,6 +207,7 @@
 	[_username release];
 	[_recentTracks release];
 	[_weeklyArtists release];
+	[_weeklyArtistImages release];
 	[_data release];
 }
 @end
