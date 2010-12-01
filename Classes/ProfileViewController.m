@@ -181,7 +181,7 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ArtworkCell *cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"TrackCell"] autorelease];
+	ArtworkCell *cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TrackCell"] autorelease];
 	
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
@@ -204,7 +204,7 @@
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
-			profilecell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ProfileCell"] autorelease];
+			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.imageURL = [profile objectForKey:@"avatar"];
 			profilecell.shouldRoundTop = YES;
@@ -224,7 +224,7 @@
 		UITableViewCell *logoutcell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
 		logoutcell.textLabel.text = @"Logout";
 		logoutcell.textLabel.textColor = [UIColor whiteColor];
-		logoutcell.textAlignment = UITextAlignmentCenter;
+		logoutcell.textLabel.textAlignment = UITextAlignmentCenter;
 		logoutcell.backgroundColor = [UIColor redColor];
 		return logoutcell;
 	}

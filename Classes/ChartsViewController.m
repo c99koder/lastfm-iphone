@@ -174,7 +174,7 @@ int tagSort(id tag1, id tag2, void *context);
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]];
 	if (cell == nil) {
-		cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]] autorelease];
+		cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]] autorelease];
 	}
 	cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
 	cell.subtitle.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"artist"];
@@ -781,7 +781,7 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"simplecell"] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"simplecell"] autorelease];
 	}
 	
 	switch([indexPath row]) {

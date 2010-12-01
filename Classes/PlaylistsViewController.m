@@ -97,7 +97,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:tableView.editing?@"EditingCell":@"BasicCell"];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:tableView.editing?@"EditingCell":@"BasicCell"] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableView.editing?@"EditingCell":@"BasicCell"] autorelease];
 	}
 	if(tableView.editing && [indexPath row] == 0) {
 		if(!_newPlaylist) {

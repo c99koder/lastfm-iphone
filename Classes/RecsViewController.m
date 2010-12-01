@@ -162,11 +162,11 @@
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
-			cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
 		}
 	}
 	if(cell == nil)
-		cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"ArtworkCell"] autorelease];
+		cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ArtworkCell"] autorelease];
 	
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 
@@ -174,7 +174,7 @@
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
 	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0) {
-		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"StationCell"] autorelease];
+		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
 		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];

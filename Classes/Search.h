@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface GlobalSearchDataSource : NSObject<UITableViewDataSource> {
+@interface GlobalSearchDataSource : NSObject<UITableViewDataSource, UITableViewDelegate> {
 	NSArray *_artists;
 	NSArray *_tags;
 	NSArray *_data;

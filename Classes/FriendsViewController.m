@@ -120,7 +120,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]];
 	if (cell == nil)
-		cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
+		cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
 	cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"username"];
 	cell.title.backgroundColor = [UIColor whiteColor];
 	cell.title.opaque = YES;

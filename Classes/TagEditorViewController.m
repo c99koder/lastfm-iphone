@@ -246,7 +246,7 @@ int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SimpleCell"];
 	if (cell == nil)
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"SimpleCell"] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SimpleCell"] autorelease];
 	if(tabBar.selectedItem.tag == 0)
 		cell.textLabel.text = [[topTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
 	else

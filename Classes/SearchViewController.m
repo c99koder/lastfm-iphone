@@ -238,7 +238,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]];
 	if (cell == nil) {
-		cell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]] autorelease];
+		cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]] autorelease];
 	}
 	cell.title.text = [[[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"] stringByAppendingString:@" Radio"] capitalizedString];
 	cell.subtitle.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"subtitle"];

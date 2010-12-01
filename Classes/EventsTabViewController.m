@@ -35,8 +35,8 @@ UIImage *eventDateBGImage = nil;
 
 @synthesize title, location, month, day;
 
-- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
-	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
+	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
 		
 		if(!eventDateBGImage)
 			eventDateBGImage = [UIImage imageNamed:@"date.png"];
@@ -223,7 +223,7 @@ UIImage *eventDateBGImage = nil;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
 	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"simplecell"] autorelease];
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"simplecell"] autorelease];
 	}
 	
 	[cell showProgress: NO];
@@ -233,7 +233,7 @@ UIImage *eventDateBGImage = nil;
 		{
 			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
 			if (eventCell == nil) {
-				eventCell = [[[MiniEventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"minieventcell"] autorelease];
+				eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
 			}
 			
 			NSDictionary *event = [_events objectAtIndex:[indexPath row]];

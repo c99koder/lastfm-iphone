@@ -34,8 +34,8 @@ extern UIImage *eventDateBGImage;
 
 @synthesize title, address, location, month, day;
 
-- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
-	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
+	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
 		
 		if(!eventDateBGImage)
 			eventDateBGImage = [UIImage imageNamed:@"date.png"];
@@ -188,7 +188,7 @@ extern UIImage *eventDateBGImage;
 		{
 			ArtworkCell *artistCell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"artworkcell"];
 			if (artistCell == nil) {
-				artistCell = [[[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"artworkcell"] autorelease];
+				artistCell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"artworkcell"] autorelease];
 			}
 			
 			artistCell.title.text = [_event objectForKey:@"headliner"];
@@ -208,7 +208,7 @@ extern UIImage *eventDateBGImage;
 		{
 			EventDetailCell *eventCell = (EventDetailCell *)[tableView dequeueReusableCellWithIdentifier:@"eventdetailcell"];
 			if (eventCell == nil) {
-				eventCell = [[[EventDetailCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventdetailcell"] autorelease];
+				eventCell = [[[EventDetailCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"eventdetailcell"] autorelease];
 			}
 			
 			eventCell.title.text = [_event objectForKey:@"venue"];

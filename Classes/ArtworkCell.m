@@ -169,8 +169,8 @@ UIImage *avatarPlaceholder = nil;
 	[_artwork.layer setBorderColor: [[UIColor blackColor] CGColor]];
 	[_artwork.layer setBorderWidth: 1.0];
 }
-- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
-	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
+	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
 		_bar = [[UIView alloc] init];
 		[self.contentView addSubview:_bar];
 		

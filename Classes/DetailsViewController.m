@@ -51,7 +51,7 @@
 	[_cells removeAllObjects];
 	_data = [[data subarrayWithRange:NSMakeRange(0,([data count]>25)?25:[data count])] retain];
 	for(NSDictionary *artist in _data) {
-		ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
+		ArtworkCell *cell = [[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
 		cell.title.text = [artist objectForKey:@"name"];
 		cell.barWidth = [[artist objectForKey:@"match"] floatValue] / 100.0f;
 		cell.imageURL = [artist objectForKey:@"image"];
@@ -187,7 +187,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil] autorelease];
+	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
 	if([_data count]) {
 		UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(8,0,256,48)];
 		l.textColor = [UIColor blackColor];
@@ -238,7 +238,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_cells removeAllObjects];
 	_data = [[data subarrayWithRange:NSMakeRange(0,([data count]>10)?10:[data count])] retain];
 	for(NSDictionary *fan in _data) {
-		ArtworkCell *cell = [[ArtworkCell alloc] initWithFrame:CGRectZero reuseIdentifier:nil];
+		ArtworkCell *cell = [[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
 		cell.title.text = [fan objectForKey:@"username"];
 		cell.imageURL = [fan objectForKey:@"image"];
 		[_cells addObject:cell];
@@ -367,8 +367,8 @@ int tagSort(id tag1, id tag2, void *context) {
 @end
 
 @implementation EventCell
-- (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
-	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
+	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
 		_eventTitle = [[UILabel alloc] init];
 		_eventTitle.textColor = [UIColor blackColor];
 		_eventTitle.highlightedTextColor = [UIColor whiteColor];
@@ -873,7 +873,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		int offset = [[_eventDateOffsets objectAtIndex:[indexPath section]] intValue];
 		EventCell *cell = (EventCell *)[tableView dequeueReusableCellWithIdentifier:@"eventcell"];
 		if(!cell)
-			cell = [[[EventCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"eventcell"] autorelease];
+			cell = [[[EventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"eventcell"] autorelease];
 		if(_data)
 			[cell setEvent:[_data objectAtIndex:[indexPath row]]];
 		else
