@@ -20,6 +20,7 @@
  */
 
 #import "EventsTabViewController.h"
+#import "EventDetailsViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
@@ -88,13 +89,13 @@ UIImage *eventDateBGImage = nil;
 	if(self.accessoryView != nil)
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
 	
-	_datebg.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, 40, 48);
+	_datebg.frame = CGRectMake(frame.origin.x+8, frame.origin.y+8, 40, 48);
 	month.frame = CGRectMake(0,2,40,10);
 	day.frame = CGRectMake(0,12,40,38);
 	
-	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 4, frame.origin.y, frame.size.width - _datebg.frame.size.width - 6, 22);
-	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 4, frame.origin.y + 20, frame.size.width - _datebg.frame.size.width - 6, 
-																[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 6, frame.size.height) lineBreakMode:location.lineBreakMode].height);
+	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 4, frame.size.width - _datebg.frame.size.width - 12, 22);
+	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 24, frame.size.width - _datebg.frame.size.width - 12, 
+																[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 12, frame.size.height) lineBreakMode:location.lineBreakMode].height);
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
@@ -152,7 +153,7 @@ UIImage *eventDateBGImage = nil;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0)
-		return 58;
+		return 64;
 	else
 		return 46;
 }
@@ -162,8 +163,12 @@ UIImage *eventDateBGImage = nil;
 	
 	switch([newIndexPath section]) {
 		case 0:
-			//
+		{
+			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+			[details release];
 			break;
+		}
 		case 1:
 			data = [[LastFMService sharedInstance] recommendedEventsForUser:_username];
 			controller = [[EventsViewController alloc] initWithUsername:_username withEvents:data];
@@ -221,6 +226,8 @@ UIImage *eventDateBGImage = nil;
 		cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"simplecell"] autorelease];
 	}
 	
+	[cell showProgress: NO];
+	
 	switch([indexPath section]) {
 		case 0:
 		{
@@ -249,6 +256,8 @@ UIImage *eventDateBGImage = nil;
 			[formatter release];
 			eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
+			[eventCell showProgress:NO];
+			
 			return eventCell;
 		}
 		case 1:

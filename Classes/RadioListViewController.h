@@ -21,11 +21,14 @@
 
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
+#import "Search.h"
 
-@interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
 	NSString *_username;
 	NSArray *_recent;
 	NSArray *_data;
+	NSTimer *_searchTimer;
+	GlobalSearchDataSource *_searchData;
 }
 - (id)initWithUsername:(NSString *)username;
 - (void)rebuildMenu;

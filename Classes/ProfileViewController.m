@@ -65,7 +65,7 @@
 
 	_searchData = [[GlobalSearchDataSource alloc] init];
 	
-	UISearchDisplayController *searchController = [[[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self] autorelease];
+	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
 	searchController.delegate = self;
 	searchController.searchResultsDataSource = _searchData;
 	searchController.searchResultsDelegate = _searchData;
@@ -223,7 +223,9 @@
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
 		UITableViewCell *logoutcell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
 		logoutcell.textLabel.text = @"Logout";
+		logoutcell.textLabel.textColor = [UIColor whiteColor];
 		logoutcell.textAlignment = UITextAlignmentCenter;
+		logoutcell.backgroundColor = [UIColor redColor];
 		return logoutcell;
 	}
 	

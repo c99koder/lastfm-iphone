@@ -134,6 +134,7 @@
 		2263269012A51133006F34EA /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263268F12A51133006F34EA /* AlbumViewController.m */; };
 		2263275912A525AD006F34EA /* TrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263275812A525AD006F34EA /* TrackViewController.m */; };
 		226F604012A67CB400319DBC /* Search.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F603F12A67CB400319DBC /* Search.m */; };
+		226F611B12A6A5A600319DBC /* EventDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F611A12A6A5A600319DBC /* EventDetailsViewController.m */; };
 		22738D211294444F001A2552 /* CXMLDocument_PrivateExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D0F1294444F001A2552 /* CXMLDocument_PrivateExtensions.m */; };
 		22738D221294444F001A2552 /* CXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D111294444F001A2552 /* CXMLDocument.m */; };
 		22738D231294444F001A2552 /* CXMLElement_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 22738D131294444F001A2552 /* CXMLElement_CreationExtensions.m */; };
@@ -381,6 +382,8 @@
 		2263275812A525AD006F34EA /* TrackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackViewController.m; sourceTree = "<group>"; };
 		226F603E12A67CB400319DBC /* Search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Search.h; sourceTree = "<group>"; };
 		226F603F12A67CB400319DBC /* Search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Search.m; sourceTree = "<group>"; };
+		226F611912A6A5A600319DBC /* EventDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventDetailsViewController.h; sourceTree = "<group>"; };
+		226F611A12A6A5A600319DBC /* EventDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventDetailsViewController.m; sourceTree = "<group>"; };
 		22738D0E1294444F001A2552 /* CXMLDocument_PrivateExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument_PrivateExtensions.h; sourceTree = "<group>"; };
 		22738D0F1294444F001A2552 /* CXMLDocument_PrivateExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CXMLDocument_PrivateExtensions.m; sourceTree = "<group>"; };
 		22738D101294444F001A2552 /* CXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXMLDocument.h; sourceTree = "<group>"; };
@@ -543,6 +546,8 @@
 				22631F160E813B5700DC2D09 /* DebugViewController.m */,
 				22CAC59B125F8B3400250917 /* DetailsViewController.h */,
 				22CAC59C125F8B3400250917 /* DetailsViewController.m */,
+				226F611912A6A5A600319DBC /* EventDetailsViewController.h */,
+				226F611A12A6A5A600319DBC /* EventDetailsViewController.m */,
 				22CD7141117E05E200493A96 /* EventsTabViewController.h */,
 				22CD7142117E05E200493A96 /* EventsTabViewController.m */,
 				223129310DFF21A500EC3BF0 /* FirstRunViewController.h */,
@@ -1151,6 +1156,7 @@
 				2263269012A51133006F34EA /* AlbumViewController.m in Sources */,
 				2263275912A525AD006F34EA /* TrackViewController.m in Sources */,
 				226F604012A67CB400319DBC /* Search.m in Sources */,
+				226F611B12A6A5A600319DBC /* EventDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

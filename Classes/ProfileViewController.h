@@ -29,7 +29,6 @@
 	NSArray *_recentTracks;
 	NSArray *_weeklyArtists;
 	NSTimer *_searchTimer;
-	NSThread *_searchThread;
 	GlobalSearchDataSource *_searchData;
 	NSMutableDictionary *_weeklyArtistImages;
 }

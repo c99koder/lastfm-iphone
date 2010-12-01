@@ -37,6 +37,7 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		self.title = @"Radio";
 		_username = [username retain];
+		_searchData = [[GlobalSearchDataSource alloc] init];
 		[[LastFMRadio sharedInstance] fetchRecentURLs];
 	}
 	return self;
@@ -56,7 +57,36 @@
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Enter an artist or genre";
 	self.tableView.tableHeaderView = bar;
+	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
+	searchController.delegate = self;
+	searchController.searchResultsDataSource = _searchData;
+	searchController.searchResultsDelegate = _searchData;
 	[bar release];
+}
+- (void)_search:(NSTimer *)timer {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSString *query = [timer userInfo];
+	[_searchData search:query];
+	[self.searchDisplayController.searchResultsTableView reloadData];
+	[self.searchDisplayController loadContentForCells:[self.searchDisplayController.searchResultsTableView visibleCells]];
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[pool release];
+}
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
+	if(_searchTimer) {
+		[_searchTimer invalidate];
+		[_searchTimer release];
+		_searchTimer = nil;
+	}
+	if([query length]) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		_searchTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0
+																										 target:self
+																									 selector:@selector(_search:)
+																									 userInfo:query
+																										repeats:NO] retain];
+	}
+	return NO;
 }
 - (void)rebuildMenu {
 	if(_data)
@@ -187,6 +217,7 @@
 	[super dealloc];
 	[_username release];
 	[_recent release];
+	[_searchData release];
 	[_data release];
 }
 @end
