@@ -65,7 +65,7 @@
 
 	_searchData = [[GlobalSearchDataSource alloc] init];
 	
-	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
+	UISearchDisplayController *searchController = [[[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self] autorelease];
 	searchController.delegate = self;
 	searchController.searchResultsDataSource = _searchData;
 	searchController.searchResultsDelegate = _searchData;

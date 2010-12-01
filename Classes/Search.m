@@ -27,7 +27,7 @@
 	
 	NSMutableArray *sections = [[NSMutableArray alloc] init];
 	
-	NSMutableArray *stations = [[NSMutableArray alloc] init];
+	NSMutableArray *stations;
 	
 	if([_artists count]) {
 		stations = [[NSMutableArray alloc] init];
