@@ -142,7 +142,7 @@ UIImage *avatarPlaceholder = nil;
 
 -(void)addBorder {
 	[_artwork.layer setBorderColor: [[UIColor blackColor] CGColor]];
-	[_artwork.layer setBorderWidth: 2.0];
+	[_artwork.layer setBorderWidth: 1.0];
 }
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithFrame:frame reuseIdentifier:identifier]) {
