@@ -10,6 +10,9 @@
 #import "LastFMService.h"
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
+#import "NSString+URLEscaped.h"
+#import "UIApplication+openURLWithWarning.h"
+#import "UITableViewCell+ProgressIndicator.h"
 
 @implementation GlobalSearchDataSource
 - (void)search:(NSString *)query {

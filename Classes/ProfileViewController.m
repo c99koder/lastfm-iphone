@@ -72,15 +72,29 @@
 
 	[bar release];
 }
-- (void)_search:(NSString *)query {
+- (void)_search:(NSTimer *)timer {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSString *query = [timer userInfo];
 	[_searchData search:query];
 	[self.searchDisplayController.searchResultsTableView reloadData];
 	[self.searchDisplayController loadContentForCells:[self.searchDisplayController.searchResultsTableView visibleCells]];
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[pool release];
 }
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)string {
-	[NSThread detachNewThreadSelector:@selector(_search:) toTarget:self withObject:string];
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
+	if(_searchTimer) {
+		[_searchTimer invalidate];
+		[_searchTimer release];
+		_searchTimer = nil;
+	}
+	if([query length]) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		_searchTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0
+																										 target:self
+																									 selector:@selector(_search:)
+																									 userInfo:query
+																										repeats:NO] retain];
+	}
 	return NO;
 }
 - (void)rebuildMenu {
