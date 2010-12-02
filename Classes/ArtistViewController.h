@@ -28,6 +28,7 @@
 	NSArray *_tracks;
 	NSArray *_albums;
 	NSArray *_tags;
+	NSArray *_events;
 	NSDictionary *_metadata;
 	NSArray *_similarArtists;
 	UISegmentedControl *_toggle;

@@ -116,9 +116,19 @@ extern UIImage *eventDateBGImage;
 @end
 
 @implementation EventDetailsViewController
+- (int)isAttendingEvent:(NSString *)event_id {
+	for(NSDictionary *event in _attendingEvents) {
+		if([[event objectForKey:@"id"] isEqualToString:event_id]) {
+			return [[event objectForKey:@"status"] intValue];
+		}
+	}
+	return eventStatusNotAttending;
+}
 - (id)initWithEvent:(NSDictionary *)event {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_event = [event retain];
+		_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
+
 		self.title = [_event objectForKey:@"title"];
 	}
 	return self;
@@ -126,6 +136,7 @@ extern UIImage *eventDateBGImage;
 - (void)_updateEvent:(NSDictionary *)event {
 	[_event release];
 	_event = [event retain];
+	_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -332,10 +343,17 @@ extern UIImage *eventDateBGImage;
 			break;
 		case 5:
 			cell.textLabel.text = @"Are you going?";
-			if([[_event objectForKey:@"status"] intValue] != 0)
-				cell.detailTextLabel.text = @"Maybe";
-			else
-				cell.detailTextLabel.text = @"Yes";
+			switch([self isAttendingEvent:[_event objectForKey:@"id"]]) {
+				case eventStatusAttending:
+					cell.detailTextLabel.text = @"Yes";
+					break;
+				case eventStatusMaybeAttending:
+					cell.detailTextLabel.text = @"Maybe";
+					break;
+				case eventStatusNotAttending:
+					cell.detailTextLabel.text = @"No";
+					break;
+			}
 			break;
 	}
 	[cell showProgress: NO];
@@ -412,7 +430,10 @@ extern UIImage *eventDateBGImage;
 			break;
 	}
 	
-	if([[_event objectForKey:@"status"] intValue] == [indexPath row])
+	NSArray *controllers = ((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController.viewControllers;
+	int status = [(EventDetailsViewController *)[controllers objectAtIndex:[controllers count]-2] isAttendingEvent:[_event objectForKey:@"id"]];
+
+	if(status == [indexPath row])
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	else
 		cell.accessoryType = UITableViewCellAccessoryNone;

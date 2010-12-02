@@ -28,10 +28,19 @@
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIApplication+openURLWithWarning.h"
+#import "EventsTabViewController.h"
+#import "EventDetailsViewController.h"
 
 @implementation ArtistViewController
 - (void)paintItBlack {
 	_paintItBlack = YES;
+}
+- (void)_loadEventsTab {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	_events = [[[LastFMService sharedInstance] eventsForArtist:_artist] retain];
+	_eventsTabLoaded = YES;
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
 }
 - (void)_loadInfoTab {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -55,8 +64,10 @@
 		_artist = [artist retain];
 		_infoTabLoaded = NO;
 		_similarTabLoaded = NO;
+		_eventsTabLoaded = NO;
 		[NSThread detachNewThreadSelector:@selector(_loadInfoTab) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadSimilarTab) toTarget:self withObject:nil];
+		[NSThread detachNewThreadSelector:@selector(_loadEventsTab) toTarget:self withObject:nil];
 		self.title = artist;
 	}
 	return self;
@@ -205,10 +216,15 @@
 	return view;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return [_data count];
+	if(_toggle.selectedSegmentIndex == 1)
+		return 1;
+	else
+		return [_data count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
+	if(_toggle.selectedSegmentIndex == 1)
+		return _eventsTabLoaded?[_events count]:1;
+	else if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
 	else
 		return 1;
@@ -220,24 +236,31 @@
  return 0;
  }*/
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]]) {
-		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
-	} else {
+	if(_toggle.selectedSegmentIndex == 1)
 		return nil;
-	}
+	else if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
+		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
+	else
+		return nil;
 }
 /*- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
  return [[[UIView alloc] init] autorelease];
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
+	if(_toggle.selectedSegmentIndex == 1) {
+		return 64;
+	} else if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
 		return [[_metadata objectForKey:@"summary"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - (18*2), MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height + 12;
 	} else {
 		return 52;
 	}
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if(_toggle.selectedSegmentIndex == 1) {
+		EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[indexPath row]]];
+		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+		[details release];
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
@@ -260,7 +283,7 @@
 	}
 	ArtworkCell *cell = nil;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if([_data count] && [[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
@@ -294,6 +317,37 @@
 		stationCell.accessoryView = img;
 		[img release];
 		return stationCell;
+	}
+	
+	if(_toggle.selectedSegmentIndex == 1) {
+		MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
+		if (eventCell == nil) {
+			eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
+		}
+		
+		NSDictionary *event = [_events objectAtIndex:[indexPath row]];
+		eventCell.title.text = [event objectForKey:@"headliner"];
+		eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
+		eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+		eventCell.location.numberOfLines = 0;
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+		[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+		[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
+		NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+		[formatter setLocale:[NSLocale currentLocale]];
+		
+		[formatter setDateFormat:@"MMM"];
+		eventCell.month.text = [formatter stringFromDate:date];
+		
+		[formatter setDateFormat:@"d"];
+		eventCell.day.text = [formatter stringFromDate:date];
+		
+		[formatter release];
+		eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		
+		[eventCell showProgress:NO];
+		
+		return eventCell;
 	}
 
 	if([indexPath section] == 0 && _toggle.selectedSegmentIndex == 0) {
@@ -344,7 +398,7 @@
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.shouldCacheArtwork = YES;
-		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] length]) {
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] != nil) {
 			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		} else {
 			[cell hideArtwork:YES];

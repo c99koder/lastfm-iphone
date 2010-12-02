@@ -52,6 +52,7 @@
 
 @interface EventDetailsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSDictionary *_event;
+	NSArray *_attendingEvents;
 }
 - (id)initWithEvent:(NSDictionary *)event;
 @end
