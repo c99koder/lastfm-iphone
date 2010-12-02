@@ -20,6 +20,7 @@
  */
 
 #import "EventDetailsViewController.h"
+#import "ArtistViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
@@ -129,22 +130,32 @@ extern UIImage *eventDateBGImage;
 	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 5;
+	if([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0) {
+		return 5;
+	} else {
+		return 4;
+	}
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(section == 1) {
+	/*if(section == 1) {
 		if([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0) {
 			return 1;
 		} else {
 			return 0;
 		}
-	}
+	}*/
 	return 1;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([indexPath section] == 0)
+	int section = [indexPath section];
+	
+	if(section >= 1 && !([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0)) {
+		section++;
+	}
+	
+	if(section == 0)
 		return 58;
-	else if([indexPath section] == 2)
+	else if(section == 2)
 		return 76;
 	else
 		return 46;
@@ -152,13 +163,23 @@ extern UIImage *eventDateBGImage;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	UINavigationController *controller = nil;
 	NSArray *data = nil;
+	int section = [newIndexPath section];
 	
-	switch([newIndexPath section]) {
+	if(section >= 1 && !([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0)) {
+		section++;
+	}
+		 
+	switch(section) {
 		case 0:
 			//
 			break;
 		case 1:
+		{
+			EventArtistsViewController *artists = [[EventArtistsViewController alloc] initWithArtists:[_event objectForKey:@"artists"]];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artists animated:YES];
+			[artists release];
 			break;
+		}
 		case 2:
 			break;
 		case 4:
@@ -182,8 +203,13 @@ extern UIImage *eventDateBGImage;
 	if (cell == nil) {
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"simplecell"] autorelease];
 	}
+	int section = [indexPath section];
 	
-	switch([indexPath section]) {
+	if(section >= 1 && !([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0)) {
+		section++;
+	}
+		 
+	switch(section) {
 		case 0:
 		{
 			ArtworkCell *artistCell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"artworkcell"];
@@ -349,5 +375,53 @@ extern UIImage *eventDateBGImage;
 - (void)dealloc {
 	[super dealloc];
 	[_event release];
+}
+@end
+
+@implementation EventArtistsViewController
+
+- (id)initWithArtists:(NSArray *)artists {
+	
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+		self.title = @"Supporting Artists";
+		_artists = [artists retain];
+	}
+	return self;
+}
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return [_artists count];
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 52;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+	ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_artists objectAtIndex:[newIndexPath row]]];
+	[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artist animated:YES];
+	[artist release];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
+	if (cell == nil) {
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"simplecell"] autorelease];
+	}
+	cell.textLabel.text = [_artists objectAtIndex:[indexPath row]];
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	return cell;
+}
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+- (void)dealloc {
+	[super dealloc];
+	[_artists release];
 }
 @end

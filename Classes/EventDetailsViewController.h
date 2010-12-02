@@ -44,6 +44,12 @@
 - (id)initWithEvent:(NSDictionary *)event;
 @end
 
+@interface EventArtistsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+	NSArray *_artists;
+}
+- (id)initWithArtists:(NSArray *)artists;
+@end
+
 @interface EventDetailsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSDictionary *_event;
 }
