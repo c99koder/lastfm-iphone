@@ -175,7 +175,7 @@ UIImage *avatarPlaceholder = nil;
 		[self.contentView addSubview:_bar];
 		
 		if(!avatarPlaceholder)
-			avatarPlaceholder = [UIImage imageNamed:@"avatarplaceholder.png"];
+			avatarPlaceholder = [[UIImage imageNamed:@"avatarplaceholder.png"] retain];
 		
 		_artwork = [[UIImageView alloc] initWithImage:avatarPlaceholder];
 		_artwork.contentMode = UIViewContentModeScaleAspectFill;

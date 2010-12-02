@@ -27,6 +27,7 @@
 #include "version.h"
 #import "NSString+URLEscaped.h"
 #import "DetailsViewController.h"
+#import "UIApplication+openURLWithWarning.h"
 #import <QuartzCore/QuartzCore.h>
 
 extern UIImage *eventDateBGImage;
@@ -39,7 +40,7 @@ extern UIImage *eventDateBGImage;
 	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
 		
 		if(!eventDateBGImage)
-			eventDateBGImage = [UIImage imageNamed:@"date.png"];
+			eventDateBGImage = [[UIImage imageNamed:@"date.png"] retain];
 		
 		_datebg = [[UIImageView alloc] initWithImage:eventDateBGImage];
 		_datebg.contentMode = UIViewContentModeScaleAspectFill;
@@ -89,12 +90,12 @@ extern UIImage *eventDateBGImage;
 	if(self.accessoryView != nil)
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
 	
-	_datebg.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, 40, 48);
+	_datebg.frame = CGRectMake(frame.origin.x+8, frame.origin.y+8, 40, 48);
 	month.frame = CGRectMake(0,2,40,10);
 	day.frame = CGRectMake(0,12,40,38);
 	
-	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 4, frame.origin.y, frame.size.width - _datebg.frame.size.width - 6, 22);
-	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 4, frame.origin.y + 20, frame.size.width - _datebg.frame.size.width - 6, 
+	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y, frame.size.width - _datebg.frame.size.width - 6, 22);
+	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 20, frame.size.width - _datebg.frame.size.width - 6, 
 															[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 6, frame.size.height) lineBreakMode:location.lineBreakMode].height);
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -133,11 +134,17 @@ extern UIImage *eventDateBGImage;
 	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	int count;
 	if([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0) {
-		return 5;
+		count = 4;
 	} else {
-		return 4;
+		count = 3;
 	}
+	if([[_event objectForKey:@"website"] length])
+		count++;
+	if([[_event objectForKey:@"phonenumber"] length])
+		count++;
+	return count;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	/*if(section == 1) {
@@ -164,14 +171,18 @@ extern UIImage *eventDateBGImage;
 		return 46;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	UINavigationController *controller = nil;
-	NSArray *data = nil;
 	int section = [newIndexPath section];
 	
 	if(section >= 1 && !([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0)) {
 		section++;
 	}
-		 
+	if(section >= 3 && ![[_event objectForKey:@"phonenumber"] length]) {
+		section++;
+	}
+	if(section >= 4 && ![[_event objectForKey:@"website"] length]) {
+		section++;
+	}
+	
 	switch(section) {
 		case 0:
 			//
@@ -184,8 +195,38 @@ extern UIImage *eventDateBGImage;
 			break;
 		}
 		case 2:
+		{
+			NSMutableString *query =[[NSMutableString alloc] init];
+			if([[_event objectForKey:@"venue"] length]) {
+				[query appendFormat:@"%@,", [_event objectForKey:@"venue"]];
+			}
+			if([[_event objectForKey:@"street"] length]) {
+				[query appendFormat:@"%@,", [_event objectForKey:@"street"]];
+			}
+			if([[_event objectForKey:@"city"] length]) {
+				[query appendFormat:@" %@,", [_event objectForKey:@"city"]];
+			}
+			if([[_event objectForKey:@"postalcode"] length]) {
+				[query appendFormat:@" %@", [_event objectForKey:@"postalcode"]];
+			}
+			if([[_event objectForKey:@"country"] length]) {
+				[query appendFormat:@" %@", [_event objectForKey:@"country"]];
+			}
+			[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?f=q&q=%@&ie=UTF8&om=1&iwloc=addr", [query URLEscaped]]]];
+			[query release];
 			break;
+		}
+		case 3:
+		{
+			[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@", [_event objectForKey:@"phonenumber"]]]];
+			break;
+		}
 		case 4:
+		{
+			[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[_event objectForKey:@"website"]]];
+			break;
+		}
+		case 5:
 		{
 			EventAttendViewController *attend = [[EventAttendViewController alloc] initWithEvent:_event];
 			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:attend animated:YES];
@@ -194,10 +235,6 @@ extern UIImage *eventDateBGImage;
 		}
 	}
 	
-	if(controller) {
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
-		[controller release];
-	}
 	[[self tableView] reloadData];
 	[[self tableView] deselectRowAtIndexPath:newIndexPath animated:YES];
 }
@@ -211,7 +248,13 @@ extern UIImage *eventDateBGImage;
 	if(section >= 1 && !([[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] && [[_event objectForKey:@"artists"] count] > 0)) {
 		section++;
 	}
-		 
+	if(section >= 3 && ![[_event objectForKey:@"phonenumber"] length]) {
+		section++;
+	}
+	if(section >= 4 && ![[_event objectForKey:@"website"] length]) {
+		section++;
+	}
+	
 	switch(section) {
 		case 0:
 		{
@@ -232,6 +275,7 @@ extern UIImage *eventDateBGImage;
 		}
 		case 1:
 			cell.textLabel.text = @"Supporting Artists";
+			cell.detailTextLabel.text = @"";
 			break;
 		case 2:
 		{
@@ -271,13 +315,22 @@ extern UIImage *eventDateBGImage;
 			eventCell.day.text = [formatter stringFromDate:date];
 			
 			[formatter release];
-			
+
+			eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
 			return eventCell;
 		}
 		case 3:
-			cell.textLabel.text = @"Show on map";
+			cell.textLabel.text = @"Call Venue";
+			cell.detailTextLabel.text = [_event objectForKey:@"phonenumber"];
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			break;
 		case 4:
+			cell.textLabel.text = @"Website";
+			cell.detailTextLabel.text = [_event objectForKey:@"website"];
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			break;
+		case 5:
 			cell.textLabel.text = @"Are you going?";
 			if([[_event objectForKey:@"status"] intValue] != 0)
 				cell.detailTextLabel.text = @"Maybe";

@@ -39,7 +39,7 @@ UIImage *eventDateBGImage = nil;
 	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
 		
 		if(!eventDateBGImage)
-			eventDateBGImage = [UIImage imageNamed:@"date.png"];
+			eventDateBGImage = [[UIImage imageNamed:@"date.png"] retain];
 		
 		_datebg = [[UIImageView alloc] initWithImage:eventDateBGImage];
 		_datebg.contentMode = UIViewContentModeScaleAspectFill;
