@@ -34,9 +34,10 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_tag = [tag retain];
 		_metadata = [[[LastFMService sharedInstance] metadataForTag:tag inLanguage:@"en"] retain];
-		_albums = [[[LastFMService sharedInstance] topAlbumsForArtist:tag] retain];
-		_tracks = [[[LastFMService sharedInstance] topTracksForArtist:tag] retain];
+		_albums = [[[LastFMService sharedInstance] topAlbumsForTag:tag] retain];
+		_tracks = [[[LastFMService sharedInstance] topTracksForTag:tag] retain];
 		_artists = [[[LastFMService sharedInstance] topArtistsForTag:tag] retain];
+		_similarTags = [[[LastFMService sharedInstance] tagsSimilarTo:tag] retain];
 		self.title = tag;
 	}
 	return self;
@@ -72,6 +73,36 @@
 																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
+	}
+	
+	if([_albums count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_albums count] && x < 5; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_albums objectAtIndex:x] objectForKey:@"name"], [[_albums objectAtIndex:x] objectForKey:@"image"],
+																															 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_albums objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_albums objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Albums", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
+	}
+	
+	if([_tracks count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_tracks count] && x < 5; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tracks objectAtIndex:x] objectForKey:@"name"], [[_tracks objectAtIndex:x] objectForKey:@"image"],
+																															 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_tracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_tracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Tracks", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
+	}
+	
+	if([_similarTags count]) {
+		stations = [[NSMutableArray alloc] init];
+		for(int x=0; x<[_similarTags count] && x < 5; x++) {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_similarTags objectAtIndex:x] objectForKey:@"name"],
+																															 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_similarTags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		}
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Similar Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 	}
 	
@@ -180,7 +211,7 @@
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.shouldCacheArtwork = YES;
-		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] length]) {
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] != nil) {
 			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		} else {
 			[cell hideArtwork:YES];

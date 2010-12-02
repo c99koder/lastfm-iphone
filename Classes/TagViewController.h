@@ -28,6 +28,7 @@
 	NSArray *_tracks;
 	NSArray *_albums;
 	NSArray *_artists;
+	NSArray *_similarTags;
 	NSDictionary *_metadata;
 }
 - (id)initWithTag:(NSString *)tag;
