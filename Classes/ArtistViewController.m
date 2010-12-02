@@ -256,6 +256,7 @@
 	if(!loadingCell) {
 		loadingCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
 		loadingCell.textLabel.text = @"Loading";
+		[loadingCell showProgress:YES];
 	}
 	ArtworkCell *cell = nil;
 	
