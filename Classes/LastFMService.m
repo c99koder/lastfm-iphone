@@ -505,6 +505,18 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 
 #pragma mark Tag methods
 
+- (NSDictionary *)metadataForTag:(NSString *)tag inLanguage:(NSString *)lang {
+	NSDictionary *metadata = nil;
+	NSArray *nodes = [self doMethod:@"tag.getInfo" maxCacheAge:7*DAYS XPath:@"./tag" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], 
+										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], nil];
+	if([nodes count]) {
+		CXMLNode *node = [nodes objectAtIndex:0];
+		metadata = [self _convertNode:node
+					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./wiki/summary", @"./taggings", nil]
+													forKeys:[NSArray arrayWithObjects:@"name", @"wiki", @"taggings", nil]];
+	}
+	return metadata;
+}
 - (NSArray *)tagsSimilarTo:(NSString *)tag {
 	NSArray *nodes = [self doMethod:@"tag.getSimilar" maxCacheAge:7*DAYS XPath:@"./similartags/tag" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
 	return [self _convertNodes:nodes
@@ -520,8 +532,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)topArtistsForTag:(NSString *)tag {
 	NSArray *nodes = [self doMethod:@"tag.getTopArtists" maxCacheAge:7*DAYS XPath:@"./topartists/artist" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", nil]
-										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", nil]];
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"medium\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"image", nil]];
 }
 
 #pragma mark Radio methods

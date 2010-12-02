@@ -110,6 +110,7 @@
 		22327C140E700B1F002016DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22327C130E700B1F002016DD /* Settings.bundle */; };
 		22362B9B0E13E4600034F91A /* btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 22362B9A0E13E4600034F91A /* btn.png */; };
 		223DFE7D0DBFFAFF00510722 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223DFE7C0DBFFAFF00510722 /* SystemConfiguration.framework */; };
+		22416D4912A7CF7100B4A894 /* TagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22416D4812A7CF7100B4A894 /* TagViewController.m */; };
 		2244DAEB0E3A554500C4F40B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAEA0E3A554500C4F40B /* Localizable.strings */; };
 		2244DAFC0E3A55C700C4F40B /* bottom_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAF80E3A55C700C4F40B /* bottom_panel.png */; };
 		2244DAFD0E3A55C700C4F40B /* info_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAF90E3A55C700C4F40B /* info_button.png */; };
@@ -348,6 +349,8 @@
 		22327C130E700B1F002016DD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		22362B9A0E13E4600034F91A /* btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn.png; sourceTree = "<group>"; };
 		223DFE7C0DBFFAFF00510722 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		22416D4712A7CF7100B4A894 /* TagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagViewController.h; sourceTree = "<group>"; };
+		22416D4812A7CF7100B4A894 /* TagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagViewController.m; sourceTree = "<group>"; };
 		2244DAE70E3A553D00C4F40B /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2244DAF80E3A55C700C4F40B /* bottom_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bottom_panel.png; sourceTree = "<group>"; };
 		2244DAF90E3A55C700C4F40B /* info_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_button.png; sourceTree = "<group>"; };
@@ -588,6 +591,8 @@
 				22E6E8600E533F08009FD470 /* TagEditorViewController.m */,
 				22C54F730DEEF9A30087322B /* TagRadioViewController.h */,
 				22C54F740DEEF9A30087322B /* TagRadioViewController.m */,
+				22416D4712A7CF7100B4A894 /* TagViewController.h */,
+				22416D4812A7CF7100B4A894 /* TagViewController.m */,
 				2263275712A525AD006F34EA /* TrackViewController.h */,
 				2263275812A525AD006F34EA /* TrackViewController.m */,
 				228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */,
@@ -1157,6 +1162,7 @@
 				2263275912A525AD006F34EA /* TrackViewController.m in Sources */,
 				226F604012A67CB400319DBC /* Search.m in Sources */,
 				226F611B12A6A5A600319DBC /* EventDetailsViewController.m in Sources */,
+				22416D4912A7CF7100B4A894 /* TagViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
