@@ -119,9 +119,12 @@ extern UIImage *eventDateBGImage;
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_event = [event retain];
 		self.title = [_event objectForKey:@"title"];
-		NSLog(@"%@", _event);
 	}
 	return self;
+}
+- (void)_updateEvent:(NSDictionary *)event {
+	[_event release];
+	_event = [event retain];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -318,22 +321,16 @@ extern UIImage *eventDateBGImage;
 		return 46;
 }
 -(void)_rowSelected:(NSIndexPath *)newIndexPath {
-	UINavigationController *controller = nil;
-	NSArray *data = nil;
-	
-	switch([newIndexPath section]) {
-		case 0:
-			//
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
-	}
-	
-	if(controller) {
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
-		[controller release];
+	[[LastFMService sharedInstance] attendEvent:[[_event objectForKey:@"id"] intValue] status:[newIndexPath row]];
+	if([LastFMService sharedInstance].error) {
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+	} else {
+		NSMutableDictionary *event = [NSMutableDictionary dictionaryWithDictionary:_event];
+		[event setObject:[NSNumber numberWithInt:[newIndexPath row]] forKey:@"status"];
+		[_event release];
+		_event = [event retain];
+		NSArray *controllers = ((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController.viewControllers;
+		[(EventDetailsViewController *)[controllers objectAtIndex:[controllers count]-2] _updateEvent:event];
 	}
 	[[self tableView] reloadData];
 }
@@ -348,6 +345,8 @@ extern UIImage *eventDateBGImage;
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"simplecell"] autorelease];
 	}
 	
+	[cell showProgress: NO];
+	
 	switch([indexPath row]) {
 		case 0:
 			cell.textLabel.text = @"Yes";
@@ -360,9 +359,7 @@ extern UIImage *eventDateBGImage;
 			break;
 	}
 	
-	if([[_event objectForKey:@"status"] intValue] == 0 && [indexPath row] == 0)
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	else if([[_event objectForKey:@"status"] intValue] != 0 && [indexPath row] == 1)
+	if([[_event objectForKey:@"status"] intValue] == [indexPath row])
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	else
 		cell.accessoryType = UITableViewCellAccessoryNone;

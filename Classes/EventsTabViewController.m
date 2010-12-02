@@ -118,7 +118,6 @@ UIImage *eventDateBGImage = nil;
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		_events = [[[LastFMService sharedInstance] eventsForUser:username] retain];
 		self.title = @"Events";
 	}
 	return self;
@@ -131,6 +130,9 @@ UIImage *eventDateBGImage = nil;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	[_events release];
+	_events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
+
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView reloadData];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];

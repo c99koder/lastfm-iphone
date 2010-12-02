@@ -22,6 +22,23 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	switch(_tabBar.selectedItem.tag) {
+		case 0:
+			[_profileController viewWillAppear:animated];
+			break;
+		case 1:
+			[_recsController viewWillAppear:animated];
+			break;
+		case 2:
+			[_eventsController viewWillAppear:animated];
+			break;
+		case 3:
+			[_radioController viewWillAppear:animated];
+			break;
+		case 4:
+			[_friendsController viewWillAppear:animated];
+			break;
+	}
 }
 - (void)viewDidLoad {
 	[super viewDidLoad];
