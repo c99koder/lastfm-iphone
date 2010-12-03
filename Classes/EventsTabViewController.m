@@ -173,7 +173,8 @@ UIImage *eventDateBGImage = nil;
 		}
 		case 1:
 			data = [[LastFMService sharedInstance] recommendedEventsForUser:_username];
-			controller = [[EventsViewController alloc] initWithUsername:_username withEvents:data];
+			controller = [[EventListViewController alloc] initWithEvents:data];
+			controller.title = @"Recommended Events";
 			break;
 		case 2:
 			if (nil == _locationManager)
@@ -207,8 +208,9 @@ UIImage *eventDateBGImage = nil;
 						newLocation.coordinate.longitude);
 		[_locationManager stopUpdatingLocation];
 		NSArray *data = [[LastFMService sharedInstance] eventsForLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude radius:50];
-		UINavigationController *controller = [[EventsViewController alloc] initWithUsername:_username withEvents:data];
+		UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
 		if(controller) {
+			controller.title = @"Events Near Me";
 			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
 			[controller release];
 		}
@@ -282,5 +284,72 @@ UIImage *eventDateBGImage = nil;
 - (void)dealloc {
 	[super dealloc];
 	[_username release];
+}
+@end
+
+@implementation EventListViewController
+
+- (id)initWithEvents:(NSArray *)events {
+	
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+		_events = [events retain];
+	}
+	return self;
+}
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	[self.tableView reloadData];
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return [_events count];
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 64;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+	EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
+	[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+	[details release];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
+	if (eventCell == nil) {
+		eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
+	}
+	
+	NSDictionary *event = [_events objectAtIndex:[indexPath row]];
+	eventCell.title.text = [event objectForKey:@"headliner"];
+	eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
+	eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+	eventCell.location.numberOfLines = 0;
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+	[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
+	NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+	[formatter setLocale:[NSLocale currentLocale]];
+	
+	[formatter setDateFormat:@"MMM"];
+	eventCell.month.text = [formatter stringFromDate:date];
+	
+	[formatter setDateFormat:@"d"];
+	eventCell.day.text = [formatter stringFromDate:date];
+	
+	[formatter release];
+	eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	
+	[eventCell showProgress:NO];
+	
+	return eventCell;
+}
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+- (void)dealloc {
+	[super dealloc];
+	[_events release];
 }
 @end

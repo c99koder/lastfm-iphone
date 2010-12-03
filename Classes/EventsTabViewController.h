@@ -36,6 +36,12 @@
 @property (nonatomic, retain) UILabel *day;
 @end
 
+@interface EventListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+	NSArray *_events;
+}
+- (id)initWithEvents:(NSArray *)events;
+@end
+
 @interface EventsTabViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate> {
 	CLLocationManager *_locationManager;
 	NSString *_username;

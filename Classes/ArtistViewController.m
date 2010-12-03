@@ -414,7 +414,7 @@
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
 			biocell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BioCell"] autorelease];
-			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - (16*2), webViewHeight);
+			_bioView.frame = CGRectMake(12,8,self.view.frame.size.width - (20*2), webViewHeight);
 			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;
