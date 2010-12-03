@@ -66,6 +66,7 @@
 		_albumsDidLoad = NO;
 		_artistsDidLoad = NO;
 		_similarTagsDidLoad = NO;	
+		webViewHeight = 0;
 		[NSThread detachNewThreadSelector:@selector(_loadTracks) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadAlbums) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
@@ -107,9 +108,6 @@
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
 - (void)rebuildMenu {
-	[self.tableView setContentOffset:CGPointMake(0,0)];
-	
-	webViewHeight = 0;
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
 	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; text-decoration: none; }</style></head>\
 										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\

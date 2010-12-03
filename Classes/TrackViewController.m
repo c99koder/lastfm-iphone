@@ -36,6 +36,7 @@
 		_track = [track retain];
 		_metadata = [[[LastFMService sharedInstance] metadataForTrack:track byArtist:artist inLanguage:@"en"] retain];
 		_tags = [[[LastFMService sharedInstance] topTagsForTrack:track byArtist:artist] retain]; 
+		webViewHeight = 0;
 		self.title = track;
 	}
 	return self;
@@ -75,9 +76,6 @@
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
 - (void)rebuildMenu {
-	[self.tableView setContentOffset:CGPointMake(0,0)];
-	
-	webViewHeight = 0;
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
 	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; text-decoration: none; }</style></head>\
 										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\

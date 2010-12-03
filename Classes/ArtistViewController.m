@@ -68,6 +68,7 @@
 		_infoTabLoaded = NO;
 		_similarTabLoaded = NO;
 		_eventsTabLoaded = NO;
+		webViewHeight = 0;
 		
 		[NSThread detachNewThreadSelector:@selector(_loadInfoTab) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadSimilarTab) toTarget:self withObject:nil];
@@ -131,9 +132,6 @@
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
 - (void)rebuildMenu {
-	[self.tableView setContentOffset:CGPointMake(0,0)];
-	
-	webViewHeight = 0;
 	NSString *bio = [[_metadata objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
 	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; text-decoration:none; }</style></head>\
 										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
