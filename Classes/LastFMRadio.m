@@ -738,6 +738,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	}
 	tuning = NO;
 	prebuffering = NO;
+	[_softSkipTimer invalidate];
+	_softSkipTimer = nil;
 	NSLog(@"Playback stopped");
 	[_busyLock unlock];
 }
