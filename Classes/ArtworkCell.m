@@ -219,10 +219,11 @@ UIImage *avatarPlaceholder = nil;
 	if([subtitle.text length]) {
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 6, frame.size.width - _artwork.frame.size.width - 6, 22);
 		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 26, frame.size.width - _artwork.frame.size.width - 6, 
-																[subtitle.text sizeWithFont:subtitle.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.size.width - 6, frame.size.height) lineBreakMode:subtitle.lineBreakMode].height);
+																[subtitle.text sizeWithFont:subtitle.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.size.width - 6, frame.size.height - 26) lineBreakMode:subtitle.lineBreakMode].height);
 	} else {
 		title.font = [UIFont boldSystemFontOfSize:18];
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, 0, frame.size.width - _artwork.frame.size.width - 6, frame.size.height);
+		subtitle.frame = CGRectZero;
 	}
 	if(barWidth > 0) {
 		_bar.frame = CGRectMake(0,0,barWidth*([self frame].size.width - 20),[self frame].size.height);

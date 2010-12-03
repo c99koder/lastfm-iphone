@@ -93,8 +93,8 @@
 			[_contentView addSubview:_radioController.view];
 			break;
 		case 4:
-			self.title = _friendsController.title;
-			self.navigationItem.titleView = nil;
+			self.navigationItem.titleView = _friendsController.navigationItem.titleView;
+			self.navigationItem.leftBarButtonItem = nil;
 			[_friendsController viewWillAppear:NO];
 			_friendsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_friendsController.view];

@@ -103,6 +103,7 @@ enum eventStatus {
 - (void)createUser:(NSString *)username withPassword:(NSString *)password andEmail:(NSString *)email;
 - (NSDictionary *)getMobileSessionForUser:(NSString *)username password:(NSString *)password;
 - (NSArray *)friendsOfUser:(NSString *)username;
+- (NSArray *)nowListeningFriendsOfUser:(NSString *)username;
 - (NSArray *)topArtistsForUser:(NSString *)username;
 - (NSArray *)weeklyArtistsForUser:(NSString *)username;
 - (NSArray *)topAlbumsForUser:(NSString *)username;

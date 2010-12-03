@@ -42,7 +42,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (id)initWithUsername:(NSString *)username {
 	UInt32 reverseSort = NO;
 	
-	if (self = [super initWithStyle:UITableViewStylePlain]) {
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_data = [[[[LastFMService sharedInstance] friendsOfUser:username] sortedArrayUsingFunction:usernameSort context:&reverseSort] retain];
 		if([LastFMService sharedInstance].error) {
 			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
@@ -54,7 +54,18 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 			[self release];
 			return nil;
 		}
+		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:username] retain];
 		self.title = @"Friends";
+		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Friends Activity", @"All Friends", nil]];
+		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
+		toggle.selectedSegmentIndex = 0;
+		CGRect frame = toggle.frame;
+		frame.size.width = self.view.frame.size.width - 20;
+		toggle.frame = frame;
+		[toggle addTarget:self.tableView
+							 action:@selector(reloadData)
+		 forControlEvents:UIControlEventValueChanged];
+		self.navigationItem.titleView = toggle;
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Friends", @"Friends back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
 		[backBarButtonItem release];
@@ -75,6 +86,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	if(delegate) {
+		self.navigationItem.titleView = nil;
 		UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"Cancel")
 																															 style:UIBarButtonItemStylePlain
 																															target:self
@@ -88,11 +100,25 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 }
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+
+	if(section == 0 && toggle != nil && toggle.selectedSegmentIndex == 0) {
+		return @"Friends Listening Now";
+	} else {
+		return nil;
+	}
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [_data count];
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+
+	if(toggle == nil || toggle.selectedSegmentIndex == 1)
+		return [_data count];
+	else
+		return [_friendsListeningNow count];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return 52;
@@ -121,15 +147,34 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	ArtworkCell *cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]];
 	if (cell == nil)
 		cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
-	cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"username"];
-	cell.title.backgroundColor = [UIColor whiteColor];
-	cell.title.opaque = YES;
-	cell.subtitle.backgroundColor = [UIColor whiteColor];
-	cell.subtitle.opaque = YES;
-	cell.shouldCacheArtwork = YES;
-	cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
-	if(!delegate)
+
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	
+	if(toggle == nil || toggle.selectedSegmentIndex == 1) {
+		cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"username"];
+		cell.title.backgroundColor = [UIColor whiteColor];
+		cell.title.opaque = YES;
+		cell.subtitle.text = @"";
+		cell.subtitle.backgroundColor = [UIColor whiteColor];
+		cell.subtitle.opaque = YES;
+		cell.shouldCacheArtwork = YES;
+		cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		if(!delegate)
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	} else if(toggle.selectedSegmentIndex == 0) {
+		cell.title.text = [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"username"];
+		cell.title.backgroundColor = [UIColor whiteColor];
+		cell.title.opaque = YES;
+		cell.subtitle.text = [NSString stringWithFormat:@"%@ - %@", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"artist"],
+													[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"title"]];
+//		cell.subtitle.numberOfLines = 1;
+//		cell.subtitle.lineBreakMode = UILineBreakModeClip;
+		cell.subtitle.backgroundColor = [UIColor whiteColor];
+		cell.subtitle.opaque = YES;
+		cell.shouldCacheArtwork = YES;
+		cell.imageURL = [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	}
 	return cell;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -138,6 +183,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (void)dealloc {
 	[super dealloc];
 	[_username release];
+	[_friendsListeningNow release];
 	[_data release];
 }
 @end
