@@ -124,11 +124,16 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	return 52;
 }
 - (void)_showProfile:(NSTimer *)timer {
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	NSIndexPath *newIndexPath = timer.userInfo;
+	NSArray *source = _data;
+	if(toggle != nil && toggle.selectedSegmentIndex == 0) {
+		source = _friendsListeningNow;
+	}
 	if(delegate) {
-		[delegate friendsViewController:self didSelectFriend:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
+		[delegate friendsViewController:self didSelectFriend:[[source objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
 	} else {
-		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[_data objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
+		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[source objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:home animated:YES];
 		[home release];
 		[[self.tableView cellForRowAtIndexPath:newIndexPath] showProgress:NO];
@@ -167,8 +172,6 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.title.opaque = YES;
 		cell.subtitle.text = [NSString stringWithFormat:@"%@ - %@", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"artist"],
 													[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"title"]];
-//		cell.subtitle.numberOfLines = 1;
-//		cell.subtitle.lineBreakMode = UILineBreakModeClip;
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
 		cell.shouldCacheArtwork = YES;
