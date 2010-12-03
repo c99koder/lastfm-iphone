@@ -63,7 +63,7 @@
 	aWebView.frame = frame;
 	
 	webViewHeight = fittingSize.height;
-	[self.tableView reloadData];
+	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
 - (void)rebuildMenu {
 	[self.tableView setContentOffset:CGPointMake(0,0)];
