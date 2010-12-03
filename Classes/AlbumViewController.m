@@ -139,6 +139,9 @@
 		return 52;
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
+	if([indexPath section] == 0) {
+		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-artist://%@", [_artist URLEscaped]]]];
+	}
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
@@ -192,8 +195,6 @@
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
-			profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-			profilecell.backgroundColor = [UIColor clearColor];
 			profilecell.title.text = _artist;
 			[profilecell addBorder];
 			
@@ -210,6 +211,7 @@
 			profilecell.subtitle.numberOfLines = 0;
 			profilecell.subtitle.text = [NSString stringWithFormat:@"%@\n\n%@\n%@", _album, releaseDate, plays];
 			[numberFormatter release];
+			profilecell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		}		
 		return profilecell;
 	}
