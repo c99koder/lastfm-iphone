@@ -559,6 +559,7 @@ NSString *kUserAgent;
 		return TRUE;
 	} else {
 		BOOL result = [self _playRadioStation:station];
+		[playbackViewController hideDetailsView];
 		if(result && animated) {
 			[self showPlaybackView];
 		}

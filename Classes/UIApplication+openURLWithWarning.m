@@ -62,7 +62,11 @@ NSURL *__redirectURL;
 		if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_NONETWORK",@"No network available") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE",@"No network available title")];
 		} else {
-			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[url absoluteString] animated:YES];
+			if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[url absoluteString] animated:NO];
+			} else {
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[url absoluteString] animated:YES];
+			}
 		}
 		return;
 	}

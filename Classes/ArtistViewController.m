@@ -152,7 +152,7 @@
 			[sections addObject:@"profile"];
 			
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-																															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", _artist], nil]
+																															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
 																																																										 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 
