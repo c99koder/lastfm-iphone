@@ -41,4 +41,5 @@
 }
 - (id)initWithArtist:(NSString *)artist;
 - (void)paintItBlack;
+- (void)jumpToEventsPage;
 @end

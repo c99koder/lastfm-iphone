@@ -35,6 +35,9 @@
 - (void)paintItBlack {
 	_paintItBlack = YES;
 }
+- (void)jumpToEventsPage {
+	_toggle.selectedSegmentIndex = 1;
+}
 - (void)_loadEventsTab {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	_events = [[[LastFMService sharedInstance] eventsForArtist:_artist] retain];
@@ -291,6 +294,11 @@
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if(_toggle.selectedSegmentIndex == 1) {
 		EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[indexPath row]]];
+		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+		}
 		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
 		[details release];
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {

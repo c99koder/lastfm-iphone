@@ -370,7 +370,7 @@
 }
 -(void)onTourButtonPressed:(id)sender {
 	[self detailsButtonPressed:sender];
-	//[detailsViewController jumpToEventsTab];
+	[artistViewController jumpToEventsPage];
 #if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"on-tour-strap" timeSession:NO];
 #endif
