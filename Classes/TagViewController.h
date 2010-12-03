@@ -30,6 +30,8 @@
 	NSArray *_artists;
 	NSArray *_similarTags;
 	NSDictionary *_metadata;
+	UIWebView *_bioView;
+	float webViewHeight;
 }
 - (id)initWithTag:(NSString *)tag;
 @end

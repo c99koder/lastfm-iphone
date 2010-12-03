@@ -28,6 +28,8 @@
 	NSArray *_data;
 	NSArray *_tags;
 	NSDictionary *_metadata;
+	UIWebView *_bioView;
+	float webViewHeight;
 }
 - (id)initWithTrack:(NSString *)track byArtist:(NSString *)artist;
 @end

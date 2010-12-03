@@ -49,9 +49,31 @@
 }
 - (void)viewDidLoad {
 	self.tableView.scrollsToTop = NO;
+	_bioView = [[UIWebView alloc] initWithFrame:CGRectZero];
+	_bioView.delegate = self;
+}
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+	CGRect frame = aWebView.frame;
+	frame.size.height = 1;
+	aWebView.frame = frame;
+	CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
+	fittingSize.width = frame.size.width;
+	frame.size = fittingSize;
+	aWebView.frame = frame;
+	
+	webViewHeight = fittingSize.height;
+	[self.tableView reloadData];
 }
 - (void)rebuildMenu {
 	[self.tableView setContentOffset:CGPointMake(0,0)];
+	
+	webViewHeight = 0;
+	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; }</style></head>\
+										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
+										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:286px; position:absolute;\">\
+										%@ <a href=\"http://www.last.fm/tag/%@\">[More]</a></body></html>", bio, [_tag URLEscaped]];
+	[_bioView loadHTMLString:html baseURL:nil];
 	
 	if(_data)
 		[_data release];
@@ -60,7 +82,7 @@
 	NSMutableArray *stations;
 	
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _tag], [NSString stringWithFormat:@"lastfm://globaltags/%@", _tag], nil]
+																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Tag Radio", _tag], [NSString stringWithFormat:@"lastfm://globaltags/%@", _tag], nil]
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
@@ -138,7 +160,7 @@
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 1) {
-		return [[_metadata objectForKey:@"wiki"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - (18*2), MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height + 12;
+		return webViewHeight + 16;
 	} else {
 		return 52;
 	}
@@ -189,17 +211,8 @@
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
 			biocell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BioCell"] autorelease];
-			biocell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-			biocell.backgroundColor = [UIColor clearColor];
-			UITextView *bio = [[UITextView alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"wiki"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height)];
-			bio.text = [_metadata objectForKey:@"wiki"];
-			bio.scrollEnabled = NO;
-			bio.backgroundColor = [UIColor clearColor];
-			bio.textColor = [UIColor blackColor];
-			bio.editable = NO;
-			bio.font = [UIFont systemFontOfSize:12.0f];
-			[biocell.contentView addSubview:bio];
-			[bio release];
+			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - (16*2), webViewHeight);
+			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;
 	}
@@ -237,5 +250,6 @@
 	[_artists release];
 	[_albums release];
 	[_data release];
+	[_bioView release];
 }
 @end

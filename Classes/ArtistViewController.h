@@ -36,6 +36,8 @@
 	BOOL _eventsTabLoaded;
 	BOOL _similarTabLoaded;
 	BOOL _paintItBlack;
+	UIWebView *_bioView;
+	float webViewHeight;
 }
 - (id)initWithArtist:(NSString *)artist;
 - (void)paintItBlack;

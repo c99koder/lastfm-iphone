@@ -50,9 +50,31 @@
 	//self.tableView.sectionHeaderHeight = 0;
 	//self.tableView.sectionFooterHeight = 0;
 	self.tableView.scrollsToTop = NO;
+	_bioView = [[UIWebView alloc] initWithFrame:CGRectZero];
+	_bioView.delegate = self;
+}
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+	CGRect frame = aWebView.frame;
+	frame.size.height = 1;
+	aWebView.frame = frame;
+	CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
+	fittingSize.width = frame.size.width;
+	frame.size = fittingSize;
+	aWebView.frame = frame;
+	
+	webViewHeight = fittingSize.height;
+	[self.tableView reloadData];
 }
 - (void)rebuildMenu {
 	[self.tableView setContentOffset:CGPointMake(0,0)];
+	
+	webViewHeight = 0;
+	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; }</style></head>\
+										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
+										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:286px; position:absolute;\">\
+										%@ <a href=\"http://www.last.fm/Music/%@/_/%@\">[More]</a></body></html>", bio, [_artist URLEscaped], [_track URLEscaped]];
+	[_bioView loadHTMLString:html baseURL:nil];
 	
 	if(_data)
 		[_data release];
@@ -127,7 +149,7 @@
 	if([indexPath section] == 0)
 		return 112;
 	if([indexPath section] == 3 && [[_metadata objectForKey:@"wiki"] length])
-		return [[_metadata objectForKey:@"wiki"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - (18*2), MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height + 12;
+		return webViewHeight + 16;
 	else
 		return 52;
 }
@@ -236,17 +258,8 @@
 		UITableViewCell *wikicell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"wikicell"];
 		if(wikicell == nil) {
 			wikicell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wikicell"] autorelease];
-			wikicell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-			wikicell.backgroundColor = [UIColor clearColor];
-			UITextView *wiki = [[UITextView alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"wiki"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height + 12)];
-			wiki.scrollEnabled = NO;
-			wiki.text = [_metadata objectForKey:@"wiki"];
-			wiki.backgroundColor = [UIColor clearColor];
-			wiki.textColor = [UIColor blackColor];
-			wiki.editable = NO;
-			wiki.font = [UIFont systemFontOfSize:12.0f];
-			[wikicell.contentView addSubview:wiki];
-			[wiki release];
+			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - (16*2), webViewHeight);
+			[wikicell.contentView addSubview:_bioView];
 		}
 		return wikicell;
 	}
@@ -264,6 +277,7 @@
 	[_artist release];
 	[_track release];
 	[_metadata release];
+	[_bioView release];
 	[_data release];
 }
 @end

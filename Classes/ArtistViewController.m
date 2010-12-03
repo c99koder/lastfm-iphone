@@ -65,6 +65,7 @@
 		_infoTabLoaded = NO;
 		_similarTabLoaded = NO;
 		_eventsTabLoaded = NO;
+		
 		[NSThread detachNewThreadSelector:@selector(_loadInfoTab) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadSimilarTab) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadEventsTab) toTarget:self withObject:nil];
@@ -77,6 +78,15 @@
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self rebuildMenu];
 }
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSURL *loadURL = [[request URL] retain];
+	if(([[loadURL scheme] isEqualToString: @"http"] || [[loadURL scheme] isEqualToString: @"https"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
+		[[UIApplication sharedApplication] openURLWithWarning:[loadURL autorelease]];
+		return NO;
+	}
+	[loadURL release];
+	return YES;
+}
 - (void)viewDidLoad {
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	//self.tableView.sectionHeaderHeight = 0;
@@ -85,6 +95,9 @@
 		self.tableView.backgroundColor = [UIColor blackColor];
 	self.tableView.scrollsToTop = NO;
 	
+	_bioView = [[UIWebView alloc] initWithFrame:CGRectZero];
+	_bioView.delegate = self;
+
 	_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Events", @"Similar Artists", nil]];
 	_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 	_toggle.selectedSegmentIndex = 0;
@@ -102,8 +115,28 @@
 	[toggleContainer release];
 	//self.navigationItem.titleView = _toggle;
 }
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+	CGRect frame = aWebView.frame;
+	frame.size.height = 1;
+	aWebView.frame = frame;
+	CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
+	fittingSize.width = frame.size.width;
+	frame.size = fittingSize;
+	aWebView.frame = frame;
+	
+	webViewHeight = fittingSize.height;
+	[self.tableView reloadData];
+}
 - (void)rebuildMenu {
 	[self.tableView setContentOffset:CGPointMake(0,0)];
+	
+	webViewHeight = 0;
+	NSString *bio = [[_metadata objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; }</style></head>\
+										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
+										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:286px; position:absolute;\">\
+										%@ <a href=\"http://www.last.fm/Music/%@\">[More]</a></body></html>", bio, [_artist URLEscaped]];
+	[_bioView loadHTMLString:html baseURL:nil];
 	
 	if(_data)
 		[_data release];
@@ -250,7 +283,7 @@
 	if(_toggle.selectedSegmentIndex == 1) {
 		return 64;
 	} else if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
-		return [[_metadata objectForKey:@"summary"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - (18*2), MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height + 12;
+		return webViewHeight + 16;
 	} else {
 		return 52;
 	}
@@ -373,20 +406,8 @@
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
 			biocell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BioCell"] autorelease];
-			biocell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-			biocell.backgroundColor = [UIColor clearColor];
-			UITextView *bio = [[UITextView alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - (18*2), [[_metadata objectForKey:@"summary"] sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:CGSizeMake(self.view.frame.size.width - 20, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height)];
-			bio.text = [_metadata objectForKey:@"summary"];
-			bio.scrollEnabled = NO;
-			bio.backgroundColor = [UIColor clearColor];
-			if(_paintItBlack)
-				bio.textColor = [UIColor whiteColor];
-			else
-				bio.textColor = [UIColor blackColor];
-			bio.editable = NO;
-			bio.font = [UIFont systemFontOfSize:12.0f];
-			[biocell.contentView addSubview:bio];
-			[bio release];
+			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - (16*2), webViewHeight);
+			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;
 	}
@@ -424,6 +445,7 @@
 	[_metadata release];
 	[_toggle release];
 	[_similarArtists release];
+	[_bioView release];
 	[_data release];
 }
 @end
