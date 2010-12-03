@@ -257,7 +257,7 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if(_toggle.selectedSegmentIndex == 1)
-		return _eventsTabLoaded?[_events count]:1;
+		return (_eventsTabLoaded&&[_events count])?[_events count]:1;
 	else if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
 	else
@@ -281,7 +281,7 @@
  return [[[UIView alloc] init] autorelease];
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(_toggle.selectedSegmentIndex == 1) {
+	if(_toggle.selectedSegmentIndex == 1 && [_events count]) {
 		return 64;
 	} else if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
 		return webViewHeight + 16;
@@ -291,14 +291,16 @@
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if(_toggle.selectedSegmentIndex == 1) {
-		EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[indexPath row]]];
-		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
-			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+		if([_events count]) {
+			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[indexPath row]]];
+			if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
+				[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+				[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+				[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+			}
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+			[details release];
 		}
-		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
-		[details release];
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
@@ -359,34 +361,40 @@
 	}
 	
 	if(_toggle.selectedSegmentIndex == 1) {
-		MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
-		if (eventCell == nil) {
-			eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
+		if([_events count]) {
+			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
+			if (eventCell == nil) {
+				eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
+			}
+			
+			NSDictionary *event = [_events objectAtIndex:[indexPath row]];
+			eventCell.title.text = [event objectForKey:@"headliner"];
+			eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
+			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+			eventCell.location.numberOfLines = 0;
+			NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+			[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+			[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
+			NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+			[formatter setLocale:[NSLocale currentLocale]];
+			
+			[formatter setDateFormat:@"MMM"];
+			eventCell.month.text = [formatter stringFromDate:date];
+			
+			[formatter setDateFormat:@"d"];
+			eventCell.day.text = [formatter stringFromDate:date];
+			
+			[formatter release];
+			eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			
+			[eventCell showProgress:NO];
+			
+			return eventCell;
+		} else {
+			UITableViewCell *emptyCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
+			emptyCell.textLabel.text = @"No Upcoming Events";
+			return emptyCell;
 		}
-		
-		NSDictionary *event = [_events objectAtIndex:[indexPath row]];
-		eventCell.title.text = [event objectForKey:@"headliner"];
-		eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
-		eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
-		eventCell.location.numberOfLines = 0;
-		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-		[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
-		[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
-		NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
-		[formatter setLocale:[NSLocale currentLocale]];
-		
-		[formatter setDateFormat:@"MMM"];
-		eventCell.month.text = [formatter stringFromDate:date];
-		
-		[formatter setDateFormat:@"d"];
-		eventCell.day.text = [formatter stringFromDate:date];
-		
-		[formatter release];
-		eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		
-		[eventCell showProgress:NO];
-		
-		return eventCell;
 	}
 
 	if([indexPath section] == 0 && _toggle.selectedSegmentIndex == 0) {
