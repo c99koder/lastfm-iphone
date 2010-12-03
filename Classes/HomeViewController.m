@@ -125,7 +125,12 @@
 
 
 - (void)dealloc {
-    [super dealloc];
+	[super dealloc];
+	[_profileController release];
+	[_eventsController release];
+	[_radioController release];
+	[_friendsController release];
+	[_recsController release];
 }
 
 
