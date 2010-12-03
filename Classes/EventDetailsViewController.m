@@ -67,16 +67,18 @@ extern UIImage *eventDateBGImage;
 		title = [[UILabel alloc] init];
 		title.textColor = [UIColor blackColor];
 		title.highlightedTextColor = [UIColor whiteColor];
-		title.backgroundColor = [UIColor clearColor];
+		title.backgroundColor = [UIColor whiteColor];
 		title.font = [UIFont boldSystemFontOfSize:16];
+		title.opaque = YES;
 		[self.contentView addSubview:title];
 		
 		location = [[UILabel alloc] init];
 		location.textColor = [UIColor grayColor];
 		location.highlightedTextColor = [UIColor whiteColor];
-		location.backgroundColor = [UIColor clearColor];
+		location.backgroundColor = [UIColor whiteColor];
 		location.font = [UIFont systemFontOfSize:14];
 		location.clipsToBounds = YES;
+		location.opaque = YES;
 		[self.contentView addSubview:location];
 		
 		self.selectionStyle = UITableViewCellSelectionStyleBlue;

@@ -187,14 +187,14 @@ UIImage *avatarPlaceholder = nil;
 		title = [[UILabel alloc] init];
 		title.textColor = [UIColor blackColor];
 		title.highlightedTextColor = [UIColor whiteColor];
-		title.backgroundColor = [UIColor clearColor];
+		title.backgroundColor = [UIColor whiteColor];
 		title.font = [UIFont boldSystemFontOfSize:16];
 		[self.contentView addSubview:title];
 		
 		subtitle = [[UILabel alloc] init];
 		subtitle.textColor = [UIColor grayColor];
 		subtitle.highlightedTextColor = [UIColor whiteColor];
-		subtitle.backgroundColor = [UIColor clearColor];
+		subtitle.backgroundColor = [UIColor whiteColor];
 		subtitle.font = [UIFont systemFontOfSize:14];
 		[self.contentView addSubview:subtitle];
 		
