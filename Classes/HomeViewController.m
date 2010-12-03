@@ -49,6 +49,12 @@
 	_friendsController = [[FriendsViewController alloc] initWithUsername:_username];
 	_recsController = [[RecsViewController alloc] initWithUsername:_username];
 	
+	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
+		NSMutableArray *array = [NSMutableArray arrayWithArray:_tabBar.items];
+		[array removeObjectAtIndex:1];
+		_tabBar.items = array;
+	}
+	
 	_tabBar.selectedItem = [_tabBar.items objectAtIndex:0];
 	[self tabBar:_tabBar didSelectItem:_tabBar.selectedItem];
 }
