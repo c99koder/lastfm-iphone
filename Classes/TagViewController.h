@@ -32,6 +32,10 @@
 	NSDictionary *_metadata;
 	UIWebView *_bioView;
 	float webViewHeight;
+	BOOL _tracksDidLoad;
+	BOOL _albumsDidLoad;
+	BOOL _artistsDidLoad;
+	BOOL _similarTagsDidLoad;
 }
 - (id)initWithTag:(NSString *)tag;
 @end

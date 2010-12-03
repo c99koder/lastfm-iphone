@@ -30,14 +30,47 @@
 #import "UIApplication+openURLWithWarning.h"
 
 @implementation TagViewController
+- (void)_loadAlbums {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	_albums = [[[LastFMService sharedInstance] topAlbumsForTag:_tag] retain];
+	_albumsDidLoad = YES;
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
+- (void)_loadTracks {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	_tracks = [[[LastFMService sharedInstance] topTracksForTag:_tag] retain];
+	_tracksDidLoad = YES;
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
+- (void)_loadArtists {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	_artists = [[[LastFMService sharedInstance] topArtistsForTag:_tag] retain];
+	_artistsDidLoad = YES;
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
+- (void)_loadTags {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	_similarTags = [[[LastFMService sharedInstance] tagsSimilarTo:_tag] retain];
+	_similarTagsDidLoad = YES;
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
 - (id)initWithTag:(NSString *)tag {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_tag = [tag retain];
 		_metadata = [[[LastFMService sharedInstance] metadataForTag:tag inLanguage:@"en"] retain];
-		_albums = [[[LastFMService sharedInstance] topAlbumsForTag:tag] retain];
-		_tracks = [[[LastFMService sharedInstance] topTracksForTag:tag] retain];
-		_artists = [[[LastFMService sharedInstance] topArtistsForTag:tag] retain];
-		_similarTags = [[[LastFMService sharedInstance] tagsSimilarTo:tag] retain];
+		_tracksDidLoad = NO;
+		_albumsDidLoad = NO;
+		_artistsDidLoad = NO;
+		_similarTagsDidLoad = NO;	
+		[NSThread detachNewThreadSelector:@selector(_loadTracks) toTarget:self withObject:nil];
+		[NSThread detachNewThreadSelector:@selector(_loadAlbums) toTarget:self withObject:nil];
+		[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
+		[NSThread detachNewThreadSelector:@selector(_loadTags) toTarget:self withObject:nil];
+
 		self.title = tag;
 	}
 	return self;
@@ -88,7 +121,9 @@
 	
 	[sections addObject:@"bio"];
 	
-	if([_artists count]) {
+	if(!_artistsDidLoad) {
+		[sections addObject:@"loading"];
+	} else if([_artists count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_artists count] && x < 5; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
@@ -98,7 +133,9 @@
 		[stations release];
 	}
 	
-	if([_albums count]) {
+	if(!_albumsDidLoad) {
+		[sections addObject:@"loading"];
+	} else if([_albums count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_albums count] && x < 5; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_albums objectAtIndex:x] objectForKey:@"name"], [[_albums objectAtIndex:x] objectForKey:@"image"],
@@ -108,7 +145,9 @@
 		[stations release];
 	}
 	
-	if([_tracks count]) {
+	if(!_tracksDidLoad) {
+		[sections addObject:@"loading"];
+	} else if([_tracks count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_tracks count] && x < 5; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tracks objectAtIndex:x] objectForKey:@"name"], [[_tracks objectAtIndex:x] objectForKey:@"image"],
@@ -118,7 +157,9 @@
 		[stations release];
 	}
 	
-	if([_similarTags count]) {
+	if(!_similarTagsDidLoad) {
+		[sections addObject:@"loading"];
+	} else if([_similarTags count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_similarTags count] && x < 5; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_similarTags objectAtIndex:x] objectForKey:@"name"],
@@ -181,7 +222,29 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	UITableViewCell *loadingCell = [tableView dequeueReusableCellWithIdentifier:@"LoadingCell"];
+	if(!loadingCell) {
+		loadingCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
+		loadingCell.textLabel.text = @"Loading";
+		[loadingCell showProgress:YES];
+	}
 	ArtworkCell *cell = nil;
+	
+	if([indexPath section] == 2 && !_artistsDidLoad) {
+		return loadingCell;
+	}
+	
+	if([indexPath section] == 3 && !_albumsDidLoad) {
+		return loadingCell;
+	}
+	
+	if([indexPath section] == 4 && !_tracksDidLoad) {
+		return loadingCell;
+	}
+	
+	if([indexPath section] == 5 && !_similarTagsDidLoad) {
+		return loadingCell;
+	}
 	
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
