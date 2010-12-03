@@ -75,6 +75,7 @@ UIImage *eventDateBGImage = nil;
 		location.highlightedTextColor = [UIColor whiteColor];
 		location.backgroundColor = [UIColor clearColor];
 		location.font = [UIFont systemFontOfSize:14];
+		location.clipsToBounds = YES;
 		[self.contentView addSubview:location];
 		
 		self.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -94,7 +95,7 @@ UIImage *eventDateBGImage = nil;
 	
 	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 4, frame.size.width - _datebg.frame.size.width - 12, 22);
 	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 24, frame.size.width - _datebg.frame.size.width - 12, 
-																[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 12, frame.size.height) lineBreakMode:location.lineBreakMode].height);
+																[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 12, frame.size.height - 24) lineBreakMode:location.lineBreakMode].height);
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
