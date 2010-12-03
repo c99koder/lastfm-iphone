@@ -198,8 +198,12 @@ extern UIImage *eventDateBGImage;
 	
 	switch(section) {
 		case 0:
-			//
+		{
+			ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_event objectForKey:@"headliner"]];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artist animated:YES];
+			[artist release];
 			break;
+		}
 		case 1:
 		{
 			EventArtistsViewController *artists = [[EventArtistsViewController alloc] initWithArtists:[_event objectForKey:@"artists"]];
@@ -283,7 +287,8 @@ extern UIImage *eventDateBGImage;
 			artistCell.shouldRoundTop = YES;
 			artistCell.shouldRoundBottom = YES;
 			artistCell.shouldCacheArtwork = YES;
-			
+			artistCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
 			return artistCell;
 		}
 		case 1:
