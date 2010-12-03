@@ -81,7 +81,7 @@
 	
 	if(toggle.selectedSegmentIndex == 0) {
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
-																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", @"lastfm://...", nil]
+																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], nil]
 																																																									forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
