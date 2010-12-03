@@ -26,7 +26,6 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
-#import "DetailsViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 UIImage *eventDateBGImage = nil;

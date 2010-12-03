@@ -25,7 +25,6 @@
 #import "LastFMService.h"
 #import "ArtworkCell.h"
 #import "FriendsViewController.h"
-#import "CalendarViewController.h"
 #import "TagEditorViewController.h"
 #import "PlaylistsViewController.h"
 #import "ArtistViewController.h"

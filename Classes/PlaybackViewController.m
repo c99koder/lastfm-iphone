@@ -33,6 +33,15 @@
 #import "Beacon.h"
 #endif
 
+int tagSort(id tag1, id tag2, void *context) {
+	if([[tag1 objectForKey:@"count"] intValue] < [[tag2 objectForKey:@"count"] intValue])
+		return NSOrderedDescending;
+	else if([[tag1 objectForKey:@"count"] intValue] > [[tag2 objectForKey:@"count"] intValue])
+		return NSOrderedAscending;
+	else
+		return NSOrderedSame;
+}
+
 @implementation PlaybackSubview
 - (void)showLoadingView {
 	_loadingView.alpha = 1;
