@@ -85,6 +85,15 @@
 	_bioView = [[UIWebView alloc] initWithFrame:CGRectZero];
 	_bioView.delegate = self;
 }
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSURL *loadURL = [[request URL] retain];
+	if(([[loadURL scheme] isEqualToString: @"http"] || [[loadURL scheme] isEqualToString: @"https"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
+		[[UIApplication sharedApplication] openURLWithWarning:[loadURL autorelease]];
+		return NO;
+	}
+	[loadURL release];
+	return YES;
+}
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
 	CGRect frame = aWebView.frame;
 	frame.size.height = 1;
@@ -105,7 +114,7 @@
 	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; }</style></head>\
 										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
 										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:286px; position:absolute;\">\
-										%@ <a href=\"http://www.last.fm/tag/%@\">[More]</a></body></html>", bio, [_tag URLEscaped]];
+										%@ <a href=\"http://www.last.fm/tag/%@/wiki\">More...</a></body></html>", bio, [_tag URLEscaped]];
 	[_bioView loadHTMLString:html baseURL:nil];
 	
 	if(_data)

@@ -105,7 +105,7 @@
 	if([_recommendedReleases count]) {
 		for(int x=0; x<[_recommendedReleases count] && x < 20; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"image"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"],
-																															 [NSString stringWithFormat:@"lastfm-artost://%@", [[_recommendedReleases objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
+																															 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[_recommendedReleases objectAtIndex:x] objectForKey:@"name"]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
 		}
 	}
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
