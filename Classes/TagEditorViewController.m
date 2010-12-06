@@ -21,312 +21,262 @@
 
 #import "TagEditorViewController.h"
 
-@implementation TagView
-@synthesize tag;
+@implementation TagsModel
 
-- (id)initWithTag:(NSString *)t {
-	CGSize size = [t sizeWithFont:[UIFont boldSystemFontOfSize:20]];
-	if(size.width > 272)
-		size.width = 272;
-	if(self = [super initWithFrame:CGRectMake(0,0,size.width + 19 + 18 + 2,size.height+4)]) {
-		self.image = [[UIImage imageNamed:@"tag-bg.png"] stretchableImageWithLeftCapWidth:18 topCapHeight:0];
-		tag = [t retain];
-		UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(16,2,size.width,size.height)];
-		l.textColor = [UIColor whiteColor];
-		l.backgroundColor = [UIColor clearColor];
-		l.font = [UIFont boldSystemFontOfSize:20];
-		l.text = t;
-		[self addSubview: l];
-		[l release];
-		UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
-		[b setImage:[UIImage imageNamed:@"remove.png"] forState:UIControlStateNormal];
-		[b addTarget:self action:@selector(_deleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		b.frame = CGRectMake(size.width + 16, 2+((size.height - 20)/2), 21, 20);
-		[self addSubview: b];
-		self.backgroundColor = [UIColor clearColor];
-		self.userInteractionEnabled = YES;
-	}
-	return self;	
-}
-- (void)_deleteButtonPressed:(id)sender {
-	[(TagEditorView *)[self superview] removeTag:self];
-}
-@end
+@synthesize topTags = _topTags;
+@synthesize userTags = _userTags;
 
-int tagViewSort(TagView *tag1, TagView *tag2, void *ctx) {
-	return [tag1.tag localizedCaseInsensitiveCompare:tag2.tag];
-}
-
-@implementation TagEditorView
-
-- (id)initWithCoder:(NSCoder *)coder {
-	if(self = [super initWithCoder:coder]) {
-		tags = [[NSMutableArray alloc] init];
-		self.directionalLockEnabled = YES;
+- (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags {
+	if (self = [super init]) {
+		_delegates = nil;
+		_allTopTags = [topTags copy];
+		_allUserTags = [userTags copy];
+		_topTags = nil;
+		_userTags = nil;
 	}
 	return self;
 }
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	[super touchesEnded:touches withEvent:event];
-	[textField resignFirstResponder];
-}
-- (void)_updateTags:(BOOL)animated {
-	int x=4,y=4,height=0;
 
-	[self scrollRectToVisible:[lastTag frame] animated:YES];
-	[lastTag release];
-	lastTag = nil;
-	
-	if(animated)
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration: 0.5];
-	
-	for(TagView *tag in tags) {
-		CGSize size = tag.frame.size;
-		height = tag.frame.size.height;
-		if(x + size.width > self.frame.size.width) {
-			x = 4;
-			y += size.height + 4;
-		}
-		tag.frame = CGRectMake(x,y,size.width,size.height);
-		tag.alpha = 1;
-		x += size.width + 4;
-	}
-	if([tags count])
-		instructions.alpha = 0;
-	else
-		instructions.alpha = 1;
-	if(animated)
-		[UIView commitAnimations];
-	self.contentSize = CGSizeMake(320,y+height+2);
-}
-- (void)addTag:(NSString *)tag animated:(BOOL)animated {
-	int x=4,y=4;
-	CGSize size = CGSizeZero;
-	TagView *t;
-	for(t in tags) {
-		if([t.tag isEqualToString:tag])
-			return;
-	}
-	t = [[TagView alloc] initWithTag:tag];
-	[tags addObject:t];
-	[self addSubview:t];
-	[tags sortUsingFunction:tagViewSort context:nil];
-	for(TagView *tag in tags) {
-		size = tag.frame.size;
-		if(x + size.width > self.frame.size.width) {
-			x = 4;
-			y += size.height + 4;
-		}
-		if(tag == t)
-			break;
-		x += size.width + 4;
-	}
-	t.frame = CGRectMake(x, y, size.width, size.height);
-	t.alpha = 0;
-	[lastTag release];
-	lastTag = t;
-	if(animated) {
-		[(TagEditorViewController *)[self delegate] tagAdded:tag];
-		[self _updateTags:animated];
-	}
-}
-- (void)removeTag:(TagView *)tag {
-	[(TagEditorViewController *)[self delegate] tagRemoved:tag.tag];
-	[tags removeObject:tag];
-	[tag removeFromSuperview];
-	[self _updateTags:YES];
-	[(TagEditorViewController *)[self delegate] reload];
-}
-- (BOOL)hasTag:(NSString *)tag {
-	for(TagView *t in tags) {
-		if([t.tag isEqualToString:tag])
-			return YES;
-	}
-	return NO;
-}
-- (NSArray *)tags {
-	return [NSArray arrayWithArray:tags];
-}
-- (void)setTags:(NSArray *)newTags {
-	[tags makeObjectsPerformSelector:@selector(removeFromSuperview)];
-	[tags removeAllObjects];
-	for(NSString *tag in newTags) {
-		[self addTag:tag animated:NO];
-	}
-	[self _updateTags:NO];
-}
 - (void)dealloc {
-	[tags release];
+	TT_RELEASE_SAFELY(_delegates);
+	TT_RELEASE_SAFELY(_allTopTags);
+	TT_RELEASE_SAFELY(_allUserTags);
+	TT_RELEASE_SAFELY(_topTags);
+	TT_RELEASE_SAFELY(_userTags);
 	[super dealloc];
 }
+
+
+- (void)loadTags {
+	TT_RELEASE_SAFELY(_topTags);
+	TT_RELEASE_SAFELY(_userTags);
+	_topTags = [_allTopTags mutableCopy];
+	_userTags = [_allUserTags mutableCopy];
+}
+
+- (void)search:(NSString*)text {
+	[self cancel];
+	
+	self.topTags = [NSMutableArray array];
+	self.userTags = [NSMutableArray array];
+	
+	[_delegates perform:@selector(modelDidStartLoad:) withObject:self];
+	
+	if (text.length) {
+		text = [text lowercaseString];
+		for (NSDictionary *tag in _allTopTags) {
+			if ([[[tag objectForKey:@"name"] lowercaseString] rangeOfString:text].location == 0) {
+				[_topTags addObject:tag];
+			}
+		}    
+		for (NSDictionary *tag in _allUserTags) {
+			if ([[[tag objectForKey:@"name"] lowercaseString] rangeOfString:text].location == 0) {
+				[_userTags addObject:tag];
+			}
+		}    
+	}
+	
+	[_delegates perform:@selector(modelDidFinishLoad:) withObject:self];
+}
+
+#pragma mark -
+#pragma mark TTModel methods
+
+- (NSMutableArray *)delegates {
+	if (!_delegates) {
+		_delegates = TTCreateNonRetainingArray();
+	}
+	return _delegates;
+}
+
+- (BOOL)isLoadingMore {
+	return NO;
+}
+
+- (BOOL)isOutdated {
+	return NO;
+}
+
+- (BOOL)isLoaded {
+	return !!_topTags && !!_userTags;
+}
+
+- (BOOL)isLoading {
+	return NO;
+}
+
+- (BOOL)isEmpty {
+	return !_topTags.count && !_userTags.count;
+}
+
+- (void)load:(TTURLRequestCachePolicy)cachePolicy more:(BOOL)more {
+}
+
+- (void)invalidate:(BOOL)erase {
+}
+
+- (void)cancel {
+}
+
 @end
 
-@implementation TagEditorViewController
-@synthesize myTags, artistTopTags, albumTopTags, trackTopTags, delegate;
+@implementation TagsDataSource
 
-- (void)tagAdded:(NSString *)tag {
-	if([tagActions objectForKey:tag])
-		[tagActions setObject:[NSNumber numberWithInt:[[tagActions objectForKey:tag] intValue]+1] forKey:tag];
-	else
-		[tagActions setObject:[NSNumber numberWithInt:1] forKey:tag];
-}
-- (void)tagRemoved:(NSString *)tag {
-	[tagActions setObject:[NSNumber numberWithInt:[[tagActions objectForKey:tag] intValue]-1] forKey:tag];
-}
-- (void)reload {
-	[table reloadData];
-}
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
-	[table reloadData];
-}
-- (void)viewDidLoad {
-	tabBar.selectedItem = [tabBar.items objectAtIndex:0];
-	tagType.tintColor = [UIColor grayColor];
-	[self tagTypeChanged:tagType];
-}
-- (void)tagTypeChanged:(id)sender {
-	switch(tagType.selectedSegmentIndex) {
-		case 0:
-			topTags = trackTopTags;
-			tagActions = trackTagActions;
-			break;
-		case 1:
-			topTags = artistTopTags;
-			tagActions = artistTagActions;
-			break;
-		case 2:
-			topTags = albumTopTags;
-			tagActions = albumTagActions;
-			break;
+- (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags {
+	if (self = [super init]) {
+		_tags = [[TagsModel alloc] initWithTopTags:topTags userTags:userTags];
+		[_tags loadTags];
+		self.model = _tags;
 	}
-	NSMutableArray *tags = [NSMutableArray array];
-	for(NSString *tag in tagActions) {
-		if([[tagActions objectForKey:tag] intValue] > -1)
-			[tags addObject:tag];
+	return self;
+}
+
+- (void)dealloc {
+	TT_RELEASE_SAFELY(_tags);
+	[super dealloc];
+}
+
+#pragma mark -
+#pragma mark TTTableViewDataSource methods
+
+- (void)tableViewDidLoadModel:(UITableView*)tableView {
+	self.items = [NSMutableArray array];
+	self.sections = [NSMutableArray array];
+
+	[self.sections addObject:@"Top Tags"];
+	NSMutableArray *section = [NSMutableArray array];
+	for (NSDictionary *tag in _tags.topTags) {
+		
+		TTTableItem *item = [TTTableTextItem itemWithText:[tag objectForKey:@"name"] URL:nil];
+		[section addObject:item];
 	}
-	[tagEditorView setTags:tags];
-	[table reloadData];
-}
-- (void)setAlbumTags:(NSArray *)tags {
-	[albumTagActions release];
-	albumTagActions = [[NSMutableDictionary alloc] init];
-	for(NSDictionary *tag in tags) {
-		[albumTagActions setObject:[NSNumber numberWithInteger:0] forKey:[tag objectForKey:@"name"]];
+	[self.items addObject:section];
+	
+	[self.sections addObject:@"User Tags"];
+	section = [NSMutableArray array];
+	for (NSDictionary *tag in _tags.userTags) {
+		
+		TTTableItem *item = [TTTableTextItem itemWithText:[tag objectForKey:@"name"] URL:nil];
+		[section addObject:item];
 	}
+	[self.items addObject:section];
 }
-- (void)setArtistTags:(NSArray *)tags {
-	[artistTagActions release];
-	artistTagActions = [[NSMutableDictionary alloc] init];
-	for(NSDictionary *tag in tags) {
-		[artistTagActions setObject:[NSNumber numberWithInteger:0] forKey:[tag objectForKey:@"name"]];
+
+- (void)search:(NSString*)text {
+	[_tags search:text];
+}
+
+@end
+
+
+@implementation TagEditorViewController
+@synthesize delegate;
+
+- (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags {
+	if (self = [super init]) {
+		self.title = @"Tags";
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+		
+		_tags = [[TagsDataSource alloc] initWithTopTags:topTags userTags:userTags];
+		_cells = [[NSMutableArray alloc] init];
 	}
+	return self;
 }
-- (void)setTrackTags:(NSArray *)tags {
-	[trackTagActions release];
-	trackTagActions = [[NSMutableDictionary alloc] init];
-	for(NSDictionary *tag in tags) {
-		[trackTagActions setObject:[NSNumber numberWithInteger:0] forKey:[tag objectForKey:@"name"]];
+
+- (void)loadView {
+	[super loadView];
+	self.view.backgroundColor = TTSTYLEVAR(backgroundColor);
+
+	UINavigationBar *bar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0,0,320,44)];
+	[bar pushNavigationItem:self.navigationItem animated:NO];
+	[self.view addSubview: bar];
+	[bar release];
+	
+	UIScrollView *scrollView = [[[UIScrollView alloc] initWithFrame:CGRectMake(0,44,320,self.view.frame.size.height-44)] autorelease];
+	scrollView.backgroundColor = TTSTYLEVAR(backgroundColor);
+	scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+	scrollView.canCancelContentTouches = NO;
+	scrollView.showsVerticalScrollIndicator = NO;
+	scrollView.showsHorizontalScrollIndicator = NO;
+	[self.view addSubview:scrollView];
+	
+	textField = [[[TTPickerTextField alloc] init] autorelease];
+	textField.dataSource = _tags;
+	textField.autocorrectionType = UITextAutocorrectionTypeNo;
+	textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	textField.rightViewMode = UITextFieldViewModeAlways;
+	textField.delegate = self;
+	textField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	[textField sizeToFit];
+	[textField becomeFirstResponder];
+	
+	[scrollView addSubview:textField];
+	
+	CGFloat y = 0;
+	
+	for (UIView *view in scrollView.subviews) {
+		view.frame = CGRectMake(0, y, self.view.frame.size.width, view.frame.size.height);
+		y += view.frame.size.height;
 	}
+	
+	scrollView.contentSize = CGSizeMake(scrollView.frame.size.width, y);
 }
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(tabBar.selectedItem.tag == 0)
-		return [topTags count];
-	else
-		return [myTags count];
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
-	[tagEditorView addTag:[tableView cellForRowAtIndexPath:newIndexPath].textLabel.text animated:YES];
-	[tableView reloadData];
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"SimpleCell"];
-	if (cell == nil)
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SimpleCell"] autorelease];
-	if(tabBar.selectedItem.tag == 0)
-		cell.textLabel.text = [[topTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
-	else
-		cell.textLabel.text = [[myTags objectAtIndex:[indexPath row]] objectForKey:@"name"];
-	if([tagEditorView hasTag:cell.textLabel.text])
-		cell.textLabel.textColor = [UIColor grayColor];
-	else
-		cell.textLabel.textColor = [UIColor blackColor];
-	cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	return cell;
-}
-- (IBAction)tagButtonPressed:(id)sender {
+
+- (BOOL)textFieldShouldReturn:(UITextField *)txtField {
 	if([textField.text length]) {
-		[tagEditorView addTag:textField.text animated:YES];
-		textField.text = @"";
+		TTTableItem *item = [TTTableTextItem itemWithText:[txtField.text stringByTrimmingCharactersInSet:
+																											 [NSCharacterSet whitespaceAndNewlineCharacterSet]] URL:nil];
+		[textField addCellWithObject: item];
 	}
+	return NO;
 }
 - (IBAction)cancelButtonPressed:(id)sender {
 	[delegate tagEditorDidCancel];
 }
 - (IBAction)doneButtonPressed:(id)sender {
-	NSMutableArray *albumtags = [NSMutableArray array];
-	NSMutableArray *artisttags = [NSMutableArray array];
-	NSMutableArray *tracktags = [NSMutableArray array];
+	NSMutableArray *tags = [NSMutableArray array];
 	
-	for(NSString *tag in albumTagActions) {
-		if([[albumTagActions objectForKey:tag] intValue] == 1)
-			[albumtags addObject:tag];
-	}
-	for(NSString *tag in artistTagActions) {
-		if([[artistTagActions objectForKey:tag] intValue] == 1)
-			[artisttags addObject:tag];
-	}
-	for(NSString *tag in trackTagActions) {
-		if([[trackTagActions objectForKey:tag] intValue] == 1)
-			[tracktags addObject:tag];
-	}
-
-	[delegate tagEditorAddArtistTags:artisttags albumTags:albumtags trackTags:tracktags];
+	NSLog(@"%@", tagActions);
 	
-	[albumtags removeAllObjects];
-	[artisttags removeAllObjects];
-	[tracktags removeAllObjects];
-
-	for(NSString *tag in albumTagActions) {
-		if([[albumTagActions objectForKey:tag] intValue] == -1)
-			[albumtags addObject:tag];
-	}
-	for(NSString *tag in artistTagActions) {
-		if([[artistTagActions objectForKey:tag] intValue] == -1)
-			[artisttags addObject:tag];
-	}
-	for(NSString *tag in trackTagActions) {
-		if([[trackTagActions objectForKey:tag] intValue] == -1)
-			[tracktags addObject:tag];
+	for(NSString *tag in tagActions) {
+		if([[tagActions objectForKey:tag] intValue] == 1)
+			[tags addObject:tag];
 	}
 	
-	[delegate tagEditorRemoveArtistTags:artisttags albumTags:albumtags trackTags:tracktags];
+	[delegate tagEditorAddTags:tags];
+	
+	[tags removeAllObjects];
+	
+	for(NSString *tag in tagActions) {
+		if([[tagActions objectForKey:tag] intValue] == -1)
+			[tags addObject:tag];
+	}
+
+	[delegate tagEditorRemoveTags:tags];
 }
-- (BOOL)textFieldShouldReturn:(UITextField *)t {
-	[self tagButtonPressed:t];
-	return NO;
+- (void)setTags:(NSArray *)tags {
+	[tagActions release];
+	tagActions = [[NSMutableDictionary alloc] init];
+	for(NSDictionary *tag in tags) {
+		TTTableItem *item = [TTTableTextItem itemWithText:[tag objectForKey:@"name"] URL:nil];
+		[textField addCellWithObject: item];
+		[tagActions setObject:[NSNumber numberWithInteger:0] forKey:[tag objectForKey:@"name"]];
+	}
 }
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	// Return YES for supported orientations
-	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (void)textField:(TTPickerTextField*)txtField didAddCellAtIndex:(NSInteger)index {
+	[_cells addObject:[textField.cells lastObject]];
+	NSString *tag = ((TTTableTextItem *)[_cells lastObject]).text;
+
+	if([tagActions objectForKey:tag])
+		[tagActions setObject:[NSNumber numberWithInt:[[tagActions objectForKey:tag] intValue]+1] forKey:tag];
+	else
+		[tagActions setObject:[NSNumber numberWithInt:1] forKey:tag];
 }
+- (void)textField:(TTPickerTextField*)txtField didRemoveCellAtIndex:(NSInteger)index {
+	NSString *tag = ((TTTableTextItem *)[_cells objectAtIndex:index]).text;
+	[_cells removeObjectAtIndex:index];
 
-
-- (void)didReceiveMemoryWarning {
-	[super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
-	// Release anything that's not essential, such as cached data
+	[tagActions setObject:[NSNumber numberWithInt:[[tagActions objectForKey:tag] intValue]-1] forKey:tag];
 }
-
-
-- (void)dealloc {
-	[topTags release];
-	[myTags release];
-	[super dealloc];
-}
-
-
 @end

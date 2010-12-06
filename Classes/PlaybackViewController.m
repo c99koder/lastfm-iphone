@@ -525,13 +525,13 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Tag", @"Tag button")]) {
 		TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
 		t.delegate = self;
-		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
+/*		t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
 		t.artistTopTags = [[[LastFMService sharedInstance] topTagsForArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 		t.albumTopTags = [[[LastFMService sharedInstance] topTagsForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 		t.trackTopTags = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 		[t setArtistTags: [[LastFMService sharedInstance] tagsForArtist:[trackInfo objectForKey:@"creator"]]];
 		[t setAlbumTags: [[LastFMService sharedInstance] tagsForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"]]];
-		[t setTrackTags: [[LastFMService sharedInstance] tagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]]];
+		[t setTrackTags: [[LastFMService sharedInstance] tagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]]];*/
 		[self presentModalViewController:t animated:YES];
 		[t release];
 	}

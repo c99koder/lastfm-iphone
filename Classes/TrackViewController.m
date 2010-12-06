@@ -297,30 +297,15 @@
 -(void)tagEditorDidCancel {
 	[self dismissModalViewControllerAnimated:YES];
 }
-- (void)tagEditorAddArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags {
-	[[LastFMService sharedInstance] addTags:artistTags toArtist:_artist];
-	if([LastFMService sharedInstance].error)
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
-	[[LastFMService sharedInstance] addTags:albumTags toAlbum:[_metadata objectForKey:@"album"] byArtist:_artist];
-	if([LastFMService sharedInstance].error)
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
-	[[LastFMService sharedInstance] addTags:trackTags toTrack:_track byArtist:_artist];
+- (void)tagEditorAddTags:(NSArray *)tags {
+	[[LastFMService sharedInstance] addTags:tags toTrack:_track byArtist:_artist];
 	if([LastFMService sharedInstance].error)
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
 	[self dismissModalViewControllerAnimated:YES];
 }
-- (void)tagEditorRemoveArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags {
-	for(NSString *tag in artistTags) {
-		[[LastFMService sharedInstance] removeTag:tag fromArtist:_artist];
-		if([LastFMService sharedInstance].error)
-			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
-	}
-	for(NSString *tag in albumTags) {
-		[[LastFMService sharedInstance] removeTag:tag fromAlbum:[_metadata objectForKey:@"album"] byArtist:_artist];
-		if([LastFMService sharedInstance].error)
-			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
-	}
-	for(NSString *tag in trackTags) {
+- (void)tagEditorRemoveTags:(NSArray *)tags {
+	for(NSString *tag in tags) {
+		NSLog(@"Removing: %@ from track: %@ by artist: %@", tag, _track, _artist);
 		[[LastFMService sharedInstance] removeTag:tag fromTrack:_track byArtist:_track];
 		if([LastFMService sharedInstance].error)
 			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
@@ -356,16 +341,18 @@
 				_addedToLibrary = YES;
 			}
 		} else if([station isEqualToString:@"tag://"]) {
-			TagEditorViewController *t = [[TagEditorViewController alloc] initWithNibName:@"TagEditorView" bundle:nil];
+			NSArray *topTags = [[[LastFMService sharedInstance] topTagsForTrack:_track byArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
+			NSArray *userTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
+			TagEditorViewController *t = [[TagEditorViewController alloc] initWithTopTags:topTags userTags:userTags];
 			t.delegate = self;
-			t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
+			/*t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
 			t.artistTopTags = [[[LastFMService sharedInstance] topTagsForArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
 			t.albumTopTags = [[[LastFMService sharedInstance] topTagsForAlbum:[_metadata objectForKey:@"album"] byArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
-			t.trackTopTags = [[[LastFMService sharedInstance] topTagsForTrack:_track byArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
+			t.trackTopTags = 
 			[t setArtistTags: [[LastFMService sharedInstance] tagsForArtist:_artist]];
-			[t setAlbumTags: [[LastFMService sharedInstance] tagsForAlbum:[_metadata objectForKey:@"album"] byArtist:_artist]];
-			[t setTrackTags: [[LastFMService sharedInstance] tagsForTrack:_track byArtist:_artist]];
+			[t setAlbumTags: [[LastFMService sharedInstance] tagsForAlbum:[_metadata objectForKey:@"album"] byArtist:_artist]];*/
 			[self presentModalViewController:t animated:YES];
+			[t setTags: [[LastFMService sharedInstance] tagsForTrack:_track byArtist:_artist]];
 			[t release];
 		} else if([station isEqualToString:@"share://"]) {
 			UIActionSheet *sheet;

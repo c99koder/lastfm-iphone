@@ -20,62 +20,46 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "Three20/Three20.h"
 
-@class TagEditorViewController;
-
-@interface TagView : UIImageView {
-	NSString *tag;
+@interface TagsModel: NSObject <TTModel> {
+	NSMutableArray *_delegates;
+	NSMutableArray *_topTags;
+	NSMutableArray *_userTags;
+	NSMutableArray *_allTopTags;
+	NSMutableArray *_allUserTags;
 }
-@property (readonly, nonatomic) NSString *tag;
-- (id)initWithTag:(NSString *)tag;
+
+@property (nonatomic, retain) NSMutableArray *topTags;
+@property (nonatomic, retain) NSMutableArray *userTags;
+
+- (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags;
+- (void)loadTags;
+- (void)search:(NSString *)text;
+
 @end
 
-@interface TagEditorView : UIScrollView {
-	NSMutableArray *tags;
-	IBOutlet UITextField *textField;
-	TagView *lastTag;
-	IBOutlet UILabel *instructions;
-	TagEditorViewController *delegate;
+@interface TagsDataSource : TTSectionedDataSource {
+	TagsModel *_tags;
 }
-- (void)addTag:(NSString *)tag animated:(BOOL)animated;
-- (void)removeTag:(TagView *)tag;
-- (BOOL)hasTag:(NSString *)tag;
-- (NSArray *)tags;
-- (void)setTags:(NSArray *)tags;
+- (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags;
 @end
 
 @protocol TagEditorViewControllerDelegate
 - (void)tagEditorDidCancel;
-- (void)tagEditorAddArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags;
-- (void)tagEditorRemoveArtistTags:(NSArray *)artistTags albumTags:(NSArray *)albumTags trackTags:(NSArray *)trackTags;
+- (void)tagEditorAddTags:(NSArray *)tags;
+- (void)tagEditorRemoveTags:(NSArray *)tags;
 @end
 
 @interface TagEditorViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITabBarDelegate,UITextFieldDelegate> {
-	IBOutlet TagEditorView *tagEditorView;
-	IBOutlet UITabBar *tabBar;
-	IBOutlet UITableView *table;
-	IBOutlet UITextField *textField;
-	IBOutlet UISegmentedControl *tagType;
-	NSArray *artistTopTags, *albumTopTags, *trackTopTags;
-	NSArray *myTags;
-	NSArray *topTags;
-	NSMutableDictionary *artistTagActions, *albumTagActions, *trackTagActions;
+	TTPickerTextField *textField;
+	TagsDataSource *_tags;
 	NSMutableDictionary *tagActions;
+	NSMutableArray *_cells;
 	id<TagEditorViewControllerDelegate> delegate;
 }
-@property (retain, nonatomic) NSArray *artistTopTags;
-@property (retain, nonatomic) NSArray *albumTopTags;
-@property (retain, nonatomic) NSArray *trackTopTags;
-@property (retain, nonatomic) NSArray *myTags;
 @property (retain, nonatomic) id<TagEditorViewControllerDelegate> delegate;
 - (IBAction)tagButtonPressed:(id)sender;
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
-- (IBAction)tagTypeChanged:(id)sender;
-- (void)tagAdded:(NSString *)tag;
-- (void)tagRemoved:(NSString *)tag;
-- (void)reload;
-- (void)setAlbumTags:(NSArray *)tags;
-- (void)setArtistTags:(NSArray *)tags;
-- (void)setTrackTags:(NSArray *)tags;
 @end

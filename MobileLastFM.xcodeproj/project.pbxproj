@@ -164,7 +164,6 @@
 		229808D10E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */; };
 		229808D20E6DAA44009CEDF9 /* profile_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CD0E6DAA44009CEDF9 /* profile_panel.png */; };
 		229808D30E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */; };
-		229F8EBD11CFDF1C00AF5D6A /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 229F8EBC11CFDF1C00AF5D6A /* libPMAnalytics-r91.a */; };
 		22ABB41E0DB10C3100D2871E /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB41D0DB10C3100D2871E /* SearchViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
@@ -777,7 +776,6 @@
 		229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_dark_bkg_lower.png; sourceTree = "<group>"; };
 		229808CD0E6DAA44009CEDF9 /* profile_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_panel.png; sourceTree = "<group>"; };
 		229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_upper.png; sourceTree = "<group>"; };
-		229F8EBC11CFDF1C00AF5D6A /* libPMAnalytics-r91.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r91.a"; sourceTree = "<group>"; };
 		22ABB41C0DB10C3100D2871E /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
 		22ABB41D0DB10C3100D2871E /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NowPlayingButton.h"; sourceTree = "<group>"; };
@@ -875,7 +873,6 @@
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
 				225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */,
-				229F8EBD11CFDF1C00AF5D6A /* libPMAnalytics-r91.a in Frameworks */,
 				229294A412AD21C800C31269 /* libThree20.a in Frameworks */,
 				229294A712AD21CC00C31269 /* libThree20Core.a in Frameworks */,
 				229294AA12AD21D300C31269 /* libThree20Network.a in Frameworks */,
@@ -959,7 +956,6 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				229F8EBC11CFDF1C00AF5D6A /* libPMAnalytics-r91.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
@@ -2154,6 +2150,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_LDFLAGS = (
+					"-all_load",
 					"-lxml2",
 					"-lsqlite3",
 					"-lz",
@@ -2218,6 +2215,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				OTHER_LDFLAGS = (
+					"-all_load",
 					"-lxml2",
 					"-lsqlite3",
 					"-lz",
@@ -2282,6 +2280,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
+					"-all_load",
 					"-lxml2",
 					"-lsqlite3",
 					"-lz",
@@ -2315,6 +2314,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
 				OTHER_LDFLAGS = (
+					"-all_load",
 					"-lxml2",
 					"-lsqlite3",
 					"-lz",
