@@ -322,6 +322,9 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (void)loveTrack:(NSString *)title byArtist:(NSString *)artist {
 	[self doMethod:@"track.love" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 }
+- (void)addTrackToLibrary:(NSString *)title byArtist:(NSString *)artist {
+	[self doMethod:@"library.addTrack" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+}
 - (void)banTrack:(NSString *)title byArtist:(NSString *)artist {
 	[self doMethod:@"track.ban" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 }
@@ -357,6 +360,13 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", nil]];
 }
+- (NSArray *)shoutsForTrack:(NSString *)track byArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"track.getShouts" maxCacheAge:5*MINUTES XPath:@"./shouts/shout" withParameters:[NSString stringWithFormat:@"track=%@", [track URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./author", @"./body", @"./date", nil]
+										 forKeys:[NSArray arrayWithObjects:@"author", @"body", @"date", nil]];
+}
+
 
 #pragma mark User methods
 

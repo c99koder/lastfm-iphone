@@ -97,6 +97,8 @@ enum eventStatus {
 - (void)addTags:(NSArray *)tags toTrack:(NSString *)track byArtist:(NSString *)artist;
 - (void)removeTag:(NSString *)tag fromTrack:(NSString *)track byArtist:(NSString *)artist;
 - (NSArray *)tagsForTrack:(NSString *)track byArtist:(NSString *)artist;
+- (NSArray *)shoutsForTrack:(NSString *)track byArtist:(NSString *)artist;
+- (void)addTrackToLibrary:(NSString *)title byArtist:(NSString *)artist;
 
 #pragma mark User methods
 

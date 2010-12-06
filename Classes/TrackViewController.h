@@ -20,16 +20,24 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <AddressBookUI/AddressBookUI.h>
+#import <MessageUI/MessageUI.h>
 #import "LastFMService.h"
+#import "TagEditorViewController.h"
+#import "FriendsViewController.h"
 
-@interface TrackViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface TrackViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, TagEditorViewControllerDelegate, UIActionSheetDelegate, FriendsViewControllerDelegate, ABPeoplePickerNavigationControllerDelegate, MFMailComposeViewControllerDelegate, UIWebViewDelegate> {
 	NSString *_artist;
 	NSString *_track;
 	NSArray *_data;
 	NSArray *_tags;
+	NSArray *_shouts;
 	NSDictionary *_metadata;
 	UIWebView *_bioView;
+	UISegmentedControl *_toggle;
 	float webViewHeight;
+	BOOL _loved;
+	BOOL _addedToLibrary;
 }
 - (id)initWithTrack:(NSString *)track byArtist:(NSString *)artist;
 @end

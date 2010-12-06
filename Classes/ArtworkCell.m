@@ -217,12 +217,12 @@ UIImage *avatarPlaceholder = nil;
 		else
 			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	if([subtitle.text length]) {
-		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 6, frame.size.width - _artwork.frame.size.width - 6, 22);
-		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 26, frame.size.width - _artwork.frame.size.width - 6, 
-																[subtitle.text sizeWithFont:subtitle.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.size.width - 6, frame.size.height - 26) lineBreakMode:subtitle.lineBreakMode].height);
+		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 6, frame.size.width - _artwork.frame.size.width - 20, 22);
+		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 26, frame.size.width - _artwork.frame.size.width - 20, 
+																[subtitle.text sizeWithFont:subtitle.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.size.width - 20, frame.size.height - 26) lineBreakMode:subtitle.lineBreakMode].height);
 	} else {
 		title.font = [UIFont boldSystemFontOfSize:18];
-		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, 0, frame.size.width - _artwork.frame.size.width - 6, frame.size.height);
+		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, 0, frame.size.width - _artwork.frame.size.width - 20, frame.size.height);
 		subtitle.frame = CGRectZero;
 	}
 	if(barWidth > 0) {
