@@ -42,7 +42,7 @@
 		frame.size.width = self.view.frame.size.width - 20;
 		toggle.frame = frame;
 		[toggle addTarget:self
-							 action:@selector(rebuildMenu)
+							 action:@selector(viewWillAppear:)
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
 		//self.title = @"Recommendations";
@@ -53,6 +53,7 @@
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self rebuildMenu];
+	[self.tableView.tableHeaderView resignFirstResponder];
 }
 - (void)viewDidLoad {
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
