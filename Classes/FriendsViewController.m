@@ -95,7 +95,8 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		_searchResults = [[NSMutableArray alloc] init];
 		query = [query lowercaseString];
 		for (NSDictionary *friend in _data) {
-			if ([[[friend objectForKey:@"username"] lowercaseString] rangeOfString:query].location == 0) {
+			if ([[[friend objectForKey:@"username"] lowercaseString] rangeOfString:query].location == 0 || 
+					([friend objectForKey:@"realname"] && [[[friend objectForKey:@"realname"] lowercaseString] rangeOfString:query].location == 0)) {
 				[_searchResults addObject:friend];
 			}
 		} 
