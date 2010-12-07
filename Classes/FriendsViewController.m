@@ -99,6 +99,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
+	[self.tableView.tableHeaderView resignFirstResponder];
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
