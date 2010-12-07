@@ -115,7 +115,10 @@
 																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", _artist], nil]
 																																																									 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		
+
+		if([[_metadata objectForKey:@"wiki"] length])
+			[sections addObject:@"wiki"];
+
 		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 												 _artist,
 												 _track];
@@ -136,9 +139,6 @@
 																															[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Share Track", @"share://", nil]
 																																																									 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		
-		if([[_metadata objectForKey:@"wiki"] length])
-			[sections addObject:@"wiki"];
 	} else if(_toggle.selectedSegmentIndex == 1) {	
 		if([_tags count]) {
 			stations = [[NSMutableArray alloc] init];
@@ -193,7 +193,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0 && _toggle.selectedSegmentIndex == 0)
 		return 112;
-	else if([indexPath section] == 3 && [[_metadata objectForKey:@"wiki"] length] && _toggle.selectedSegmentIndex == 0)
+	else if([indexPath section] == 2 && [[_metadata objectForKey:@"wiki"] length] && _toggle.selectedSegmentIndex == 0)
 		return webViewHeight + 16;
 	else if(_toggle.selectedSegmentIndex == 2) {
 		ArtworkCell *cell = (ArtworkCell *)[self tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -464,7 +464,7 @@
 			cell.shouldRoundTop = YES;
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
-	} else if([indexPath section] == 3 && _toggle.selectedSegmentIndex == 0) {
+	} else if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
 		UITableViewCell *wikicell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"wikicell"];
 		if(wikicell == nil) {
 			wikicell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wikicell"] autorelease];
@@ -476,9 +476,9 @@
 	if(cell.accessoryType == UITableViewCellAccessoryNone && _toggle.selectedSegmentIndex == 1) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
-	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 2 && [indexPath row] == 1 && _loved)
+	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 3 && [indexPath row] == 1 && _loved)
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 2 && [indexPath row] == 2 && _addedToLibrary)
+	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 3 && [indexPath row] == 2 && _addedToLibrary)
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	return cell;
 }
