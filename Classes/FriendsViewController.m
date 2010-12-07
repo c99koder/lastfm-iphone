@@ -103,8 +103,14 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	}
 	return YES;
 }
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
+	[_searchResults release];
+	_searchResults = nil;
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	[_searchResults release];
+	_searchResults = nil;
 	if(delegate) {
 		self.navigationItem.titleView = nil;
 		UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"Cancel")

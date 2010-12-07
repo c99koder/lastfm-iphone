@@ -29,7 +29,7 @@
 -(void)friendsViewControllerDidCancel:(FriendsViewController *)controller;
 @end
 
-@interface FriendsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface FriendsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
 	NSString *_username;
 	NSArray *_friendsListeningNow;
 	NSMutableArray *_searchResults;
