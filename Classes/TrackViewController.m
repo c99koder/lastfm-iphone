@@ -440,8 +440,9 @@
 			profilecell.subtitle.numberOfLines = 0;
 			profilecell.subtitle.text = [NSString stringWithFormat:@"%@\n(%@)\n\n%@", _track, duration, plays];
 			[numberFormatter release];
-			profilecell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		}		
+		}
+		[profilecell showProgress: NO];
+		profilecell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		return profilecell;
 	}
 	

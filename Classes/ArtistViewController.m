@@ -407,6 +407,7 @@
 			profilecell.shouldRoundBottom = YES;
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.title.text = _artist;
+			profilecell.accessoryType = UITableViewCellAccessoryNone;
 			
 			NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 			[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
