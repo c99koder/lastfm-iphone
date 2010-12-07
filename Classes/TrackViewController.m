@@ -98,7 +98,7 @@
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
 	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; text-decoration: none; }</style></head>\
 										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
-										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:286px; position:absolute;\">\
+										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:280px; position:absolute;\">\
 										%@ <a href=\"http://www.last.fm/Music/%@/_/%@/wiki\">Read More »</a></body></html>", bio, [_artist URLEscaped], [_track URLEscaped]];
 	[_bioView loadHTMLString:html baseURL:nil];
 	
