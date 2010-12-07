@@ -81,7 +81,26 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Search Friends";
 	self.tableView.tableHeaderView = bar;
+
+	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
+	searchController.delegate = self;
+	searchController.searchResultsDataSource = self;
+	searchController.searchResultsDelegate = self;
 	[bar release];
+}
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
+	[_searchResults release];
+	_searchResults = nil;
+	if([query length]) {
+		_searchResults = [[NSMutableArray alloc] init];
+		query = [query lowercaseString];
+		for (NSDictionary *friend in _data) {
+			if ([[[friend objectForKey:@"username"] lowercaseString] rangeOfString:query].location == 0) {
+				[_searchResults addObject:friend];
+			}
+		} 
+	}
+	return YES;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -104,7 +123,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 
-	if(section == 0 && toggle != nil && toggle.selectedSegmentIndex == 0) {
+	if(section == 0 && toggle != nil && toggle.selectedSegmentIndex == 0 && _searchResults == nil) {
 		return @"Friends Listening Now";
 	} else {
 		return nil;
@@ -116,7 +135,9 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 
-	if(toggle == nil || toggle.selectedSegmentIndex == 1)
+	if(_searchResults)
+		return [_searchResults count];
+	else if(toggle == nil || toggle.selectedSegmentIndex == 1)
 		return [_data count];
 	else
 		return [_friendsListeningNow count];
@@ -128,7 +149,9 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	NSIndexPath *newIndexPath = timer.userInfo;
 	NSArray *source = _data;
-	if(toggle != nil && toggle.selectedSegmentIndex == 0) {
+	if(_searchResults) {
+		source = _searchResults;
+	} else if(toggle != nil && toggle.selectedSegmentIndex == 0) {
 		source = _friendsListeningNow;
 	}
 	if(delegate) {
@@ -152,7 +175,11 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	ArtworkCell *cell;
-	if(toggle != nil && toggle.selectedSegmentIndex == 0) {
+	if(_searchResults) {
+		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"username"]];
+		if (cell == nil)
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
+	} else if(toggle != nil && toggle.selectedSegmentIndex == 0) {
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"username"]];
 		if (cell == nil)
 			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
@@ -162,7 +189,20 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
 	}
 	
-	if(toggle == nil || toggle.selectedSegmentIndex == 1) {
+	if(_searchResults) {
+		cell.title.text = [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"username"];
+		cell.title.backgroundColor = [UIColor whiteColor];
+		cell.title.opaque = YES;
+		cell.subtitle.text = @"";
+		cell.subtitle.backgroundColor = [UIColor whiteColor];
+		cell.subtitle.opaque = YES;
+		cell.shouldCacheArtwork = YES;
+		cell.imageURL = [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		if(!delegate)
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		else
+			cell.accessoryType = UITableViewCellAccessoryNone;
+	} else if(toggle == nil || toggle.selectedSegmentIndex == 1) {
 		cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"username"];
 		cell.title.backgroundColor = [UIColor whiteColor];
 		cell.title.opaque = YES;
@@ -196,6 +236,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	[super dealloc];
 	[_username release];
 	[_friendsListeningNow release];
+	[_searchResults release];
 	[_data release];
 }
 @end
