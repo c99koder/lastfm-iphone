@@ -305,8 +305,7 @@
 }
 - (void)tagEditorRemoveTags:(NSArray *)tags {
 	for(NSString *tag in tags) {
-		NSLog(@"Removing: %@ from track: %@ by artist: %@", tag, _track, _artist);
-		[[LastFMService sharedInstance] removeTag:tag fromTrack:_track byArtist:_track];
+		[[LastFMService sharedInstance] removeTag:tag fromTrack:_track byArtist:_artist];
 		if([LastFMService sharedInstance].error)
 			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
 	}
@@ -345,12 +344,6 @@
 			NSArray *userTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
 			TagEditorViewController *t = [[TagEditorViewController alloc] initWithTopTags:topTags userTags:userTags];
 			t.delegate = self;
-			/*t.myTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
-			t.artistTopTags = [[[LastFMService sharedInstance] topTagsForArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
-			t.albumTopTags = [[[LastFMService sharedInstance] topTagsForAlbum:[_metadata objectForKey:@"album"] byArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
-			t.trackTopTags = 
-			[t setArtistTags: [[LastFMService sharedInstance] tagsForArtist:_artist]];
-			[t setAlbumTags: [[LastFMService sharedInstance] tagsForAlbum:[_metadata objectForKey:@"album"] byArtist:_artist]];*/
 			[self presentModalViewController:t animated:YES];
 			[t setTags: [[LastFMService sharedInstance] tagsForTrack:_track byArtist:_artist]];
 			[t release];

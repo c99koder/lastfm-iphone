@@ -21,57 +21,62 @@
 
 #import "TagEditorViewController.h"
 
+int tagSort(id tag1, id tag2, void *context);
+
 @implementation TagsModel
 
-@synthesize topTags = _topTags;
-@synthesize userTags = _userTags;
+@synthesize tags = _tags;
 
 - (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags {
+	int x=0, y=0;
 	if (self = [super init]) {
 		_delegates = nil;
-		_allTopTags = [topTags copy];
-		_allUserTags = [userTags copy];
-		_topTags = nil;
-		_userTags = nil;
+		NSMutableArray *newUserTags = [[NSMutableArray alloc] init];
+		NSMutableArray *newTopTags = [NSMutableArray arrayWithArray:topTags];
+		for(x = 0; x < [userTags count]; x++) {
+			for(y = 0; y < [newTopTags count]; y++) {
+				if([[[userTags objectAtIndex:x] objectForKey:@"name"] isEqualToString:[[newTopTags objectAtIndex:y] objectForKey:@"name"]]) {
+					[newUserTags addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[userTags objectAtIndex:x] objectForKey:@"name"],
+																																			[NSString stringWithFormat:@"%i",([[[userTags objectAtIndex:x] objectForKey:@"name"] intValue] + [[[newTopTags objectAtIndex:y] objectForKey:@"count"] intValue])],nil] forKeys:[NSArray arrayWithObjects:@"name", @"count",nil]]];
+					[newTopTags removeObjectAtIndex:y];
+					break;
+				}
+			}
+			if(y == [newTopTags count])
+				[newUserTags addObject:[userTags objectAtIndex:x]];
+		}
+		_allTags = [[[newTopTags arrayByAddingObjectsFromArray:newUserTags] sortedArrayUsingFunction:tagSort context:nil] retain];
+		_tags = nil;
+		[newUserTags release];
 	}
 	return self;
 }
 
 - (void)dealloc {
 	TT_RELEASE_SAFELY(_delegates);
-	TT_RELEASE_SAFELY(_allTopTags);
-	TT_RELEASE_SAFELY(_allUserTags);
-	TT_RELEASE_SAFELY(_topTags);
-	TT_RELEASE_SAFELY(_userTags);
+	TT_RELEASE_SAFELY(_allTags);
+	TT_RELEASE_SAFELY(_tags);
 	[super dealloc];
 }
 
 
 - (void)loadTags {
-	TT_RELEASE_SAFELY(_topTags);
-	TT_RELEASE_SAFELY(_userTags);
-	_topTags = [_allTopTags mutableCopy];
-	_userTags = [_allUserTags mutableCopy];
+	TT_RELEASE_SAFELY(_tags);
+	_tags = [_allTags mutableCopy];
 }
 
 - (void)search:(NSString*)text {
 	[self cancel];
 	
-	self.topTags = [NSMutableArray array];
-	self.userTags = [NSMutableArray array];
+	self.tags = [NSMutableArray array];
 	
 	[_delegates perform:@selector(modelDidStartLoad:) withObject:self];
 	
 	if (text.length) {
 		text = [text lowercaseString];
-		for (NSDictionary *tag in _allTopTags) {
+		for (NSDictionary *tag in _allTags) {
 			if ([[[tag objectForKey:@"name"] lowercaseString] rangeOfString:text].location == 0) {
-				[_topTags addObject:tag];
-			}
-		}    
-		for (NSDictionary *tag in _allUserTags) {
-			if ([[[tag objectForKey:@"name"] lowercaseString] rangeOfString:text].location == 0) {
-				[_userTags addObject:tag];
+				[_tags addObject:tag];
 			}
 		}    
 	}
@@ -98,7 +103,7 @@
 }
 
 - (BOOL)isLoaded {
-	return !!_topTags && !!_userTags;
+	return !!_tags;
 }
 
 - (BOOL)isLoading {
@@ -106,7 +111,7 @@
 }
 
 - (BOOL)isEmpty {
-	return !_topTags.count && !_userTags.count;
+	return !_tags.count;
 }
 
 - (void)load:(TTURLRequestCachePolicy)cachePolicy more:(BOOL)more {
@@ -143,18 +148,9 @@
 	self.items = [NSMutableArray array];
 	self.sections = [NSMutableArray array];
 
-	[self.sections addObject:@"Top Tags"];
+	[self.sections addObject:@"Recommended Tags"];
 	NSMutableArray *section = [NSMutableArray array];
-	for (NSDictionary *tag in _tags.topTags) {
-		
-		TTTableItem *item = [TTTableTextItem itemWithText:[tag objectForKey:@"name"] URL:nil];
-		[section addObject:item];
-	}
-	[self.items addObject:section];
-	
-	[self.sections addObject:@"User Tags"];
-	section = [NSMutableArray array];
-	for (NSDictionary *tag in _tags.userTags) {
+	for (NSDictionary *tag in _tags.tags) {
 		
 		TTTableItem *item = [TTTableTextItem itemWithText:[tag objectForKey:@"name"] URL:nil];
 		[section addObject:item];

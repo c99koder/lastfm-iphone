@@ -24,14 +24,11 @@
 
 @interface TagsModel: NSObject <TTModel> {
 	NSMutableArray *_delegates;
-	NSMutableArray *_topTags;
-	NSMutableArray *_userTags;
-	NSMutableArray *_allTopTags;
-	NSMutableArray *_allUserTags;
+	NSMutableArray *_tags;
+	NSMutableArray *_allTags;
 }
 
-@property (nonatomic, retain) NSMutableArray *topTags;
-@property (nonatomic, retain) NSMutableArray *userTags;
+@property (nonatomic, retain) NSMutableArray *tags;
 
 - (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags;
 - (void)loadTags;
