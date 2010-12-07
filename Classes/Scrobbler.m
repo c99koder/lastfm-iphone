@@ -41,15 +41,10 @@
 }
 - (id)init {
 	self = [super init];
-	_sess = nil;
-	_nowPlayingURL = nil;
-	_scrobbleURL = nil;
 	_queue = [[NSMutableArray alloc] initWithCapacity:250];
 	_queueTimer = nil;
-	_scrobblerState = SCROBBLER_OFFLINE;
+	_scrobblerState = SCROBBLER_READY;
 	_queueTimerInterval = 2;
-	_maxSubmissionCount = 50;
-	_connection = nil;
 	_submitted = NO;
 	_sentNowPlaying = NO;
 	_oldNetworkType = 0;
@@ -67,6 +62,7 @@
 	if(savedQueue != nil) {
 		[_queue addObjectsFromArray:savedQueue];
 		NSLog(@"Loaded queue with %i items\n", [_queue count]);
+		[self doQueueTimer];
 	}
 }
 - (void)saveQueue {
@@ -74,10 +70,6 @@
 }
 - (void)update:(NSTimer *)timer {
 	int networkType;
-	[[NSUserDefaults standardUserDefaults] setObject:_sess forKey: @"session"];
-	[[NSUserDefaults standardUserDefaults] setObject:_nowPlayingURL forKey: @"nowPlayingURL"];
-	[[NSUserDefaults standardUserDefaults] setObject:_scrobbleURL forKey: @"scrobbleURL"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 	if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasWiFiConnection]) {
 		networkType = 2;
@@ -87,13 +79,6 @@
 		networkType = 0;
 	}
 	
-	if(networkType != _oldNetworkType && [(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		NSLog(@"Network connection changed, handshaking\n");
-		[self handshake];
-	}
-	if(_oldNetworkType>0 && networkType == 0) {
-		NSLog(@"Lost network connection\n");
-	}
 	_oldNetworkType = networkType;
 	
 	if(_scrobblerState != SCROBBLER_SCROBBLING && _scrobblerState != SCROBBLER_NOWPLAYING && [(APP_CLASS *)[UIApplication sharedApplication].delegate isPlaying]) {
@@ -135,36 +120,6 @@
 																						userInfo:NULL
 																						 repeats:NO];
 	}
-}
-- (void)handshake {
-	NSString *timestamp = [NSString stringWithFormat:@"%qu", (u_int64_t)[[NSDate date] timeIntervalSince1970]];
-	NSString *auth = [[NSString stringWithFormat:@"%s%@", API_SECRET, timestamp] md5sum];
-	NSString *authURL = [NSString stringWithFormat:@"http://post.audioscrobbler.com/?hs=true&p=1.2.1&c=%@&v=%@&u=%@&t=%@&a=%@&api_key=%s&sk=%@",
-											 SCROBBLER_ID,
-											 SCROBBLER_VERSION,
-											 [[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] lowercaseString] URLEscaped],
-											 timestamp,
-											 auth,
-											 API_KEY,
-											 [[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_session"]];
-
-	NSURL *theURL = [NSURL URLWithString:authURL];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-
-	if(_connection) {
-		return;
-	}
-	
-	if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		NSLog(@"Authenticating...\n");
-		_scrobblerState = SCROBBLER_AUTHENTICATING;
-		_connection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	}
-	if (_connection) {
-		_receivedData=[[NSMutableData alloc] init];
-	} else {
-		_scrobblerState = SCROBBLER_OFFLINE;
-	}	
 }
 - (void)rateTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withStartTime:(int)startTime withDuration:(int)duration fromSource:(NSString *)source rating:(NSString *)rating {
 	for(NSMutableDictionary *track in _queue) {
@@ -217,47 +172,17 @@
 		_queueTimerInterval *= 2;
 		if(_queueTimerInterval < 2) {
 			_queueTimerInterval = 2;
-		} else if(_queueTimerInterval > 240) {
-			_sess = nil;
 		}
 		if(_queueTimerInterval > 7200) _queueTimerInterval = 7200;
 	}
 }
 - (void)nowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration {
-	if(_sess == nil || _connection) {
-		return;
-	}	
-	
-	NSMutableData *postData=[[NSMutableData alloc] init];
-	[postData appendData:[[NSString stringWithFormat:@"s=%@",_sess] dataUsingEncoding:NSUTF8StringEncoding]];
-	[postData appendData:[[NSString stringWithFormat:@"&a=%@&t=%@&b=%@&l=%i&n=&m=",
-												 [artist URLEscaped],
-												 [title URLEscaped],
-												 [album URLEscaped],
-												 (duration/1000)
-												 ] dataUsingEncoding:NSUTF8StringEncoding]];
-
-	NSLog(@"Sending currently playing track to %@", _nowPlayingURL);
-
-	NSURL *theURL = [NSURL URLWithString:_nowPlayingURL];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-	
-	[theRequest setHTTPMethod:@"POST"];
-	[theRequest setHTTPBody:postData];
-	[postData release];
-	
-	if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		_scrobblerState = SCROBBLER_NOWPLAYING;
-		_connection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-	}	
-	if (_connection) {
-    _receivedData=[[NSMutableData alloc] init];
-	}	
+	_scrobblerState = SCROBBLER_NOWPLAYING;
+	[[LastFMService sharedInstance] nowPlayingTrack:title byArtist:artist onAlbum:album withDuration:duration/1000];
+	_scrobblerState = SCROBBLER_READY;
 }
 - (void)flushQueue:(NSTimer *)theTimer {
 	NSEnumerator *enumerator = [_queue objectEnumerator];
-	NSString *trackStr;
-	int i=0;
 	id track;
 	
 	if(_queueTimer != nil) {
@@ -268,177 +193,35 @@
 	if([_queue count] < 1)
 		return;
 	
-	if(_connection) {
-		_queueTimerInterval = 2;
-		[self doQueueTimer];
-		return;
-	}	
-	
-	if(_sess == nil) {
-		[self handshake];
-		return;
-	}	
-	
 	if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
 		_scrobblerState = SCROBBLER_OFFLINE;
 		return;
 	}
 	
-	NSMutableData *postData=[[NSMutableData alloc] init];
-	[postData appendData:[[NSString stringWithFormat:@"s=%@",_sess] dataUsingEncoding:NSUTF8StringEncoding]];
-	_submissionCount = 0;
+	_scrobblerState = SCROBBLER_SCROBBLING;
 	
-	while((track = [enumerator nextObject]) && i < _maxSubmissionCount) {
-		trackStr = [NSString stringWithFormat:@"&a[%i]=%@&t[%i]=%@&i[%i]=%@&o[%i]=%@&r[%i]=%@&l[%i]=%@&b[%i]=%@&n[%i]=&m[%i]=",
-								i, [[track objectForKey:@"artist"] URLEscaped],
-								i, [[track objectForKey:@"title"] URLEscaped],
-								i, [track objectForKey:@"startTime"],
-								i, [track objectForKey:@"source"] ? [track objectForKey:@"source"] : @"P",
-								i, [track objectForKey:@"rating"] ? [track objectForKey:@"rating"] : @"",
-								i, [track objectForKey:@"duration"],
-								i, [[track objectForKey:@"album"] URLEscaped],
-								i, i
-								];
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"] || [track objectForKey:@"rating"])
-			[postData appendData:[trackStr dataUsingEncoding:NSUTF8StringEncoding]];
-		i++;
-	}
-	
-	if([postData length] == [[NSString stringWithFormat:@"s=%@",_sess] length]) {
-		NSLog(@"Not sending any tracks");
-		[postData release];
-		[_queue removeAllObjects];
-		_queueTimerInterval = 2;
-	} else {
-		_submissionCount = i;
-		NSLog(@"Sending %i / %i tracks...\n", i, [_queue count]);
-
-		NSURL *theURL = [NSURL URLWithString:_scrobbleURL];
-		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:theURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30];
-		
-		[theRequest setHTTPMethod:@"POST"];
-		[theRequest setHTTPBody:postData];
-		[postData release];
-		
-		_connection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-		if (_connection) {
-			_scrobblerState = SCROBBLER_SCROBBLING;
-			_receivedData=[[NSMutableData alloc] init];
-		} else {
-			[self doQueueTimer];
+	while((track = [enumerator nextObject])) {
+		if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
+			[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
 		}
-	}
-}
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-	NSString *theResponseString = [[NSString alloc] initWithData:_receivedData encoding:NSASCIIStringEncoding];
-	NSArray *list = [theResponseString componentsSeparatedByString:@"\n"];
-	[theResponseString release];
-	int i;
-	[_connection release];
-	_connection = nil;
-	[_receivedData release];
-	_receivedData = nil;
-	
-	NSString *scrobblerResult = [[list objectAtIndex: 0] retain];
-	NSLog(@"Server response: %@\n", scrobblerResult);
-	
-	switch(_scrobblerState) {
-		case SCROBBLER_AUTHENTICATING:
-			if([scrobblerResult isEqualToString:@"OK"]) {
-				[_sess release];
-				_sess = [[list objectAtIndex: 1] retain];
-				[_nowPlayingURL release];
-				_nowPlayingURL = [[list objectAtIndex: 2] retain];
-				[_scrobbleURL release];
-				_scrobbleURL = [[list objectAtIndex: 3] retain];
-				_scrobblerState = SCROBBLER_READY;
-				NSLog(@"Authenticated. Session: %@\n", _sess);
-				_queueTimerInterval = 2;
-			} else {
-				[_sess release];
-				_sess = nil;
-				[_nowPlayingURL release];
-				_nowPlayingURL = nil;
-				[_scrobbleURL release];
-				_scrobbleURL = nil;
-				_scrobblerState = SCROBBLER_OFFLINE;
-			}
-			break;
-		case SCROBBLER_SCROBBLING:
-			if([scrobblerResult isEqualToString:@"OK"]) {
-				NSLog(@"Scrobble succeeded!\n");
-				_queueTimerInterval = 2;
-				for(i=0; [_queue count] > 0 && i < _submissionCount; i++) {
-					NSDictionary *track = [_queue objectAtIndex: 0];
-					if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
-						[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-					}
-					if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
-						[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-					}
-					[_queue removeObjectAtIndex:0];
-				}
-				_maxSubmissionCount = 50;
-			} else {
-				NSLog(@"Error: \"%@\"\n", scrobblerResult);
-				if([scrobblerResult isEqualToString:@"BADSESSION"]) {
-					[self handshake];
-				} else {
-					_maxSubmissionCount /= 4;
-					if(_maxSubmissionCount < 1) _maxSubmissionCount = 1;
-				}
-			}
+		if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
+			[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+		}
+		[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
+		if([LastFMService sharedInstance].error == nil) {
+			[_queue removeObject:track];
 			[self saveQueue];
-			break;
-	}
-	[scrobblerResult release];
-	if(_scrobblerState != SCROBBLER_OFFLINE) {
-		if(_scrobblerState != SCROBBLER_NOWPLAYING && [_queue count]) {
-			_scrobblerState = SCROBBLER_READY;
-			[self doQueueTimer];
 		} else {
-			_scrobblerState = SCROBBLER_READY;
+			break;
 		}
 	}
-}
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-	[_receivedData setLength:0];
-}
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-	[_receivedData appendData:data];
-}
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	// release the connection, and the data object
-	[_connection release];
-	_connection = nil;
-	
-	// receivedData is declared as a method instance elsewhere
-	[_receivedData release];
-	_receivedData = nil;
-	
-	// inform the user
-	NSLog(@"Connection failed! Error - %@ %@",
-				[error localizedDescription],
-				[[error userInfo] objectForKey:NSErrorFailingURLStringKey]);
-	
-	if(_scrobblerState == SCROBBLER_SCROBBLING) {
-		_scrobblerState = SCROBBLER_READY;
-	} else {
-		_scrobblerState = SCROBBLER_OFFLINE;
-	}
-	
-	[self doQueueTimer];
+	_scrobblerState = SCROBBLER_READY;
 }
 - (void)cancelTimer {
 	[_timer invalidate];
 }
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[_sess release];
-	[_nowPlayingURL release];
-	[_scrobbleURL release];
-	[_connection release];
-	[_receivedData release];
 	[_queue release];
 	[_queueTimer release];
 	[super dealloc];

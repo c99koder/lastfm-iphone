@@ -29,18 +29,11 @@
 #define SCROBBLER_NOWPLAYING 4
 
 @interface Scrobbler : NSObject {
-	NSString *_sess;
-	NSString *_nowPlayingURL;
-	NSString *_scrobbleURL;
-	NSURLConnection *_connection;
-	NSMutableData *_receivedData;
 	int _scrobblerState;
 	int _scrobblerError;
 	NSMutableArray *_queue;
 	NSTimer *_queueTimer;
 	int _queueTimerInterval;
-	int _submissionCount;
-	int _maxSubmissionCount;
 	NSTimer *_timer;
 	BOOL _submitted;
 	BOOL _sentNowPlaying;
@@ -49,7 +42,6 @@
 - (BOOL)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withStartTime:(int)startTime withDuration:(int)duration fromSource:(NSString *)source;
 - (void)nowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration;
 - (void)rateTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withStartTime:(int)startTime withDuration:(int)duration fromSource:(NSString *)source rating:(NSString *)rating;
-- (void)handshake;
 - (void)flushQueue:(NSTimer *)theTimer;
 - (void)doQueueTimer;
 - (void)loadQueue;

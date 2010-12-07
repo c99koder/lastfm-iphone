@@ -114,7 +114,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 		[theRequest setHTTPMethod:@"POST"];
 		[theRequest setHTTPBody:[[NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]] dataUsingEncoding:NSUTF8StringEncoding]];
-		//NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
+		NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
 		
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 		if(seconds)
@@ -132,7 +132,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 	}
 	
-	//NSLog(@"Response: %s\n", [theResponseData bytes]);
+	NSLog(@"Response: %s\n", [theResponseData bytes]);
 	
 	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
 	if(theError) {
@@ -324,6 +324,16 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 }
 - (void)addTrackToLibrary:(NSString *)title byArtist:(NSString *)artist {
 	[self doMethod:@"library.addTrack" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+}
+- (void)nowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration {
+	[self doMethod:@"track.updateNowPlaying" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], [NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"duration=%i", duration], nil];
+}
+- (void)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration timestamp:(int)timestamp {
+	[self doMethod:@"track.scrobble" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], 
+	 [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], 
+	 [NSString stringWithFormat:@"album=%@", [album URLEscaped]], 
+	 [NSString stringWithFormat:@"timestamp=%i", timestamp], 
+	 [NSString stringWithFormat:@"duration=%i", duration], nil];
 }
 - (void)banTrack:(NSString *)title byArtist:(NSString *)artist {
 	[self doMethod:@"track.ban" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
