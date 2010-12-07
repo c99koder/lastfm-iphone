@@ -479,7 +479,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
     NSLog(@"Could not open recent db.");
 	}
 	
-	[_db executeUpdate:@"create table recent_radio (timestamp integer, url text, name text)", nil];
+	[_db executeUpdate:@"create table if not exists recent_radio (timestamp integer, url text, name text)", nil];
 	
 	_busyLock = [[NSLock alloc] init];
 	_tracks = [[NSMutableArray alloc] init];
