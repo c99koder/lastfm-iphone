@@ -203,7 +203,7 @@
 			}
 		}
 	}
-	_data = [sections retain];
+	_data = sections;
 	
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];

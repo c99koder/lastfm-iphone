@@ -125,7 +125,7 @@
 	[sections addObject:@"debug"];
 #endif
 	
-	_data = [sections retain];
+	_data = sections;
 
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];

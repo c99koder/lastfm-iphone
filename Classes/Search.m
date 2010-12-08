@@ -51,7 +51,7 @@
 		[stations release];
 	}
 	
-	_data = [sections retain];
+	_data = sections;
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {

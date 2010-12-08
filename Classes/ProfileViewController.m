@@ -132,7 +132,7 @@
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
 		[sections addObject:@"logout"];
 	
-	_data = [sections retain];
+	_data = sections;
 	
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];

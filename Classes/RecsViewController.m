@@ -146,7 +146,7 @@
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	[stations release];
 	}
-	_data = [sections retain];
+	_data = sections;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return [_data count];
