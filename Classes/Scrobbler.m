@@ -224,6 +224,7 @@
 				break;
 			}
 		}
+		_queueTimerInterval = 2;
 		_scrobblerState = SCROBBLER_READY;
 	}
 }
