@@ -244,9 +244,11 @@ int tagSort(id tag1, id tag2, void *context) {
 #if !(TARGET_IPHONE_SIMULATOR)
 	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:frame];
 	[volumeView removeFromSuperview];
+	[volumeView release];
 	volumeView = v;
 	[volumeView sizeToFit];
 	[trackView.view addSubview: volumeView];
+	[v release];
 #endif
 	self.hidesBottomBarWhenPushed = YES;
 }
