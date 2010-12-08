@@ -294,8 +294,10 @@ int tagSort(id tag1, id tag2, void *context) {
 	if (theEvent.type == UIEventTypeRemoteControl) {
 		switch(theEvent.subtype) {
 			case UIEventSubtypeRemoteControlPlay:
+				[self stopButtonPressed:nil];
 				break;
 			case UIEventSubtypeRemoteControlPause:
+				[self stopButtonPressed:nil];
 				break;
 			case UIEventSubtypeRemoteControlTogglePlayPause:
 			case UIEventSubtypeRemoteControlStop:
