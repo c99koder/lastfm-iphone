@@ -191,7 +191,7 @@
 }
 - (void)flushQueue:(NSTimer *)theTimer {
 	@synchronized(_queue) {
-		NSEnumerator *enumerator = [_queue objectEnumerator];
+		NSEnumerator *enumerator = [[[_queue copy] autorelease] objectEnumerator];
 		id track;
 		
 		if(_queueTimer != nil) {
