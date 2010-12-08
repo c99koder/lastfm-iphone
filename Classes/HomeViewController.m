@@ -72,7 +72,7 @@
 			break;
 		case 1:
 			self.navigationItem.titleView = _recsController.navigationItem.titleView;
-			self.navigationItem.leftBarButtonItem = nil;
+			self.navigationItem.rightBarButtonItem = _recsController.navigationItem.rightBarButtonItem;
 			//self.title = _recsController.title;
 			[_recsController viewWillAppear:NO];
 			_recsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);

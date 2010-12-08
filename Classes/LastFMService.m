@@ -114,7 +114,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 		[theRequest setHTTPMethod:@"POST"];
 		[theRequest setHTTPBody:[[NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]] dataUsingEncoding:NSUTF8StringEncoding]];
-		NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
+		//NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
 		
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 		if(seconds)
@@ -132,7 +132,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 	}
 	
-	NSLog(@"Response: %s\n", [theResponseData bytes]);
+	//NSLog(@"Response: %s\n", [theResponseData bytes]);
 	
 	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
 	if(theError) {

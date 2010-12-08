@@ -45,15 +45,48 @@
 							 action:@selector(viewWillAppear:)
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
 		//self.title = @"Recommendations";
 	}
 	return self;
+}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	
+	if(toggle.selectedSegmentIndex == 0 && [indexPath section] == 1)
+		return YES;
+	else
+		return NO;
+}
+- (void)doneButtonPressed:(id)sender {
+	[self.tableView setEditing:NO animated:YES];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
+	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+ }
+- (void)editButtonPressed:(id)sender {
+	[self.tableView setEditing:YES animated:YES];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self rebuildMenu];
+	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
 	[self.tableView.tableHeaderView resignFirstResponder];
+	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
+}
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(editingStyle == UITableViewCellEditingStyleDelete) {
+		NSMutableArray *newArtists = [NSMutableArray arrayWithArray:_artists];
+		[newArtists removeObjectAtIndex:[indexPath row]];
+		[_artists release];
+		_artists = [newArtists retain];
+		[self rebuildMenu];
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationLeft];
+		[self loadContentForCells:[self.tableView visibleCells]];
+	}
 }
 - (void)viewDidLoad {
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -70,7 +103,6 @@
 	[bar release];
 }
 - (void)rebuildMenu {
-	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 
 	if(_data)
 		[_data release];
@@ -88,7 +120,7 @@
 	
 	if([_artists count]) {
 		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_artists count] && x < 20; x++) {
+		for(int x=0; x<[_artists count]; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
 																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
@@ -113,9 +145,6 @@
 	[stations release];
 	}
 	_data = [sections retain];
-	
-	[self.tableView reloadData];
-	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return [_data count];
