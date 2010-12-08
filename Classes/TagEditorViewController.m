@@ -196,6 +196,7 @@ int tagSort(id tag1, id tag2, void *context);
 	scrollView.showsVerticalScrollIndicator = NO;
 	scrollView.showsHorizontalScrollIndicator = NO;
 	[self.view addSubview:scrollView];
+	[scrollView release];
 	
 	textField = [[[TTPickerTextField alloc] init] autorelease];
 	textField.dataSource = _tags;
@@ -274,5 +275,12 @@ int tagSort(id tag1, id tag2, void *context);
 	[_cells removeObjectAtIndex:index];
 
 	[tagActions setObject:[NSNumber numberWithInt:[[tagActions objectForKey:tag] intValue]-1] forKey:tag];
+}
+- (void)dealloc {
+	[tagActions release];
+	[_cells release];
+	[_tags release];
+	[textField release];
+	[super dealloc];
 }
 @end
