@@ -306,10 +306,10 @@ int tagSort(id tag1, id tag2, void *context) {
 			case UIEventSubtypeRemoteControlNextTrack:
 				[self skipButtonPressed:nil];
 				break;
-			case UIEventSubtypeRemoteControlEndSeekingBackward:
+			case UIEventSubtypeRemoteControlBeginSeekingBackward:
 				[self loveButtonPressed:loveBtn];
 				break;
-			case UIEventSubtypeRemoteControlEndSeekingForward:
+			case UIEventSubtypeRemoteControlBeginSeekingForward:
 				[self banButtonPressed:banBtn];
 				break;
 			default:
