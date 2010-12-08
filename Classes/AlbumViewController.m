@@ -244,9 +244,11 @@
 }
 - (void)dealloc {
 	[super dealloc];
-	[_tags release];
 	[_artist release];
+	[_album release];
 	[_metadata release];
+	[_tags release];
+	[_tracks release];
 	[_data release];
 }
 @end

@@ -455,6 +455,9 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	[_tracks release];
+	[_albums release];
+	[_events release];
 	[_tags release];
 	[_artist release];
 	[_metadata release];

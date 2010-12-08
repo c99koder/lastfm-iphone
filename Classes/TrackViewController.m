@@ -488,6 +488,8 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	[_shouts release];
+	[_toggle release];
 	[_tags release];
 	[_artist release];
 	[_track release];
