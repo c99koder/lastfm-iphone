@@ -12,6 +12,7 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		2207593612AFBAD9001A4F0F /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2207593512AFBAD9001A4F0F /* libPMAnalytics-r91.a */; };
 		220CEBD30DCCB420007F888D /* UITableViewCell+ProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */; };
 		22117E400E153AC50093BFED /* now_playing_header.png in Resources */ = {isa = PBXBuildFile; fileRef = 22117E3D0E153AC50093BFED /* now_playing_header.png */; };
 		22117E410E153AC50093BFED /* streaming.png in Resources */ = {isa = PBXBuildFile; fileRef = 22117E3E0E153AC50093BFED /* streaming.png */; };
@@ -583,6 +584,7 @@
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Last.fm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Last.fm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2207593512AFBAD9001A4F0F /* libPMAnalytics-r91.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r91.a"; sourceTree = "<group>"; };
 		220CEBD10DCCB420007F888D /* UITableViewCell+ProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewCell+ProgressIndicator.h"; sourceTree = "<group>"; };
 		220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewCell+ProgressIndicator.m"; sourceTree = "<group>"; };
 		22117E3D0E153AC50093BFED /* now_playing_header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = now_playing_header.png; sourceTree = "<group>"; };
@@ -880,6 +882,7 @@
 				229294B012AD21DC00C31269 /* libThree20UI.a in Frameworks */,
 				229294B312AD21E300C31269 /* libThree20UICommon.a in Frameworks */,
 				229294B612AD21E700C31269 /* libThree20UINavigator.a in Frameworks */,
+				2207593612AFBAD9001A4F0F /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -956,6 +959,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2207593512AFBAD9001A4F0F /* libPMAnalytics-r91.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,

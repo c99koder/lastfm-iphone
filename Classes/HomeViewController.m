@@ -21,13 +21,17 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	if(_tabBar.selectedItem.tag != 1)
+		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	
 	switch(_tabBar.selectedItem.tag) {
 		case 0:
 			[_profileController viewWillAppear:animated];
 			break;
 		case 1:
 			[_recsController viewWillAppear:animated];
+			self.navigationItem.titleView = _recsController.navigationItem.titleView;
+			self.navigationItem.rightBarButtonItem = _recsController.navigationItem.rightBarButtonItem;
 			break;
 		case 2:
 			[_eventsController viewWillAppear:animated];
@@ -61,6 +65,8 @@
 
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	[[_contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+	if(item.tag != 1)
+		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	
 	switch(item.tag) {
 		case 0:
