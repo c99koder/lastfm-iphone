@@ -58,15 +58,19 @@
 	return self;
 }
 - (void)loadQueue {
-	NSArray *savedQueue = [NSKeyedUnarchiver unarchiveObjectWithFile:CACHE_FILE(@"queue.plist")];
-	if(savedQueue != nil) {
-		[_queue addObjectsFromArray:savedQueue];
-		NSLog(@"Loaded queue with %i items\n", [_queue count]);
-		[self doQueueTimer];
+	@synchronized(_queue) {
+		NSArray *savedQueue = [NSKeyedUnarchiver unarchiveObjectWithFile:CACHE_FILE(@"queue.plist")];
+		if(savedQueue != nil) {
+			[_queue addObjectsFromArray:savedQueue];
+			NSLog(@"Loaded queue with %i items\n", [_queue count]);
+			[self doQueueTimer];
+		}
 	}
 }
 - (void)saveQueue {
-	[NSKeyedArchiver archiveRootObject:_queue toFile:CACHE_FILE(@"queue.plist")];
+	@synchronized(_queue) {
+		[NSKeyedArchiver archiveRootObject:_queue toFile:CACHE_FILE(@"queue.plist")];
+	}
 }
 - (void)update:(NSTimer *)timer {
 	int networkType;
@@ -122,44 +126,48 @@
 	}
 }
 - (void)rateTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withStartTime:(int)startTime withDuration:(int)duration fromSource:(NSString *)source rating:(NSString *)rating {
-	for(NSMutableDictionary *track in _queue) {
-		if([[track objectForKey:@"title"] isEqualToString:(title==nil)?@"":title] &&
-			 [[track objectForKey:@"artist"] isEqualToString:(artist==nil)?@"":artist] &&
-			 [[track objectForKey:@"album"] isEqualToString:(album==nil)?@"":album]) {
-			if(![rating isEqualToString:@"S"])
-				[track setObject:rating forKey:@"rating"];
-			return;
-		}
-	}
-	//If we got here, there was no match. Queue it and repeat!
-	if([self scrobbleTrack:title byArtist:artist onAlbum:album withStartTime:startTime withDuration:duration fromSource:source])
-	{
+	@synchronized(_queue) {
 		for(NSMutableDictionary *track in _queue) {
 			if([[track objectForKey:@"title"] isEqualToString:(title==nil)?@"":title] &&
 				 [[track objectForKey:@"artist"] isEqualToString:(artist==nil)?@"":artist] &&
 				 [[track objectForKey:@"album"] isEqualToString:(album==nil)?@"":album]) {
-				[track setObject:rating forKey:@"rating"];
+				if(![rating isEqualToString:@"S"])
+					[track setObject:rating forKey:@"rating"];
 				return;
+			}
+		}
+		//If we got here, there was no match. Queue it and repeat!
+		if([self scrobbleTrack:title byArtist:artist onAlbum:album withStartTime:startTime withDuration:duration fromSource:source])
+		{
+			for(NSMutableDictionary *track in _queue) {
+				if([[track objectForKey:@"title"] isEqualToString:(title==nil)?@"":title] &&
+					 [[track objectForKey:@"artist"] isEqualToString:(artist==nil)?@"":artist] &&
+					 [[track objectForKey:@"album"] isEqualToString:(album==nil)?@"":album]) {
+					[track setObject:rating forKey:@"rating"];
+					return;
+				}
 			}
 		}
 	}
 }
 - (BOOL)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withStartTime:(int)startTime withDuration:(int)duration fromSource:(NSString *)source {
-	if([[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastScrobble"] objectForKey:@"startTime"] intValue] != startTime ||
-		 ![[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastScrobble"] objectForKey:@"title"] isEqualToString:title] ||
-		 ![[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastScrobble"] objectForKey:@"artist"] isEqualToString:artist]) {
-		NSMutableDictionary *track = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:(artist==nil)?@"":artist,(title==nil)?@"":title,[NSString stringWithFormat:@"%i",startTime],[NSString stringWithFormat:@"%i",duration],(album==nil)?@"":album,(source==nil)?@"":source, nil]
-																																		forKeys:[NSArray arrayWithObjects:@"artist", @"title", @"startTime", @"duration", @"album", @"source", nil]];
-		NSLog(@"Queueing %@ - %@ - %@ for submission\n", artist, album, title);
-		[[NSUserDefaults standardUserDefaults] setObject:track forKey:@"lastScrobble"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		[_queue addObject:track];
-		[self saveQueue];
-		return TRUE;
-	} else {
-		NSLog(@"Ignoring duplicate %@ - %@ - %@\n", artist, album, title);
+	@synchronized(_queue) {
+		if([[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastScrobble"] objectForKey:@"startTime"] intValue] != startTime ||
+			 ![[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastScrobble"] objectForKey:@"title"] isEqualToString:title] ||
+			 ![[[[NSUserDefaults standardUserDefaults] objectForKey:@"lastScrobble"] objectForKey:@"artist"] isEqualToString:artist]) {
+			NSMutableDictionary *track = [NSMutableDictionary dictionaryWithObjects:[NSArray arrayWithObjects:(artist==nil)?@"":artist,(title==nil)?@"":title,[NSString stringWithFormat:@"%i",startTime],[NSString stringWithFormat:@"%i",duration],(album==nil)?@"":album,(source==nil)?@"":source, nil]
+																																			forKeys:[NSArray arrayWithObjects:@"artist", @"title", @"startTime", @"duration", @"album", @"source", nil]];
+			NSLog(@"Queueing %@ - %@ - %@ for submission\n", artist, album, title);
+			[[NSUserDefaults standardUserDefaults] setObject:track forKey:@"lastScrobble"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+			[_queue addObject:track];
+			[self saveQueue];
+			return TRUE;
+		} else {
+			NSLog(@"Ignoring duplicate %@ - %@ - %@\n", artist, album, title);
+		}
+		return FALSE;
 	}
-	return FALSE;
 }
 - (void)doQueueTimer {
 	if(_queueTimer == nil && _scrobblerState != SCROBBLER_OFFLINE) {
@@ -182,40 +190,42 @@
 	_scrobblerState = SCROBBLER_READY;
 }
 - (void)flushQueue:(NSTimer *)theTimer {
-	NSEnumerator *enumerator = [_queue objectEnumerator];
-	id track;
-	
-	if(_queueTimer != nil) {
-		[_queueTimer invalidate];
-		_queueTimer = nil;
-	}
-	
-	if([_queue count] < 1)
-		return;
-	
-	if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		_scrobblerState = SCROBBLER_OFFLINE;
-		return;
-	}
-	
-	_scrobblerState = SCROBBLER_SCROBBLING;
-	
-	while((track = [enumerator nextObject])) {
-		if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
-			[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+	@synchronized(_queue) {
+		NSEnumerator *enumerator = [_queue objectEnumerator];
+		id track;
+		
+		if(_queueTimer != nil) {
+			[_queueTimer invalidate];
+			_queueTimer = nil;
 		}
-		if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
-			[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+		
+		if([_queue count] < 1)
+			return;
+		
+		if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
+			_scrobblerState = SCROBBLER_OFFLINE;
+			return;
 		}
-		[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
-		if([LastFMService sharedInstance].error == nil) {
-			[_queue removeObject:track];
-			[self saveQueue];
-		} else {
-			break;
+		
+		_scrobblerState = SCROBBLER_SCROBBLING;
+		
+		while((track = [enumerator nextObject])) {
+			if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
+				[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+			}
+			if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
+				[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+			}
+			[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
+			if([LastFMService sharedInstance].error == nil) {
+				[_queue removeObject:track];
+				[self saveQueue];
+			} else {
+				break;
+			}
 		}
+		_scrobblerState = SCROBBLER_READY;
 	}
-	_scrobblerState = SCROBBLER_READY;
 }
 - (void)cancelTimer {
 	[_timer invalidate];
