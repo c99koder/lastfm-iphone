@@ -56,7 +56,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		}
 		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:username] retain];
 		self.title = @"Friends";
-		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Friends Activity", @"All Friends", nil]];
+		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Listening Now", @"All Friends", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
 		CGRect frame = toggle.frame;
@@ -128,13 +128,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	[self.tableView.tableHeaderView resignFirstResponder];
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
-
-	if(section == 0 && toggle != nil && toggle.selectedSegmentIndex == 0 && _searchResults == nil) {
-		return @"Friends Listening Now";
-	} else {
-		return nil;
-	}
+	return nil;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
