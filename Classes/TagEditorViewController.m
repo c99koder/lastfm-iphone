@@ -279,7 +279,6 @@ int tagSort(id tag1, id tag2, void *context);
 	[tagActions release];
 	[_cells release];
 	[_tags release];
-	[textField release];
 	[super dealloc];
 }
 @end

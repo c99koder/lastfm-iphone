@@ -73,7 +73,7 @@
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
-	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/Music/%@/_/%@/wiki\">Read More »</a>", bio, [_artist URLEscaped], [_track URLEscaped]];
+	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/music/%@/_/%@/wiki\">Read More »</a>", bio, [_artist URLEscaped], [_track URLEscaped]];
 	_bioView.html = html;
 	
 	if(_data)
@@ -158,6 +158,8 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]]) {
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
+	}	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"bio"]) {
+		return @"About This Track";
 	} else {
 		return nil;
 	}
@@ -441,7 +443,7 @@
 			cell.shouldRoundTop = YES;
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
-	} else if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
 			biocell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BioCell"] autorelease];

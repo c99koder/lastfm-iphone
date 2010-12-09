@@ -65,8 +65,7 @@
 		_tracksDidLoad = NO;
 		_albumsDidLoad = NO;
 		_artistsDidLoad = NO;
-		_similarTagsDidLoad = NO;	
-		webViewHeight = 0;
+		_similarTagsDidLoad = NO;
 		[NSThread detachNewThreadSelector:@selector(_loadTracks) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadAlbums) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
@@ -83,37 +82,12 @@
 }
 - (void)viewDidLoad {
 	self.tableView.scrollsToTop = NO;
-	_bioView = [[UIWebView alloc] initWithFrame:CGRectZero];
-	_bioView.delegate = self;
-}
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSURL *loadURL = [[request URL] retain];
-	if(([[loadURL scheme] isEqualToString: @"http"] || [[loadURL scheme] isEqualToString: @"https"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
-		[[UIApplication sharedApplication] openURLWithWarning:[loadURL autorelease]];
-		return NO;
-	}
-	[loadURL release];
-	return YES;
-}
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
-	CGRect frame = aWebView.frame;
-	frame.size.height = 1;
-	aWebView.frame = frame;
-	CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
-	fittingSize.width = frame.size.width;
-	frame.size = fittingSize;
-	aWebView.frame = frame;
-	
-	webViewHeight = fittingSize.height;
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
-	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; text-decoration: none; }</style></head>\
-										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
-										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:286px; position:absolute;\">\
-										%@ <a href=\"http://www.last.fm/tag/%@/wiki\">Read More »</a></body></html>", bio, [_tag URLEscaped]];
-	[_bioView loadHTMLString:html baseURL:nil];
+	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/tag/%@/wiki\">Read More »</a>", bio, [_tag URLEscaped]];
+	_bioView.html = html;
 	
 	if(_data)
 		[_data release];
@@ -121,7 +95,8 @@
 	NSMutableArray *sections = [[NSMutableArray alloc] init];
 	NSMutableArray *stations;
 	
-	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
 																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Tag Radio", [_tag capitalizedString]], [NSString stringWithFormat:@"lastfm://globaltags/%@", _tag], nil]
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
@@ -199,6 +174,8 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]]) {
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
+	}	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"bio"]) {
+			return @"About This Tag";
 	} else {
 		return nil;
 	}
@@ -207,8 +184,9 @@
  return [[[UIView alloc] init] autorelease];
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([indexPath section] == 1) {
-		return webViewHeight + 16;
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
+		_bioView.text.width = self.view.frame.size.width - 32;
+		return _bioView.text.height + 16;
 	} else {
 		return 52;
 	}
@@ -266,7 +244,7 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 0) {
+	if([indexPath section] == 0 && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
@@ -277,11 +255,14 @@
 		return stationCell;
 	}
 	
-	if([indexPath section] == 1) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
 			biocell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BioCell"] autorelease];
-			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - (16*2), webViewHeight);
+			biocell.selectionStyle = UITableViewCellSelectionStyleNone;
+			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - 32, _bioView.text.height);
+			_bioView.backgroundColor = [UIColor clearColor];
+			_bioView.textColor = [UIColor blackColor];
 			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;

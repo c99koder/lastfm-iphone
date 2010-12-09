@@ -39,7 +39,6 @@
 	BOOL _paintItBlack;
 	TTStyledTextLabel *_bioView;
 	TTStyledTextLabel *_tagsView;
-	float webViewHeight;
 }
 - (id)initWithArtist:(NSString *)artist;
 - (void)paintItBlack;

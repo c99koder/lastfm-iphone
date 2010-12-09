@@ -20,6 +20,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "Three20/Three20.h"
 #import "LastFMService.h"
 
 @interface TagViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
@@ -30,8 +31,7 @@
 	NSArray *_artists;
 	NSArray *_similarTags;
 	NSDictionary *_metadata;
-	UIWebView *_bioView;
-	float webViewHeight;
+	TTStyledTextLabel *_bioView;
 	BOOL _tracksDidLoad;
 	BOOL _albumsDidLoad;
 	BOOL _artistsDidLoad;
