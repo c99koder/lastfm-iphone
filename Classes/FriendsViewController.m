@@ -196,12 +196,9 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.title.font = [UIFont boldSystemFontOfSize:16];
 		cell.title.backgroundColor = [UIColor whiteColor];
 		cell.title.opaque = YES;
-		if([[[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"realname"] length])
-			cell.detailTextLabel.text = [NSString stringWithFormat:@"(%@)", [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"realname"]];
-		else
-			cell.detailTextLabel.text = @"";
-		cell.detailTextLabel.textColor = [UIColor grayColor];
-		cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
+		cell.detailTextLabel.text = [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"realname"];
+		cell.detailTextLabel.textColor = [UIColor blackColor];
+		cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 		cell.subtitle.text = @"";
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
@@ -217,12 +214,9 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.title.font = [UIFont boldSystemFontOfSize:16];
 		cell.title.backgroundColor = [UIColor whiteColor];
 		cell.title.opaque = YES;
-		if([[[_data objectAtIndex:[indexPath row]] objectForKey:@"realname"] length])
-			cell.detailTextLabel.text = [NSString stringWithFormat:@"(%@)", [[_data objectAtIndex:[indexPath row]] objectForKey:@"realname"]];
-		else
-			cell.detailTextLabel.text = @"";
-		cell.detailTextLabel.textColor = [UIColor grayColor];
-		cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
+		cell.detailTextLabel.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"realname"];
+		cell.detailTextLabel.textColor = [UIColor blackColor];
+		cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 		cell.subtitle.text = @"";
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
@@ -238,12 +232,9 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.title.font = [UIFont boldSystemFontOfSize:16];
 		cell.title.backgroundColor = [UIColor whiteColor];
 		cell.title.opaque = YES;
-		if([[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"realname"] length])
-			cell.detailTextLabel.text = [NSString stringWithFormat:@"(%@)", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"realname"]];
-		else
-			cell.detailTextLabel.text = @"";
-		cell.detailTextLabel.textColor = [UIColor grayColor];
-		cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
+		cell.detailTextLabel.text = [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"realname"];
+		cell.detailTextLabel.textColor = [UIColor blackColor];
+		cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 		cell.subtitle.text = [NSString stringWithFormat:@"%@ - %@", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"artist"],
 													[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
