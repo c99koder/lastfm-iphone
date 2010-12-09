@@ -53,7 +53,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	
-	if(toggle.selectedSegmentIndex == 0 && [indexPath section] == 1 || ([indexPath section] == 0 && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]))
+	if(toggle.selectedSegmentIndex == 0 && [indexPath section] == 1 || (toggle.selectedSegmentIndex == 0 && [indexPath section] == 0 && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]))
 		return YES;
 	else
 		return NO;
