@@ -19,6 +19,7 @@
  * along with MobileLastFM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#import "Three20/Three20.h"
 #import "NSString+MD5.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "ProfileViewController.h"
@@ -318,6 +319,8 @@ NSString *kUserAgent;
 #if !(TARGET_IPHONE_SIMULATOR)
 	[Beacon initAndStartBeaconWithApplicationCode:PINCHMEDIA_ID useCoreLocation:NO useOnlyWiFi:NO];
 #endif
+	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];
+	
 	_mainView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	[window addSubview:_mainView];
 

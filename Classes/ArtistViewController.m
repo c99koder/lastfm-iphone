@@ -68,7 +68,6 @@
 		_infoTabLoaded = NO;
 		_similarTabLoaded = NO;
 		_eventsTabLoaded = NO;
-		webViewHeight = 0;
 		
 		[NSThread detachNewThreadSelector:@selector(_loadInfoTab) toTarget:self withObject:nil];
 		[NSThread detachNewThreadSelector:@selector(_loadSimilarTab) toTarget:self withObject:nil];
@@ -99,8 +98,8 @@
 		self.tableView.backgroundColor = [UIColor blackColor];
 	self.tableView.scrollsToTop = NO;
 	
-	_bioView = [[UIWebView alloc] initWithFrame:CGRectZero];
-	_bioView.delegate = self;
+	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
+	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 
 	_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Events", @"Similar Artists", nil]];
 	_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
@@ -119,25 +118,10 @@
 	[toggleContainer release];
 	//self.navigationItem.titleView = _toggle;
 }
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
-	CGRect frame = aWebView.frame;
-	frame.size.height = 1;
-	aWebView.frame = frame;
-	CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
-	fittingSize.width = frame.size.width;
-	frame.size = fittingSize;
-	aWebView.frame = frame;
-	
-	webViewHeight = fittingSize.height;
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-}
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
-	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; text-decoration:none; }</style></head>\
-										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
-										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:280px; position:absolute;\">\
-										%@ <a href=\"http://www.last.fm/Music/%@/wiki\">Read More »</a></body></html>", bio, [_artist URLEscaped]];
-	[_bioView loadHTMLString:html baseURL:nil];
+	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/Music/%@/wiki\">Read More »</a>", bio, [_artist URLEscaped]];
+	_bioView.html = html;
 	
 	if(_data)
 		[_data release];
@@ -151,11 +135,32 @@
 		} else {
 			[sections addObject:@"profile"];
 			
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
 																															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
 																																																										 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-
+			/*if([_tags count]) {
+				stations = [[NSMutableArray alloc] init];
+				for(int x=0; x<[_tags count] && x < 5; x++) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tags objectAtIndex:x] objectForKey:@"name"],
+																																	 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_tags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+				}
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Popular Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+				[stations release];
+			}*/
+			[sections addObject:@"tags"];
+			NSString *taghtml = @"";//@"<b>Popular Tags</b><br/>";
+			
+			for(int i = 0; i < [_tags count] && i < 10; i++) {
+				if(i < [_tags count]-1 && i < 9)
+					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@, </a>", [[_tags objectAtIndex: i] objectForKey:@"name"], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+				else
+					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[_tags objectAtIndex: i] objectForKey:@"name"], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+			}
+			
+			_tagsView.html = taghtml;
+			
 			[sections addObject:@"bio"];
 			
 			if([_tracks count]) {
@@ -175,16 +180,6 @@
 																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[[_albums objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 				}
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Albums", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-				[stations release];
-			}
-
-			if([_tags count]) {
-				stations = [[NSMutableArray alloc] init];
-				for(int x=0; x<[_tags count] && x < 10; x++) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tags objectAtIndex:x] objectForKey:@"name"],
-																																	 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_tags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-				}
-				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Related Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
 			}
 		}
@@ -274,6 +269,10 @@
 		return nil;
 	else if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
+	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"tags"])
+		return @"Popular Tags";
+	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"bio"])
+		return @"Biography";
 	else
 		return nil;
 }
@@ -281,10 +280,16 @@
  return [[[UIView alloc] init] autorelease];
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(_toggle.selectedSegmentIndex == 1 && [_events count]) {
+	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 0)
+		return 86;
+	else if(_toggle.selectedSegmentIndex == 1 && [_events count]) {
 		return 64;
-	} else if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
-		return webViewHeight + 16;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"] && _toggle.selectedSegmentIndex == 0) {
+		_bioView.text.width = self.view.frame.size.width - 32;
+		return _bioView.text.height;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"] && _toggle.selectedSegmentIndex == 0) {
+		_tagsView.text.width = self.view.frame.size.width - 32;
+		return _tagsView.text.height;
 	} else {
 		return 52;
 	}
@@ -349,7 +354,7 @@
 		return loadingCell;
 	}
 	
-	if([indexPath section] == 1 && _toggle.selectedSegmentIndex == 0) {
+	if([indexPath section] == 1 && _toggle.selectedSegmentIndex == 0 && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
@@ -401,6 +406,7 @@
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
+			profilecell.contentView.bounds = CGRectMake(0,0,80,80);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldRoundTop = YES;
@@ -411,17 +417,43 @@
 			
 			NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 			[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-			profilecell.subtitle.text = [NSString stringWithFormat:@"%@ plays in your library",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"userplaycount"] intValue]]]];
+			profilecell.subtitle.lineBreakMode = UILineBreakModeWordWrap;
+			profilecell.subtitle.numberOfLines = 0;
+			profilecell.subtitle.text = [NSString stringWithFormat:@"%@ plays\n%@ listeners\n%@ plays in your library",
+																	 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"playcount"] intValue]]],
+																	 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"listeners"] intValue]]],
+																	 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"userplaycount"] intValue]]]
+																	 ];
 			[numberFormatter release];
 		}		
 		return profilecell;
 	}
 	
-	if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"] && _toggle.selectedSegmentIndex == 0) {
+		UITableViewCell *tagcell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"TagCell"];
+		if(tagcell == nil) {
+			tagcell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TagCell"];
+			tagcell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+			tagcell.backgroundColor = [UIColor clearColor];
+			tagcell.selectionStyle = UITableViewCellSelectionStyleNone;
+			_tagsView.frame = CGRectMake(8,0,self.view.frame.size.width - 32, _tagsView.text.height);
+			_tagsView.textColor = [UIColor blackColor];
+			_tagsView.backgroundColor = [UIColor clearColor];
+
+			[tagcell.contentView addSubview:_tagsView];
+		}
+		return tagcell;
+	}
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"] && _toggle.selectedSegmentIndex == 0) {
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
 			biocell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BioCell"] autorelease];
-			_bioView.frame = CGRectMake(12,8,self.view.frame.size.width - (20*2), webViewHeight);
+			biocell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+			biocell.backgroundColor = [UIColor clearColor];
+			biocell.selectionStyle = UITableViewCellSelectionStyleNone;
+			_bioView.frame = CGRectMake(8,0,self.view.frame.size.width - 32, _bioView.text.height);
+			_bioView.backgroundColor = [UIColor clearColor];
+			_bioView.textColor = [UIColor blackColor];
 			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;

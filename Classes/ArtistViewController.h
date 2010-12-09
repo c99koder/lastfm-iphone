@@ -20,6 +20,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "Three20/Three20.h"
 #import "LastFMService.h"
 
 @interface ArtistViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
@@ -36,7 +37,8 @@
 	BOOL _eventsTabLoaded;
 	BOOL _similarTabLoaded;
 	BOOL _paintItBlack;
-	UIWebView *_bioView;
+	TTStyledTextLabel *_bioView;
+	TTStyledTextLabel *_tagsView;
 	float webViewHeight;
 }
 - (id)initWithArtist:(NSString *)artist;
