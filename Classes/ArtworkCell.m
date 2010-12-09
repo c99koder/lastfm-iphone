@@ -230,6 +230,10 @@ UIImage *avatarPlaceholder = nil;
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, 0, frame.size.width - _artwork.frame.size.width - 20, frame.size.height);
 		subtitle.frame = CGRectZero;
 	}
+	if([self.detailTextLabel.text length]) {
+		float detailX = title.frame.origin.x + [title.text sizeWithFont:title.font constrainedToSize:title.frame.size lineBreakMode:title.lineBreakMode].width + 2;
+		self.detailTextLabel.frame = CGRectMake(detailX, title.frame.origin.y, frame.size.width - detailX, title.frame.size.height);
+	}
 	if(barWidth > 0) {
 		_bar.frame = CGRectMake(0,0,barWidth*([self frame].size.width - 20),[self frame].size.height);
 		_bar.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.4];

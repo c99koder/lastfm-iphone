@@ -179,21 +179,29 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	if(_searchResults) {
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"username"]];
 		if (cell == nil)
-			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:[[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
 	} else if(toggle != nil && toggle.selectedSegmentIndex == 0) {
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"username"]];
 		if (cell == nil)
-			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
 	} else {
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]];
 		if (cell == nil)
-			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"username"]] autorelease];
 	}
 	
 	if(_searchResults) {
 		cell.title.text = [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"username"];
+		cell.title.textColor = [UIColor blackColor];
+		cell.title.font = [UIFont boldSystemFontOfSize:16];
 		cell.title.backgroundColor = [UIColor whiteColor];
 		cell.title.opaque = YES;
+		if([[[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"realname"] length])
+			cell.detailTextLabel.text = [NSString stringWithFormat:@"(%@)", [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"realname"]];
+		else
+			cell.detailTextLabel.text = @"";
+		cell.detailTextLabel.textColor = [UIColor grayColor];
+		cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
 		cell.subtitle.text = @"";
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
@@ -205,8 +213,16 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 			cell.accessoryType = UITableViewCellAccessoryNone;
 	} else if(toggle == nil || toggle.selectedSegmentIndex == 1) {
 		cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"username"];
+		cell.title.textColor = [UIColor blackColor];
+		cell.title.font = [UIFont boldSystemFontOfSize:16];
 		cell.title.backgroundColor = [UIColor whiteColor];
 		cell.title.opaque = YES;
+		if([[[_data objectAtIndex:[indexPath row]] objectForKey:@"realname"] length])
+			cell.detailTextLabel.text = [NSString stringWithFormat:@"(%@)", [[_data objectAtIndex:[indexPath row]] objectForKey:@"realname"]];
+		else
+			cell.detailTextLabel.text = @"";
+		cell.detailTextLabel.textColor = [UIColor grayColor];
+		cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
 		cell.subtitle.text = @"";
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
@@ -218,8 +234,16 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 			cell.accessoryType = UITableViewCellAccessoryNone;
 	} else if(toggle.selectedSegmentIndex == 0) {
 		cell.title.text = [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"username"];
+		cell.title.textColor = [UIColor blackColor];
+		cell.title.font = [UIFont boldSystemFontOfSize:16];
 		cell.title.backgroundColor = [UIColor whiteColor];
 		cell.title.opaque = YES;
+		if([[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"realname"] length])
+			cell.detailTextLabel.text = [NSString stringWithFormat:@"(%@)", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"realname"]];
+		else
+			cell.detailTextLabel.text = @"";
+		cell.detailTextLabel.textColor = [UIColor grayColor];
+		cell.detailTextLabel.font = [UIFont systemFontOfSize:16];
 		cell.subtitle.text = [NSString stringWithFormat:@"%@ - %@", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"artist"],
 													[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
