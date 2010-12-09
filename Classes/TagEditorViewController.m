@@ -196,7 +196,6 @@ int tagSort(id tag1, id tag2, void *context);
 	scrollView.showsVerticalScrollIndicator = NO;
 	scrollView.showsHorizontalScrollIndicator = NO;
 	[self.view addSubview:scrollView];
-	[scrollView release];
 	
 	textField = [[[TTPickerTextField alloc] init] autorelease];
 	textField.dataSource = _tags;
