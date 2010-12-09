@@ -53,7 +53,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	
-	if(toggle.selectedSegmentIndex == 0 && [indexPath section] == 1)
+	if(toggle.selectedSegmentIndex == 0 && [indexPath section] == 1 || ([indexPath section] == 0 && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]))
 		return YES;
 	else
 		return NO;
@@ -86,7 +86,11 @@
 		[_artists release];
 		_artists = [newArtists retain];
 		[self rebuildMenu];
+		[tableView beginUpdates];
+		if([_artists count] >= 25)
+			[tableView insertRowsAtIndexPaths:[NSArray arrayWithObjects:[NSIndexPath indexPathForRow:24 inSection:[indexPath section]],nil] withRowAnimation:UITableViewRowAnimationFade];
 		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath,nil] withRowAnimation:UITableViewRowAnimationLeft];
+		[tableView endUpdates];
 		[self loadContentForCells:[self.tableView visibleCells]];
 	}
 }
@@ -115,14 +119,15 @@
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	
 	if(toggle.selectedSegmentIndex == 0) {
-	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
 																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], nil]
 																																																									forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
 	if([_artists count]) {
 		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_artists count]; x++) {
+		for(int x=0; x<[_artists count] && x < 25; x++) {
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
 																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 		}
@@ -205,7 +210,7 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0) {
+	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0 && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
