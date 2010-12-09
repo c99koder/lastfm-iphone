@@ -117,14 +117,14 @@ UIImage *avatarPlaceholder = nil;
 -(UIImage *)roundedImage:(UIImage *)image
 {
 	UIImage *img = image;
-	int w = self.frame.size.height;
-	int h = self.frame.size.height;
+	int w = self.contentView.bounds.size.height;
+	int h = self.contentView.bounds.size.height;
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
 	
 	CGRect rect = CGRectMake(0, 0, w, h);
-	float radius = 10.0f;
+	float radius = 8.0f;
 	
 	if(shouldRoundTop) {
 		CGContextBeginPath(context);
@@ -171,6 +171,9 @@ UIImage *avatarPlaceholder = nil;
 }
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
+		self.contentView.bounds = CGRectMake(0,0,52,52);
+
+		
 		_bar = [[UIView alloc] init];
 		[self.contentView addSubview:_bar];
 		
@@ -207,6 +210,8 @@ UIImage *avatarPlaceholder = nil;
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
+	_artwork.image = [self roundedImage:_artwork.image];
+
 	CGRect frame = [self.contentView bounds];
 	if(self.accessoryView != nil)
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
@@ -258,6 +263,7 @@ UIImage *avatarPlaceholder = nil;
 -(void)_fetchImage {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSData *imageData;
+	
 	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS)) {
 		imageData = [[NSData alloc] initWithContentsOfFile:CACHE_FILE([imageURL md5sum])];
 	} else {
