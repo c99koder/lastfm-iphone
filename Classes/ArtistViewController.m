@@ -140,17 +140,9 @@
 																															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
 																																																										 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-			/*if([_tags count]) {
-				stations = [[NSMutableArray alloc] init];
-				for(int x=0; x<[_tags count] && x < 5; x++) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tags objectAtIndex:x] objectForKey:@"name"],
-																																	 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_tags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-				}
-				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Popular Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-				[stations release];
-			}*/
+
 			[sections addObject:@"tags"];
-			NSString *taghtml = @"";//@"<b>Popular Tags</b><br/>";
+			NSString *taghtml = @"";
 			
 			for(int i = 0; i < [_tags count] && i < 10; i++) {
 				if(i < [_tags count]-1 && i < 9)

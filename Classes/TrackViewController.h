@@ -22,6 +22,7 @@
 #import <UIKit/UIKit.h>
 #import <AddressBookUI/AddressBookUI.h>
 #import <MessageUI/MessageUI.h>
+#import "Three20/Three20.h"
 #import "LastFMService.h"
 #import "TagEditorViewController.h"
 #import "FriendsViewController.h"
@@ -33,9 +34,8 @@
 	NSArray *_tags;
 	NSArray *_shouts;
 	NSDictionary *_metadata;
-	UIWebView *_bioView;
+	TTStyledTextLabel *_bioView;
 	UISegmentedControl *_toggle;
-	float webViewHeight;
 	BOOL _loved;
 	BOOL _addedToLibrary;
 }

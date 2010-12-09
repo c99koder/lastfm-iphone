@@ -39,7 +39,6 @@
 		_shouts = [[[LastFMService sharedInstance] shoutsForTrack:track byArtist:artist] retain];
 		_loved = NO;
 		_addedToLibrary = NO;
-		webViewHeight = 0;
 		self.title = track;
 	}
 	return self;
@@ -54,8 +53,7 @@
 	//self.tableView.sectionHeaderHeight = 0;
 	//self.tableView.sectionFooterHeight = 0;
 	self.tableView.scrollsToTop = NO;
-	_bioView = [[UIWebView alloc] initWithFrame:CGRectZero];
-	_bioView.delegate = self;
+	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 	
 	_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Related Tags", @"Shouts", nil]];
 	_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
@@ -73,34 +71,10 @@
 	[toggleContainer release];
 	
 }
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	NSURL *loadURL = [[request URL] retain];
-	if(([[loadURL scheme] isEqualToString: @"http"] || [[loadURL scheme] isEqualToString: @"https"]) && (navigationType == UIWebViewNavigationTypeLinkClicked)) {
-		[[UIApplication sharedApplication] openURLWithWarning:[loadURL autorelease]];
-		return NO;
-	}
-	[loadURL release];
-	return YES;
-}
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
-	CGRect frame = aWebView.frame;
-	frame.size.height = 1;
-	aWebView.frame = frame;
-	CGSize fittingSize = [aWebView sizeThatFits:CGSizeZero];
-	fittingSize.width = frame.size.width;
-	frame.size = fittingSize;
-	aWebView.frame = frame;
-	
-	webViewHeight = fittingSize.height;
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-}
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
-	NSString *html = [NSString stringWithFormat:@"<html><head><style>a { color: #34A3EC; text-decoration: none; }</style></head>\
-										<body style=\"margin:0; padding:0; color:black; background: white; font-family: Helvetica; font-size: 11pt;\">\
-										<div style=\"padding:0px; margin:0; top:0px; left:0px; width:280px; position:absolute;\">\
-										%@ <a href=\"http://www.last.fm/Music/%@/_/%@/wiki\">Read More »</a></body></html>", bio, [_artist URLEscaped], [_track URLEscaped]];
-	[_bioView loadHTMLString:html baseURL:nil];
+	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/Music/%@/_/%@/wiki\">Read More »</a>", bio, [_artist URLEscaped], [_track URLEscaped]];
+	_bioView.html = html;
 	
 	if(_data)
 		[_data release];
@@ -111,13 +85,14 @@
 	if(_toggle.selectedSegmentIndex == 0) {
 		[sections addObject:@"heading"];
 		
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
 																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", _artist], nil]
 																																																									 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 
 		if([[_metadata objectForKey:@"wiki"] length])
-			[sections addObject:@"wiki"];
+			[sections addObject:@"bio"];
 
 		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 												 _artist,
@@ -193,9 +168,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0 && _toggle.selectedSegmentIndex == 0)
 		return 112;
-	else if([indexPath section] == 2 && [[_metadata objectForKey:@"wiki"] length] && _toggle.selectedSegmentIndex == 0)
-		return webViewHeight + 16;
-	else if(_toggle.selectedSegmentIndex == 2) {
+	else if(_toggle.selectedSegmentIndex == 0 && [[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
+		_bioView.text.width = self.view.frame.size.width - 32;
+		return _bioView.text.height + 16;
+	} else if(_toggle.selectedSegmentIndex == 2) {
 		ArtworkCell *cell = (ArtworkCell *)[self tableView:tableView cellForRowAtIndexPath:indexPath];
 		return [cell.subtitle.text sizeWithFont:cell.subtitle.font constrainedToSize:CGSizeMake(self.tableView.frame.size.width - 38, MAXFLOAT) lineBreakMode:cell.subtitle.lineBreakMode].height + 36;
 	}
@@ -396,7 +372,7 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 1 && _toggle.selectedSegmentIndex == 0) {
+	if([indexPath section] == 1 && _toggle.selectedSegmentIndex == 0 && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
@@ -466,13 +442,16 @@
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
 	} else if([indexPath section] == 2 && _toggle.selectedSegmentIndex == 0) {
-		UITableViewCell *wikicell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"wikicell"];
-		if(wikicell == nil) {
-			wikicell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wikicell"] autorelease];
-			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - (16*2), webViewHeight);
-			[wikicell.contentView addSubview:_bioView];
+		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
+		if(biocell == nil) {
+			biocell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BioCell"] autorelease];
+			biocell.selectionStyle = UITableViewCellSelectionStyleNone;
+			_bioView.frame = CGRectMake(8,8,self.view.frame.size.width - 32, _bioView.text.height);
+			_bioView.backgroundColor = [UIColor clearColor];
+			_bioView.textColor = [UIColor blackColor];
+			[biocell.contentView addSubview:_bioView];
 		}
-		return wikicell;
+		return biocell;
 	}
 	if(cell.accessoryType == UITableViewCellAccessoryNone && _toggle.selectedSegmentIndex == 1) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
