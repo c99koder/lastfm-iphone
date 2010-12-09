@@ -146,9 +146,9 @@
 			
 			for(int i = 0; i < [_tags count] && i < 10; i++) {
 				if(i < [_tags count]-1 && i < 9)
-					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@, </a>", [[_tags objectAtIndex: i] objectForKey:@"name"], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@, </a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
 				else
-					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[_tags objectAtIndex: i] objectForKey:@"name"], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
 			}
 			
 			_tagsView.html = taghtml;
