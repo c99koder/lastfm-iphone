@@ -57,9 +57,11 @@ enum eventStatus {
 @interface LastFMService : NSObject {
 	NSString *session;
 	NSError *error;
+	BOOL cacheOnly;
 }
 @property (nonatomic, retain) NSString *session;
 @property (readonly) NSError *error;
+@property (nonatomic) BOOL cacheOnly;
 
 + (LastFMService *)sharedInstance;
 - (NSArray *)doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath withParameters:(NSString *)firstParam, ...;

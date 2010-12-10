@@ -31,16 +31,46 @@
 #import "UIApplication+openURLWithWarning.h"
 
 @implementation ProfileViewController
+- (void)_loadRecentTracks {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSArray *tracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
+	@synchronized(self) {
+		[_recentTracks release];
+		_recentTracks = tracks;
+	}
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
+- (void)_loadWeeklyArtists {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSArray *artists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
+	NSMutableDictionary *images = [[NSMutableDictionary alloc] init];
+	for(int x = 0; x < [artists count] && x < 3; x++) {
+		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[artists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
+		[images setObject:[info objectForKey:@"image"] forKey:[[artists objectAtIndex:x] objectForKey:@"name"]];
+	}
+	@synchronized(self) {
+		[_weeklyArtists release];
+		_weeklyArtists = artists;
+		[_weeklyArtistImages release];
+		_weeklyArtistImages = images;
+	}
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:username]] retain];
-		_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:username] retain];
+		[LastFMService sharedInstance].cacheOnly = YES;
+		_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
+		_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
 		_weeklyArtistImages = [[NSMutableDictionary alloc] init];
 		for(int x = 0; x < [_weeklyArtists count] && x < 3; x++) {
 			NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
 			[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
 		}
+		[LastFMService sharedInstance].cacheOnly = NO;
+		[self rebuildMenu];
 		self.title = @"Profile";
 	}
 	return self;
@@ -49,7 +79,8 @@
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	
-	[self rebuildMenu];
+	[NSThread detachNewThreadSelector:@selector(_loadRecentTracks) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_loadWeeklyArtists) toTarget:self withObject:nil];
 }
 - (void)viewDidLoad {
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -98,44 +129,46 @@
 	return NO;
 }
 - (void)rebuildMenu {
-	if(_data)
-		[_data release];
-	
-	NSMutableArray *sections = [[NSMutableArray alloc] init];
-	
-	[sections addObject:@"profile"];
-	
-	NSMutableArray *stations;
-	
-	if([_weeklyArtists count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
-																															 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],
-																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+	@synchronized(self) {
+		if(_data)
+			[_data release];
+		
+		NSMutableArray *sections = [[NSMutableArray alloc] init];
+		
+		[sections addObject:@"profile"];
+		
+		NSMutableArray *stations;
+		
+		if([_weeklyArtists count]) {
+			stations = [[NSMutableArray alloc] init];
+			for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
+																																 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],
+																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+			}
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[stations release];
 		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
-	}
-	
-	if([_recentTracks count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_recentTracks count] && x < 10; x++) {
-			if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"])
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
+		
+		if([_recentTracks count]) {
+			stations = [[NSMutableArray alloc] init];
+			for(int x=0; x<[_recentTracks count] && x < 10; x++) {
+				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"])
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
+																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
+			}
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[stations release];
 		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
+		
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+			[sections addObject:@"logout"];
+		
+		_data = sections;
+		
+		[self.tableView reloadData];
+		[self loadContentForCells:[self.tableView visibleCells]];
 	}
-	
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
-		[sections addObject:@"logout"];
-	
-	_data = sections;
-	
-	[self.tableView reloadData];
-	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return [_data count];

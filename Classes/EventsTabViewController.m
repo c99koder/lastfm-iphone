@@ -117,10 +117,27 @@ UIImage *eventDateBGImage = nil;
 @end
 
 @implementation EventsTabViewController
+- (void)_loadEvents {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSArray *events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
+	NSArray *recs = [[[LastFMService sharedInstance] recommendedEventsForUser:_username] retain];
+	@synchronized(self) {
+		[_events release];
+		_events = events;
+		[_recs release];
+		_recs = recs;
+	}
+	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
+		[LastFMService sharedInstance].cacheOnly = YES;
+		[self _loadEvents];
+		[LastFMService sharedInstance].cacheOnly = NO;
 		self.title = @"Events";
+		[NSThread detachNewThreadSelector:@selector(_loadEvents) toTarget:self withObject:nil];
 	}
 	return self;
 }
@@ -132,13 +149,9 @@ UIImage *eventDateBGImage = nil;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[_events release];
-	_events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
-	[_recs release];
-	_recs = [[[LastFMService sharedInstance] recommendedEventsForUser:_username] retain];
-
+	
+	[NSThread detachNewThreadSelector:@selector(_loadEvents) toTarget:self withObject:nil];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	[self.tableView reloadData];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

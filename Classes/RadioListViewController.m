@@ -33,12 +33,18 @@
 #import "MobileLastFMApplicationDelegate.h"
 
 @implementation RadioListViewController
+- (void)_loadRecentStations {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[[LastFMRadio sharedInstance] fetchRecentURLs];
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		self.title = @"Radio";
 		_username = [username retain];
 		_searchData = [[GlobalSearchDataSource alloc] init];
-		[[LastFMRadio sharedInstance] fetchRecentURLs];
+		[NSThread detachNewThreadSelector:@selector(_loadRecentStations) toTarget:self withObject:nil];
 	}
 	return self;
 }
@@ -48,6 +54,7 @@
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	
 	[self rebuildMenu];
+	[NSThread detachNewThreadSelector:@selector(_loadRecentStations) toTarget:self withObject:nil];
 }
 - (void)viewDidLoad {
 	/*self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;

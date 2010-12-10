@@ -80,6 +80,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 @implementation LastFMService
 @synthesize session;
 @synthesize error;
+@synthesize cacheOnly;
 
 + (LastFMService *)sharedInstance {
   static LastFMService *sharedInstance;
@@ -106,9 +107,9 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[signature appendString:[[param stringByReplacingOccurrencesOfString:@"=" withString:@""] unURLEscape]];
 	}
 	[signature appendString:[NSString stringWithFormat:@"%s", API_SECRET]];
-	if(seconds && shouldUseCache(CACHE_FILE([signature md5sum]),seconds)) {
+	if((seconds && shouldUseCache(CACHE_FILE([signature md5sum]),seconds)) || cacheOnly) {
 		theResponseData = [NSData dataWithContentsOfFile:CACHE_FILE([signature md5sum])];
-	} else if([((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasNetworkConnection]) {
+	} else if([((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasNetworkConnection] && !cacheOnly) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", API_URL]] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
@@ -117,8 +118,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		//NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
 		
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
-		if(seconds)
-			[theResponseData writeToFile:CACHE_FILE([signature md5sum]) atomically:YES];
+		[theResponseData writeToFile:CACHE_FILE([signature md5sum]) atomically:YES];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	} else {
 		error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:0 userInfo:nil];

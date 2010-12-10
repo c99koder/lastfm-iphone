@@ -29,12 +29,40 @@
 #import "MobileLastFMApplicationDelegate.h"
 
 @implementation RecsViewController
+- (void)_loadArtists {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSArray *artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];
+	@synchronized(self) {
+		[_artists release];
+		_artists = artists;
+	}
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
+- (void)_loadReleases {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSArray *releases = [[[LastFMService sharedInstance] releasesForUser:_username] retain];
+	NSArray *recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:_username] retain];
+
+	@synchronized(self) {
+		[_releases release];
+		_releases = releases;
+		[_recommendedReleases release];
+		_recommendedReleases = recommendedReleases;
+	}
+	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
+		[LastFMService sharedInstance].cacheOnly = YES;
 		_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:username] retain];
 		_releases = [[[LastFMService sharedInstance] releasesForUser:username] retain];
 		_recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:username] retain];
+		[LastFMService sharedInstance].cacheOnly = NO;
 		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
@@ -46,6 +74,8 @@
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
+		[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
+		[NSThread detachNewThreadSelector:@selector(_loadReleases) toTarget:self withObject:nil];
 		//self.title = @"Recommendations";
 	}
 	return self;
@@ -78,6 +108,8 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
 	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 	self.tableView.editing = NO;
+	[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_loadReleases) toTarget:self withObject:nil];
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(editingStyle == UITableViewCellEditingStyleDelete) {
@@ -109,49 +141,50 @@
 	[bar release];
 }
 - (void)rebuildMenu {
-
-	if(_data)
-		[_data release];
-	
-	NSMutableArray *sections = [[NSMutableArray alloc] init];
-	NSMutableArray *stations;
-	
-	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
-	
-	if(toggle.selectedSegmentIndex == 0) {
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
-																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], nil]
-																																																									forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
-																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	
-	if([_artists count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_artists count] && x < 25; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+	@synchronized(self) {
+		if(_data)
+			[_data release];
+		
+		NSMutableArray *sections = [[NSMutableArray alloc] init];
+		NSMutableArray *stations;
+		
+		UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+		
+		if(toggle.selectedSegmentIndex == 0) {
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
+																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], nil]
+																																																										forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
+																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		
+			if([_artists count]) {
+				stations = [[NSMutableArray alloc] init];
+				for(int x=0; x<[_artists count] && x < 25; x++) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
+																																	 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+				}
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+				[stations release];
+			}
+		} else {
+			stations = [[NSMutableArray alloc] init];
+			if([_releases count]) {
+				for(int x=0; x<[_releases count] && x < 20; x++) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"],
+																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_releases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_releases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
+				}
+			}
+			if([_recommendedReleases count]) {
+				for(int x=0; x<[_recommendedReleases count] && x < 20; x++) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"image"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"],
+																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
+				}
+			}
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[stations release];
 		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
+		_data = sections;
 	}
-	} else {
-	stations = [[NSMutableArray alloc] init];
-	if([_releases count]) {
-		for(int x=0; x<[_releases count] && x < 20; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"],
-																															 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_releases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_releases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
-		}
-	}
-	if([_recommendedReleases count]) {
-		for(int x=0; x<[_recommendedReleases count] && x < 20; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"image"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"],
-																															 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
-		}
-	}
-	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	[stations release];
-	}
-	_data = sections;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return [_data count];
