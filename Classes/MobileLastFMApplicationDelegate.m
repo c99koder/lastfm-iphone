@@ -395,16 +395,6 @@ NSString *kUserAgent;
 #if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"skip" timeSession:NO];
 #endif
-	NSDictionary *track = [self trackInfo];
-	if(_scrobbler && track) {
-		[_scrobbler rateTrack:[track objectForKey:@"title"]
-								 byArtist:[track objectForKey:@"creator"]
-									onAlbum:[track objectForKey:@"album"]
-						withStartTime:[[track objectForKey:@"startTime"] intValue]
-						 withDuration:[[track objectForKey:@"duration"] intValue]
-							 fromSource:[track objectForKey:@"source"]
-									 rating:@"S"];
-	}
 	[[LastFMRadio sharedInstance] skip];
 }
 -(IBAction)stopButtonPressed:(id)sender {
