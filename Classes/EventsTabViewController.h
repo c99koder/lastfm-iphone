@@ -47,6 +47,7 @@
 	NSString *_username;
 	NSArray *_events;
 	NSArray *_recs;
+	NSThread *_refreshThread;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

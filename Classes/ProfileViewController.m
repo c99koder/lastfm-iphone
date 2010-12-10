@@ -31,31 +31,28 @@
 #import "UIApplication+openURLWithWarning.h"
 
 @implementation ProfileViewController
-- (void)_loadRecentTracks {
+- (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *tracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
-	@synchronized(self) {
-		[_recentTracks release];
-		_recentTracks = tracks;
-	}
-	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
-	[pool release];
-}
-- (void)_loadWeeklyArtists {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *artists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
 	NSMutableDictionary *images = [[NSMutableDictionary alloc] init];
 	for(int x = 0; x < [artists count] && x < 3; x++) {
 		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[artists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
 		[images setObject:[info objectForKey:@"image"] forKey:[[artists objectAtIndex:x] objectForKey:@"name"]];
 	}
-	@synchronized(self) {
-		[_weeklyArtists release];
-		_weeklyArtists = artists;
-		[_weeklyArtistImages release];
-		_weeklyArtistImages = images;
+	if(![[NSThread currentThread] isCancelled]) {
+		@synchronized(self) {
+			[_recentTracks release];
+			_recentTracks = tracks;
+			[_weeklyArtists release];
+			_weeklyArtists = artists;
+			[_weeklyArtistImages release];
+			_weeklyArtistImages = images;
+			[_refreshThread release];
+			_refreshThread = nil;
+		}
+		[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
 	}
-	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
 	[pool release];
 }
 - (id)initWithUsername:(NSString *)username {
@@ -79,8 +76,13 @@
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	
-	[NSThread detachNewThreadSelector:@selector(_loadRecentTracks) toTarget:self withObject:nil];
-	[NSThread detachNewThreadSelector:@selector(_loadWeeklyArtists) toTarget:self withObject:nil];
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
+	
+	_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
+	[_refreshThread start];
 }
 - (void)viewDidLoad {
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -273,6 +275,10 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
 	[_username release];
 	[_recentTracks release];
 	[_weeklyArtists release];

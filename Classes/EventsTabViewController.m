@@ -117,27 +117,33 @@ UIImage *eventDateBGImage = nil;
 @end
 
 @implementation EventsTabViewController
-- (void)_loadEvents {
+- (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
 	NSArray *recs = [[[LastFMService sharedInstance] recommendedEventsForUser:_username] retain];
-	@synchronized(self) {
-		[_events release];
-		_events = events;
-		[_recs release];
-		_recs = recs;
+	if(![[NSThread currentThread] isCancelled]) {
+		@synchronized(self) {
+			[_events release];
+			_events = events;
+			[_recs release];
+			_recs = recs;
+			[_refreshThread release];
+			_refreshThread = nil;
+		}
+		[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	}
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	[pool release];
 }
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
 		[LastFMService sharedInstance].cacheOnly = YES;
-		[self _loadEvents];
+		[self _refresh];
 		[LastFMService sharedInstance].cacheOnly = NO;
 		self.title = @"Events";
-		[NSThread detachNewThreadSelector:@selector(_loadEvents) toTarget:self withObject:nil];
+		
+		_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
+		[_refreshThread start];
 	}
 	return self;
 }
@@ -150,9 +156,16 @@ UIImage *eventDateBGImage = nil;
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
-	[NSThread detachNewThreadSelector:@selector(_loadEvents) toTarget:self withObject:nil];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
+
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
+	
+	_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
+	[_refreshThread start];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
@@ -336,6 +349,10 @@ UIImage *eventDateBGImage = nil;
 }
 - (void)dealloc {
 	[super dealloc];
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
 	[_username release];
 	[_events release];
 	[_recs release];

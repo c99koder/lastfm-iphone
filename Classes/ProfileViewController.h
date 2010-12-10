@@ -31,6 +31,7 @@
 	NSTimer *_searchTimer;
 	GlobalSearchDataSource *_searchData;
 	NSMutableDictionary *_weeklyArtistImages;
+	NSThread *_refreshThread;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

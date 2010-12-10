@@ -29,30 +29,25 @@
 #import "MobileLastFMApplicationDelegate.h"
 
 @implementation RecsViewController
-- (void)_loadArtists {
+- (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];
-	@synchronized(self) {
-		[_artists release];
-		_artists = artists;
-	}
-	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-	[pool release];
-}
-- (void)_loadReleases {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *releases = [[[LastFMService sharedInstance] releasesForUser:_username] retain];
 	NSArray *recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:_username] retain];
-
-	@synchronized(self) {
-		[_releases release];
-		_releases = releases;
-		[_recommendedReleases release];
-		_recommendedReleases = recommendedReleases;
+	if(![[NSThread currentThread] isCancelled]) {
+		@synchronized(self) {
+			[_artists release];
+			_artists = artists;
+			[_releases release];
+			_releases = releases;
+			[_recommendedReleases release];
+			_recommendedReleases = recommendedReleases;
+			[_refreshThread release];
+			_refreshThread = nil;
+		}
+		[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+		[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	}
-	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
-	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	[pool release];
 }
 - (id)initWithUsername:(NSString *)username {
@@ -74,9 +69,8 @@
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-		[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
-		[NSThread detachNewThreadSelector:@selector(_loadReleases) toTarget:self withObject:nil];
-		//self.title = @"Recommendations";
+		_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
+		[_refreshThread start];
 	}
 	return self;
 }
@@ -108,8 +102,14 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
 	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 	self.tableView.editing = NO;
-	[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
-	[NSThread detachNewThreadSelector:@selector(_loadReleases) toTarget:self withObject:nil];
+	
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
+	
+	_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
+	[_refreshThread start];
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(editingStyle == UITableViewCellEditingStyleDelete) {
@@ -279,6 +279,10 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
 	[_username release];
 	[_artists release];
 	[_releases release];
