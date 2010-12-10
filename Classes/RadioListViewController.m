@@ -43,7 +43,7 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		self.title = @"Radio";
 		_username = [username retain];
-		_searchData = [[GlobalSearchDataSource alloc] init];
+		_searchData = [[RadioSearchDataSource alloc] init];
 		[NSThread detachNewThreadSelector:@selector(_loadRecentStations) toTarget:self withObject:nil];
 	}
 	return self;
