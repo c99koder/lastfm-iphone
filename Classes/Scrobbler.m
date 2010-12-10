@@ -199,8 +199,10 @@
 			_queueTimer = nil;
 		}
 		
-		if([_queue count] < 1)
+		if([_queue count] < 1) {
+			_queueTimerInterval = 2;
 			return;
+		}
 		
 		if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
 			_scrobblerState = SCROBBLER_OFFLINE;
