@@ -120,7 +120,7 @@
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
-	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/music/%@/wiki\">Read More »</a>", bio, [_artist URLEscaped]];
+	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/music/%@/+wiki\">Read More »</a>", bio, [_artist URLEscaped]];
 	_bioView.html = html;
 	
 	if(_data)
