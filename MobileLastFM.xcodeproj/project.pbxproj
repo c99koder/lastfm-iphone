@@ -135,6 +135,7 @@
 		2263275912A525AD006F34EA /* TrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263275812A525AD006F34EA /* TrackViewController.m */; };
 		226F604012A67CB400319DBC /* Search.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F603F12A67CB400319DBC /* Search.m */; };
 		226F611B12A6A5A600319DBC /* EventDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F611A12A6A5A600319DBC /* EventDetailsViewController.m */; };
+		227B8B2B12B23C5B00FAD77D /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 227B8B2A12B23C5B00FAD77D /* libPMAnalytics-r91.a */; };
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
 		229122800E6C34F500F9C17C /* tagareabg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291227F0E6C34F500F9C17C /* tagareabg.png */; };
@@ -731,6 +732,7 @@
 		226F603F12A67CB400319DBC /* Search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Search.m; sourceTree = "<group>"; };
 		226F611912A6A5A600319DBC /* EventDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventDetailsViewController.h; sourceTree = "<group>"; };
 		226F611A12A6A5A600319DBC /* EventDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventDetailsViewController.m; sourceTree = "<group>"; };
+		227B8B2A12B23C5B00FAD77D /* libPMAnalytics-r91.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r91.a"; sourceTree = "<group>"; };
 		227F6F420DB26F4900C11B22 /* ArtworkCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtworkCell.h; sourceTree = "<group>"; };
 		227F6F430DB26F4900C11B22 /* ArtworkCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtworkCell.m; sourceTree = "<group>"; };
 		228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURLWithWarning.h"; sourceTree = "<group>"; };
@@ -880,6 +882,7 @@
 				229294B012AD21DC00C31269 /* libThree20UI.a in Frameworks */,
 				229294B312AD21E300C31269 /* libThree20UICommon.a in Frameworks */,
 				229294B612AD21E700C31269 /* libThree20UINavigator.a in Frameworks */,
+				227B8B2B12B23C5B00FAD77D /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -956,6 +959,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				227B8B2A12B23C5B00FAD77D /* libPMAnalytics-r91.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,

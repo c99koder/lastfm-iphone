@@ -277,8 +277,6 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
-	
-	[trackView viewWillAppear:YES];
 }
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -290,6 +288,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[super viewDidAppear:animated];
 	[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 	[self becomeFirstResponder];
+	[self becomeActive];
 }
 - (void)remoteControlReceivedWithEvent:(UIEvent*)theEvent {
 

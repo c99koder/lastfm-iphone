@@ -171,8 +171,8 @@ int tagSort(id tag1, id tag2, void *context);
 - (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags {
 	if (self = [super init]) {
 		self.title = @"Tags";
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)] autorelease];
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)] autorelease];
 		
 		_tags = [[TagsDataSource alloc] initWithTopTags:topTags userTags:userTags];
 		_cells = [[NSMutableArray alloc] init];
@@ -232,8 +232,6 @@ int tagSort(id tag1, id tag2, void *context);
 }
 - (IBAction)doneButtonPressed:(id)sender {
 	NSMutableArray *tags = [NSMutableArray array];
-	
-	NSLog(@"%@", tagActions);
 	
 	for(NSString *tag in tagActions) {
 		if([[tagActions objectForKey:tag] intValue] == 1)
