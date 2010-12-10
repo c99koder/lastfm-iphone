@@ -252,12 +252,8 @@ NSString *kUserAgent;
 	if([[info objectForKey:@"country"] length]) {
 		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"country"] forKey:@"country"];
 	}
-	if([[info objectForKey:@"icon"] length]) {
-		if([[info objectForKey:@"icon"] isEqualToString:@"http://cdn.last.fm/depth/global/icon_user.gif"]) {
-			[[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"lastfm_subscriber"];
-		} else {
-			[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"lastfm_subscriber"];
-		}
+	if([[info objectForKey:@"subscriber"] length]) {
+		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"subscriber"] forKey:@"lastfm_subscriber"];
 	}
 	
 	HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
