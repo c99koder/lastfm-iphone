@@ -210,10 +210,12 @@ UIImage *eventDateBGImage = nil;
 			break;
 		}
 		case 1:
-			data = [[LastFMService sharedInstance] recommendedEventsForUser:_username];
-			controller = [[EventListViewController alloc] initWithEvents:data];
-			controller.title = @"Recommended Events";
+		{
+			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+			[details release];
 			break;
+		}
 		case 2:
 			if (nil == _locationManager)
         _locationManager = [[CLLocationManager alloc] init];
