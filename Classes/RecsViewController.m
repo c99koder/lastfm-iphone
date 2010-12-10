@@ -132,13 +132,6 @@
 	//self.tableView.sectionFooterHeight = 0;
 	//self.tableView.backgroundColor = [UIColor blackColor];
 	self.tableView.scrollsToTop = NO;
-	
-	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	//bar.barStyle = UIBarStyleBlackTranslucent;
-	//bar.backgroundColor = [UIColor grayColor];
-	bar.placeholder = @"Search Recommendations";
-	self.tableView.tableHeaderView = bar;
-	[bar release];
 }
 - (void)rebuildMenu {
 	@synchronized(self) {
