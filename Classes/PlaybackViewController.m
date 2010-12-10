@@ -60,7 +60,8 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)becomeActive {
 	NSLog(@"Resuming timer and subscribing to track changes");
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
-	_timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+	if(!(_timer && [_timer isValid])) 
+		_timer = [NSTimer scheduledTimerWithTimeInterval:0.5
 																						target:self
 																					selector:@selector(_updateProgress:)
 																					userInfo:nil
@@ -83,7 +84,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	_noArtworkView.image = [UIImage imageNamed:@"noartplaceholder.png"];
 	_noArtworkView.opaque = NO;
 	[_artworkView addSubview: _noArtworkView];
-	[self becomeActive];
 }
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
