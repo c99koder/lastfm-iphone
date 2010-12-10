@@ -134,6 +134,8 @@ UIImage *eventDateBGImage = nil;
 	[super viewWillAppear:animated];
 	[_events release];
 	_events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
+	[_recs release];
+	_recs = [[[LastFMService sharedInstance] recommendedEventsForUser:_username] retain];
 
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView reloadData];
@@ -145,18 +147,22 @@ UIImage *eventDateBGImage = nil;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(section == 0 && [_events count]) {
 		return @"Upcoming Events";
+	} else if(section == 1 && [_recs count]) {
+		return @"Recommended Events";
 	} else {
 		return nil;
 	}
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if(section == 0)
-		return ([_events count] > 5)?5:[_events count];
+		return ([_events count] > 3)?3:[_events count];
+	else if(section == 1)
+		return ([_recs count] > 3)?3:[_recs count];
 	else
 		return 1;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([indexPath section] == 0)
+	if([indexPath section] == 0 || [indexPath section] == 1)
 		return 64;
 	else
 		return 46;
@@ -267,8 +273,36 @@ UIImage *eventDateBGImage = nil;
 			return eventCell;
 		}
 		case 1:
-			cell.textLabel.text = @"Recommended by Last.fm";
-			break;
+		{
+			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
+			if (eventCell == nil) {
+				eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
+			}
+			
+			NSDictionary *event = [_recs objectAtIndex:[indexPath row]];
+			eventCell.title.text = [event objectForKey:@"headliner"];
+			eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
+			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+			eventCell.location.numberOfLines = 0;
+			NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+			[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+			[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
+			NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+			[formatter setLocale:[NSLocale currentLocale]];
+			
+			[formatter setDateFormat:@"MMM"];
+			eventCell.month.text = [formatter stringFromDate:date];
+			
+			[formatter setDateFormat:@"d"];
+			eventCell.day.text = [formatter stringFromDate:date];
+			
+			[formatter release];
+			eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			
+			[eventCell showProgress:NO];
+			
+			return eventCell;
+		}
 		case 2:
 			cell.textLabel.text = @"Events Near Me";
 			break;
@@ -286,6 +320,8 @@ UIImage *eventDateBGImage = nil;
 - (void)dealloc {
 	[super dealloc];
 	[_username release];
+	[_events release];
+	[_recs release];
 }
 @end
 

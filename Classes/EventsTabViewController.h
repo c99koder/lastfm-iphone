@@ -46,6 +46,7 @@
 	CLLocationManager *_locationManager;
 	NSString *_username;
 	NSArray *_events;
+	NSArray *_recs;
 }
 - (id)initWithUsername:(NSString *)username;
 @end
