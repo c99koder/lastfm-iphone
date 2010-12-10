@@ -33,10 +33,16 @@
 #import "MobileLastFMApplicationDelegate.h"
 
 @implementation RadioListViewController
-- (void)_loadRecentStations {
+- (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[[LastFMRadio sharedInstance] fetchRecentURLs];
-	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	if(![[NSThread currentThread] isCancelled]) {
+		@synchronized(self) {
+			[_refreshThread release];
+			_refreshThread = nil;
+		}
+		[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	}
 	[pool release];
 }
 - (id)initWithUsername:(NSString *)username {
@@ -44,7 +50,8 @@
 		self.title = @"Radio";
 		_username = [username retain];
 		_searchData = [[RadioSearchDataSource alloc] init];
-		[NSThread detachNewThreadSelector:@selector(_loadRecentStations) toTarget:self withObject:nil];
+		_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
+		[_refreshThread start];
 	}
 	return self;
 }
@@ -54,7 +61,14 @@
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	
 	[self rebuildMenu];
-	[NSThread detachNewThreadSelector:@selector(_loadRecentStations) toTarget:self withObject:nil];
+
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
+	
+	_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
+	[_refreshThread start];
 }
 - (void)viewDidLoad {
 	/*self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -96,46 +110,48 @@
 	return NO;
 }
 - (void)rebuildMenu {
-	if(_data)
-		[_data release];
-	
-	[_recent release];
-	_recent = [[[LastFMRadio sharedInstance] recentURLs] retain];
-	
-	NSMutableArray *sections = [[NSMutableArray alloc] init];
-	
-	NSMutableArray *stations = [[NSMutableArray alloc] init];
-	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library", @"My Library station"),[NSString stringWithFormat:@"lastfm://user/%@/personal", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station"),[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),[NSString stringWithFormat:@"lastfm://user/%@/mix", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-	
-	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Personal Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	[stations release];
-	
-	stations = [[NSMutableArray alloc] init];
-	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Radio",[NSString stringWithFormat:@"lastfm://user/%@/friends", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-	[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Neighbourhood Radio",[NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-	
-	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Network Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	[stations release];
-	
-	if([_recent count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_recent count]; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recent objectAtIndex:x] objectForKey:@"name"],[[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recent Stations", @"Recent Stations heading"), stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	@synchronized(self) {
+		if(_data)
+			[_data release];
+		
+		[_recent release];
+		_recent = [[[LastFMRadio sharedInstance] recentURLs] retain];
+		
+		NSMutableArray *sections = [[NSMutableArray alloc] init];
+		
+		NSMutableArray *stations = [[NSMutableArray alloc] init];
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library", @"My Library station"),[NSString stringWithFormat:@"lastfm://user/%@/personal", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station"),[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),[NSString stringWithFormat:@"lastfm://user/%@/mix", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Personal Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
-	}
-	
+		
+		stations = [[NSMutableArray alloc] init];
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Radio",[NSString stringWithFormat:@"lastfm://user/%@/friends", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Neighbourhood Radio",[NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Network Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		[stations release];
+		
+		if([_recent count]) {
+			stations = [[NSMutableArray alloc] init];
+			for(int x=0; x<[_recent count]; x++) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recent objectAtIndex:x] objectForKey:@"name"],[[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+			}
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recent Stations", @"Recent Stations heading"), stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[stations release];
+		}
+		
 #ifndef DISTRIBUTION	
-	[sections addObject:@"debug"];
+		[sections addObject:@"debug"];
 #endif
-	
-	_data = sections;
+		
+		_data = sections;
 
-	[self.tableView reloadData];
-	[self loadContentForCells:[self.tableView visibleCells]];
+		[self.tableView reloadData];
+		[self loadContentForCells:[self.tableView visibleCells]];
+	}
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return [_data count];
@@ -222,6 +238,10 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	if(_refreshThread) {
+		[_refreshThread cancel];
+		[_refreshThread release];
+	}
 	[_username release];
 	[_recent release];
 	[_searchData release];

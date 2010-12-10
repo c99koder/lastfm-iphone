@@ -28,7 +28,8 @@
 	NSArray *_recent;
 	NSArray *_data;
 	NSTimer *_searchTimer;
-	GlobalSearchDataSource *_searchData;
+	NSThread *_refreshThread;
+	RadioSearchDataSource *_searchData;
 }
 - (id)initWithUsername:(NSString *)username;
 - (void)rebuildMenu;
