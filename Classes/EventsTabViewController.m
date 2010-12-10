@@ -155,7 +155,11 @@ UIImage *eventDateBGImage = nil;
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 4;
+	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
+		return 1;
+	} else {
+		return 4;
+	}
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(section == 0 && [_events count]) {
