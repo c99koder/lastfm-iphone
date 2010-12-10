@@ -97,6 +97,10 @@ int tagSort(id tag1, id tag2, void *context) {
 		return [NSString stringWithFormat:@"%02i:%02i", m, s];
 }
 - (void)_updateProgress:(NSTimer *)timer {
+	if(!_timer) {
+		[timer invalidate];
+		return;
+	}
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
 		float duration = [[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"duration"] floatValue]/1000.0f;
 		float elapsed = [[LastFMRadio sharedInstance] trackPosition];

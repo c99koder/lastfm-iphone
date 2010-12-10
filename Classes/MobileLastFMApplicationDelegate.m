@@ -145,16 +145,17 @@ NSString *kUserAgent;
 		[playbackViewController becomeActive];
 }
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+	BOOL releasedDetailsView = NO;
+	BOOL cancelledPrebuffer = NO;
+	
 	if(playbackViewController != nil) {
 		NSLog(@"Low memory, releasing details view controller");
-		if([playbackViewController releaseDetailsView])
-			return;
+		releasedDetailsView = [playbackViewController releaseDetailsView];
 	}
 	NSLog(@"Low memory, cancelling prebuffering");
-	if([[LastFMRadio sharedInstance] cancelPrebuffering])
-		return;
+	cancelledPrebuffer = [[LastFMRadio sharedInstance] cancelPrebuffering];
 	
-	if(_locked && playbackViewController) {
+	if(_locked && playbackViewController && !releasedDetailsView && !cancelledPrebuffer) {
 		NSLog(@"Low memory, popping playback view as last resort");
 		[rootViewController popViewControllerAnimated:NO];
 		[playbackViewController release];
