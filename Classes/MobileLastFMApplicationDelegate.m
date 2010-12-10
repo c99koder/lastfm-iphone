@@ -338,7 +338,7 @@ NSString *kUserAgent;
 		[_loadingViewLogo startAnimating];
 		_loadingView.frame = [UIScreen mainScreen].applicationFrame;
 		[_mainView addSubview:_loadingView];
-		[self performSelector:@selector(_loadProfile) withObject:nil afterDelay:2];
+		[self performSelector:@selector(_loadProfile) withObject:nil afterDelay:0.01];
 		_scrobbler = [[Scrobbler alloc] init];
 	} else {
 		[self showFirstRunView:NO];
