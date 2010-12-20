@@ -23,6 +23,8 @@
 	RadioListViewController *_radioController;
 	FriendsViewController *_friendsController;
 	NSString *_username;
+	
+	int currentTab;
 }
 -(id)initWithUsername:(NSString *)user;
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;

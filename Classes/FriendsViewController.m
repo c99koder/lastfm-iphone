@@ -40,21 +40,8 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 @synthesize delegate;
 
 - (id)initWithUsername:(NSString *)username {
-	UInt32 reverseSort = NO;
-	
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		_data = [[[[LastFMService sharedInstance] friendsOfUser:username] sortedArrayUsingFunction:usernameSort context:&reverseSort] retain];
-		if([LastFMService sharedInstance].error) {
-			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-			[self release];
-			return nil;
-		}
-		if(![_data count]) {
-			[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) displayError:NSLocalizedString(@"FRIENDS_EMPTY", @"No friends") withTitle:NSLocalizedString(@"FRIENDS_EMPTY_TITLE", @"No friends title")];
-			[self release];
-			return nil;
-		}
-		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:username] retain];
+		_username = [username retain];
 		self.title = @"Friends";
 		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Listening Now", @"All Friends", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
@@ -69,7 +56,6 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Friends", @"Friends back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
 		[backBarButtonItem release];
-		_username = [username retain];
 	}
 	return self;
 }
@@ -77,7 +63,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	[delegate friendsViewControllerDidCancel:self];
 }
 - (void)viewDidLoad {
-//	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+	UInt32 reverseSort = NO;
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Search Friends";
 	self.tableView.tableHeaderView = bar;
@@ -87,7 +73,28 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	searchController.searchResultsDataSource = self;
 	searchController.searchResultsDelegate = self;
 	[bar release];
+	
+	_data = [[[[LastFMService sharedInstance] friendsOfUser:_username] sortedArrayUsingFunction:usernameSort context:&reverseSort] retain];
+	if([LastFMService sharedInstance].error) {
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+		[self release];
+		return nil;
+	}
+	if(![_data count]) {
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) displayError:NSLocalizedString(@"FRIENDS_EMPTY", @"No friends") withTitle:NSLocalizedString(@"FRIENDS_EMPTY_TITLE", @"No friends title")];
+		[self release];
+		return nil;
+	}
+	_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
 }
+- (void)viewDidUnload {
+	[super viewDidUnload];
+	NSLog(@"Releasing friends data");
+	[_data release];
+	_data = nil;
+	[_friendsListeningNow release];
+	_friendsListeningNow = nil;
+}	
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
 	[_searchResults release];
 	_searchResults = nil;

@@ -131,28 +131,38 @@ UIImage *eventDateBGImage = nil;
 			_refreshThread = nil;
 		}
 		[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+	} else {
+		[events release];
+		[recs release];
 	}
 	[pool release];
 }
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		[LastFMService sharedInstance].cacheOnly = YES;
-		[self _refresh];
-		[LastFMService sharedInstance].cacheOnly = NO;
 		self.title = @"Events";
-		
-		_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
-		[_refreshThread start];
 	}
 	return self;
 }
-- (void)viewDidLoad {
+/*- (void)viewDidLoad {
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Search Events";
 	self.tableView.tableHeaderView = bar;
 	[bar release];
+}*/
+- (void)viewDidUnload {
+	[super viewDidUnload];
+	NSLog(@"Releasing events data");
+	[_events release];
+	_events = nil;
+	[_recs release];
+	_recs = nil;
 }
+- (void)viewDidLoad {
+	[LastFMService sharedInstance].cacheOnly = YES;
+	[self _refresh];
+	[LastFMService sharedInstance].cacheOnly = NO;
+}	
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	
@@ -163,7 +173,7 @@ UIImage *eventDateBGImage = nil;
 		[_refreshThread cancel];
 		[_refreshThread release];
 	}
-	
+
 	_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
 	[_refreshThread start];
 }

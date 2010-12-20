@@ -47,17 +47,17 @@
 		}
 		[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
 		[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[self.tableView visibleCells] waitUntilDone:YES];
+	} else {
+		[artists release];
+		[releases release];
+		[recommendedReleases release];
 	}
 	[pool release];
 }
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		[LastFMService sharedInstance].cacheOnly = YES;
-		_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:username] retain];
-		_releases = [[[LastFMService sharedInstance] releasesForUser:username] retain];
-		_recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:username] retain];
-		[LastFMService sharedInstance].cacheOnly = NO;
 		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
@@ -69,8 +69,6 @@
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-		_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
-		[_refreshThread start];
 	}
 	return self;
 }
@@ -91,6 +89,18 @@
 	[self.tableView setEditing:YES animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
 	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+}
+- (void)viewDidUnload {
+	[super viewDidUnload];
+	NSLog(@"Releasing recs data");
+	[_artists release];
+	_artists = nil;
+	[_releases release];
+	_releases = nil;
+	[_recommendedReleases release];
+	_recommendedReleases = nil;
+	[_data release];
+	_data = nil;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -127,10 +137,15 @@
 	}
 }
 - (void)viewDidLoad {
-	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-	//self.tableView.sectionHeaderHeight = 0;
-	//self.tableView.sectionFooterHeight = 0;
-	//self.tableView.backgroundColor = [UIColor blackColor];
+	[LastFMService sharedInstance].cacheOnly = YES;
+	[_artists release];
+	_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];
+	[_releases release];
+	_releases = [[[LastFMService sharedInstance] releasesForUser:_username] retain];
+	[_recommendedReleases release];
+	_recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:_username] retain];
+	[LastFMService sharedInstance].cacheOnly = NO;
+	[self rebuildMenu];
 	self.tableView.scrollsToTop = NO;
 }
 - (void)rebuildMenu {

@@ -52,25 +52,31 @@
 			_refreshThread = nil;
 		}
 		[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	} else {
+		[tracks release];
+		[artists release];
+		[images release];
 	}
 	[pool release];
 }
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		[LastFMService sharedInstance].cacheOnly = YES;
-		_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
-		_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
-		_weeklyArtistImages = [[NSMutableDictionary alloc] init];
-		for(int x = 0; x < [_weeklyArtists count] && x < 3; x++) {
-			NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
-			[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
-		}
-		[LastFMService sharedInstance].cacheOnly = NO;
-		[self rebuildMenu];
 		self.title = @"Profile";
 	}
 	return self;
+}
+- (void)viewDidUnload {
+	[super viewDidUnload];
+	NSLog(@"Releasing profile data");
+	[_recentTracks release];
+	_recentTracks = nil;
+	[_weeklyArtists release];
+	_weeklyArtists = nil;
+	[_weeklyArtistImages release];
+	_weeklyArtistImages = nil;
+	[_data release];
+	_data = nil;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -85,14 +91,21 @@
 	[_refreshThread start];
 }
 - (void)viewDidLoad {
-	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-	//self.tableView.sectionHeaderHeight = 0;
-	//self.tableView.sectionFooterHeight = 0;
-	//self.tableView.backgroundColor = [UIColor blackColor];
+	[LastFMService sharedInstance].cacheOnly = YES;
+	[_recentTracks release];
+	_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
+	[_weeklyArtists release];
+	_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
+	[_weeklyArtistImages release];
+	_weeklyArtistImages = [[NSMutableDictionary alloc] init];
+	for(int x = 0; x < [_weeklyArtists count] && x < 3; x++) {
+		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
+		[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
+	}
+	[LastFMService sharedInstance].cacheOnly = NO;
+	[self rebuildMenu];
 	
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	//bar.barStyle = UIBarStyleBlackTranslucent;
-	//bar.backgroundColor = [UIColor grayColor];
 	bar.placeholder = @"Search Last.fm";
 	self.tableView.tableHeaderView = bar;
 

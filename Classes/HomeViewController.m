@@ -15,9 +15,31 @@
 -(id)initWithUsername:(NSString *)user {
 	if (self = [super initWithNibName:@"HomeViewController" bundle:nil]) {
 		_username = [user retain];
+		currentTab = 0;
 		return self;
 	}
 	return nil;
+}
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	
+	switch(_tabBar.selectedItem.tag) {
+		case 0:
+			[_profileController viewWillDisappear:animated];
+			break;
+		case 1:
+			[_recsController viewWillDisappear:animated];
+			break;
+		case 2:
+			[_eventsController viewWillDisappear:animated];
+			break;
+		case 3:
+			[_radioController viewWillDisappear:animated];
+			break;
+		case 4:
+			[_friendsController viewWillDisappear:animated];
+			break;
+	}
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -64,6 +86,26 @@
 }
 
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+	if(item.tag != currentTab) {
+		switch(currentTab) {
+			case 0:
+				[_profileController viewWillDisappear:NO];
+				break;
+			case 1:
+				[_recsController viewWillDisappear:NO];
+				break;
+			case 2:
+				[_eventsController viewWillDisappear:NO];
+				break;
+			case 3:
+				[_radioController viewWillDisappear:NO];
+				break;
+			case 4:
+				[_friendsController viewWillDisappear:NO];
+				break;
+		}
+	}
+	currentTab = item.tag;
 	[[_contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	if(item.tag != 1)
 		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
@@ -127,6 +169,18 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+	[_profileController release];
+	_profileController = nil;
+	[_eventsController release];
+	_eventsController = nil;
+	[_radioController release];
+	_radioController = nil;
+	[_friendsController release];
+	_friendsController = nil;
+	[_recsController release];
+	_recsController = nil;
+	_tabBar = nil;
+	currentTab = 0;
 }
 
 
