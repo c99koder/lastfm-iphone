@@ -145,10 +145,17 @@
 			NSString *taghtml = @"";
 			
 			for(int i = 0; i < [_tags count] && i < 10; i++) {
-				if(i < [_tags count]-1 && i < 9)
-					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@, </a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
-				else
-					taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+				if(_paintItBlack) {
+					if(i < [_tags count]-1 && i < 9)
+						taghtml = [taghtml stringByAppendingFormat:@"%@, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+					else
+						taghtml = [taghtml stringByAppendingFormat:@"%@", [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+				} else {
+					if(i < [_tags count]-1 && i < 9)
+						taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@, </a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+					else
+						taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+				}
 			}
 			
 			_tagsView.html = taghtml;
@@ -286,22 +293,35 @@
 		return 52;
 	}
 }
+-(void)doneButtonPressed:(id)sender {
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+}
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if(_toggle.selectedSegmentIndex == 1) {
 		if([_events count]) {
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[indexPath row]]];
-			if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-				[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+			if([[self.navigationController topViewController] isKindOfClass:[PlaybackViewController class]]) {
+				[self.navigationController popViewControllerAnimated:NO];
 				[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-				[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+				[self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
 			}
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
-			[details release];
+			if(_paintItBlack) {
+				[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+				details.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+				UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:details];
+				[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:n animated:YES];
+				[details release];
+				[n release];
+			} else {
+				[self.navigationController pushViewController:details animated:YES];
+			}
 		}
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
-		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
+		if(!_paintItBlack || [station hasPrefix:@"lastfm://"])
+			[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
 	}
 	[self.tableView reloadData];
 }
@@ -465,7 +485,7 @@
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
 	}		
-	if(cell.accessoryType == UITableViewCellAccessoryNone) {
+	if(cell.accessoryType == UITableViewCellAccessoryNone && !_paintItBlack) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	return cell;

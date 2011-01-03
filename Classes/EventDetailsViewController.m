@@ -199,15 +199,17 @@ extern UIImage *eventDateBGImage;
 	switch(section) {
 		case 0:
 		{
-			ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_event objectForKey:@"headliner"]];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artist animated:YES];
-			[artist release];
+			if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController) {
+				ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_event objectForKey:@"headliner"]];
+				[self.navigationController pushViewController:artist animated:YES];
+				[artist release];
+			}
 			break;
 		}
 		case 1:
 		{
 			EventArtistsViewController *artists = [[EventArtistsViewController alloc] initWithArtists:[_event objectForKey:@"artists"]];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artists animated:YES];
+			[self.navigationController  pushViewController:artists animated:YES];
 			[artists release];
 			break;
 		}
@@ -246,7 +248,7 @@ extern UIImage *eventDateBGImage;
 		case 5:
 		{
 			EventAttendViewController *attend = [[EventAttendViewController alloc] initWithEvent:_event];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:attend animated:YES];
+			[self.navigationController pushViewController:attend animated:YES];
 			[attend release];
 			break;
 		}
@@ -287,8 +289,11 @@ extern UIImage *eventDateBGImage;
 			artistCell.shouldRoundTop = YES;
 			artistCell.shouldRoundBottom = YES;
 			artistCell.shouldCacheArtwork = YES;
-			artistCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
+			if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController)
+				artistCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			else
+				artistCell.accessoryType = UITableViewCellAccessoryNone;
+			
 			return artistCell;
 		}
 		case 1:
@@ -407,7 +412,7 @@ extern UIImage *eventDateBGImage;
 		[event setObject:[NSNumber numberWithInt:[newIndexPath row]] forKey:@"status"];
 		[_event release];
 		_event = [event retain];
-		NSArray *controllers = ((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController.viewControllers;
+		NSArray *controllers = self.navigationController.viewControllers;
 		[(EventDetailsViewController *)[controllers objectAtIndex:[controllers count]-2] _updateEvent:event];
 	}
 	[[self tableView] reloadData];
@@ -437,7 +442,7 @@ extern UIImage *eventDateBGImage;
 			break;
 	}
 	
-	NSArray *controllers = ((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)).rootViewController.viewControllers;
+	NSArray *controllers = self.navigationController.viewControllers;
 	int status = [(EventDetailsViewController *)[controllers objectAtIndex:[controllers count]-2] isAttendingEvent:[_event objectForKey:@"id"]];
 
 	if(status == [indexPath row])
@@ -482,9 +487,11 @@ extern UIImage *eventDateBGImage;
 	return 52;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_artists objectAtIndex:[newIndexPath row]]];
-	[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artist animated:YES];
-	[artist release];
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController) {
+		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_artists objectAtIndex:[newIndexPath row]]];
+		[self.navigationController pushViewController:artist animated:YES];
+		[artist release];
+	}
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
@@ -492,7 +499,10 @@ extern UIImage *eventDateBGImage;
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"simplecell"] autorelease];
 	}
 	cell.textLabel.text = [_artists objectAtIndex:[indexPath row]];
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController)
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	else
+		cell.accessoryType = UITableViewCellAccessoryNone;
 	return cell;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

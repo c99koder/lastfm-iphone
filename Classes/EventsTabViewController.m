@@ -215,14 +215,14 @@ UIImage *eventDateBGImage = nil;
 		case 0:
 		{
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+			[self.navigationController pushViewController:details animated:YES];
 			[details release];
 			break;
 		}
 		case 1:
 		{
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+			[self.navigationController pushViewController:details animated:YES];
 			[details release];
 			break;
 		}
@@ -242,7 +242,7 @@ UIImage *eventDateBGImage = nil;
 	}
 	
 	if(controller) {
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+		[self.navigationController pushViewController:controller animated:YES];
 		[controller release];
 	}
 	[[self tableView] reloadData];
@@ -261,7 +261,7 @@ UIImage *eventDateBGImage = nil;
 		UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
 		if(controller) {
 			controller.title = @"Events Near Me";
-			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+			[self.navigationController pushViewController:controller animated:YES];
 			[controller release];
 		}
 		//[_locationManager release];
@@ -396,7 +396,7 @@ UIImage *eventDateBGImage = nil;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
-	[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+	[self.navigationController pushViewController:details animated:YES];
 	[details release];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

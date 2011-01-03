@@ -181,19 +181,19 @@
 		else if([station isEqualToString:@"tags"]) {
 			TagRadioViewController *tags = [[TagRadioViewController alloc] initWithUsername:_username];
 			if(tags) {
-				[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tags animated:YES];
+				[self.navigationController pushViewController:tags animated:YES];
 				[tags release];
 			}
 		}
 	} else if([[_data objectAtIndex:[indexPath section]] isEqualToString:@"start"]) {
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
 			SearchViewController *controller = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
-			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+			[self.navigationController pushViewController:controller animated:YES];
 			[controller release];
 		}
 	} else if([[_data objectAtIndex:[indexPath section]] isEqualToString:@"debug"]) {
 		DebugViewController *controller = [[DebugViewController alloc] initWithNibName:@"DebugView" bundle:nil];
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+		[self.navigationController pushViewController:controller animated:YES];
 		[controller release];
 	}
 	[self.tableView reloadData];

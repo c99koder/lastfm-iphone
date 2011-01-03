@@ -24,23 +24,25 @@
 
 @implementation UIViewController (NowPlayingButton)
 -(void)showNowPlayingButton:(BOOL)show {
-	if(show) {
-		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 64, 30)];
-		[btn setBackgroundImage:[UIImage imageNamed:@"now_playing_header.png"] forState:UIControlStateNormal];
-		btn.adjustsImageWhenHighlighted = YES;
-		[btn addTarget:self action:@selector(nowPlayingButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
-		if(self.tabBarController)
-			self.tabBarController.navigationItem.rightBarButtonItem = item;
-		else
-			self.navigationItem.rightBarButtonItem = item;
-		[item release];
-		[btn release];
-	} else {
-		if(self.tabBarController)
-			self.tabBarController.navigationItem.rightBarButtonItem = nil;
-		else
-			self.navigationItem.rightBarButtonItem = nil;
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController) {
+		if(show) {
+			UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 64, 30)];
+			[btn setBackgroundImage:[UIImage imageNamed:@"now_playing_header.png"] forState:UIControlStateNormal];
+			btn.adjustsImageWhenHighlighted = YES;
+			[btn addTarget:self action:@selector(nowPlayingButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+			UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
+			if(self.tabBarController)
+				self.tabBarController.navigationItem.rightBarButtonItem = item;
+			else
+				self.navigationItem.rightBarButtonItem = item;
+			[item release];
+			[btn release];
+		} else {
+			if(self.tabBarController)
+				self.tabBarController.navigationItem.rightBarButtonItem = nil;
+			else
+				self.navigationItem.rightBarButtonItem = nil;
+		}
 	}
 }
 -(void)nowPlayingButtonPressed:(id)sender {

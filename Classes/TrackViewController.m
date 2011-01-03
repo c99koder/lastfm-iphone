@@ -218,7 +218,7 @@
 		ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
 		peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
 		peoplePicker.peoplePickerDelegate = self;
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:peoplePicker animated:YES];
+		[self.navigationController presentModalViewController:peoplePicker animated:YES];
 		[peoplePicker release];
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	}
@@ -229,7 +229,7 @@
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
 	ABMultiValueRef value = ABRecordCopyValue(person, property);
 	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(value, ABMultiValueGetIndexForIdentifier(value, identifier));
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
 	
 	[[LastFMService sharedInstance] recommendTrack:_track
 																				byArtist:_artist
@@ -244,7 +244,7 @@
 	return NO;
 }
 - (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 - (void)shareToFriend {
 	FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
@@ -253,7 +253,7 @@
 		friends.title = NSLocalizedString(@"Choose A Friend", @"Friend selector title");
 		UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:friends];
 		[friends release];
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:nav animated:YES];
+		[self.navigationController presentModalViewController:nav animated:YES];
 		[nav release];
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	}
@@ -267,10 +267,10 @@
 	else
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
 	
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 - (void)friendsViewControllerDidCancel:(FriendsViewController *)friends {
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 -(void)tagEditorDidCancel {
 	[self dismissModalViewControllerAnimated:YES];

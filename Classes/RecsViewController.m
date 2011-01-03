@@ -83,12 +83,12 @@
 - (void)doneButtonPressed:(id)sender {
 	[self.tableView setEditing:NO animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	self.navigationController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
  }
 - (void)editButtonPressed:(id)sender {
 	[self.tableView setEditing:YES animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
-	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	self.navigationController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 }
 - (void)viewDidUnload {
 	[super viewDidUnload];
@@ -110,7 +110,7 @@
 	[self.tableView.tableHeaderView resignFirstResponder];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-	((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	self.navigationController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 	self.tableView.editing = NO;
 	
 	if(_refreshThread) {

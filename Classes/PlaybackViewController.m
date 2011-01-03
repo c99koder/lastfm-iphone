@@ -431,7 +431,7 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		ABPeoplePickerNavigationController *peoplePicker = [[ABPeoplePickerNavigationController alloc] init];
 		peoplePicker.displayedProperties = [NSArray arrayWithObjects:[NSNumber numberWithInteger:kABPersonEmailProperty], nil];
 		peoplePicker.peoplePickerDelegate = self;
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:peoplePicker animated:YES];
+		[self.navigationController presentModalViewController:peoplePicker animated:YES];
 		[peoplePicker release];
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	}
