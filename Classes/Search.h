@@ -10,16 +10,14 @@
 
 
 @interface GlobalSearchDataSource : NSObject<UITableViewDataSource, UITableViewDelegate> {
-	NSArray *_artists;
-	NSArray *_tags;
+	NSArray *_results;
 	NSArray *_data;
 }
 -(void)search:(NSString *)query;
 @end
 
 @interface RadioSearchDataSource : NSObject<UITableViewDataSource, UITableViewDelegate> {
-	NSArray *_artists;
-	NSArray *_tags;
+	NSArray *_results;
 	NSArray *_data;
 }
 -(void)search:(NSString *)query;

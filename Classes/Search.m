@@ -19,43 +19,40 @@
 	if(_data)
 		[_data release];
 	
-	[_artists release];
-	_artists = [[[LastFMService sharedInstance] searchForArtist:query] retain];
+	[_results release];
+	_results = [[[LastFMService sharedInstance] search:query] retain];
 	
-	[_tags release];
-	_tags = [[[LastFMService sharedInstance] searchForTag:query] retain];
+	NSMutableArray *stations = [[NSMutableArray alloc] init];
 	
-	NSMutableArray *sections = [[NSMutableArray alloc] init];
-	
-	NSMutableArray *stations;
-	
-	if([_artists count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_artists count] && x<5; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"],[[_artists objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
-																											forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
+	if([_results count]) {
+		for(int x=0; x<[_results count]; x++) {
+			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],@"-",
+																																 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
+																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
+			}
+			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"artist"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"image"],
+																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
+																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
+			}
+			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"album"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[_results objectAtIndex:x] objectForKey:@"image"],
+																																 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
+																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url", nil]]];
+			}
+			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"track"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[_results objectAtIndex:x] objectForKey:@"image"],
+																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
+																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url", nil]]];
+			}
 		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
 	}
-	
-	if([_tags count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_tags count] && x<5; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tags objectAtIndex:x] objectForKey:@"name"],@"-",
-																															 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_tags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
-																											forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
-	}
-	
-	_data = sections;
+	_data = stations;
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
+	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
+		NSString *station = [[_data objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
@@ -70,29 +67,21 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return [_data count];
+	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
-		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
-	else
-		return 1;
+	return [_data count];
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]]) {
-		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
-	} else {
-		return nil;
-	}
+	return nil;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = nil;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
-		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
+	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
+		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
-			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
 		}
 	}
 	if(cell == nil)
@@ -101,17 +90,16 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
-		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
-		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
-			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
+		cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"title"];
+		if([[_data objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
+			cell.subtitle.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.shouldCacheArtwork = YES;
-		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"]) {
+		if([[[_data objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"]) {
 			[cell hideArtwork:YES];
 		} else {
-			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+			cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		}
 		cell.shouldFillHeight = YES;
 	}		
@@ -120,7 +108,11 @@
 	}
 	return cell;
 }
-
+- (void)dealloc {
+	[super dealloc];
+	[_data release];
+	[_results release];
+}
 @end
 
 @implementation RadioSearchDataSource
@@ -128,43 +120,30 @@
 	if(_data)
 		[_data release];
 	
-	[_artists release];
-	_artists = [[[LastFMService sharedInstance] searchForArtist:query] retain];
+	[_results release];
+	_results = [[[LastFMService sharedInstance] search:query] retain];
 	
-	[_tags release];
-	_tags = [[[LastFMService sharedInstance] searchForTag:query] retain];
+	NSMutableArray *stations = [[NSMutableArray alloc] init];
 	
-	NSMutableArray *sections = [[NSMutableArray alloc] init];
-	
-	NSMutableArray *stations;
-	
-	if([_artists count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_artists count] && x<5; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Radio", [[_artists objectAtIndex:x] objectForKey:@"name"]],[[_artists objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm://artist/%@/similar", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
-																											forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
+	if([_results count]) {
+		for(int x=0; x<[_results count]; x++) {
+			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Tag Radio", [[_results objectAtIndex:x] objectForKey:@"name"]],@"-",
+																																 [NSString stringWithFormat:@"lastfm://globaltags/%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
+																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
+			}
+			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"artist"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Radio", [[_results objectAtIndex:x] objectForKey:@"name"]],[[_results objectAtIndex:x] objectForKey:@"image"],
+																																 [NSString stringWithFormat:@"lastfm://artist/%@/similar", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
+																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
+			}
 		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
 	}
-	
-	if([_tags count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_tags count] && x<5; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Tag Radio", [[_tags objectAtIndex:x] objectForKey:@"name"]],@"-",
-																															 [NSString stringWithFormat:@"lastfm://globaltags/%@", [[[_tags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
-																											forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
-	}
-	
-	_data = sections;
+	_data = stations;
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
+	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
+		NSString *station = [[_data objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
@@ -179,29 +158,21 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return [_data count];
+	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
-		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
-	else
-		return 1;
+	return [_data count];
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]]) {
-		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
-	} else {
-		return nil;
-	}
+	return nil;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = nil;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
-		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
+	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
+		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
-			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_data objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
 		}
 	}
 	if(cell == nil)
@@ -210,17 +181,16 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
-		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
-		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
-			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
+		cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"title"];
+		if([[_data objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
+			cell.subtitle.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.shouldCacheArtwork = YES;
-		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"]) {
+		if([[[_data objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"]) {
 			[cell hideArtwork:YES];
 		} else {
-			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+			cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		}
 		cell.shouldFillHeight = YES;
 	}		
@@ -230,5 +200,9 @@
 	[img release];
 	return cell;
 }
-
+- (void)dealloc {
+	[super dealloc];
+	[_data release];
+	[_results release];
+}
 @end

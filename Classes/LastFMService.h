@@ -71,7 +71,6 @@ enum eventStatus {
 - (NSDictionary *)metadataForArtist:(NSString *)artist inLanguage:(NSString *)lang;
 - (NSArray *)eventsForArtist:(NSString *)artist;
 - (NSArray *)artistsSimilarTo:(NSString *)artist;
-- (NSArray *)searchForArtist:(NSString *)artist;
 - (NSArray *)topTagsForArtist:(NSString *)artist;
 - (void)addTags:(NSArray *)tags toArtist:(NSString *)artist;
 - (void)removeTag:(NSString *)tag fromArtist:(NSString *)artist;
@@ -129,7 +128,6 @@ enum eventStatus {
 #pragma mark Tag methods
 
 - (NSArray *)tagsSimilarTo:(NSString *)tag;
-- (NSArray *)searchForTag:(NSString *)tag;
 - (NSArray *)topArtistsForTag:(NSString *)tag;
 - (NSArray *)topAlbumsForTag:(NSString *)tag;
 - (NSArray *)topTracksForTag:(NSString *)tag;
@@ -139,6 +137,12 @@ enum eventStatus {
 
 - (NSDictionary *)tuneRadioStation:(NSString *)stationURL;
 - (NSDictionary *)getPlaylist;
+
+#pragma mark Search methods
+
+- (NSArray *)search:(NSString *)query;
+- (NSArray *)searchForArtist:(NSString *)artist;
+- (NSArray *)searchForTag:(NSString *)tag;
 
 #pragma mark Event methods
 

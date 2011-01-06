@@ -649,6 +649,56 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	}
 }
 
+#pragma mark Search methods
+
+- (NSArray *)search:(NSString *)query {
+	NSArray *nodes = [[[self doMethod:@"search.multi" maxCacheAge:0 XPath:@"./results/matches" withParameters:
+												[NSString stringWithFormat:@"term=%@",query],
+												nil] objectAtIndex:0] children];
+	
+	if([nodes count]) {
+		NSMutableArray *results = [[[NSMutableArray alloc] init] autorelease];
+		
+		for(CXMLNode *node in nodes) {
+			if([[node name] isEqualToString:@"tag"]) {
+				NSDictionary *tag = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", nil]
+																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", nil]];
+				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:tag];
+				[result setObject:@"tag" forKey:@"kind"];
+				[results addObject: result];
+				[result release];
+			}
+			if([[node name] isEqualToString:@"artist"]) {
+				NSDictionary *artist = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"medium\"]", nil]
+																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"image", nil]];
+				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:artist];
+				[result setObject:@"artist" forKey:@"kind"];
+				[results addObject: result];
+				[result release];
+			}
+			if([[node name] isEqualToString:@"album"]) {
+				NSDictionary *album = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"artist", @"image", nil]];
+				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:album];
+				[result setObject:@"album" forKey:@"kind"];
+				[results addObject: result];
+				[result release];
+			}
+			if([[node name] isEqualToString:@"track"]) {
+				NSDictionary *track = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"artist", @"image", nil]];
+				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:track];
+				[result setObject:@"track" forKey:@"kind"];
+				[results addObject: result];
+				[result release];
+			}
+		}
+		return results;
+	} else {
+		return nil;
+	}
+}
+
 #pragma mark Event methods
 
 - (void)attendEvent:(int)event status:(int)status {
