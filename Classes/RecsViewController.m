@@ -69,6 +69,7 @@
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
+		self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Recommended" style:UIBarButtonItemStylePlain target:nil action:nil];
 	}
 	return self;
 }

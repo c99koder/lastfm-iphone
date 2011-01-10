@@ -114,6 +114,7 @@
 		case 0:
 			self.title = _profileController.title;
 			self.navigationItem.titleView = nil;
+			self.navigationItem.backBarButtonItem = nil;
 			[_profileController viewWillAppear:NO];
 			_profileController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_profileController.view];
@@ -122,6 +123,7 @@
 			self.navigationItem.titleView = _recsController.navigationItem.titleView;
 			self.navigationItem.rightBarButtonItem = _recsController.navigationItem.rightBarButtonItem;
 			//self.title = _recsController.title;
+			self.navigationItem.backBarButtonItem = _recsController.navigationItem.backBarButtonItem;
 			[_recsController viewWillAppear:NO];
 			_recsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_recsController.view];
@@ -129,6 +131,7 @@
 		case 2:
 			self.title = _eventsController.title;
 			self.navigationItem.titleView = nil;
+			self.navigationItem.backBarButtonItem = nil;
 			[_eventsController viewWillAppear:NO];
 			_eventsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_eventsController.view];
@@ -136,6 +139,7 @@
 		case 3:
 			self.title = _radioController.title;
 			self.navigationItem.titleView = nil;
+			self.navigationItem.backBarButtonItem = nil;
 			[_radioController viewWillAppear:NO];
 			_radioController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_radioController.view];
@@ -143,6 +147,7 @@
 		case 4:
 			self.navigationItem.titleView = _friendsController.navigationItem.titleView;
 			self.navigationItem.leftBarButtonItem = nil;
+			self.navigationItem.backBarButtonItem = nil;
 			[_friendsController viewWillAppear:NO];
 			_friendsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_friendsController.view];
