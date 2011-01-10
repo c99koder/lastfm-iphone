@@ -215,14 +215,14 @@ UIImage *eventDateBGImage = nil;
 		case 0:
 		{
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
-			[self.navigationController pushViewController:details animated:YES];
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
 			[details release];
 			break;
 		}
 		case 1:
 		{
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
-			[self.navigationController pushViewController:details animated:YES];
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
 			[details release];
 			break;
 		}

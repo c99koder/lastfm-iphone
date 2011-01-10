@@ -166,7 +166,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		[delegate friendsViewController:self didSelectFriend:[[source objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
 	} else {
 		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[source objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
-		[self.navigationController pushViewController:home animated:YES];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:home animated:YES];
 		[home release];
 		[[self.tableView cellForRowAtIndexPath:newIndexPath] showProgress:NO];
 	}
