@@ -171,8 +171,8 @@
 		
 		if(toggle.selectedSegmentIndex == 0) {
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
-				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Play my recommendations", 
-																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], nil]
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"", 
+																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"My Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], nil]
 																																																										forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		
@@ -182,7 +182,7 @@
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_artists objectAtIndex:x] objectForKey:@"name"], [[_artists objectAtIndex:x] objectForKey:@"image"],
 																																	 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_artists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 				}
-				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Music Recommendations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
 			}
 		} else {
