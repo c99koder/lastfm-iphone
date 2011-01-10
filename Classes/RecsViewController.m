@@ -58,7 +58,7 @@
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
-		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"Latest Releases", nil]];
+		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"New Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
 		CGRect frame = toggle.frame;
@@ -83,12 +83,12 @@
 - (void)doneButtonPressed:(id)sender {
 	[self.tableView setEditing:NO animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-	self.navigationController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
  }
 - (void)editButtonPressed:(id)sender {
 	[self.tableView setEditing:YES animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
-	self.navigationController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 }
 - (void)viewDidUnload {
 	[super viewDidUnload];
@@ -109,8 +109,19 @@
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[self.tableView.tableHeaderView resignFirstResponder];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-	self.navigationController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	if(self.navigationItem.rightBarButtonItem == nil)
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
+	((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.75];
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	if(toggle.selectedSegmentIndex == 0)
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+	else
+		self.navigationItem.rightBarButtonItem.enabled = NO;
+	[UIView commitAnimations];
+		
 	self.tableView.editing = NO;
 	
 	if(_refreshThread) {
