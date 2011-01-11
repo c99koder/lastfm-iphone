@@ -1,4 +1,4 @@
-/* ProfileViewController.h - Display a Last.fm profile
+/* SearchTabViewController.h - Display search results
  * 
  * Copyright 2009 Last.fm Ltd.
  *   - Primarily authored by Sam Steele <sam@last.fm>
@@ -21,16 +21,10 @@
 
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
+#import "Search.h"
 
-@interface ProfileViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
-	NSString *_username;
-	NSArray *_data;
-	NSArray *_recentTracks;
-	NSArray *_weeklyArtists;
-	NSArray *_friendsListeningNow;
-	int friendsCount;
-	NSMutableDictionary *_weeklyArtistImages;
-	NSThread *_refreshThread;
+@interface SearchTabViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
+	NSTimer *_searchTimer;
+	GlobalSearchDataSource *_searchData;
 }
-- (id)initWithUsername:(NSString *)username;
 @end

@@ -164,6 +164,7 @@
 		229808D10E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */; };
 		229808D20E6DAA44009CEDF9 /* profile_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CD0E6DAA44009CEDF9 /* profile_panel.png */; };
 		229808D30E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */; };
+		22AA37A512DCF2D70000F121 /* SearchTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AA37A412DCF2D70000F121 /* SearchTabViewController.m */; };
 		22ABB41E0DB10C3100D2871E /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB41D0DB10C3100D2871E /* SearchViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
@@ -776,6 +777,8 @@
 		229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_dark_bkg_lower.png; sourceTree = "<group>"; };
 		229808CD0E6DAA44009CEDF9 /* profile_panel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profile_panel.png; sourceTree = "<group>"; };
 		229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_upper.png; sourceTree = "<group>"; };
+		22AA37A312DCF2D70000F121 /* SearchTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTabViewController.h; sourceTree = "<group>"; };
+		22AA37A412DCF2D70000F121 /* SearchTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTabViewController.m; sourceTree = "<group>"; };
 		22ABB41C0DB10C3100D2871E /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
 		22ABB41D0DB10C3100D2871E /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NowPlayingButton.h"; sourceTree = "<group>"; };
@@ -933,6 +936,8 @@
 				221E6B030DC2BD300006E74C /* Scrobbler.m */,
 				226F603E12A67CB400319DBC /* Search.h */,
 				226F603F12A67CB400319DBC /* Search.m */,
+				22AA37A312DCF2D70000F121 /* SearchTabViewController.h */,
+				22AA37A412DCF2D70000F121 /* SearchTabViewController.m */,
 				22ABB41C0DB10C3100D2871E /* SearchViewController.h */,
 				22ABB41D0DB10C3100D2871E /* SearchViewController.m */,
 				22E6E85F0E533F08009FD470 /* TagEditorViewController.h */,
@@ -1957,6 +1962,7 @@
 				2292952012AD23C500C31269 /* CXMLNode_PrivateExtensions.m in Sources */,
 				2292952112AD23C500C31269 /* CXMLNode_XPathExtensions.m in Sources */,
 				2292952212AD23C500C31269 /* CTidy.m in Sources */,
+				22AA37A512DCF2D70000F121 /* SearchTabViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

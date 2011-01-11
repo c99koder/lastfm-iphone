@@ -36,6 +36,9 @@
 		case 3:
 			[_radioController viewWillDisappear:animated];
 			break;
+		case 4:
+			[_searchController viewWillDisappear:animated];
+			break;
 	}
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -58,6 +61,9 @@
 		case 3:
 			[_radioController viewWillAppear:animated];
 			break;
+		case 4:
+			[_searchController viewWillAppear:animated];
+			break;
 	}
 }
 - (void)viewDidLoad {
@@ -67,6 +73,7 @@
 	_eventsController = [[EventsTabViewController alloc] initWithUsername:_username];
 	_radioController = [[RadioListViewController alloc] initWithUsername:_username];
 	_recsController = [[RecsViewController alloc] initWithUsername:_username];
+	_searchController = [[SearchTabViewController alloc] initWithStyle:UITableViewStylePlain];
 	
 	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
 		NSMutableArray *array = [NSMutableArray arrayWithArray:_tabBar.items];
@@ -92,6 +99,9 @@
 				break;
 			case 3:
 				[_radioController viewWillDisappear:NO];
+				break;
+			case 4:
+				[_searchController viewWillDisappear:NO];
 				break;
 		}
 	}
@@ -134,6 +144,14 @@
 			_radioController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_radioController.view];
 			break;
+		case 4:
+			self.title = _searchController.title;
+			self.navigationItem.titleView = nil;
+			self.navigationItem.backBarButtonItem = nil;
+			[_searchController viewWillAppear:NO];
+			_searchController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
+			[_contentView addSubview:_searchController.view];
+			break;
 	}
 }
 
@@ -164,6 +182,8 @@
 	_radioController = nil;
 	[_recsController release];
 	_recsController = nil;
+	[_searchController release];
+	_searchController = nil;
 	_tabBar = nil;
 	currentTab = 0;
 }

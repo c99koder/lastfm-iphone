@@ -12,6 +12,7 @@
 #import "RadioListViewController.h"
 #import "FriendsViewController.h"
 #import "RecsViewController.h"
+#import "SearchTabViewController.h"
 
 @interface HomeViewController : UIViewController<UITabBarDelegate> {
 	IBOutlet UIView *_contentView;
@@ -21,6 +22,7 @@
 	RecsViewController *_recsController;
 	EventsTabViewController *_eventsController;
 	RadioListViewController *_radioController;
+	SearchTabViewController *_searchController;
 	NSString *_username;
 	
 	int currentTab;

@@ -114,44 +114,6 @@
 		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
 	[LastFMService sharedInstance].cacheOnly = NO;
 	[self rebuildMenu];
-	
-	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	bar.placeholder = @"Search Last.fm";
-	self.tableView.tableHeaderView = bar;
-
-	_searchData = [[GlobalSearchDataSource alloc] init];
-	
-	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
-	searchController.delegate = self;
-	searchController.searchResultsDataSource = _searchData;
-	searchController.searchResultsDelegate = _searchData;
-
-	[bar release];
-}
-- (void)_search:(NSTimer *)timer {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *query = [timer userInfo];
-	[_searchData search:query];
-	[self.searchDisplayController.searchResultsTableView reloadData];
-	[self.searchDisplayController loadContentForCells:[self.searchDisplayController.searchResultsTableView visibleCells]];
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-	[pool release];
-}
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
-	if(_searchTimer) {
-		[_searchTimer invalidate];
-		[_searchTimer release];
-		_searchTimer = nil;
-	}
-	if([query length]) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-		_searchTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0
-																										 target:self
-																									 selector:@selector(_search:)
-																									 userInfo:query
-																										repeats:NO] retain];
-	}
-	return NO;
 }
 - (void)rebuildMenu {
 	@synchronized(self) {
@@ -195,6 +157,8 @@
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
+		} else if(friendsCount) {
+			[sections addObject:@"myfriends"];
 		}
 		
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
@@ -238,6 +202,8 @@
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"myfriends"]) {
+		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]]]];
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) logoutButtonPressed:nil];
 	}
@@ -312,6 +278,11 @@
 		logoutcell.textLabel.textAlignment = UITextAlignmentCenter;
 		logoutcell.backgroundColor = [UIColor redColor];
 		return logoutcell;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"myfriends"]) {
+		UITableViewCell *friendscell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
+		friendscell.textLabel.text = [NSString stringWithFormat:@"My Friends (%i)", friendsCount];
+		friendscell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		return friendscell;
 	}
 	
 	if([indexPath section] > 0 && cell.accessoryType == UITableViewCellAccessoryNone) {
