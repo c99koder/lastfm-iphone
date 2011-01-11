@@ -98,6 +98,7 @@ UIImage *avatarPlaceholder = nil;
 		[imageURL release];
 		imageURL = nil;
 	}
+	[self hideArtwork: NO];
 	imageURL = [url retain];
 	NSData *imageData;
 	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS)) {

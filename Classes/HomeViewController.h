@@ -21,7 +21,6 @@
 	RecsViewController *_recsController;
 	EventsTabViewController *_eventsController;
 	RadioListViewController *_radioController;
-	FriendsViewController *_friendsController;
 	NSString *_username;
 	
 	int currentTab;

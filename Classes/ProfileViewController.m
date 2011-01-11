@@ -40,6 +40,10 @@
 		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[artists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
 		[images setObject:[info objectForKey:@"image"] forKey:[[artists objectAtIndex:x] objectForKey:@"name"]];
 	}
+	friendsCount = [[[LastFMService sharedInstance] friendsOfUser:_username] count];
+	NSArray *friendsListeningNow = nil;
+	if(friendsCount > 0)
+		friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
 	if(![[NSThread currentThread] isCancelled]) {
 		@synchronized(self) {
 			[_recentTracks release];
@@ -48,6 +52,8 @@
 			_weeklyArtists = artists;
 			[_weeklyArtistImages release];
 			_weeklyArtistImages = images;
+			[_friendsListeningNow release];
+			_friendsListeningNow = friendsListeningNow;
 			[_refreshThread release];
 			_refreshThread = nil;
 		}
@@ -102,6 +108,10 @@
 		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
 		[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
 	}
+	friendsCount = [[[LastFMService sharedInstance] friendsOfUser:_username] count];
+	_friendsListeningNow = nil;
+	if(friendsCount > 0)
+		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
 	[LastFMService sharedInstance].cacheOnly = NO;
 	[self rebuildMenu];
 	
@@ -175,6 +185,17 @@
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
 		}
+
+		if([_friendsListeningNow count]) {
+			stations = [[NSMutableArray alloc] init];
+			for(int x=0; x<[_friendsListeningNow count] && x < 4; x++) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
+																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"track", @"realname", @"url",nil]]];
+			}
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[stations release];
+		}
 		
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
 			[sections addObject:@"logout"];
@@ -230,7 +251,7 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ArtworkCell *cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TrackCell"] autorelease];
+	ArtworkCell *cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"TrackCell"] autorelease];
 	
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
@@ -239,10 +260,25 @@
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
-			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]) {
+				cell.subtitle.text = [NSString stringWithFormat:@"%@ - %@", [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"], [[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]];
+			} else {
+				cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+			}
 		}
 		cell.shouldCacheArtwork = YES;
-		cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
+			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		else
+			[cell hideArtwork:YES];
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"]) {
+			cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"];
+			cell.detailTextLabel.textColor = [UIColor blackColor];
+			cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+		}	else {
+			cell.detailTextLabel.text = @"";
+		}
 		cell.shouldFillHeight = YES;
 		if([indexPath row] == 0)
 			cell.shouldRoundTop = YES;
@@ -296,6 +332,7 @@
 	[_recentTracks release];
 	[_weeklyArtists release];
 	[_weeklyArtistImages release];
+	[_friendsListeningNow release];
 	[_data release];
 }
 @end

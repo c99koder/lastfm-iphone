@@ -31,6 +31,8 @@
 			<string>fm.last.${PRODUCT_NAME:identifier}.lastfmservice</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>lastfm-user</string>
+				<string>lastfm-friends</string>
 				<string>lastfm-track</string>
 				<string>lastfm-album</string>
 				<string>lastfm-artist</string>

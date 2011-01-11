@@ -26,6 +26,7 @@
 #import "AlbumViewController.h"
 #import "TrackViewController.h"
 #import "TagViewController.h"
+#import "HomeViewController.h"
 #import "PlaybackViewController.h"
 #import "NSString+URLEscaped.h"
 
@@ -68,6 +69,30 @@ NSURL *__redirectURL;
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[url absoluteString] animated:YES];
 			}
 		}
+		return;
+	}
+	
+	if([[url scheme] isEqualToString:@"lastfm-user"]) {
+		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[url host] unURLEscape]];
+		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+		}
+		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:home animated:YES];
+		[home release];
+		return;
+	}
+	
+	if([[url scheme] isEqualToString:@"lastfm-friends"]) {
+		FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[url host] unURLEscape]];
+		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+		}
+		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:friends animated:YES];
+		[friends release];
 		return;
 	}
 	

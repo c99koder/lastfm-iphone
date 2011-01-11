@@ -36,9 +36,6 @@
 		case 3:
 			[_radioController viewWillDisappear:animated];
 			break;
-		case 4:
-			[_friendsController viewWillDisappear:animated];
-			break;
 	}
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -61,9 +58,6 @@
 		case 3:
 			[_radioController viewWillAppear:animated];
 			break;
-		case 4:
-			[_friendsController viewWillAppear:animated];
-			break;
 	}
 }
 - (void)viewDidLoad {
@@ -72,7 +66,6 @@
 	_profileController = [[ProfileViewController alloc] initWithUsername:_username];
 	_eventsController = [[EventsTabViewController alloc] initWithUsername:_username];
 	_radioController = [[RadioListViewController alloc] initWithUsername:_username];
-	_friendsController = [[FriendsViewController alloc] initWithUsername:_username];
 	_recsController = [[RecsViewController alloc] initWithUsername:_username];
 	
 	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
@@ -99,9 +92,6 @@
 				break;
 			case 3:
 				[_radioController viewWillDisappear:NO];
-				break;
-			case 4:
-				[_friendsController viewWillDisappear:NO];
 				break;
 		}
 	}
@@ -144,14 +134,6 @@
 			_radioController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
 			[_contentView addSubview:_radioController.view];
 			break;
-		case 4:
-			self.navigationItem.titleView = _friendsController.navigationItem.titleView;
-			self.navigationItem.leftBarButtonItem = nil;
-			self.navigationItem.backBarButtonItem = nil;
-			[_friendsController viewWillAppear:NO];
-			_friendsController.view.frame = CGRectMake(0,0,_contentView.frame.size.width,_contentView.frame.size.height);
-			[_contentView addSubview:_friendsController.view];
-			break;
 	}
 }
 
@@ -180,8 +162,6 @@
 	_eventsController = nil;
 	[_radioController release];
 	_radioController = nil;
-	[_friendsController release];
-	_friendsController = nil;
 	[_recsController release];
 	_recsController = nil;
 	_tabBar = nil;
@@ -194,7 +174,6 @@
 	[_profileController release];
 	[_eventsController release];
 	[_radioController release];
-	[_friendsController release];
 	[_recsController release];
 }
 

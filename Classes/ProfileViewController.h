@@ -28,6 +28,8 @@
 	NSArray *_data;
 	NSArray *_recentTracks;
 	NSArray *_weeklyArtists;
+	NSArray *_friendsListeningNow;
+	int friendsCount;
 	NSTimer *_searchTimer;
 	GlobalSearchDataSource *_searchData;
 	NSMutableDictionary *_weeklyArtistImages;
