@@ -71,7 +71,6 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	NSDate *age = [[[NSFileManager defaultManager] fileAttributesAtPath:file traverseLink:YES] objectForKey:NSFileModificationDate];
 	if(age==nil) return NO;
 	if(([age timeIntervalSinceNow] * -1) > seconds && [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasNetworkConnection]) {
-		[[NSFileManager defaultManager] removeItemAtPath:file error:NULL];
 		return NO;
 	} else
 		return YES;
@@ -214,19 +213,19 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)eventsForArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.getEvents" maxCacheAge:1*DAYS XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./startDate", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./startDate", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"startDate", @"image", nil]];
 }
 - (NSArray *)artistsSimilarTo:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.getSimilar" maxCacheAge:7*DAYS XPath:@"./similarartists/artist" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./match", @"./image[@size=\"medium\"]", @"./streamable", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./match", @"./image[@size=\"large\"]", @"./streamable", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"match", @"image", @"streamable", nil]];
 }
 - (NSArray *)searchForArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.search" maxCacheAge:1*HOURS XPath:@"./results/artistmatches/artist" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"image", nil]];
 }
 - (NSArray *)topTagsForArtist:(NSString *)artist {
@@ -252,7 +251,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)topTracksForArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.getTopTracks" maxCacheAge:5*MINUTES XPath:@"./toptracks/track" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"image", nil]];
 }
 
@@ -274,7 +273,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)tracksForAlbum:(NSString *)album byArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"album.getInfo" maxCacheAge:7*DAYS XPath:@"./album/tracks/track" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./artist/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"artist", @"image", nil]];
 }
 - (NSArray *)topTagsForAlbum:(NSString *)album byArtist:(NSString *)artist {
@@ -300,7 +299,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)topAlbumsForArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 
@@ -341,7 +340,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)fansOfTrack:(NSString *)track byArtist:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"track.getTopFans" maxCacheAge:7*DAYS XPath:@"./topfans/user" withParameters:[NSString stringWithFormat:@"track=%@", [track URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./weight", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./weight", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"username", @"weight", @"image", nil]];
 }
 - (NSArray *)topTagsForTrack:(NSString *)track byArtist:(NSString *)artist {
@@ -399,43 +398,43 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)topArtistsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getTopArtists" maxCacheAge:5*MINUTES XPath:@"./topartists/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
 }
 - (NSArray *)weeklyArtistsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getWeeklyArtistChart" maxCacheAge:5*MINUTES XPath:@"./weeklyartistchart/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
 }
 - (NSArray *)recommendedArtistsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecommendedArtists" maxCacheAge:5*MINUTES XPath:@"./recommendations/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
 }
 - (NSArray *)recommendedReleasesForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getNewReleases" maxCacheAge:5*MINUTES XPath:@"./albums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], @"userecs=1", nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", @"./@releasedate", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", @"releasedate", nil]];
 }
 - (NSArray *)releasesForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getNewReleases" maxCacheAge:5*MINUTES XPath:@"./albums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], @"userecs=0", nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", @"./@releasedate", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", @"releasedate", nil]];
 }
 - (NSArray *)topAlbumsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 - (NSArray *)topTracksForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getTopTracks" maxCacheAge:5*MINUTES XPath:@"./toptracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 - (NSArray *)tagsForUser:(NSString *)username {
@@ -453,37 +452,37 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@nowplaying", @"./artist/name", @"./name", @"./date", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@nowplaying", @"./artist/name", @"./name", @"./date", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"nowplaying", @"artist", @"name", @"date", @"image", nil]];
 }
 - (NSArray *)friendsOfUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getFriends" maxCacheAge:0 XPath:@"./friends/user" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./image[@size=\"medium\"]", @"realname", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./image[@size=\"large\"]", @"realname", nil]
 										 forKeys:[NSArray arrayWithObjects:@"username", @"image", @"realname", nil]];
 }
 - (NSArray *)nowListeningFriendsOfUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getfriendslisteningnow" maxCacheAge:0 XPath:@"./friendslisteningnow/user" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./realname", @"./scrobblesource/name", @"./recenttrack/artist/name", @"./recenttrack/name", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./realname", @"./scrobblesource/name", @"./recenttrack/artist/name", @"./recenttrack/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"username", @"realname", @"scrobblesource", @"artist", @"title", @"image", nil]];
 }
 - (NSArray *)eventsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
 }
 - (NSArray *)recommendedEventsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecommendedEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
 }
 - (NSArray *)eventsForLatitude:(float)latitude longitude:(float)longitude radius:(int)radius {
 	NSArray *nodes = [self doMethod:@"geo.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"lat=%f", latitude], [NSString stringWithFormat:@"long=%f", longitude], [NSString stringWithFormat:@"distance=%i", radius], nil];
 	return [self _convertNodes:nodes
-				 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"medium\"]", nil]
+				 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
 									 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
 }
 - (NSDictionary *)profileForUser:(NSString *)username {
@@ -558,19 +557,19 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)topArtistsForTag:(NSString *)tag {
 	NSArray *nodes = [self doMethod:@"tag.getTopArtists" maxCacheAge:7*DAYS XPath:@"./topartists/artist" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"image", nil]];
 }
 - (NSArray *)topAlbumsForTag:(NSString *)tag {
 	NSArray *nodes = [self doMethod:@"tag.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 - (NSArray *)topTracksForTag:(NSString *)tag {
 	NSArray *nodes = [self doMethod:@"tag.getTopTracks" maxCacheAge:5*MINUTES XPath:@"./toptracks/track" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
 }
 
@@ -669,7 +668,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 				[result release];
 			}
 			if([[node name] isEqualToString:@"artist"]) {
-				NSDictionary *artist = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"medium\"]", nil]
+				NSDictionary *artist = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"large\"]", nil]
 																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"image", nil]];
 				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:artist];
 				[result setObject:@"artist" forKey:@"kind"];
@@ -677,7 +676,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 				[result release];
 			}
 			if([[node name] isEqualToString:@"album"]) {
-				NSDictionary *album = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+				NSDictionary *album = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"large\"]", nil]
 																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"artist", @"image", nil]];
 				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:album];
 				[result setObject:@"album" forKey:@"kind"];
@@ -685,7 +684,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 				[result release];
 			}
 			if([[node name] isEqualToString:@"track"]) {
-				NSDictionary *track = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"medium\"]", nil]
+				NSDictionary *track = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"large\"]", nil]
 																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"artist", @"image", nil]];
 				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:track];
 				[result setObject:@"track" forKey:@"kind"];

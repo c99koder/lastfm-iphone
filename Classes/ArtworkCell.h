@@ -32,17 +32,20 @@
 	UIView *_bar;
 	double _maxCacheAge;
 	float barWidth;
+	float Yoffset;
 	NSString *imageURL;
 	BOOL _imageLoaded;
 	BOOL shouldCacheArtwork;
 	BOOL shouldRoundTop;
 	BOOL shouldRoundBottom;
 	BOOL shouldFillHeight;
+	UITableViewCellStyle _style;
 }
 @property (nonatomic, retain) UILabel *title;
 @property (nonatomic, retain) UILabel *subtitle;
 @property (nonatomic, retain) NSString *imageURL;
 @property float barWidth;
+@property float Yoffset;
 @property BOOL shouldCacheArtwork;
 @property BOOL shouldRoundTop;
 @property BOOL shouldRoundBottom;

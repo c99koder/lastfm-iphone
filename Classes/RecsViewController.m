@@ -187,21 +187,43 @@
 				[stations release];
 			}
 		} else {
-			stations = [[NSMutableArray alloc] init];
 			if([_releases count]) {
+				stations = [[NSMutableArray alloc] init];
 				for(int x=0; x<[_releases count] && x < 20; x++) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"],
-																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_releases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_releases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
+					NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+					[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+					[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z2"]; //"Fri, 21 Jan 2011 21:00:00 +0000"
+					NSDate *date = [formatter dateFromString:[[_releases objectAtIndex:x] objectForKey:@"releasedate"]];
+					[formatter setLocale:[NSLocale currentLocale]];
+					
+					[formatter setDateStyle:NSDateFormatterMediumStyle];
+					NSString *releaseDate = [NSString stringWithFormat:@"Released %@", [formatter stringFromDate:date]];
+					[formatter release];
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"], releaseDate,
+																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_releases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_releases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"releasedate", @"url", nil]]];
 				}
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"From Artists In Your Library", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+				[stations release];
 			}
+
 			if([_recommendedReleases count]) {
+				stations = [[NSMutableArray alloc] init];
 				for(int x=0; x<[_recommendedReleases count] && x < 20; x++) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"image"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"],
-																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"url",nil]]];
+					NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+					[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+					[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss Z2"]; //"Fri, 21 Jan 2011 21:00:00 +0000"
+					NSDate *date = [formatter dateFromString:[[_recommendedReleases objectAtIndex:x] objectForKey:@"releasedate"]];
+					[formatter setLocale:[NSLocale currentLocale]];
+					
+					[formatter setDateStyle:NSDateFormatterMediumStyle];
+					NSString *releaseDate = [NSString stringWithFormat:@"Released %@", [formatter stringFromDate:date]];
+					[formatter release];
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"image"], [[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"], releaseDate,
+																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_recommendedReleases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recommendedReleases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"releasedate", @"url", nil]]];
 				}
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recommended By Last.fm", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+				[stations release];
 			}
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Releases", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-			[stations release];
 		}
 		_data = sections;
 	}
@@ -228,7 +250,12 @@
  return [[[UIView alloc] init] autorelease];
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 52;
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	
+	if(toggle.selectedSegmentIndex == 1)
+		return 72;
+	else
+		return 52;
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
@@ -252,7 +279,7 @@
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
-			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
 		}
 	}
 	if(cell == nil)
@@ -278,7 +305,18 @@
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
+			cell.Yoffset = 12;
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+		}
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"releasedate"]) {
+			cell.Yoffset = 6;
+			cell.title.font = [UIFont boldSystemFontOfSize:12];
+			cell.title.textColor = [UIColor grayColor];
+			cell.subtitle.font = [UIFont boldSystemFontOfSize:16];
+			cell.subtitle.textColor = [UIColor blackColor];
+			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			cell.detailTextLabel.textColor = [UIColor grayColor];
+			cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"releasedate"];
 		}
 		cell.shouldCacheArtwork = YES;
 		cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
