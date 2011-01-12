@@ -499,6 +499,15 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)_trackDidFinishPlaying:(NSNotification *)notification {
 	NSLog(@"Track did finish playing");
+	int playsleft = [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue];
+	if(playsleft > 0) {
+		playsleft--;
+		[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%i", playsleft] forKey:@"trial_playsleft"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	} else {
+		[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+	}
 	[_busyLock lock];
 	//For some reason [_tracks removeObjectAtIndex:0] doesn't deallocate us properly, so we'll do it ourselves
 	LastFMTrack *t = [[_tracks objectAtIndex: 0] retain];

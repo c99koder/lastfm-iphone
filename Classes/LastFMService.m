@@ -640,6 +640,17 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 				[station replaceOccurrencesOfString:@"+" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [station length])];
 				[station replaceOccurrencesOfString:@"-" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [station length])];
 				title = [(NSString *)CFURLCreateStringByReplacingPercentEscapes(NULL,(CFStringRef)[station stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]],CFSTR("")) autorelease];
+			} else if([[node name] isEqualToString:@"extension"] && [[node children] count]) {
+				for(CXMLNode *extNode in [node children]) {
+					if([[extNode name] isEqualToString:@"expired"]) {
+						[[NSUserDefaults standardUserDefaults] setObject:[extNode stringValue] forKey:@"trial_expired"];
+						[[NSUserDefaults standardUserDefaults] synchronize];
+					}
+					if([[extNode name] isEqualToString:@"playsleft"]) {
+						[[NSUserDefaults standardUserDefaults] setObject:[extNode stringValue] forKey:@"trial_playsleft"];
+						[[NSUserDefaults standardUserDefaults] synchronize];
+					}
+				}
 			}
 		}
 		return [NSDictionary dictionaryWithObjectsAndKeys:playlist,@"playlist",title,@"title",nil]; 
