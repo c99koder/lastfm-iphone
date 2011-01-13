@@ -708,6 +708,18 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 	}
 }
+- (NSString *)searchForStation:(NSString *)query {
+	NSArray *nodes = [self doMethod:@"radio.search" maxCacheAge:0 XPath:@"./stations/station" withParameters:[NSString stringWithFormat:@"name=%@", [query URLEscaped]], nil];
+	if([nodes count]) {
+		NSDictionary *station = nil;
+		CXMLNode *node = [nodes objectAtIndex:0];
+		station = [self _convertNode:node
+					toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./url", nil]
+												 forKeys:[NSArray arrayWithObjects:@"name", @"url", nil]];
+		return [station objectForKey:@"url"];
+	}
+	return nil;
+}
 
 #pragma mark Event methods
 

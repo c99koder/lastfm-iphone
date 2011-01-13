@@ -69,6 +69,11 @@
 	
 	_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
 	[_refreshThread start];
+	
+	UISearchBar *bar = (UISearchBar *)self.tableView.tableHeaderView;
+	[bar resignFirstResponder];
+	bar.showsCancelButton = NO;
+	bar.text = @"";
 }
 - (void)viewDidLoad {
 	/*self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
@@ -77,19 +82,46 @@
 	self.tableView.backgroundColor = [UIColor blackColor];*/
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Enter an artist or genre";
+	bar.delegate = self;
 	self.tableView.tableHeaderView = bar;
-	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
+	/*UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
 	searchController.delegate = self;
 	searchController.searchResultsDataSource = _searchData;
-	searchController.searchResultsDelegate = _searchData;
+	searchController.searchResultsDelegate = _searchData;*/
 	[bar release];
+}
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+	searchBar.showsCancelButton = YES;
+	return YES;
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+	searchBar.showsCancelButton = NO;
+	[searchBar resignFirstResponder];
+}
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+	if(_searchTimer) {
+		[_searchTimer invalidate];
+		[_searchTimer release];
+		_searchTimer = nil;
+	}
+	if([searchBar.text length]) {
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		_searchTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0
+																										 target:self
+																									 selector:@selector(_search:)
+																									 userInfo:searchBar.text
+																										repeats:NO] retain];
+	}
 }
 - (void)_search:(NSTimer *)timer {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *query = [timer userInfo];
-	[_searchData search:query];
+	/*[_searchData search:query];
 	[self.searchDisplayController.searchResultsTableView reloadData];
-	[self.searchDisplayController loadContentForCells:[self.searchDisplayController.searchResultsTableView visibleCells]];
+	[self.searchDisplayController loadContentForCells:[self.searchDisplayController.searchResultsTableView visibleCells]];*/
+	NSString *station = [[LastFMService sharedInstance] searchForStation:query];
+	NSLog(@"Station: %@", station);
+	[self playRadioStation:station];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[pool release];
 }

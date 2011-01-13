@@ -143,6 +143,7 @@ enum eventStatus {
 - (NSArray *)search:(NSString *)query;
 - (NSArray *)searchForArtist:(NSString *)artist;
 - (NSArray *)searchForTag:(NSString *)tag;
+- (NSString *)searchForStation:(NSString *)query;
 
 #pragma mark Event methods
 
