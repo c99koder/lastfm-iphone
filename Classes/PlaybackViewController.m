@@ -208,8 +208,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }	
 - (void)_displayTrackInfo:(NSDictionary *)trackInfo {
 	_showedMetadata = NO;
-	_trackTitle.text = [trackInfo objectForKey:@"title"];
-	_artist.text = [trackInfo objectForKey:@"creator"];
+	_artistAndTrackTitle.text = [NSString stringWithFormat:@"%@ - %@", [trackInfo objectForKey:@"creator"], [trackInfo objectForKey:@"title"]];
 	_elapsed.text = @"0:00";
 	_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:([[trackInfo objectForKey:@"duration"] floatValue] / 1000.0f)]];
 	_progress.progress = 0;
@@ -219,7 +218,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	_noArtworkView.alpha = 1;
 	_badge.alpha = 0;
 	[UIView commitAnimations];
-	_artist.frame = CGRectMake(20,13,280,18);
 	[self _updateProgress:nil];
 	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
@@ -493,22 +491,6 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController dismissModalViewControllerAnimated:YES];
 }
--(void)playlistViewControllerDidCancel {
-	[self dismissModalViewControllerAnimated:YES];
-}
--(void)_addToPlaylist:(NSNumber *)playlist {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSDictionary *trackInfo = [[[LastFMRadio sharedInstance] trackInfo] retain];
-	[[LastFMService sharedInstance] addTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"] toPlaylist:[playlist intValue]];
-	if([LastFMService sharedInstance].error)
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) performSelectorOnMainThread:@selector(reportError:) withObject:[LastFMService sharedInstance].error waitUntilDone:YES];
-	[trackInfo release];
-	[pool release];
-}
--(void)playlistViewControllerDidSelectPlaylist:(int)playlist {
-	[self dismissModalViewControllerAnimated:YES];
-	[NSThread detachNewThreadSelector:@selector(_addToPlaylist:) toTarget:self withObject:[NSNumber numberWithInt:playlist]];
-}
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSDictionary *trackInfo = [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) trackInfo];
 
@@ -539,15 +521,6 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 		[self presentModalViewController:t animated:YES];
 		[t setTags: [[LastFMService sharedInstance] tagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]]];
 		[t release];
-	}
-	
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Add to Playlist", @"Add to Playlist button")]) {
-		PlaylistsViewController *p = [[PlaylistsViewController alloc] init];
-		p.delegate = self;
-		UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:p];
-		[self presentModalViewController:n animated:YES];
-		[p release];
-		[n release];
 	}
 	
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button")]) {
@@ -582,7 +555,6 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 																			 destructiveButtonTitle:nil
 																						otherButtonTitles:NSLocalizedString(@"Share", @"Share button"),
 																															NSLocalizedString(@"Tag", @"Tag button"),
-																															NSLocalizedString(@"Add to Playlist", @"Add to Playlist button"),
 																															NSLocalizedString(@"Buy on iTunes", @"Buy on iTunes button"),
 																															nil];
 	sheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;

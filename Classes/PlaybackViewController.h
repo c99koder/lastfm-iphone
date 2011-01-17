@@ -26,7 +26,6 @@
 #import "ArtworkCell.h"
 #import "FriendsViewController.h"
 #import "TagEditorViewController.h"
-#import "PlaylistsViewController.h"
 #import "ArtistViewController.h"
 
 int tagSort(id tag1, id tag2, void *context);
@@ -40,8 +39,7 @@ int tagSort(id tag1, id tag2, void *context);
 
 @interface TrackPlaybackViewController : PlaybackSubview {
 	IBOutlet UIImageView *_artworkView;
-	IBOutlet UILabel *_trackTitle;
-	IBOutlet UILabel *_artist;
+	IBOutlet UILabel *_artistAndTrackTitle;
 	IBOutlet UILabel *_elapsed;
 	IBOutlet UILabel *_remaining;
 	IBOutlet UIProgressView *_progress;
@@ -59,7 +57,7 @@ int tagSort(id tag1, id tag2, void *context);
 @property (nonatomic, readonly) UIImage *artwork;
 @end
 
-@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,PlaylistsViewControllerDelegate,MFMailComposeViewControllerDelegate> {
+@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,MFMailComposeViewControllerDelegate> {
 	IBOutlet UILabel *_titleLabel;
 	IBOutlet UIToolbar *toolbar;
 	IBOutlet UIView *contentView;
