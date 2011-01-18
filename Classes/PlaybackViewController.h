@@ -46,12 +46,18 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UILabel *_bufferPercentage;
 	IBOutlet UIImageView *_fullscreenMetadataView;
 	IBOutlet UIButton *_badge;
+	IBOutlet UIView *_filterBar;
+	IBOutlet UIView *_filterView;
+	IBOutlet UIPickerView *_filter;
+	NSArray *_trackTags;
 	UIImage *artwork;
 	UIImageView *_noArtworkView;
 	NSLock *_lock;
 	NSTimer *_timer;
 	BOOL _showedMetadata;
 }
+-(void)filterButtonPressed:(id)sender;
+-(void)dismissFilterView:(id)sender;
 -(void)resignActive;
 -(void)becomeActive;
 @property (nonatomic, readonly) UIImage *artwork;

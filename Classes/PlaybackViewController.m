@@ -143,6 +143,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSString *artworkURL = nil;
 	UIImage *artworkImage;
 	
+	[_trackTags release];
+	_trackTags = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] retain];
+	
 	if([[albumData objectForKey:@"image"] length]) {
 		artworkURL = [NSString stringWithString:[albumData objectForKey:@"image"]];
 	} else if([[trackInfo objectForKey:@"image"] length]) {
@@ -228,6 +231,29 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)_trackDidChange:(NSNotification *)notification {
 	NSDictionary *trackInfo = [notification userInfo];
 	[self _displayTrackInfo:trackInfo];
+}
+-(void)filterButtonPressed:(id)sender {
+	[_filter reloadAllComponents];
+	[UIView beginAnimations:nil context:nil];
+	_filterView.frame = CGRectMake(0,162,320,254);
+	[UIView commitAnimations];
+}
+-(void)dismissFilterView:(id)sender {
+	[UIView beginAnimations:nil context:nil];
+	_filterView.frame = CGRectMake(0,416,320,254);
+	[UIView commitAnimations];
+}
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView {
+	return 1;
+}
+- (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component {
+	return [_trackTags count] + 1;
+}
+- (NSString *)pickerView:(UIPickerView *)thePickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+	if(row == 0)
+		return @"Include all tags";
+	else
+		return [[_trackTags objectAtIndex:(row-1)] objectForKey:@"name"];
 }
 @end
 
