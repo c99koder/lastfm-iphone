@@ -152,16 +152,39 @@
 		NSMutableArray *sections = [[NSMutableArray alloc] init];
 		
 		NSMutableArray *stations = [[NSMutableArray alloc] init];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library", @"My Library station"),[NSString stringWithFormat:@"lastfm://user/%@/personal", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station"),[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),[NSString stringWithFormat:@"lastfm://user/%@/mix", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library", @"My Library station"),
+																						  [NSString stringWithFormat:@"lastfm://user/%@/personal", _username],
+																						  NSLocalizedString(@"Music you know and love", @"My Library description"),
+																						  nil] 
+														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description",nil]]];
+		
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),
+																[NSString stringWithFormat:@"lastfm://user/%@/mix", _username],
+																NSLocalizedString(@"Your library + new music", @"Mix Radio description"),
+																nil] 
+														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+		
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station"),
+																						  [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],
+																					      NSLocalizedString(@"New Music from Last.fm", @"Recommendation Radio description"),
+																						  nil] 
+														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description" ,nil]]];
 		
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Personal Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 		
 		stations = [[NSMutableArray alloc] init];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Radio",[NSString stringWithFormat:@"lastfm://user/%@/friends", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Neighbourhood Radio",[NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Radio",
+																						  [NSString stringWithFormat:@"lastfm://user/%@/friends", _username],
+																						  @"Music your friends like",
+																						  nil] 
+														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Neighbourhood Radio",
+																						  [NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],
+																						  @"Music from listeners like you",
+																						  nil] 
+														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
 		
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Network Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
@@ -242,7 +265,7 @@
 		return nil;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
+	UITableViewCell *cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil] autorelease];
 
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
@@ -250,6 +273,8 @@
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
+		cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"description"];
+		NSLog( @"Cell detail: %@", [[stations objectAtIndex:[indexPath row]] objectForKey:@"description"] );
 		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"url"] isEqualToString:@"tags"])
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	} else {
