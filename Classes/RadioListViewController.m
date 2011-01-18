@@ -274,7 +274,6 @@
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
 		cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"description"];
-		NSLog( @"Cell detail: %@", [[stations objectAtIndex:[indexPath row]] objectForKey:@"description"] );
 		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"url"] isEqualToString:@"tags"])
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	} else {
@@ -283,10 +282,8 @@
 	}
 	
 	if(cell.accessoryType == UITableViewCellAccessoryNone) {
-		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-		img.opaque = YES;
-		cell.accessoryView = img;
-		[img release];
+		UIImage *img = [UIImage imageNamed:@"streaming.png"];
+		cell.imageView.image = img;
 	}
 	return cell;
 }
