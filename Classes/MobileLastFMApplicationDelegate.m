@@ -204,6 +204,8 @@ NSString *kUserAgent;
 	[pool release];
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Subscribe"])
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/subscribe"]];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Logout", @"Logout")])
 		[self performSelectorOnMainThread:@selector(_logout) withObject:nil waitUntilDone:YES];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Cancel", @"Cancel")])
@@ -465,6 +467,13 @@ NSString *kUserAgent;
 				return;
 			case errorCodeSubscribersOnly:
 				[self displayError:NSLocalizedString(@"ERROR_SUBSCRIPTION", @"Subscription required error") withTitle:NSLocalizedString(@"ERROR_SUBSCRIPTION_TITLE", @"Subscription required error title")];
+				return;
+			case errorCodeTrialExpired:
+				_pendingAlert = [[UIAlertView alloc] initWithTitle:@"Trial Expired" message:@"Your Last.fm radio free trial has expired." delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe",nil];
+				if(!_locked)
+					[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+				[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
+				[[NSUserDefaults standardUserDefaults] synchronize];
 				return;
 		}
 	}

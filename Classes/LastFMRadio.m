@@ -483,6 +483,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	
 	_busyLock = [[NSLock alloc] init];
 	_tracks = [[NSMutableArray alloc] init];
+	softskipping = NO;
 	AudioSessionInitialize(NULL, NULL, interruptionListener, self);
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidBecomeAvailable:) name:kTrackDidBecomeAvailable object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishPlaying:) name:kTrackDidFinishPlaying object:nil];
@@ -504,15 +505,23 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		playsleft--;
 		[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%i", playsleft] forKey:@"trial_playsleft"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
+		if(playsleft == 5) {
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free trial is almost over!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+		}
 	} else {
 		[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
+		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free has expired!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+		[self stop];
 	}
 	[_busyLock lock];
 	//For some reason [_tracks removeObjectAtIndex:0] doesn't deallocate us properly, so we'll do it ourselves
 	LastFMTrack *t = [[_tracks objectAtIndex: 0] retain];
 	[_tracks removeObjectAtIndex:0];
 	[t release];
+	[_busyLock unlock];
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];
 		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
@@ -520,15 +529,17 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	} else {
 		[self play];
 	}
-	[_busyLock unlock];
 }
 -(void)_softSkip:(NSTimer *)timer {
 	NSLog(@"Soft skipping to prebuffer next track");
+	softskipping = YES;
 	_softSkipTimer = nil;
 	[_playlist removeObjectAtIndex:0];
-	[self play];
-	[[_tracks lastObject] pause];
-	prebuffering = YES;
+	if([self play]) {
+		[[_tracks lastObject] pause];
+		prebuffering = YES;
+	}
+	softskipping = NO;
 }
 -(BOOL)cancelPrebuffering {
 	if(prebuffering) {
@@ -695,18 +706,30 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 	}
 	if(![_playlist count]) {
-		[self removeRecentURL: _stationURL];
-		if([LastFMService sharedInstance].error)
-			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
-		else
-			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
+		if(!softskipping) {
+			[self removeRecentURL: _stationURL];
+			if([LastFMService sharedInstance].error)
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
+			else
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
 #if !(TARGET_IPHONE_SIMULATOR)
-		[[Beacon shared] startSubBeaconWithName:@"NEC error" timeSession:NO];
+			[[Beacon shared] startSubBeaconWithName:@"NEC error" timeSession:NO];
 #endif
-		[self stop];
+			[self stop];
+		}
 		return FALSE;
 	}
 
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 30) {
+		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Welcome to Last.fm! You can listen to 30 tracks for free before a subscription is required." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+	}
+	
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 5) {
+		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free trial is almost over!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+	}
+	
 	LastFMTrack *track = [[[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]] autorelease];
 	
 	if(track) {

@@ -87,6 +87,7 @@ NSString *kTrackDidFailToStream;
 	int _errorSkipCounter;
 	NSTimer *_softSkipTimer;
 	BOOL prebuffering;
+	BOOL softskipping;
 	BOOL tuning;
 }
 

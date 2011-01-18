@@ -41,6 +41,7 @@ enum serviceErrorCodes {
 };
 
 enum radioErrorCodes {
+	errorCodeTrialExpired = 18,
 	errorCodeNotEnoughContent = 20,
 	errorCodeNotEnoughMembers = 21,
 	errorCodeNotEnoughFans = 22,
