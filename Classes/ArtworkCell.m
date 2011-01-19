@@ -101,8 +101,12 @@ UIImage *avatarPlaceholder = nil;
 	[self hideArtwork: NO];
 	imageURL = [url retain];
 	NSData *imageData;
-	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS)) {
-		imageData = [[NSData alloc] initWithContentsOfFile:CACHE_FILE([imageURL md5sum])];
+	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS) || [imageURL hasPrefix:@"/"]) {
+		if([imageURL hasPrefix:@"/"])
+			imageData = [[NSData alloc] initWithContentsOfFile:imageURL];
+		else
+			imageData = [[NSData alloc] initWithContentsOfFile:CACHE_FILE([imageURL md5sum])];
+			
 		UIImage *image = [UIImage imageWithData:imageData];
 		if(shouldRoundTop || shouldRoundBottom) {
 			image = [self roundedImage:image];

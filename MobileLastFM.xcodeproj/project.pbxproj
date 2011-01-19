@@ -116,6 +116,8 @@
 		2244DAFE0E3A55C700C4F40B /* reflectionmask.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFA0E3A55C700C4F40B /* reflectionmask.png */; };
 		2244DAFF0E3A55C700C4F40B /* cog_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAFB0E3A55C700C4F40B /* cog_button.png */; };
 		224EFDAF0E3E2FAC007F293F /* calendarday.png in Resources */ = {isa = PBXBuildFile; fileRef = 224EFDAD0E3E2FAC007F293F /* calendarday.png */; };
+		224F654112E7627B00ABEECD /* searchresults_tag.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F653F12E7627B00ABEECD /* searchresults_tag.png */; };
+		224F654212E7627B00ABEECD /* searchresults_track.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F654012E7627B00ABEECD /* searchresults_track.png */; };
 		225157980E09A67B00943078 /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 225157970E09A67B00943078 /* backBtn.png */; };
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
 		2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349C0DA85CD30035A1AA /* LastFMRadio.m */; };
@@ -703,6 +705,8 @@
 		2244DAFB0E3A55C700C4F40B /* cog_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cog_button.png; sourceTree = "<group>"; };
 		224793070F8123C100EE0C52 /* Beacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beacon.h; sourceTree = "<group>"; };
 		224EFDAD0E3E2FAC007F293F /* calendarday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarday.png; sourceTree = "<group>"; };
+		224F653F12E7627B00ABEECD /* searchresults_tag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchresults_tag.png; sourceTree = "<group>"; };
+		224F654012E7627B00ABEECD /* searchresults_track.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchresults_track.png; sourceTree = "<group>"; };
 		225157970E09A67B00943078 /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
 		2259349A0DA85CD30035A1AA /* LastFMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMService.m; sourceTree = "<group>"; };
 		2259349B0DA85CD30035A1AA /* LastFMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMService.h; sourceTree = "<group>"; };
@@ -1064,6 +1068,8 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				224F653F12E7627B00ABEECD /* searchresults_tag.png */,
+				224F654012E7627B00ABEECD /* searchresults_track.png */,
 				22F255200E75771E000965FA /* metadatagradient.png */,
 				22624B4D0E6F01FE00072BB4 /* calendar-view-gradient.png */,
 				229808CA0E6DAA44009CEDF9 /* red_button_dark_bkg_upper.png */,
@@ -1900,6 +1906,8 @@
 				22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */,
 				22CAC580125F891100250917 /* DetailsView.xib in Resources */,
 				22D21AE01294827400B3E520 /* HomeViewController.xib in Resources */,
+				224F654112E7627B00ABEECD /* searchresults_tag.png in Resources */,
+				224F654212E7627B00ABEECD /* searchresults_track.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

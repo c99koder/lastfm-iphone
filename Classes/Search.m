@@ -27,7 +27,7 @@
 	if([_results count]) {
 		for(int x=0; x<[_results count]; x++) {
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],@"-",
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[NSBundle mainBundle] pathForResource:@"searchresults_tag" ofType:@"png"],
 																																 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
 			}
@@ -37,12 +37,12 @@
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
 			}
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"album"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[_results objectAtIndex:x] objectForKey:@"image"],
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[NSString stringWithFormat:@"By %@", [[_results objectAtIndex:x] objectForKey:@"artist"]],[[_results objectAtIndex:x] objectForKey:@"image"],
 																																 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url", nil]]];
 			}
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"track"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[_results objectAtIndex:x] objectForKey:@"image"],
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[NSBundle mainBundle] pathForResource:@"searchresults_track" ofType:@"png"],
 																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url", nil]]];
 			}
@@ -50,27 +50,14 @@
 	}
 	_data = stations;
 }
--(void)_rowSelected:(NSIndexPath *)indexPath {
-	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
-		NSString *station = [[_data objectAtIndex:[indexPath row]] objectForKey:@"url"];
-		NSLog(@"Station: %@", station);
-		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
-	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) logoutButtonPressed:nil];
-	}
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	if([newIndexPath row] > 0) {
-		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
-	}
-	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
-}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return [_data count];
+}
+- (NSArray *)data {
+	return _data;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	return nil;

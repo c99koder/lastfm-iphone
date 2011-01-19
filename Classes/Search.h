@@ -14,6 +14,7 @@
 	NSArray *_data;
 }
 -(void)search:(NSString *)query;
+-(NSArray *)data;
 @end
 
 @interface RadioSearchDataSource : NSObject<UITableViewDataSource, UITableViewDelegate> {

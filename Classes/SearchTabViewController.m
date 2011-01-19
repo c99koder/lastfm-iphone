@@ -51,14 +51,10 @@
 - (void)viewDidLoad {
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Search Last.fm";
+	bar.delegate = self;
 	self.tableView.tableHeaderView = bar;
 	self.tableView.dataSource = _searchData;
-	self.tableView.delegate = _searchData;
-	
-	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
-	searchController.delegate = self;
-	searchController.searchResultsDataSource = _searchData;
-	searchController.searchResultsDelegate = _searchData;
+	self.tableView.delegate = self;
 	
 	[bar release];
 }
@@ -68,28 +64,56 @@
 	[_searchData search:query];
 	[self.searchDisplayController.searchResultsTableView reloadData];
 	[self.tableView reloadData];
-	[self.searchDisplayController loadContentForCells:[self.searchDisplayController.searchResultsTableView visibleCells]];
+	[self loadContentForCells:[self.tableView visibleCells]];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[pool release];
 }
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
+	searchBar.showsCancelButton = YES;
+	return YES;
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+	searchBar.showsCancelButton = NO;
+	[searchBar resignFirstResponder];
+}
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	if(_searchTimer) {
 		[_searchTimer invalidate];
 		[_searchTimer release];
 		_searchTimer = nil;
 	}
-	if([query length]) {
+	if([searchBar.text length]) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 		_searchTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0
 																										 target:self
 																									 selector:@selector(_search:)
-																									 userInfo:query
+																									 userInfo:searchBar.text
 																										repeats:NO] retain];
 	}
 	return NO;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return 52;
+}
+-(void)_rowSelected:(NSIndexPath *)indexPath {
+	NSArray *_data = [_searchData data];
+	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {
+		NSString *station = [[_data objectAtIndex:[indexPath row]] objectForKey:@"url"];
+		NSLog(@"Station: %@", station);
+		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) logoutButtonPressed:nil];
+	}
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
+	if([newIndexPath row] > 0) {
+		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
+	}
+	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (void)dealloc {
 	[super dealloc];
