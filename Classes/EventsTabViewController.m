@@ -305,7 +305,8 @@ UIImage *eventDateBGImage = nil;
 			eventCell.day.text = [formatter stringFromDate:date];
 			
 			eventCell.title.text = [event objectForKey:@"headliner"];
-			[formatter setDateFormat:@"HH:mm"];
+			[formatter setDateStyle:NSDateFormatterNoStyle];
+			[formatter setTimeStyle:NSDateFormatterShortStyle];
 			eventCell.location.text = [NSString stringWithFormat:@"%@, %@\n%@", [formatter stringFromDate:date], [event objectForKey:@"venue"], [event objectForKey:@"city"]];
 			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
 			eventCell.location.numberOfLines = 0;
@@ -333,7 +334,8 @@ UIImage *eventDateBGImage = nil;
 			[formatter setLocale:[NSLocale currentLocale]];
 			
 			eventCell.title.text = [event objectForKey:@"headliner"];
-			[formatter setDateFormat:@"HH:mm"];
+			[formatter setDateStyle:NSDateFormatterNoStyle];
+			[formatter setTimeStyle:NSDateFormatterShortStyle];
 			eventCell.location.text = [NSString stringWithFormat:@"%@, %@\n%@", [formatter stringFromDate:date], [event objectForKey:@"venue"], [event objectForKey:@"city"]];
 			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
 			eventCell.location.numberOfLines = 0;
