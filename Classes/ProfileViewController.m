@@ -139,7 +139,7 @@
 		
 		if([_recentTracks count]) {
 			stations = [[NSMutableArray alloc] init];
-			for(int x=0; x<[_recentTracks count] && x < 10; x++) {
+			for(int x=0; x<[_recentTracks count] && x < 5; x++) {
 				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"])
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
 																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
@@ -150,12 +150,12 @@
 
 		if([_friendsListeningNow count]) {
 			stations = [[NSMutableArray alloc] init];
-			for(int x=0; x<[_friendsListeningNow count] && x < 4; x++) {
+			for(int x=0; x<[_friendsListeningNow count] && x < 3; x++) {
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
 																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"track", @"realname", @"url",nil]]];
 			}
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Listening Now", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
 		} else if(friendsCount) {
 			[sections addObject:@"myfriends"];
