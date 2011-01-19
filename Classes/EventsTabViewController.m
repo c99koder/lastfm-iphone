@@ -186,7 +186,7 @@ UIImage *eventDateBGImage = nil;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(section == 0 && [_events count]) {
-		return @"Upcoming Events";
+		return @"Your Upcoming Events";
 	} else if(section == 1 && [_recs count]) {
 		return @"Recommended Events";
 	} else {
@@ -291,10 +291,7 @@ UIImage *eventDateBGImage = nil;
 			}
 			
 			NSDictionary *event = [_events objectAtIndex:[indexPath row]];
-			eventCell.title.text = [event objectForKey:@"headliner"];
-			eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
-			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
-			eventCell.location.numberOfLines = 0;
+
 			NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 			[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 			[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
@@ -306,6 +303,12 @@ UIImage *eventDateBGImage = nil;
 			
 			[formatter setDateFormat:@"d"];
 			eventCell.day.text = [formatter stringFromDate:date];
+			
+			eventCell.title.text = [event objectForKey:@"headliner"];
+			[formatter setDateFormat:@"HH:mm"];
+			eventCell.location.text = [NSString stringWithFormat:@"%@, %@\n%@", [formatter stringFromDate:date], [event objectForKey:@"venue"], [event objectForKey:@"city"]];
+			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+			eventCell.location.numberOfLines = 0;
 			
 			[formatter release];
 			eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -322,15 +325,18 @@ UIImage *eventDateBGImage = nil;
 			}
 			
 			NSDictionary *event = [_recs objectAtIndex:[indexPath row]];
-			eventCell.title.text = [event objectForKey:@"headliner"];
-			eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
-			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
-			eventCell.location.numberOfLines = 0;
+			
 			NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 			[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 			[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
 			NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
 			[formatter setLocale:[NSLocale currentLocale]];
+			
+			eventCell.title.text = [event objectForKey:@"headliner"];
+			[formatter setDateFormat:@"HH:mm"];
+			eventCell.location.text = [NSString stringWithFormat:@"%@, %@\n%@", [formatter stringFromDate:date], [event objectForKey:@"venue"], [event objectForKey:@"city"]];
+			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+			eventCell.location.numberOfLines = 0;
 			
 			[formatter setDateFormat:@"MMM"];
 			eventCell.month.text = [formatter stringFromDate:date];
