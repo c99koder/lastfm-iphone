@@ -32,6 +32,7 @@
 @interface FriendsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
 	NSString *_username;
 	NSArray *_friendsListeningNow;
+	NSArray *_eqFrames;
 	NSMutableArray *_searchResults;
 	NSMutableArray *_data;
 	id<FriendsViewControllerDelegate> delegate;

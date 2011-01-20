@@ -69,6 +69,13 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
 		self.title = @"Profile";
+		NSMutableArray *frames = [[NSMutableArray alloc] init];
+		int i;
+		for(i=1; i<=11; i++) {
+			NSString *filename = [NSString stringWithFormat:@"icon_eq_f%02i.png", i];
+			[frames addObject:[UIImage imageNamed:filename]];
+		}
+		_eqFrames = frames;
 	}
 	return self;
 }
@@ -106,7 +113,8 @@
 	_weeklyArtistImages = [[NSMutableDictionary alloc] init];
 	for(int x = 0; x < [_weeklyArtists count] && x < 3; x++) {
 		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
-		[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
+		if(info != nil)
+			[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
 	}
 	friendsCount = [[[LastFMService sharedInstance] friendsOfUser:_username] count];
 	_friendsListeningNow = nil;
@@ -129,9 +137,10 @@
 		if([_weeklyArtists count]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
+				if([_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]])
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
 																																 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],
-																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],@"blah", @"blah",nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",@"artist", @"track",nil]]];
 			}
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
@@ -227,7 +236,13 @@
 		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
 			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]) {
-				cell.subtitle.text = [NSString stringWithFormat:@"%@ - %@", [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"], [[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]];
+				cell.subtitle.text = [NSString stringWithFormat:@"    %@ - %@", [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"], [[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]];
+				UIImageView *eq = [[[UIImageView alloc] initWithFrame:CGRectMake(0,4,12,12)] autorelease];
+				eq.animationImages = _eqFrames;
+				eq.animationDuration = 2;
+				[eq startAnimating];
+				[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+				[cell.subtitle addSubview:eq];
 			} else {
 				cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 			}
@@ -299,6 +314,7 @@
 		[_refreshThread cancel];
 		[_refreshThread release];
 	}
+	[_eqFrames release];
 	[_username release];
 	[_recentTracks release];
 	[_weeklyArtists release];

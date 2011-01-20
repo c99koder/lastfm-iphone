@@ -28,6 +28,7 @@
 	NSArray *_recentTracks;
 	NSArray *_weeklyArtists;
 	NSArray *_friendsListeningNow;
+	NSArray *_eqFrames;
 	int friendsCount;
 	NSMutableDictionary *_weeklyArtistImages;
 	NSThread *_refreshThread;

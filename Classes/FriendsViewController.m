@@ -56,6 +56,13 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Friends", @"Friends back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
 		[backBarButtonItem release];
+		NSMutableArray *frames = [[NSMutableArray alloc] init];
+		int i;
+		for(i=1; i<=11; i++) {
+			NSString *filename = [NSString stringWithFormat:@"icon_eq_f%02i.png", i];
+			[frames addObject:[UIImage imageNamed:filename]];
+		}
+		_eqFrames = frames;
 	}
 	return self;
 }
@@ -210,6 +217,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.subtitle.text = @"";
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
+		[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 		cell.shouldCacheArtwork = YES;
 		cell.imageURL = [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		if(!delegate)
@@ -229,6 +237,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.subtitle.text = @"";
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
+		[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 		cell.shouldCacheArtwork = YES;
 		cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		if(!delegate)
@@ -245,8 +254,14 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.detailTextLabel.textColor = [UIColor blackColor];
 		cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 		cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
-		cell.subtitle.text = [NSString stringWithFormat:@"%@ - %@", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"artist"],
+		cell.subtitle.text = [NSString stringWithFormat:@"    %@ - %@", [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"artist"],
 													[[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"title"]];
+		UIImageView *eq = [[[UIImageView alloc] initWithFrame:CGRectMake(0,4,12,12)] autorelease];
+		eq.animationImages = _eqFrames;
+		eq.animationDuration = 2;
+		[eq startAnimating];
+		[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+		[cell.subtitle addSubview:eq];
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
 		cell.shouldCacheArtwork = YES;
@@ -260,6 +275,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 }
 - (void)dealloc {
 	[super dealloc];
+	[_eqFrames release];
 	[_username release];
 	[_friendsListeningNow release];
 	[_searchResults release];
