@@ -595,28 +595,45 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"dd MMM yyyy, HH:mm"];
-	PLSqliteResultSet *rs = (PLSqliteResultSet *)[_db executeQuery:@"select * from recent_radio order by timestamp desc limit 10",  nil];
 	
-	while([rs next]) {
-		NSString *url = [rs stringForColumn:@"url"];
+	@try {
+		PLSqliteResultSet *rs = (PLSqliteResultSet *)[_db executeQuery:@"select * from recent_radio order by timestamp desc limit 10",  nil];
 		
-		if([url hasSuffix:@"/loved"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removeLovedTracks"] isEqualToString:@"YES"])
-			continue;
+		while([rs next]) {
+			NSString *url = [rs stringForColumn:@"url"];
+			
+			if([url hasSuffix:@"/loved"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removeLovedTracks"] isEqualToString:@"YES"])
+				continue;
+			
+			if([url hasPrefix:@"lastfm://playlist/"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removePlaylists"] isEqualToString:@"YES"])
+				continue;
+
+			if([url hasPrefix:@"lastfm://usertags/"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removeUserTags"] isEqualToString:@"YES"])
+				continue;
+
+			[URLs addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [rs stringForColumn:@"url"], @"url",
+											 [rs stringForColumn:@"name"], @"name",
+											 [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[rs intForColumn:@"timestamp"]]], @"date",
+											 nil]];
+		}
+		[formatter release];
+		return [URLs autorelease];
+	} @catch(NSException *e) {
+		NSLog(@"Problem with the station db, re-creating...");
+		[_db close];
+		[_db release];
+		_db = nil;
 		
-		if([url hasPrefix:@"lastfm://playlist/"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removePlaylists"] isEqualToString:@"YES"])
-			continue;
+		[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"recent.db") error:nil];
 
-		if([url hasPrefix:@"lastfm://usertags/"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"removeUserTags"] isEqualToString:@"YES"])
-			continue;
-
-		[URLs addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-										 [rs stringForColumn:@"url"], @"url",
-										 [rs stringForColumn:@"name"], @"name",
-										 [formatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:[rs intForColumn:@"timestamp"]]], @"date",
-										 nil]];
+		_db = [[PLSqliteDatabase databaseWithPath:CACHE_FILE(@"recent.db")] retain];
+		if (![_db open]) {
+			NSLog(@"Could not open recent db.");
+		}
+		
+		[_db executeUpdate:@"create table if not exists recent_radio (timestamp integer, url text, name text)", nil];
 	}
-	[formatter release];
-	return [URLs autorelease];
 }
 -(void)fetchRecentURLs {
 	NSArray *stations = [[LastFMService sharedInstance] recentStationsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
