@@ -226,7 +226,7 @@ UIImage *eventDateBGImage = nil;
 		}
 		case 2:
 			if (nil == _locationManager)
-        _locationManager = [[CLLocationManager alloc] init];
+				_locationManager = [[CLLocationManager alloc] init];
 			
 			_locationManager.delegate = self;
 			_locationManager.desiredAccuracy = kCLLocationAccuracyKilometer;
@@ -259,10 +259,10 @@ UIImage *eventDateBGImage = nil;
 		UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
 		if(controller) {
 			controller.title = @"Events Near Me";
-			[self.navigationController pushViewController:controller animated:YES];
-			[controller release];
+			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+			[controller autorelease];
 		}
-		//[_locationManager release];
+		[_locationManager autorelease];
 		_locationManager = nil;
 		[[self tableView] reloadData];
 	}
@@ -406,6 +406,7 @@ UIImage *eventDateBGImage = nil;
 	[details release];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
 	MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
 	if (eventCell == nil) {
 		eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
