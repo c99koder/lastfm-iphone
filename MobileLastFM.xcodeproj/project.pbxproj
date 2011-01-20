@@ -118,6 +118,7 @@
 		224EFDAF0E3E2FAC007F293F /* calendarday.png in Resources */ = {isa = PBXBuildFile; fileRef = 224EFDAD0E3E2FAC007F293F /* calendarday.png */; };
 		224F654112E7627B00ABEECD /* searchresults_tag.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F653F12E7627B00ABEECD /* searchresults_tag.png */; };
 		224F654212E7627B00ABEECD /* searchresults_track.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F654012E7627B00ABEECD /* searchresults_track.png */; };
+		224F661212E898FC00ABEECD /* date-detail_view.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F661112E898FC00ABEECD /* date-detail_view.png */; };
 		225157980E09A67B00943078 /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 225157970E09A67B00943078 /* backBtn.png */; };
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
 		2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349C0DA85CD30035A1AA /* LastFMRadio.m */; };
@@ -707,6 +708,7 @@
 		224EFDAD0E3E2FAC007F293F /* calendarday.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarday.png; sourceTree = "<group>"; };
 		224F653F12E7627B00ABEECD /* searchresults_tag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchresults_tag.png; sourceTree = "<group>"; };
 		224F654012E7627B00ABEECD /* searchresults_track.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchresults_track.png; sourceTree = "<group>"; };
+		224F661112E898FC00ABEECD /* date-detail_view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date-detail_view.png"; sourceTree = "<group>"; };
 		225157970E09A67B00943078 /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
 		2259349A0DA85CD30035A1AA /* LastFMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMService.m; sourceTree = "<group>"; };
 		2259349B0DA85CD30035A1AA /* LastFMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMService.h; sourceTree = "<group>"; };
@@ -1068,6 +1070,7 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				224F661112E898FC00ABEECD /* date-detail_view.png */,
 				224F653F12E7627B00ABEECD /* searchresults_tag.png */,
 				224F654012E7627B00ABEECD /* searchresults_track.png */,
 				22F255200E75771E000965FA /* metadatagradient.png */,
@@ -1908,6 +1911,7 @@
 				22D21AE01294827400B3E520 /* HomeViewController.xib in Resources */,
 				224F654112E7627B00ABEECD /* searchresults_tag.png in Resources */,
 				224F654212E7627B00ABEECD /* searchresults_track.png in Resources */,
+				224F661212E898FC00ABEECD /* date-detail_view.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
