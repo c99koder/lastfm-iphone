@@ -29,6 +29,13 @@
 #import "MobileLastFMApplicationDelegate.h"
 
 @implementation RecsViewController
+- (void)_dismiss:(NSString *)artist {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[[LastFMService sharedInstance] dismissRecommendedArtist:artist];
+	if([LastFMService sharedInstance].error)
+		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate performSelectorOnMainThread:@selector(reportError:) withObject:[LastFMService sharedInstance].error waitUntilDone:YES];
+	[pool release];
+}
 - (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];
@@ -136,6 +143,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(editingStyle == UITableViewCellEditingStyleDelete) {
 		NSMutableArray *newArtists = [NSMutableArray arrayWithArray:_artists];
+		[self performSelectorInBackground:@selector(_dismiss:) withObject:[[_artists objectAtIndex:[indexPath row]] objectForKey:@"name"]];
 		[newArtists removeObjectAtIndex:[indexPath row]];
 		[_artists release];
 		_artists = [newArtists retain];

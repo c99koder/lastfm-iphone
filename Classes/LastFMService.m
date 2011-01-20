@@ -254,6 +254,9 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"image", nil]];
 }
+- (void)dismissRecommendedArtist:(NSString *)artist {
+	[self doMethod:@"user.dismissArtistRecommendation" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+}
 
 #pragma mark Album methods
 
