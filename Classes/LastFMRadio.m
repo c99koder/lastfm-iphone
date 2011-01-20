@@ -633,6 +633,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 		
 		[_db executeUpdate:@"create table if not exists recent_radio (timestamp integer, url text, name text)", nil];
+		return nil;
 	}
 }
 -(void)fetchRecentURLs {
