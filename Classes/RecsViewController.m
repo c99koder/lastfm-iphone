@@ -179,7 +179,7 @@
 		UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 		
 		if(toggle.selectedSegmentIndex == 0) {
-			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"", 
 																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"My Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], nil]
 																																																										forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
@@ -298,14 +298,11 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0 && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0 && ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
-		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-		img.opaque = YES;
-		stationCell.accessoryView = img;
-		[img release];
+		stationCell.imageView.image = [UIImage imageNamed:@"radiostarter.png"];
 		return stationCell;
 	}
 	

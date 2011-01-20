@@ -282,7 +282,7 @@
 	}
 	
 	if(cell.accessoryType == UITableViewCellAccessoryNone) {
-		UIImage *img = [UIImage imageNamed:@"streaming.png"];
+		UIImage *img = [UIImage imageNamed:@"radiostarter.png"];
 		cell.imageView.image = img;
 	}
 	return cell;

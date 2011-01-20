@@ -371,10 +371,7 @@
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
-		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-		img.opaque = YES;
-		stationCell.accessoryView = img;
-		[img release];
+		stationCell.imageView.image = [UIImage imageNamed:@"radiostarter.png"];
 		return stationCell;
 	}
 	
