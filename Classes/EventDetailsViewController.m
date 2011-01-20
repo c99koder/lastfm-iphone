@@ -153,7 +153,12 @@
 	return @"";
 }
 - (NSString*)formatArtistsFromEvent:(NSDictionary *)event {
-	NSArray* artists = [event objectForKey:@"artists"];
+	NSArray* artists;
+	if( [[event objectForKey:@"artists"] isKindOfClass:[NSArray class]] )
+		artists = [event objectForKey:@"artists"];
+	else 
+		artists = [NSArray arrayWithObject: [event objectForKey: @"artists"]];
+	
 	NSString* text = [[artists subarrayWithRange:NSMakeRange(0, MIN(4, [artists count]))] componentsJoinedByString: @", "];
 	if ( [artists count] > 4 ) {
 		return [NSString stringWithFormat: @"%@\n(and %i more)…", text, [artists count] - 4];
@@ -224,9 +229,16 @@
 			
 		case 1: //Artist list
 		{
-			EventArtistsViewController *artists = [[EventArtistsViewController alloc] initWithArtists:[_event objectForKey:@"artists"]];
-			[self.navigationController  pushViewController:artists animated:YES];
-			[artists release];
+			if( [[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] ) {
+				NSArray* artists = [_event objectForKey:@"artists"];
+				EventArtistsViewController *artistsVC = [[EventArtistsViewController alloc] initWithArtists:artists];
+				[self.navigationController  pushViewController:artistsVC animated:YES];
+				[artistsVC release];
+			} else {
+				ArtistViewController* artistVC = [[ArtistViewController alloc] initWithArtist:[_event objectForKey:@"artists"]];
+				[self.navigationController pushViewController: artistVC animated: YES];
+			}
+
 			break;
 		}
 			
@@ -262,7 +274,10 @@
 				break;
 			}
 			if( row == 1 ) {
-				[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@", [_event objectForKey:@"phonenumber"]]]];
+				NSString* str = [NSString stringWithFormat:@"tel://%@", [_event objectForKey:@"phonenumber"]];
+				NSString* trimmedStr = [str stringByReplacingOccurrencesOfString:@" " withString:@""];
+				NSURL* url = [NSURL URLWithString: trimmedStr];
+				[[UIApplication sharedApplication] openURL:url];
 				break;
 			}
 			if( row == 2) {
