@@ -11,7 +11,7 @@
 			<string key="NS.object.0">132</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="8"/>
+			<integer value="1"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -45,7 +45,7 @@
 								<string key="IBUITitle">Profile</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">bio.png</string>
+									<string key="NSResourceName">tabbar_profile.png</string>
 								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUITabBar" ref="986046429"/>
@@ -55,7 +55,7 @@
 								<string key="IBUITitle">Recommended</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">similar_artists.png</string>
+									<string key="NSResourceName">tabbar_recs.png</string>
 								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUITabBar" ref="986046429"/>
@@ -65,23 +65,27 @@
 								<string key="IBUITitle">Events</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">events.png</string>
+									<string key="NSResourceName">tabbar_events.png</string>
 								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUITabBar" ref="986046429"/>
 							</object>
 							<object class="IBUITabBarItem" id="45129721">
 								<int key="IBUITag">4</int>
+								<string key="IBUITitle">Search</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">tabbar_search.png</string>
+								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUITabBar" ref="986046429"/>
-								<int key="IBUISystemItemIdentifier">8</int>
 							</object>
 							<object class="IBUITabBarItem" id="474752383">
 								<int key="IBUITag">3</int>
 								<string key="IBUITitle">Radio</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">radio_icon_tab.png</string>
+									<string key="NSResourceName">tabbar_radio.png</string>
 								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUITabBar" ref="986046429"/>
@@ -521,10 +525,11 @@
 		<string key="IBDocument.LastKnownRelativeProjectPath">../../MobileLastFM.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="bio.png">{17, 20}</string>
-			<string key="events.png">{26, 26}</string>
-			<string key="radio_icon_tab.png">{26, 20}</string>
-			<string key="similar_artists.png">{21, 21}</string>
+			<string key="tabbar_events.png">{30, 30}</string>
+			<string key="tabbar_profile.png">{30, 30}</string>
+			<string key="tabbar_radio.png">{30, 30}</string>
+			<string key="tabbar_recs.png">{30, 30}</string>
+			<string key="tabbar_search.png">{30, 30}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">132</string>
 	</data>
