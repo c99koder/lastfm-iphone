@@ -30,6 +30,7 @@
 	UILabel *location;
 	UILabel *month;
 	UILabel *day;
+	UIImage *eventDateBGDetailImage;
 }
 @property (nonatomic, retain) UILabel *title;
 @property (nonatomic, retain) UILabel *address;

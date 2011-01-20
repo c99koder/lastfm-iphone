@@ -43,17 +43,15 @@ UIImage *eventDateBGImage = nil;
 		_datebg = [[UIImageView alloc] initWithImage:eventDateBGImage];
 		_datebg.contentMode = UIViewContentModeScaleAspectFill;
 		_datebg.clipsToBounds = YES;
-		[_datebg.layer setBorderColor: [[UIColor blackColor] CGColor]];
-		[_datebg.layer setBorderWidth: 1.0];
+		[_datebg.layer setBorderColor: [[UIColor clearColor] CGColor]];
+		[_datebg.layer setBorderWidth: 0.0];
 		[self.contentView addSubview:_datebg];
 		
 		month = [[UILabel alloc] init];
 		month.textColor = [UIColor whiteColor];
 		month.backgroundColor = [UIColor clearColor];
 		month.textAlignment = UITextAlignmentCenter;
-		month.font = [UIFont boldSystemFontOfSize:14];
-		month.shadowColor = [UIColor blackColor];
-		month.shadowOffset = CGSizeMake(0.0, 1.0);
+		month.font = [UIFont boldSystemFontOfSize:11];
 		[_datebg addSubview: month];
 		
 		day = [[UILabel alloc] init];
@@ -92,8 +90,8 @@ UIImage *eventDateBGImage = nil;
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
 	
 	_datebg.frame = CGRectMake(frame.origin.x+8, frame.origin.y+8, 40, 48);
-	month.frame = CGRectMake(0,2,40,10);
-	day.frame = CGRectMake(0,12,40,38);
+	month.frame = CGRectMake(0,6,40,10);
+	day.frame = CGRectMake(0,13,40,38);
 	
 	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 4, frame.size.width - _datebg.frame.size.width - 12, 22);
 	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 24, frame.size.width - _datebg.frame.size.width - 12, 
@@ -299,7 +297,7 @@ UIImage *eventDateBGImage = nil;
 			[formatter setLocale:[NSLocale currentLocale]];
 			
 			[formatter setDateFormat:@"MMM"];
-			eventCell.month.text = [formatter stringFromDate:date];
+			eventCell.month.text = [[formatter stringFromDate:date] uppercaseString];
 			
 			[formatter setDateFormat:@"d"];
 			eventCell.day.text = [formatter stringFromDate:date];
@@ -341,7 +339,7 @@ UIImage *eventDateBGImage = nil;
 			eventCell.location.numberOfLines = 0;
 			
 			[formatter setDateFormat:@"MMM"];
-			eventCell.month.text = [formatter stringFromDate:date];
+			eventCell.month.text = [[formatter stringFromDate:date] uppercaseString];
 			
 			[formatter setDateFormat:@"d"];
 			eventCell.day.text = [formatter stringFromDate:date];
