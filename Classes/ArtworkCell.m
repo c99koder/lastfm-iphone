@@ -132,7 +132,7 @@ UIImage *avatarPlaceholder = nil;
 	CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
 	
 	CGRect rect = CGRectMake(0, 0, w, h);
-	float radius = 8.0f;
+	float radius = 8.0f * scale;
 	
 	if(shouldRoundTop) {
 		CGContextBeginPath(context);
