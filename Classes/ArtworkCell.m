@@ -101,6 +101,7 @@ UIImage *avatarPlaceholder = nil;
 	[self hideArtwork: NO];
 	imageURL = [url retain];
 	NSData *imageData;
+	
 	if(shouldUseCache(CACHE_FILE([imageURL md5sum]), 1*HOURS) || [imageURL hasPrefix:@"/"]) {
 		if([imageURL hasPrefix:@"/"])
 			imageData = [[NSData alloc] initWithContentsOfFile:imageURL];
@@ -119,11 +120,13 @@ UIImage *avatarPlaceholder = nil;
 -(NSString *)imageURL {
 	return imageURL;
 }
--(UIImage *)roundedImage:(UIImage *)image
-{
+-(UIImage *)roundedImage:(UIImage *)image {
 	UIImage *img = image;
-	int w = self.contentView.bounds.size.height;
-	int h = self.contentView.bounds.size.height;
+	float scale = 1.0f;
+	if([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+		scale = [[UIScreen mainScreen] scale];
+	int w = self.contentView.bounds.size.height * scale;
+	int h = self.contentView.bounds.size.height * scale;
 	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);

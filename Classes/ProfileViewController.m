@@ -226,7 +226,17 @@
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	ArtworkCell *cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"TrackCell"] autorelease];
+	ArtworkCell *cell = nil;
+	
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
+		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
+		if (cell == nil) {
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
+		}
+	}
+	if(cell == nil)
+		cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ArtworkCell"] autorelease];
 	
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
@@ -248,10 +258,6 @@
 			}
 		}
 		cell.shouldCacheArtwork = YES;
-		if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
-			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
-		else
-			[cell hideArtwork:YES];
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"]) {
 			cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"];
 			cell.detailTextLabel.textColor = [UIColor blackColor];
@@ -265,7 +271,11 @@
 			cell.shouldRoundTop = YES;
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
-
+		if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
+			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		else
+			[cell hideArtwork:YES];
+		
 	} else if([indexPath section] == 0) {
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
