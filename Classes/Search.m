@@ -27,7 +27,7 @@
 	if([_results count]) {
 		for(int x=0; x<[_results count]; x++) {
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[NSBundle mainBundle] pathForResource:@"searchresults_tag" ofType:@"png"],
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[NSBundle mainBundle] pathForResource:@"search-results_tag" ofType:@"png"],
 																																 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
 			}
@@ -42,7 +42,7 @@
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url", nil]]];
 			}
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"track"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[NSBundle mainBundle] pathForResource:@"searchresults_track" ofType:@"png"],
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[NSBundle mainBundle] pathForResource:@"search-results_track" ofType:@"png"],
 																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url", nil]]];
 			}
