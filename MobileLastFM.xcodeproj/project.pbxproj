@@ -155,10 +155,11 @@
 		224F672412E8CFC600ABEECD /* radiostarter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F672212E8CFC600ABEECD /* radiostarter@2x.png */; };
 		224F679F12EA0EA400ABEECD /* search_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F679D12EA0EA400ABEECD /* search_icon.png */; };
 		224F67A012EA0EA400ABEECD /* search_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F679E12EA0EA400ABEECD /* search_icon@2x.png */; };
+		224F67DA12EA151200ABEECD /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F67D812EA151200ABEECD /* icon.png */; };
+		224F67DB12EA151200ABEECD /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F67D912EA151200ABEECD /* icon@2x.png */; };
 		225157980E09A67B00943078 /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 225157970E09A67B00943078 /* backBtn.png */; };
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
 		2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349C0DA85CD30035A1AA /* LastFMRadio.m */; };
-		225934DE0DA85DA60035A1AA /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934CC0DA85DA60035A1AA /* icon.png */; };
 		225934E70DA85DA60035A1AA /* skip.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934D70DA85DA60035A1AA /* skip.png */; };
 		225934EA0DA85DA60035A1AA /* ban.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DA0DA85DA60035A1AA /* ban.png */; };
 		225934EB0DA85DA60035A1AA /* love.png in Resources */ = {isa = PBXBuildFile; fileRef = 225934DB0DA85DA60035A1AA /* love.png */; };
@@ -781,12 +782,13 @@
 		224F672212E8CFC600ABEECD /* radiostarter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radiostarter@2x.png"; sourceTree = "<group>"; };
 		224F679D12EA0EA400ABEECD /* search_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_icon.png; sourceTree = "<group>"; };
 		224F679E12EA0EA400ABEECD /* search_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_icon@2x.png"; sourceTree = "<group>"; };
+		224F67D812EA151200ABEECD /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		224F67D912EA151200ABEECD /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		225157970E09A67B00943078 /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
 		2259349A0DA85CD30035A1AA /* LastFMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMService.m; sourceTree = "<group>"; };
 		2259349B0DA85CD30035A1AA /* LastFMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMService.h; sourceTree = "<group>"; };
 		2259349C0DA85CD30035A1AA /* LastFMRadio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMRadio.m; sourceTree = "<group>"; };
 		2259349D0DA85CD30035A1AA /* LastFMRadio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMRadio.h; sourceTree = "<group>"; };
-		225934CC0DA85DA60035A1AA /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		225934D70DA85DA60035A1AA /* skip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = skip.png; sourceTree = "<group>"; };
 		225934DA0DA85DA60035A1AA /* ban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ban.png; sourceTree = "<group>"; };
 		225934DB0DA85DA60035A1AA /* love.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = love.png; sourceTree = "<group>"; };
@@ -1172,6 +1174,8 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				224F67D812EA151200ABEECD /* icon.png */,
+				224F67D912EA151200ABEECD /* icon@2x.png */,
 				224F679D12EA0EA400ABEECD /* search_icon.png */,
 				224F679E12EA0EA400ABEECD /* search_icon@2x.png */,
 				224F672112E8CFC600ABEECD /* radiostarter.png */,
@@ -1230,7 +1234,6 @@
 				22DB15550E424418002D66BE /* events.png */,
 				2214D0930E43590F00FC3F3D /* events_red_circle.png */,
 				22DB15560E424418002D66BE /* events_selected.png */,
-				225934CC0DA85DA60035A1AA /* icon.png */,
 				225934F20DA85DBE0035A1AA /* Info.plist */,
 				22EB5F6B0E6492920021751A /* info_button_behind.png */,
 				2244DAF90E3A55C700C4F40B /* info_button.png */,
@@ -1870,7 +1873,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				225934DE0DA85DA60035A1AA /* icon.png in Resources */,
 				225934E70DA85DA60035A1AA /* skip.png in Resources */,
 				225934EA0DA85DA60035A1AA /* ban.png in Resources */,
 				225934EB0DA85DA60035A1AA /* love.png in Resources */,
@@ -2065,6 +2067,8 @@
 				224F672412E8CFC600ABEECD /* radiostarter@2x.png in Resources */,
 				224F679F12EA0EA400ABEECD /* search_icon.png in Resources */,
 				224F67A012EA0EA400ABEECD /* search_icon@2x.png in Resources */,
+				224F67DA12EA151200ABEECD /* icon.png in Resources */,
+				224F67DB12EA151200ABEECD /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
