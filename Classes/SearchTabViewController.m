@@ -36,6 +36,8 @@
 	NSLog(@"Releasing search data");
 	[_searchData release];
 	_searchData = nil;
+	[_emptyView release];
+	_emptyView = nil;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -50,12 +52,36 @@
 }
 - (void)viewDidLoad {
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	bar.placeholder = @"Search Last.fm";
+	bar.placeholder = @"Music Search";
 	bar.delegate = self;
 	self.tableView.tableHeaderView = bar;
 	self.tableView.dataSource = _searchData;
 	self.tableView.delegate = self;
 	
+	_emptyView = [[UIView alloc] initWithFrame:CGRectMake(0,60,self.view.frame.size.width,self.view.frame.size.height)];
+	_emptyView.backgroundColor = [UIColor whiteColor];
+	_emptyView.opaque = NO;
+	
+	UILabel *hint = [[UILabel alloc] initWithFrame:CGRectMake(0,128,_emptyView.frame.size.width,40)];
+	hint.text = @"Search Last.fm for Information about\nartists, albums, tracks, and tags.";
+	hint.numberOfLines = 2;
+	hint.font = [UIFont boldSystemFontOfSize:16];
+	hint.textColor = [UIColor grayColor];
+	hint.textAlignment = UITextAlignmentCenter;
+	[_emptyView addSubview: hint];
+	
+	UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake((_emptyView.frame.size.width - 55) / 2, hint.frame.origin.y - 61,55,55)];
+	image.image = [UIImage imageNamed:@"search_icon"];
+	[_emptyView addSubview: image];
+	
+	[hint release];
+	[image release];
+	
+	if([_searchData.data count] == 0) {
+		self.tableView.scrollEnabled = NO;
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+		[self.tableView addSubview: _emptyView];
+	}
 	[bar release];
 }
 - (void)_search:(NSTimer *)timer {
@@ -69,12 +95,11 @@
 	[pool release];
 }
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-	searchBar.showsCancelButton = YES;
+	[_emptyView removeFromSuperview];
+	self.tableView.scrollEnabled = YES;
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	[self.tableView reloadData];
 	return YES;
-}
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-	searchBar.showsCancelButton = NO;
-	[searchBar resignFirstResponder];
 }
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
 	if(_searchTimer) {
@@ -90,7 +115,7 @@
 																									 userInfo:searchBar.text
 																										repeats:NO] retain];
 	}
-	return NO;
+	[searchBar resignFirstResponder];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);

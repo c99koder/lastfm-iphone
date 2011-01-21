@@ -25,6 +25,7 @@
 
 @interface SearchTabViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
 	NSTimer *_searchTimer;
+	UIView *_emptyView;
 	GlobalSearchDataSource *_searchData;
 }
 @end
