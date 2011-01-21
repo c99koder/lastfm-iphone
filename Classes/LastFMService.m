@@ -467,7 +467,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)nowListeningFriendsOfUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getfriendslisteningnow" maxCacheAge:0 XPath:@"./friendslisteningnow/user" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./realname", @"./scrobblesource/name", @"./recenttrack/artist/name", @"./recenttrack/name", @"./image[@size=\"large\"]", nil]
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./realname", @"./scrobblesource/name", @"./recenttrack/artist/name", @"./recenttrack/name", @"./image[@size=\"extralarge\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"username", @"realname", @"scrobblesource", @"artist", @"title", @"image", nil]];
 }
 - (NSArray *)eventsForUser:(NSString *)username {

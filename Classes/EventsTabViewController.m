@@ -302,7 +302,7 @@ UIImage *eventDateBGImage = nil;
 			[formatter setDateFormat:@"d"];
 			eventCell.day.text = [formatter stringFromDate:date];
 			
-			eventCell.title.text = [event objectForKey:@"headliner"];
+			eventCell.title.text = [event objectForKey:@"title"];
 			[formatter setDateStyle:NSDateFormatterNoStyle];
 			[formatter setTimeStyle:NSDateFormatterShortStyle];
 			eventCell.location.text = [NSString stringWithFormat:@"%@, %@\n%@", [formatter stringFromDate:date], [event objectForKey:@"venue"], [event objectForKey:@"city"]];
@@ -331,7 +331,7 @@ UIImage *eventDateBGImage = nil;
 			NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
 			[formatter setLocale:[NSLocale currentLocale]];
 			
-			eventCell.title.text = [event objectForKey:@"headliner"];
+			eventCell.title.text = [event objectForKey:@"title"];
 			[formatter setDateStyle:NSDateFormatterNoStyle];
 			[formatter setTimeStyle:NSDateFormatterShortStyle];
 			eventCell.location.text = [NSString stringWithFormat:@"%@, %@\n%@", [formatter stringFromDate:date], [event objectForKey:@"venue"], [event objectForKey:@"city"]];
