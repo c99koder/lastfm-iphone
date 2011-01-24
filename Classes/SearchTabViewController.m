@@ -47,6 +47,7 @@
 	if (self = [super initWithStyle:style]) {
 		_searchData = [[GlobalSearchDataSource alloc] init];
 		self.title = @"Search";
+		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_search.png"];
 	}
 	return self;
 }

@@ -139,6 +139,7 @@ UIImage *eventDateBGImage = nil;
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
 		self.title = @"Events";
+		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_events.png"];
 	}
 	return self;
 }
@@ -213,14 +214,14 @@ UIImage *eventDateBGImage = nil;
 		case 0:
 		{
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
-			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+			[self.navigationController pushViewController:details animated:YES];
 			[details release];
 			break;
 		}
 		case 1:
 		{
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
-			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController pushViewController:details animated:YES];
+			[self.navigationController pushViewController:details animated:YES];
 			[details release];
 			break;
 		}
@@ -259,7 +260,7 @@ UIImage *eventDateBGImage = nil;
 		UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
 		if(controller) {
 			controller.title = @"Events Near Me";
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:controller animated:YES];
+			[self.navigationController pushViewController:controller animated:YES];
 			[controller autorelease];
 		}
 		[_locationManager autorelease];

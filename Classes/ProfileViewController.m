@@ -69,6 +69,7 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
 		self.title = @"Profile";
+		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_profile.png"];
 		NSMutableArray *frames = [[NSMutableArray alloc] init];
 		int i;
 		for(i=1; i<=11; i++) {
@@ -232,7 +233,7 @@
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
-			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
+			cell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]] autorelease];
 		}
 	}
 	if(cell == nil)

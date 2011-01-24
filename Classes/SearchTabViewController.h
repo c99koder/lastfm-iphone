@@ -23,7 +23,7 @@
 #import "LastFMService.h"
 #import "Search.h"
 
-@interface SearchTabViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
+@interface SearchTabViewController : UITableViewController<UITableViewDelegate, UISearchBarDelegate> {
 	NSTimer *_searchTimer;
 	UIView *_emptyView;
 	GlobalSearchDataSource *_searchData;

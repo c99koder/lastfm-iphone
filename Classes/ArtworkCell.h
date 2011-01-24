@@ -54,4 +54,5 @@
 -(void)addStreamIcon;
 -(void)hideArtwork:(BOOL)hidden;
 -(void)addBorder;
+-(UIImage *)roundedImage:(UIImage *)image;
 @end

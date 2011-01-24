@@ -232,7 +232,7 @@
 			if( [[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] ) {
 				NSArray* artists = [_event objectForKey:@"artists"];
 				EventArtistsViewController *artistsVC = [[EventArtistsViewController alloc] initWithArtists:artists];
-				[self.navigationController  pushViewController:artistsVC animated:YES];
+				[self.navigationController pushViewController:artistsVC animated:YES];
 				[artistsVC release];
 			} else {
 				ArtistViewController* artistVC = [[ArtistViewController alloc] initWithArtist:[_event objectForKey:@"artists"]];
@@ -518,7 +518,7 @@
 	return 52;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController) {
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.tabBarController.selectedViewController) {
 		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_artists objectAtIndex:[newIndexPath row]]];
 		[self.navigationController pushViewController:artist animated:YES];
 		[artist release];
@@ -530,7 +530,7 @@
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"simplecell"] autorelease];
 	}
 	cell.textLabel.text = [_artists objectAtIndex:[indexPath row]];
-	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController)
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.tabBarController.selectedViewController)
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	else
 		cell.accessoryType = UITableViewCellAccessoryNone;

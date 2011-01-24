@@ -14,20 +14,20 @@
 #import "RecsViewController.h"
 #import "SearchTabViewController.h"
 
-@interface HomeViewController : UIViewController<UITabBarDelegate> {
-	IBOutlet UIView *_contentView;
-	IBOutlet UITabBar *_tabBar;
-	
-	ProfileViewController *_profileController;
+@interface HomeViewController : UIViewController<UITabBarControllerDelegate> {
+	UITabBarController *tabBarController;
+	/*ProfileViewController *_profileController;
 	RecsViewController *_recsController;
 	EventsTabViewController *_eventsController;
 	RadioListViewController *_radioController;
-	SearchTabViewController *_searchController;
+	SearchTabViewController *_searchController;*/
 	NSString *_username;
 	
-	int currentTab;
+	//int currentTab;
 }
 -(id)initWithUsername:(NSString *)user;
--(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
+//-(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item;
+
+@property (nonatomic, retain) UITabBarController *tabBarController;
 
 @end

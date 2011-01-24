@@ -58,12 +58,19 @@ NSURL *__redirectURL;
 @end
 
 @implementation UIApplication (openURLWithWarning)
+-(UINavigationController *)findCurrentNavController:(HomeViewController *)root {
+	if(!((UINavigationController *)root.tabBarController.selectedViewController).navigationBarHidden) {
+		return (UINavigationController *)root.tabBarController.selectedViewController;
+  } else {
+		return [self findCurrentNavController:(HomeViewController *)((UINavigationController *)root.tabBarController.selectedViewController).topViewController];
+	}
+}
 -(void)openURLWithWarning:(NSURL *)url {
 	if([[url scheme] isEqualToString:@"lastfm"]) {
 		if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
 			[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_NONETWORK",@"No network available") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE",@"No network available title")];
 		} else {
-			if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[url absoluteString] animated:NO];
 			} else {
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:[url absoluteString] animated:YES];
@@ -74,36 +81,36 @@ NSURL *__redirectURL;
 	
 	if([[url scheme] isEqualToString:@"lastfm-user"]) {
 		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[url host] unURLEscape]];
-		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
 		}
-		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:home animated:YES];
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:home animated:YES];
 		[home release];
 		return;
 	}
 	
 	if([[url scheme] isEqualToString:@"lastfm-friends"]) {
 		FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[url host] unURLEscape]];
-		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
 		}
-		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:friends animated:YES];
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:friends animated:YES];
 		[friends release];
 		return;
 	}
 	
 	if([[url scheme] isEqualToString:@"lastfm-artist"]) {
 		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[[url host] unURLEscape]];
-		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
 		}
-		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:artist animated:YES];
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:artist animated:YES];
 		[artist release];
 		return;
 	}
@@ -112,12 +119,12 @@ NSURL *__redirectURL;
 		NSString *artist = [[url host] unURLEscape];
 		NSString *album = [[[url path] substringFromIndex:1] unURLEscape];
 		AlbumViewController *view = [[AlbumViewController alloc] initWithAlbum:album byArtist:artist];
-		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
 		}
-		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:view animated:YES];
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:view animated:YES];
 		[view release];
 		return;
 	}
@@ -126,24 +133,24 @@ NSURL *__redirectURL;
 		NSString *artist = [[url host] unURLEscape];
 		NSString *track = [[[url path] substringFromIndex:1] unURLEscape];
 		TrackViewController *view = [[TrackViewController alloc] initWithTrack:track byArtist:artist];
-		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
 		}
-		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:view animated:YES];
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:view animated:YES];
 		[view release];
 		return;
 	}
 	
 	if([[url scheme] isEqualToString:@"lastfm-tag"]) {
 		TagViewController *tag = [[TagViewController alloc] initWithTag:[[url host] unURLEscape]];
-		if([[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController topViewController] isKindOfClass:[PlaybackViewController class]]) {
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController popViewControllerAnimated:NO];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
 		}
-		[((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController pushViewController:tag animated:YES];
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:tag animated:YES];
 		[tag release];
 		return;
 	}

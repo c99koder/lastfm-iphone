@@ -140,7 +140,7 @@ NSString *kUserAgent;
 		if(!playbackViewController) {
 			NSLog(@"Failed to load playback view!\n");
 		}
-		[rootViewController pushViewController:playbackViewController animated:NO];
+		[rootViewController.tabBarController.selectedViewController pushViewController:playbackViewController animated:NO];
 		_hidPlaybackDueToLowMemory = NO;
 	}
 	if(playbackViewController != nil)
@@ -159,7 +159,7 @@ NSString *kUserAgent;
 	
 	if(_locked && playbackViewController && !releasedDetailsView && !cancelledPrebuffer) {
 		NSLog(@"Low memory, popping playback view as last resort");
-		[rootViewController popViewControllerAnimated:NO];
+		[rootViewController.tabBarController.selectedViewController popViewControllerAnimated:NO];
 		[playbackViewController release];
 		playbackViewController = nil;
 		_hidPlaybackDueToLowMemory = YES;
@@ -218,23 +218,6 @@ NSString *kUserAgent;
 		[self showPlaybackView];
 		[self performSelector:@selector(_playRadioStation:) withObject:_dmcaAlertStation afterDelay:2];
 	}
-	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Don't Warn Again"]) {
-		[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"hidedmcawarning"];
-		[self _playRadioStation:_dmcaAlertStation animated:YES];
-	}
-	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Remove Station"]) {
-		if([_dmcaAlertStation hasPrefix:@"lastfm://usertags/"]) {
-			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removeUserTags"];
-		} else if([_dmcaAlertStation hasPrefix:@"lastfm://playlist/"]) {
-			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removePlaylists"];
-		} else if([_dmcaAlertStation hasSuffix:@"/loved"]) {
-			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"removeLovedTracks"];
-		}
-		[radioListViewController rebuildMenu];
-		if([[rootViewController topViewController] isKindOfClass:[TagRadioViewController class]]) {
-			[rootViewController popViewControllerAnimated:YES];
-		}
-	}
 
 	if(_pendingAlert) {
 		[_pendingAlert release];
@@ -260,11 +243,11 @@ NSString *kUserAgent;
 		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"subscriber"] forKey:@"lastfm_subscriber"];
 	}
 	
-	HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-
 	[rootViewController release];
-	rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
-	[home release];
+	rootViewController = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+
+	//rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
+	//[home release];
 	//rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
 	
 	if(animated) {
@@ -581,17 +564,17 @@ NSString *kUserAgent;
 	}
 
 	[playbackViewController hideDetailsView];
-	[rootViewController pushViewController:playbackViewController animated:YES];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-	[rootViewController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
+	[(UINavigationController *)(rootViewController.tabBarController.selectedViewController) pushViewController:playbackViewController animated:YES];
+	//[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	//[rootViewController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
 }
 -(void)hidePlaybackView {
-	[rootViewController popViewControllerAnimated:YES];
+	[(UINavigationController *)(rootViewController.tabBarController.selectedViewController) popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 	[playbackViewController release];
 	playbackViewController = nil;
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-	[rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
+	//[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	//[rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
 	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];

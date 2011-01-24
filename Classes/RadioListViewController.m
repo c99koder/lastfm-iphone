@@ -20,7 +20,6 @@
  */
 
 #import "RadioListViewController.h"
-#import "SearchViewController.h"
 #import "TagRadioViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
@@ -48,6 +47,7 @@
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		self.title = @"Radio";
+		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_radio.png"];
 		_username = [username retain];
 		_searchData = [[RadioSearchDataSource alloc] init];
 		_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
@@ -239,12 +239,6 @@
 				[self.navigationController pushViewController:tags animated:YES];
 				[tags release];
 			}
-		}
-	} else if([[_data objectAtIndex:[indexPath section]] isEqualToString:@"start"]) {
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
-			SearchViewController *controller = [[SearchViewController alloc] initWithNibName:@"SearchView" bundle:nil];
-			[self.navigationController pushViewController:controller animated:YES];
-			[controller release];
 		}
 	} else if([[_data objectAtIndex:[indexPath section]] isEqualToString:@"debug"]) {
 		DebugViewController *controller = [[DebugViewController alloc] initWithNibName:@"DebugView" bundle:nil];

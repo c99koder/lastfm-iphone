@@ -12,15 +12,18 @@
 
 @implementation HomeViewController
 
+@synthesize tabBarController;
+
 -(id)initWithUsername:(NSString *)user {
-	if (self = [super initWithNibName:@"HomeViewController" bundle:nil]) {
+	if (self = [super init]) {
 		_username = [user retain];
-		currentTab = 0;
+		self.title = _username;
+		self.hidesBottomBarWhenPushed = YES;
 		return self;
 	}
 	return nil;
 }
-- (void)viewWillDisappear:(BOOL)animated {
+/*- (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	
 	switch(_tabBar.selectedItem.tag) {
@@ -65,26 +68,80 @@
 			[_searchController viewWillAppear:animated];
 			break;
 	}
-}
-- (void)viewDidLoad {
-	[super viewDidLoad];
+}*/
+- (void)loadView {
+	UIView *contentView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+	contentView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+	self.view = contentView;
+	[contentView release];
 	
-	_profileController = [[ProfileViewController alloc] initWithUsername:_username];
-	_eventsController = [[EventsTabViewController alloc] initWithUsername:_username];
-	_radioController = [[RadioListViewController alloc] initWithUsername:_username];
-	_recsController = [[RecsViewController alloc] initWithUsername:_username];
-	_searchController = [[SearchTabViewController alloc] initWithStyle:UITableViewStylePlain];
+	ProfileViewController *profileController = [[ProfileViewController alloc] initWithUsername:_username];
+	EventsTabViewController *eventsController = [[EventsTabViewController alloc] initWithUsername:_username];
+	RadioListViewController *radioController = [[RadioListViewController alloc] initWithUsername:_username];
+	SearchTabViewController *searchController = [[SearchTabViewController alloc] initWithStyle:UITableViewStylePlain];
+	UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 42, 30)];
+	[btn setBackgroundImage:[UIImage imageNamed:@"blueBackBtn.png"] forState:UIControlStateNormal];
+	btn.adjustsImageWhenHighlighted = YES;
+	[btn addTarget:self action:@selector(backButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: btn];
+	[btn release];
 	
-	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
-		NSMutableArray *array = [NSMutableArray arrayWithArray:_tabBar.items];
-		[array removeObjectAtIndex:1];
-		_tabBar.items = array;
+	if(self.navigationController) {
+		profileController.navigationItem.title = _username;
+		profileController.navigationItem.leftBarButtonItem = backBarButtonItem;
+		eventsController.navigationItem.leftBarButtonItem = backBarButtonItem;
+		radioController.navigationItem.leftBarButtonItem = backBarButtonItem;
+		searchController.navigationItem.leftBarButtonItem = backBarButtonItem;
+		self.navigationItem.backBarButtonItem = backBarButtonItem;
 	}
 	
-	_tabBar.selectedItem = [_tabBar.items objectAtIndex:0];
-	[self tabBar:_tabBar didSelectItem:_tabBar.selectedItem];
-}
+	tabBarController = [[UITabBarController alloc] init];
+	tabBarController.delegate = self;
+	tabBarController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+	
+	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
+		[tabBarController setViewControllers:[NSArray arrayWithObjects:[[[UINavigationController alloc] initWithRootViewController:profileController] autorelease],
+																						[[[UINavigationController alloc] initWithRootViewController:eventsController] autorelease],
+																						[[[UINavigationController alloc] initWithRootViewController:searchController] autorelease],
+																						[[[UINavigationController alloc] initWithRootViewController:radioController] autorelease], nil]];
+	} else {
+		RecsViewController *recsController = [[RecsViewController alloc] initWithUsername:_username];
+		if(self.navigationController) {
+			recsController.navigationItem.backBarButtonItem = backBarButtonItem;
+		}
+		[tabBarController setViewControllers:[NSArray arrayWithObjects:[[[UINavigationController alloc] initWithRootViewController:profileController] autorelease],
+																					[[[UINavigationController alloc] initWithRootViewController:recsController] autorelease],
+																					[[[UINavigationController alloc] initWithRootViewController:eventsController] autorelease],
+																					[[[UINavigationController alloc] initWithRootViewController:searchController] autorelease],
+																					[[[UINavigationController alloc] initWithRootViewController:radioController] autorelease], nil]];
+		[recsController release];
+	}
 
+	[profileController viewWillAppear: YES];
+	[self.view addSubview: tabBarController.view];
+	
+	[profileController release];
+	[eventsController release];
+	[radioController release];
+	[searchController release];
+	[backBarButtonItem release];
+	
+	self.navigationController.navigationBarHidden = YES;
+}
+- (void)backButtonPressed:(id)sender {
+	[tabBarController.view removeFromSuperview];
+	self.navigationController.navigationBarHidden = NO;
+	[self.navigationController popViewControllerAnimated:YES];
+}
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[[tabBarController selectedViewController] viewWillAppear:animated];
+	self.navigationController.navigationBarHidden = YES;
+}
+-(void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+	[viewController viewWillAppear: YES];
+}
+/*
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 	if(item.tag != currentTab) {
 		switch(currentTab) {
@@ -154,7 +211,7 @@
 			break;
 	}
 }
-
+*/
 /*
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -171,10 +228,11 @@
 }
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
+  [super viewDidUnload];
+	[tabBarController release];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-	[_profileController release];
+	/*[_profileController release];
 	_profileController = nil;
 	[_eventsController release];
 	_eventsController = nil;
@@ -185,16 +243,18 @@
 	[_searchController release];
 	_searchController = nil;
 	_tabBar = nil;
-	currentTab = 0;
+	currentTab = 0;*/
 }
 
 
 - (void)dealloc {
 	[super dealloc];
-	[_profileController release];
+	[tabBarController release];
+	[_username release];
+	/*[_profileController release];
 	[_eventsController release];
 	[_radioController release];
-	[_recsController release];
+	[_recsController release];*/
 }
 
 

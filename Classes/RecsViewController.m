@@ -77,6 +77,8 @@
 		self.navigationItem.titleView = toggle;
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
 		self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Recommended" style:UIBarButtonItemStylePlain target:nil action:nil];
+		self.title = @"Recommended";
+		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_recs.png"];
 	}
 	return self;
 }
@@ -91,12 +93,12 @@
 - (void)doneButtonPressed:(id)sender {
 	[self.tableView setEditing:NO animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-	((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
  }
 - (void)editButtonPressed:(id)sender {
 	[self.tableView setEditing:YES animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
-	((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 }
 - (void)viewDidUnload {
 	[super viewDidUnload];
@@ -119,7 +121,7 @@
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 	if(self.navigationItem.rightBarButtonItem == nil)
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-	((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.75];

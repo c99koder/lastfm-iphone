@@ -24,8 +24,8 @@
 #import "Scrobbler.h"
 #import "FirstRunViewController.h"
 #import "PlaybackViewController.h"
-#import "SearchViewController.h"
 #import "RadioListViewController.h"
+#import "HomeViewController.h"
 
 @interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate> {
   IBOutlet UIWindow *window;
@@ -36,7 +36,7 @@
 	UIView *_mainView;
 	IBOutlet UIView *_loadingView;
 	IBOutlet UIImageView *_loadingViewLogo;
-	UINavigationController *rootViewController;
+	HomeViewController *rootViewController;
 	NSString *_launchURL;
 	UIAlertView *_pendingAlert;
 	UIAlertView *_dmcaAlert;
@@ -49,7 +49,7 @@
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) FirstRunViewController *firstRunView;
 @property (nonatomic, retain) PlaybackViewController *playbackViewController;
-@property (nonatomic, retain) UINavigationController *rootViewController;
+@property (nonatomic, retain) HomeViewController *rootViewController;
 
 -(BOOL)hasNetworkConnection;
 -(BOOL)hasWiFiConnection;

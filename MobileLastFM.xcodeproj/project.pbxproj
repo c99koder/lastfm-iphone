@@ -206,7 +206,6 @@
 		229808D20E6DAA44009CEDF9 /* profile_panel.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CD0E6DAA44009CEDF9 /* profile_panel.png */; };
 		229808D30E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */; };
 		22AA37A512DCF2D70000F121 /* SearchTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AA37A412DCF2D70000F121 /* SearchTabViewController.m */; };
-		22ABB41E0DB10C3100D2871E /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB41D0DB10C3100D2871E /* SearchViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
 		22BA0DDF0DC3731100DBE5BD /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA0DDE0DC3731100DBE5BD /* stop.png */; };
@@ -222,7 +221,6 @@
 		22CD7143117E05E300493A96 /* EventsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CD7142117E05E200493A96 /* EventsTabViewController.m */; };
 		22D1DEB30E5C61F700D1068D /* rounded_table_cell.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D1DEB20E5C61F600D1068D /* rounded_table_cell.png */; };
 		22D219501294524F00B3E520 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D2194E1294524F00B3E520 /* HomeViewController.m */; };
-		22D21AE01294827400B3E520 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22D21ADE1294827400B3E520 /* HomeViewController.xib */; };
 		22D21C241295C6FA00B3E520 /* RecsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D21C231295C6FA00B3E520 /* RecsViewController.m */; };
 		22DB14A90E422455002D66BE /* radio_icon_tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB14A70E422455002D66BE /* radio_icon_tab.png */; };
 		22DB14AA0E422455002D66BE /* profile_icon_tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 22DB14A80E422455002D66BE /* profile_icon_tab.png */; };
@@ -258,7 +256,6 @@
 		22EB5F6C0E6492920021751A /* info_button_behind.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EB5F6B0E6492920021751A /* info_button_behind.png */; };
 		22EB5FC00E6499C80021751A /* ontourbadge.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EB5FBF0E6499C80021751A /* ontourbadge.png */; };
 		22EB603A0E65A8B20021751A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60390E65A8B20021751A /* MainWindow.xib */; };
-		22EB603C0E65A8B20021751A /* SearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB603B0E65A8B20021751A /* SearchView.xib */; };
 		22EB603E0E65A8B20021751A /* PlaybackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB603D0E65A8B20021751A /* PlaybackView.xib */; };
 		22EB60400E65A8B30021751A /* FirstRunView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB603F0E65A8B30021751A /* FirstRunView.xib */; };
 		22EB60460E65A8B40021751A /* TagEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60450E65A8B40021751A /* TagEditorView.xib */; };
@@ -630,7 +627,6 @@
 		22117E3D0E153AC50093BFED /* now_playing_header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = now_playing_header.png; sourceTree = "<group>"; };
 		22117E3E0E153AC50093BFED /* streaming.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = streaming.png; sourceTree = "<group>"; };
 		22117E3F0E153AC50093BFED /* now_playing_list.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = now_playing_list.png; sourceTree = "<group>"; };
-		22117E860E1544F50093BFED /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/SearchView.xib; sourceTree = "<group>"; };
 		22117E880E1545050093BFED /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PlaybackView.xib; sourceTree = "<group>"; };
 		22117E8A0E1545110093BFED /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FirstRunView.xib; sourceTree = "<group>"; };
 		221185DB0E1676620093BFED /* date.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date.png; sourceTree = "<group>"; };
@@ -860,8 +856,6 @@
 		229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_upper.png; sourceTree = "<group>"; };
 		22AA37A312DCF2D70000F121 /* SearchTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTabViewController.h; sourceTree = "<group>"; };
 		22AA37A412DCF2D70000F121 /* SearchTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTabViewController.m; sourceTree = "<group>"; };
-		22ABB41C0DB10C3100D2871E /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
-		22ABB41D0DB10C3100D2871E /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NowPlayingButton.h"; sourceTree = "<group>"; };
 		22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NowPlayingButton.m"; sourceTree = "<group>"; };
 		22B444410E9FB1300079C52E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -883,7 +877,6 @@
 		22D1DEB20E5C61F600D1068D /* rounded_table_cell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rounded_table_cell.png; sourceTree = "<group>"; };
 		22D2194D1294524F00B3E520 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		22D2194E1294524F00B3E520 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
-		22D21ADF1294827400B3E520 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/HomeViewController.xib; sourceTree = "<group>"; };
 		22D21C221295C6FA00B3E520 /* RecsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecsViewController.h; sourceTree = "<group>"; };
 		22D21C231295C6FA00B3E520 /* RecsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecsViewController.m; sourceTree = "<group>"; };
 		22DB14A70E422455002D66BE /* radio_icon_tab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio_icon_tab.png; sourceTree = "<group>"; };
@@ -1017,8 +1010,6 @@
 				226F603F12A67CB400319DBC /* Search.m */,
 				22AA37A312DCF2D70000F121 /* SearchTabViewController.h */,
 				22AA37A412DCF2D70000F121 /* SearchTabViewController.m */,
-				22ABB41C0DB10C3100D2871E /* SearchViewController.h */,
-				22ABB41D0DB10C3100D2871E /* SearchViewController.m */,
 				22E6E85F0E533F08009FD470 /* TagEditorViewController.h */,
 				22E6E8600E533F08009FD470 /* TagEditorViewController.m */,
 				22C54F730DEEF9A30087322B /* TagRadioViewController.h */,
@@ -1456,11 +1447,9 @@
 				229293D312AD217400C31269 /* Three20.xcodeproj */,
 				22CAC57E125F891100250917 /* DetailsView.xib */,
 				224793070F8123C100EE0C52 /* Beacon.h */,
-				22D21ADE1294827400B3E520 /* HomeViewController.xib */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
-				22EB603B0E65A8B20021751A /* SearchView.xib */,
 				22EB603D0E65A8B20021751A /* PlaybackView.xib */,
 				22EB603F0E65A8B30021751A /* FirstRunView.xib */,
 				22EB60450E65A8B40021751A /* TagEditorView.xib */,
@@ -1889,7 +1878,6 @@
 				22117E400E153AC50093BFED /* now_playing_header.png in Resources */,
 				22117E410E153AC50093BFED /* streaming.png in Resources */,
 				22117E420E153AC50093BFED /* now_playing_list.png in Resources */,
-				22EB603C0E65A8B20021751A /* SearchView.xib in Resources */,
 				22EB603E0E65A8B20021751A /* PlaybackView.xib in Resources */,
 				22EB60400E65A8B30021751A /* FirstRunView.xib in Resources */,
 				221185DC0E1676620093BFED /* date.png in Resources */,
@@ -2033,7 +2021,6 @@
 				22F255210E75771E000965FA /* metadatagradient.png in Resources */,
 				22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */,
 				22CAC580125F891100250917 /* DetailsView.xib in Resources */,
-				22D21AE01294827400B3E520 /* HomeViewController.xib in Resources */,
 				224F661212E898FC00ABEECD /* date-detail_view.png in Resources */,
 				224F662F12E8AE2600ABEECD /* tabbar_events.png in Resources */,
 				224F663012E8AE2600ABEECD /* tabbar_events@2x.png in Resources */,
@@ -2094,7 +2081,6 @@
 				2213D1B40D9F113100914A50 /* FriendsViewController.m in Sources */,
 				2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */,
 				2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */,
-				22ABB41E0DB10C3100D2871E /* SearchViewController.m in Sources */,
 				22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */,
 				227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */,
 				221E6B040DC2BD300006E74C /* Scrobbler.m in Sources */,
@@ -2202,29 +2188,12 @@
 			name = DetailsView.xib;
 			sourceTree = "<group>";
 		};
-		22D21ADE1294827400B3E520 /* HomeViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22D21ADF1294827400B3E520 /* English */,
-			);
-			name = HomeViewController.xib;
-			sourceTree = "<group>";
-		};
 		22EB60390E65A8B20021751A /* MainWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				223128F60DFF1ECB00EC3BF0 /* English */,
 			);
 			name = MainWindow.xib;
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		22EB603B0E65A8B20021751A /* SearchView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22117E860E1544F50093BFED /* English */,
-			);
-			name = SearchView.xib;
 			path = Resources;
 			sourceTree = "<group>";
 		};

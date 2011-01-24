@@ -48,7 +48,7 @@
 - (void)tagEditorRemoveTags:(NSArray *)tags;
 @end
 
-@interface TagEditorViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UITabBarDelegate,UITextFieldDelegate> {
+@interface TagEditorViewController : UIViewController<UITextFieldDelegate> {
 	TTPickerTextField *textField;
 	TagsDataSource *_tags;
 	NSMutableDictionary *tagActions;
@@ -56,7 +56,7 @@
 	id<TagEditorViewControllerDelegate> delegate;
 }
 @property (retain, nonatomic) id<TagEditorViewControllerDelegate> delegate;
-- (IBAction)tagButtonPressed:(id)sender;
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
+- (void)setTags:(NSArray *)tags;
 @end

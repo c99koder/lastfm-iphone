@@ -23,7 +23,7 @@
 #import "LastFMService.h"
 #import "Search.h"
 
-@interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchDisplayDelegate> {
+@interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate> {
 	NSString *_username;
 	NSArray *_recent;
 	NSArray *_data;
