@@ -339,6 +339,40 @@
 	}
 	return cell;
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	if(toggle.selectedSegmentIndex != 0 || section != 0) {
+		return 0;
+	} else {
+		return 40;
+	}
+}
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	if(toggle.selectedSegmentIndex != 0 || section != 0) {
+		return nil;
+	}
+	
+	// Create label with section title
+	UILabel *label = [[[UILabel alloc] init] autorelease];
+	label.frame = CGRectMake(20, 6, 300, 40);
+	label.backgroundColor = [UIColor clearColor];
+	label.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+	label.shadowColor = [UIColor whiteColor];
+	label.shadowOffset = CGSizeMake(0.0, 1.0);
+	label.font = [UIFont systemFontOfSize:14];
+	label.numberOfLines = 2;
+	label.textAlignment = UITextAlignmentCenter;
+	label.lineBreakMode = UILineBreakModeWordWrap;
+	label.text = @"New music from Last.fm, based on\nwhat you've been listening to.";
+	
+	// Create header view and add label as a subview
+	UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+	[view autorelease];
+	[view addSubview:label];
+	
+	return view;
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
