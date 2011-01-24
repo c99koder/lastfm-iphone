@@ -168,7 +168,6 @@
 	_recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:_username] retain];
 	[LastFMService sharedInstance].cacheOnly = NO;
 	[self rebuildMenu];
-	self.tableView.scrollsToTop = NO;
 }
 - (void)rebuildMenu {
 	@synchronized(self) {
