@@ -496,6 +496,17 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	if(notification.object == [_tracks objectAtIndex:0]) {
 		[notification.object play];
 		_errorSkipCounter = 0;
+		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] isEqualToString:@"1"]) {
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 30) {
+				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Welcome to Last.fm! You can listen to 30 tracks for free before a subscription is required." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+				[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+			}
+			
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 5) {
+				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free trial is almost over!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+				[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+			}
+		}
 	}
 }
 -(void)_trackDidFinishPlaying:(NSNotification *)notification {
@@ -505,10 +516,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		playsleft--;
 		[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%i", playsleft] forKey:@"trial_playsleft"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-		if(playsleft == 5) {
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free trial is almost over!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
-			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-		}
 	} else {
 		[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
@@ -738,16 +745,6 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		return FALSE;
 	}
 
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 30) {
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Welcome to Last.fm! You can listen to 30 tracks for free before a subscription is required." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
-		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-	}
-	
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 5) {
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free trial is almost over!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
-		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-	}
-	
 	LastFMTrack *track = [[[LastFMTrack alloc] initWithTrackInfo:[_playlist objectAtIndex:0]] autorelease];
 	
 	if(track) {

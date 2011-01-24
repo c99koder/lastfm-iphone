@@ -159,6 +159,7 @@
 		224F67F412EA16F200ABEECD /* searchresults_tag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F67F012EA16F200ABEECD /* searchresults_tag@2x.png */; };
 		224F67F512EA16F200ABEECD /* searchresults_track@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F67F112EA16F200ABEECD /* searchresults_track@2x.png */; };
 		224F67FA12EA17ED00ABEECD /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F67F912EA17ED00ABEECD /* icon@2x.png */; };
+		224F6A4A12EE14C000ABEECD /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */; };
 		225157980E09A67B00943078 /* backBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 225157970E09A67B00943078 /* backBtn.png */; };
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
 		2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349C0DA85CD30035A1AA /* LastFMRadio.m */; };
@@ -784,6 +785,7 @@
 		224F67F012EA16F200ABEECD /* searchresults_tag@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "searchresults_tag@2x.png"; sourceTree = "<group>"; };
 		224F67F112EA16F200ABEECD /* searchresults_track@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "searchresults_track@2x.png"; sourceTree = "<group>"; };
 		224F67F912EA17ED00ABEECD /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r91.a"; sourceTree = "<group>"; };
 		225157970E09A67B00943078 /* backBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backBtn.png; sourceTree = "<group>"; };
 		2259349A0DA85CD30035A1AA /* LastFMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMService.m; sourceTree = "<group>"; };
 		2259349B0DA85CD30035A1AA /* LastFMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMService.h; sourceTree = "<group>"; };
@@ -957,6 +959,7 @@
 				229294B012AD21DC00C31269 /* libThree20UI.a in Frameworks */,
 				229294B312AD21E300C31269 /* libThree20UICommon.a in Frameworks */,
 				229294B612AD21E700C31269 /* libThree20UINavigator.a in Frameworks */,
+				224F6A4A12EE14C000ABEECD /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1031,6 +1034,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
