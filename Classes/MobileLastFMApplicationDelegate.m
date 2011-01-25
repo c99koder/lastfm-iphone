@@ -95,7 +95,6 @@ NSString *kUserAgent;
 		
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		
-		
 		[NSThread detachNewThreadSelector:@selector(_cleanCache) toTarget:self withObject:nil];
 	}
 	return self;
@@ -235,6 +234,7 @@ NSString *kUserAgent;
 	if(!_scrobbler) {
 		_scrobbler = [[Scrobbler alloc] init];
 	}
+	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];
 	NSDictionary *info = [[LastFMService sharedInstance] profileForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	if([[info objectForKey:@"country"] length]) {
 		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"country"] forKey:@"country"];
@@ -260,7 +260,6 @@ NSString *kUserAgent;
 	if(animated)
 		[UIView commitAnimations];
 
-	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];
 	[firstRunView release];
 	firstRunView = nil;
 	if(_launchURL) {
