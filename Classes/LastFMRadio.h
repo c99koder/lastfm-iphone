@@ -89,6 +89,7 @@ NSString *kTrackDidFailToStream;
 	BOOL prebuffering;
 	BOOL softskipping;
 	BOOL tuning;
+	NSArray *_suggestions;
 }
 
 @property BOOL playbackWasInterrupted;
@@ -111,4 +112,5 @@ NSString *kTrackDidFailToStream;
 -(float)bufferProgress;
 -(LastFMTrack *)currentTrack;
 -(BOOL)cancelPrebuffering;
+-(NSArray *)suggestions;
 @end

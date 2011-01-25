@@ -131,7 +131,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 	}
 	
-	//NSLog(@"Response: %s\n", [theResponseData bytes]);
+	NSLog(@"Response: %s\n", [theResponseData bytes]);
 	
 	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
 	if(theError) {
@@ -660,6 +660,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	} else {
 		return nil;
 	}
+}
+- (NSArray *)suggestedTagsForStation:(NSString *)stationURL {
+	NSArray *nodes = [self doMethod:@"radio.getTagSuggestions" maxCacheAge:7*DAYS XPath:@"./suggestions/suggestion" withParameters:[NSString stringWithFormat:@"station=%@", [stationURL URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./tag/name", @"./station/url", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"url", nil]];
 }
 
 #pragma mark Search methods

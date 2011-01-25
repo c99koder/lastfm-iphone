@@ -49,7 +49,6 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UIView *_filterBar;
 	IBOutlet UIView *_filterView;
 	IBOutlet UIPickerView *_filter;
-	NSArray *_trackTags;
 	UIImage *artwork;
 	UIImageView *_noArtworkView;
 	NSLock *_lock;

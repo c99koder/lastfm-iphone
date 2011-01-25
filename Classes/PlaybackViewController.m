@@ -143,9 +143,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSString *artworkURL = nil;
 	UIImage *artworkImage;
 	
-	[_trackTags release];
-	_trackTags = [[[LastFMService sharedInstance] topTagsForTrack:[trackInfo objectForKey:@"title"] byArtist:[trackInfo objectForKey:@"creator"]] retain];
-	
 	if([[albumData objectForKey:@"image"] length]) {
 		artworkURL = [NSString stringWithString:[albumData objectForKey:@"image"]];
 	} else if([[trackInfo objectForKey:@"image"] length]) {
@@ -230,6 +227,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSDictionary *trackInfo = [notification userInfo];
 	[self _displayTrackInfo:trackInfo];
 	NSLog(@"Free trial tracks remaining: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]);
+	if([[[LastFMRadio sharedInstance] suggestions] count]) {
+		_filterBar.hidden = NO;
+	} else {
+		_filterBar.hidden = YES;
+	}
 }
 -(void)filterButtonPressed:(id)sender {
 	[_filter reloadAllComponents];
@@ -237,22 +239,40 @@ int tagSort(id tag1, id tag2, void *context) {
 	_filterView.frame = CGRectMake(0,162,320,254);
 	[UIView commitAnimations];
 }
+-(void)_tuneNewStation:(NSDictionary *)filter {
+	if(![[LastFMRadio sharedInstance] selectStation:[filter objectForKey:@"url"]]) {
+		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
+	} else {
+		if([filter objectForKey:@"name"]) {
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Re-Tuned" message:
+														 [NSString stringWithFormat:@"After this track, you'll only hear '%@' music on this station.",[filter objectForKey:@"name"]]
+																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Don't show this message again", nil] autorelease];
+			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+			}
+	}
+}
 -(void)dismissFilterView:(id)sender {
 	[UIView beginAnimations:nil context:nil];
 	_filterView.frame = CGRectMake(0,416,320,254);
 	[UIView commitAnimations];
+	if([_filter selectedRowInComponent:0] == 0) {
+		//TODO: Special handling needed for the "ALL" option
+	} else if(![[[LastFMRadio sharedInstance] stationURL] isEqualToString:[[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:[_filter selectedRowInComponent:0]-1] objectForKey:@"url"]]) {
+		NSLog(@"New URL: %@", [[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:[_filter selectedRowInComponent:0]-1] objectForKey:@"url"]);
+		[self performSelector:@selector(_tuneNewStation:) withObject:[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:[_filter selectedRowInComponent:0]-1] afterDelay:0.1];
+	}
 }
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)thePickerView {
 	return 1;
 }
 - (NSInteger)pickerView:(UIPickerView *)thePickerView numberOfRowsInComponent:(NSInteger)component {
-	return [_trackTags count] + 1;
+	return [[[LastFMRadio sharedInstance] suggestions] count] + 1;
 }
 - (NSString *)pickerView:(UIPickerView *)thePickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
 	if(row == 0)
 		return @"Include all tags";
 	else
-		return [[_trackTags objectAtIndex:(row-1)] objectForKey:@"name"];
+		return [[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:(row-1)] objectForKey:@"name"];
 }
 @end
 
@@ -272,11 +292,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	
 #if !(TARGET_IPHONE_SIMULATOR)
 	MPVolumeView *v = [[MPVolumeView alloc] initWithFrame:frame];
+	[trackView.view insertSubview: v aboveSubview: volumeView];
 	[volumeView removeFromSuperview];
 	[volumeView release];
 	volumeView = v;
 	[volumeView sizeToFit];
-	[trackView.view addSubview: volumeView];
 	[v release];
 #endif
 	self.hidesBottomBarWhenPushed = YES;

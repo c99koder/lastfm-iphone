@@ -654,21 +654,22 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		}
 	}
 }
+-(NSArray *)suggestions {
+	return _suggestions;
+}
 -(BOOL)selectStation:(NSString *)station {
 	int x;
 	NSDictionary *tune;
 	[self removeRecentURL: station];
+	[self cancelPrebuffering];
 	NSLog(@"Selecting station: %@\n", station);
 	NSLog(@"Network connection type: %@\n", [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasWiFiConnection]?@"WiFi":@"EDGE");
 	tune = [[LastFMService sharedInstance] tuneRadioStation:station];
 	if(!tune || [LastFMService sharedInstance].error) {
-		[_playlist release];
-		[_stationURL release];
-		[_station release];
-		_playlist = nil;
-		_stationURL = nil;
-		_station = nil;
+		return FALSE;
 	} else {
+		[_suggestions release];
+		_suggestions = [[[LastFMService sharedInstance] suggestedTagsForStation:station] retain];
 		[_playlist release];
 		_playlist = nil;
 		[_stationURL release];
