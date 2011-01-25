@@ -75,39 +75,41 @@
 - (void)update:(NSTimer *)timer {
 	int networkType;
 	
-	if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasWiFiConnection]) {
-		networkType = 2;
-	} else if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-		networkType = 1;
-	} else {
-		networkType = 0;
-	}
-	
-	_oldNetworkType = networkType;
-	
-	if(_scrobblerState != SCROBBLER_SCROBBLING && _scrobblerState != SCROBBLER_NOWPLAYING && [(APP_CLASS *)[UIApplication sharedApplication].delegate isPlaying]) {
-		NSDictionary *track = [(APP_CLASS *)[UIApplication sharedApplication].delegate trackInfo];
-		if(track != nil) {
-			if([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] > 240 || (([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] * 1000.0f) / [[track objectForKey:@"duration"] floatValue]) > 0.5) {
-				if(!_submitted) {
-					[self scrobbleTrack:[track objectForKey:@"title"]
-										 byArtist:[track objectForKey:@"creator"]
-											onAlbum:[track objectForKey:@"album"]
-								withStartTime:[[track objectForKey:@"startTime"] intValue]
-								 withDuration:[[track objectForKey:@"duration"] intValue]
-									 fromSource:[track objectForKey:@"source"]];
-					_submitted = TRUE;
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]) {
+		if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasWiFiConnection]) {
+			networkType = 2;
+		} else if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
+			networkType = 1;
+		} else {
+			networkType = 0;
+		}
+		
+		_oldNetworkType = networkType;
+		
+		if(_scrobblerState != SCROBBLER_SCROBBLING && _scrobblerState != SCROBBLER_NOWPLAYING && [(APP_CLASS *)[UIApplication sharedApplication].delegate isPlaying]) {
+			NSDictionary *track = [(APP_CLASS *)[UIApplication sharedApplication].delegate trackInfo];
+			if(track != nil) {
+				if([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] > 240 || (([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] * 1000.0f) / [[track objectForKey:@"duration"] floatValue]) > 0.5) {
+					if(!_submitted) {
+						[self scrobbleTrack:[track objectForKey:@"title"]
+											 byArtist:[track objectForKey:@"creator"]
+												onAlbum:[track objectForKey:@"album"]
+									withStartTime:[[track objectForKey:@"startTime"] intValue]
+									 withDuration:[[track objectForKey:@"duration"] intValue]
+										 fromSource:[track objectForKey:@"source"]];
+						_submitted = TRUE;
+					}
+				} else {
+					_submitted = FALSE;
 				}
-			} else {
-				_submitted = FALSE;
-			}
-			if([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] > 10) {
-				if(!_sentNowPlaying && [(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-					[self nowPlayingTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"creator"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]];
-					_sentNowPlaying = TRUE;
+				if([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] > 10) {
+					if(!_sentNowPlaying && [(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
+						[self nowPlayingTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"creator"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]];
+						_sentNowPlaying = TRUE;
+					}
+				} else {
+					_sentNowPlaying = FALSE;
 				}
-			} else {
-				_sentNowPlaying = FALSE;
 			}
 		}
 	}
@@ -170,7 +172,7 @@
 	}
 }
 - (void)doQueueTimer {
-	if(_queueTimer == nil && _scrobblerState != SCROBBLER_OFFLINE) {
+	if(_queueTimer == nil && _scrobblerState != SCROBBLER_OFFLINE && [[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]) {
 		_queueTimer = [NSTimer scheduledTimerWithTimeInterval:_queueTimerInterval
 																								target:self
 																							selector:@selector(flushQueue:)
@@ -190,44 +192,46 @@
 	_scrobblerState = SCROBBLER_READY;
 }
 - (void)flushQueue:(NSTimer *)theTimer {
-	@synchronized(_queue) {
-		NSEnumerator *enumerator = [[[_queue copy] autorelease] objectEnumerator];
-		id track;
-		
-		if(_queueTimer != nil) {
-			[_queueTimer invalidate];
-			_queueTimer = nil;
-		}
-		
-		if([_queue count] < 1) {
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]) {
+		@synchronized(_queue) {
+			NSEnumerator *enumerator = [[[_queue copy] autorelease] objectEnumerator];
+			id track;
+			
+			if(_queueTimer != nil) {
+				[_queueTimer invalidate];
+				_queueTimer = nil;
+			}
+			
+			if([_queue count] < 1) {
+				_queueTimerInterval = 2;
+				return;
+			}
+			
+			if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
+				_scrobblerState = SCROBBLER_OFFLINE;
+				return;
+			}
+			
+			_scrobblerState = SCROBBLER_SCROBBLING;
+			
+			while((track = [enumerator nextObject])) {
+				if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
+					[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+				}
+				if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
+					[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+				}
+				[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
+				if([LastFMService sharedInstance].error == nil) {
+					[_queue removeObject:track];
+					[self saveQueue];
+				} else {
+					break;
+				}
+			}
 			_queueTimerInterval = 2;
-			return;
+			_scrobblerState = SCROBBLER_READY;
 		}
-		
-		if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-			_scrobblerState = SCROBBLER_OFFLINE;
-			return;
-		}
-		
-		_scrobblerState = SCROBBLER_SCROBBLING;
-		
-		while((track = [enumerator nextObject])) {
-			if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
-				[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-			}
-			if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
-				[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-			}
-			[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
-			if([LastFMService sharedInstance].error == nil) {
-				[_queue removeObject:track];
-				[self saveQueue];
-			} else {
-				break;
-			}
-		}
-		_queueTimerInterval = 2;
-		_scrobblerState = SCROBBLER_READY;
 	}
 }
 - (void)cancelTimer {
