@@ -88,7 +88,7 @@
 	}	
 }
 -(IBAction)createButtonPressed:(id)sender {
-	if([_regusername.text length] && [_regpassword.text length]) {
+	if([_regusername.text length] && [_regpassword.text length] && [_regemail.text length]) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 		_regusername.enabled = NO;
 		_regpassword.enabled = NO;
