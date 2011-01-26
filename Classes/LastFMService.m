@@ -455,8 +455,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@nowplaying", @"./artist/name", @"./name", @"./date", @"./image[@size=\"large\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"nowplaying", @"artist", @"name", @"date", @"image", nil]];
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@nowplaying", @"./artist/name", @"./name", @"./date", @"./date/@uts", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"nowplaying", @"artist", @"name", @"date", @"uts", @"image", nil]];
 }
 - (NSArray *)friendsOfUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getFriends" maxCacheAge:0 XPath:@"./friends/user" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], @"limit=500", nil];

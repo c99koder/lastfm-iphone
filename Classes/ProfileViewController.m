@@ -25,6 +25,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
+#import "NSString+LastFMTimeExtensions.h"
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "ArtistViewController.h"
@@ -150,9 +151,10 @@
 		if([_recentTracks count]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_recentTracks count] && x < 5; x++) {
-				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"])
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
-																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
+				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"]) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] StringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
+																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"url",nil]]];
+				}
 			}
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened Tracks", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
@@ -264,6 +266,14 @@
 			cell.detailTextLabel.textColor = [UIColor blackColor];
 			cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+		}	else {
+			cell.detailTextLabel.text = @"";
+		}
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
+			cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
+			cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
+			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+			cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 		}	else {
 			cell.detailTextLabel.text = @"";
 		}
