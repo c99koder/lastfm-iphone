@@ -82,6 +82,7 @@ NSURL *__redirectURL;
 	
 	if([[url scheme] isEqualToString:@"lastfm-user"]) {
 		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[url host] unURLEscape]];
+		[home viewWillAppear:YES];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -94,6 +95,7 @@ NSURL *__redirectURL;
 	
 	if([[url scheme] isEqualToString:@"lastfm-friends"]) {
 		FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[url host] unURLEscape]];
+		[friends viewWillAppear:YES];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -106,6 +108,7 @@ NSURL *__redirectURL;
 	
 	if([[url scheme] isEqualToString:@"lastfm-recenttracks"]) {
 		RecentTracksViewController *tracks = [[RecentTracksViewController alloc] initWithUsername:[[url host] unURLEscape]];
+		[tracks viewWillAppear:YES];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -118,6 +121,7 @@ NSURL *__redirectURL;
 	
 	if([[url scheme] isEqualToString:@"lastfm-artist"]) {
 		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[[url host] unURLEscape]];
+		[artist viewWillAppear: YES];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -132,6 +136,7 @@ NSURL *__redirectURL;
 		NSString *artist = [[url host] unURLEscape];
 		NSString *album = [[[url path] substringFromIndex:1] unURLEscape];
 		AlbumViewController *view = [[AlbumViewController alloc] initWithAlbum:album byArtist:artist];
+		[view viewWillAppear:YES];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -146,6 +151,7 @@ NSURL *__redirectURL;
 		NSString *artist = [[url host] unURLEscape];
 		NSString *track = [[[url path] substringFromIndex:1] unURLEscape];
 		TrackViewController *view = [[TrackViewController alloc] initWithTrack:track byArtist:artist];
+		[view viewWillAppear:YES];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -158,6 +164,7 @@ NSURL *__redirectURL;
 	
 	if([[url scheme] isEqualToString:@"lastfm-tag"]) {
 		TagViewController *tag = [[TagViewController alloc] initWithTag:[[url host] unURLEscape]];
+		[tag viewWillAppear: YES];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
