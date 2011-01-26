@@ -87,7 +87,7 @@
 		
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", _artist], nil]
+																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
 																																																									 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 
@@ -378,10 +378,7 @@
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
-		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-		img.opaque = YES;
-		stationCell.accessoryView = img;
-		[img release];
+		stationCell.imageView.image = [UIImage imageNamed:@"radiostarter.png"];
 		return stationCell;
 	}
 	
