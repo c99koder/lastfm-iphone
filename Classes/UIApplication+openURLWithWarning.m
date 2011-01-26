@@ -27,6 +27,7 @@
 #import "TrackViewController.h"
 #import "TagViewController.h"
 #import "HomeViewController.h"
+#import "RecentTracksViewController.h"
 #import "PlaybackViewController.h"
 #import "NSString+URLEscaped.h"
 
@@ -100,6 +101,18 @@ NSURL *__redirectURL;
 		}
 		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:friends animated:YES];
 		[friends release];
+		return;
+	}
+	
+	if([[url scheme] isEqualToString:@"lastfm-recenttracks"]) {
+		RecentTracksViewController *tracks = [[RecentTracksViewController alloc] initWithUsername:[[url host] unURLEscape]];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
+			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
+		}
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:tracks animated:YES];
+		[tracks release];
 		return;
 	}
 	
