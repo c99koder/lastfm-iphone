@@ -200,6 +200,7 @@ UIImage *avatarPlaceholder = nil;
 		title.highlightedTextColor = [UIColor whiteColor];
 		title.backgroundColor = [UIColor whiteColor];
 		title.font = [UIFont boldSystemFontOfSize:16];
+		title.lineBreakMode = UILineBreakModeTailTruncation;
 		[self.contentView addSubview:title];
 		
 		subtitle = [[UILabel alloc] init];
@@ -225,26 +226,30 @@ UIImage *avatarPlaceholder = nil;
 	if(self.accessoryView != nil)
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
 	
+	float detailWidth = 0;
+	if([self.detailTextLabel.text length] && _style == UITableViewCellStyleValue1) {
+		detailWidth = [self.detailTextLabel.text sizeWithFont:self.detailTextLabel.font].width;
+	}
+	
 	if(imageURL)
 		if(shouldRoundTop || shouldRoundBottom || shouldFillHeight)
 			_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
 		else
 			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	if([subtitle.text length]) {
-		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + Yoffset, frame.size.width - _artwork.frame.size.width - 20, 22);
+		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + Yoffset, frame.size.width - _artwork.frame.size.width - 20 - detailWidth, 22);
 		float height = 20;
 		if(subtitle.numberOfLines != 1)
 			height = [subtitle.text sizeWithFont:subtitle.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.size.width - 20, frame.size.height - 20 - (Yoffset * 2)) lineBreakMode:subtitle.lineBreakMode].height;
-		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 20 + Yoffset, frame.size.width - _artwork.frame.size.width - 20, 
-																height);
+		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 20 + Yoffset, frame.size.width - _artwork.frame.size.width - 20, height);
 	} else {
 		title.font = [UIFont boldSystemFontOfSize:18];
-		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, Yoffset, frame.size.width - _artwork.frame.size.width - 20, frame.size.height - (Yoffset * 2));
+		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, Yoffset, frame.size.width - _artwork.frame.size.width - 20 - detailWidth, frame.size.height - (Yoffset * 2));
 		subtitle.frame = CGRectZero;
 	}
 	if([self.detailTextLabel.text length]) {
 		if(_style == UITableViewCellStyleValue1) {
-			float detailX = title.frame.origin.x + [title.text sizeWithFont:title.font constrainedToSize:title.frame.size lineBreakMode:title.lineBreakMode].width + 2;
+			float detailX = title.frame.origin.x + [title.text sizeWithFont:title.font forWidth:title.bounds.size.width lineBreakMode:title.lineBreakMode].width + 2;
 			self.detailTextLabel.frame = CGRectMake(detailX, title.frame.origin.y, frame.size.width - detailX, title.frame.size.height);
 		}
 		if(_style == UITableViewCellStyleValue2) {
