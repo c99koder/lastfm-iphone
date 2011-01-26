@@ -428,6 +428,18 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", @"./@releasedate", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", @"releasedate", nil]];
 }
+- (NSString *)releaseDataSourceForUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getNewReleases" maxCacheAge:5*MINUTES XPath:@"./albums" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	if([nodes count]) {
+		NSDictionary *source = nil;
+		CXMLNode *node = [nodes objectAtIndex:0];
+		source = [self _convertNode:node
+					toDictionaryWithXPaths:[NSArray arrayWithObjects:@"@source", nil]
+												 forKeys:[NSArray arrayWithObjects:@"source", nil]];
+		return [source objectForKey:@"source"];
+	}
+	return nil;
+}
 - (NSArray *)topAlbumsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getTopAlbums" maxCacheAge:5*MINUTES XPath:@"./topalbums/album" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
 	return [self _convertNodes:nodes
