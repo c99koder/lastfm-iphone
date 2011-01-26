@@ -24,7 +24,7 @@
 
 @implementation UIViewController (NowPlayingButton)
 -(void)showNowPlayingButton:(BOOL)show {
-	if(self.navigationController == ((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.tabBarController.selectedViewController) {
+	if(self.navigationController == ((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController || self.tabBarController) {
 		if(show) {
 			UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 64, 30)];
 			[btn setBackgroundImage:[UIImage imageNamed:@"now_playing_header.png"] forState:UIControlStateNormal];

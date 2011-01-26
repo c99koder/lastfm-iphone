@@ -518,7 +518,7 @@
 	return 52;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
-	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.tabBarController.selectedViewController) {
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
 		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_artists objectAtIndex:[newIndexPath row]]];
 		[self.navigationController pushViewController:artist animated:YES];
 		[artist release];
@@ -530,7 +530,7 @@
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"simplecell"] autorelease];
 	}
 	cell.textLabel.text = [_artists objectAtIndex:[indexPath row]];
-	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.tabBarController.selectedViewController)
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController)
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	else
 		cell.accessoryType = UITableViewCellAccessoryNone;
