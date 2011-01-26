@@ -3,4 +3,4 @@
 	url = https://github.com/facebook/three20.git
 [submodule "TouchXML"]
 	path = TouchXML
-	url = https://github.com/schwa/TouchXML.git
+	url = https://github.com/TouchCode/TouchXML.git
