@@ -28,6 +28,7 @@
 #import "TagViewController.h"
 #import "HomeViewController.h"
 #import "RecentTracksViewController.h"
+#import "WeeklyArtistsViewController.h"
 #import "PlaybackViewController.h"
 #import "NSString+URLEscaped.h"
 
@@ -116,6 +117,19 @@ NSURL *__redirectURL;
 		}
 		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:tracks animated:YES];
 		[tracks release];
+		return;
+	}
+	
+	if([[url scheme] isEqualToString:@"lastfm-weeklyartists"]) {
+		WeeklyArtistsViewController *artists = [[WeeklyArtistsViewController alloc] initWithUsername:[[url host] unURLEscape]];
+		[artists viewWillAppear:YES];
+		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
+			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
+			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
+		}
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:artists animated:YES];
+		[artists release];
 		return;
 	}
 	
