@@ -59,6 +59,11 @@
 - (NSArray *)data {
 	return _data;
 }
+- (void)clear {
+	[_data release];
+	_data = [[NSMutableArray alloc] init];
+	
+}
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	return nil;
 }

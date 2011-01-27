@@ -119,6 +119,13 @@
 	}
 	[searchBar resignFirstResponder];
 }
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+	if ([searchText isEqualToString: @""]) {
+		[_searchData clear];
+		[self.searchDisplayController.searchResultsTableView reloadData];
+		[self.tableView reloadData];
+	}
+}
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	[searchBar resignFirstResponder];
 }
