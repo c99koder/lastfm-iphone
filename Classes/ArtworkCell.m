@@ -121,6 +121,9 @@ UIImage *avatarPlaceholder = nil;
 	return imageURL;
 }
 -(UIImage *)roundedImage:(UIImage *)image {
+	if(!shouldRoundTop && !shouldRoundBottom)
+		return image;
+
 	UIImage *img = image;
 	float scale = 1.0f;
 	if([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
