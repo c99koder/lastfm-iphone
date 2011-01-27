@@ -55,6 +55,7 @@
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Music Search";
 	bar.delegate = self;
+	bar.showsCancelButton = YES;
 	self.tableView.tableHeaderView = bar;
 	self.tableView.dataSource = _searchData;
 	self.tableView.delegate = self;
@@ -116,6 +117,16 @@
 																									 userInfo:searchBar.text
 																										repeats:NO] retain];
 	}
+	[searchBar resignFirstResponder];
+}
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+	if ([searchText isEqualToString: @""]) {
+		[_searchData clear];
+		[self.searchDisplayController.searchResultsTableView reloadData];
+		[self.tableView reloadData];
+	}
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	[searchBar resignFirstResponder];
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
