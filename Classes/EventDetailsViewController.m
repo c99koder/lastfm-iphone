@@ -330,7 +330,7 @@
 			[formatter setDateFormat:@"d"];
 			eventCell.day.text = [formatter stringFromDate:date];
 			
-			[formatter setDateFormat: @"EEE, MMM dd"];
+			[formatter setDateFormat: @"EEEE, dd MMM"];
 			NSString* formattedDate = [self formatDate:date];
 			if( [formattedDate length] > 0 ) {
 				eventCell.title.text = [NSString stringWithFormat: @"%@ (%@)", formattedDate, [formatter stringFromDate: date]];
@@ -340,7 +340,7 @@
 
 			[formatter setDateStyle:NSDateFormatterNoStyle];
 			[formatter setTimeStyle:NSDateFormatterShortStyle];
-			eventCell.location.text = [NSString stringWithFormat: @"at %@, %@", [_event objectForKey: @"venue"], [formatter stringFromDate: date]];
+			eventCell.location.text = [NSString stringWithFormat: @"%@, %@", [_event objectForKey: @"venue"], [formatter stringFromDate: date]];
 			
 			[formatter release];
 			
