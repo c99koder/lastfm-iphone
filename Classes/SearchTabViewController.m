@@ -55,7 +55,6 @@
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Music Search";
 	bar.delegate = self;
-	bar.showsCancelButton = YES;
 	self.tableView.tableHeaderView = bar;
 	self.tableView.dataSource = _searchData;
 	self.tableView.delegate = self;
@@ -90,7 +89,6 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *query = [timer userInfo];
 	[_searchData search:query];
-	[self.searchDisplayController.searchResultsTableView reloadData];
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -101,6 +99,7 @@
 	self.tableView.scrollEnabled = YES;
 	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	[self.tableView reloadData];
+	searchBar.showsCancelButton = YES;
 	return YES;
 }
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
@@ -118,16 +117,17 @@
 																										repeats:NO] retain];
 	}
 	[searchBar resignFirstResponder];
+	searchBar.showsCancelButton = NO;
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-	if ([searchText isEqualToString: @""]) {
+	if(![searchText length]) {
 		[_searchData clear];
-		[self.searchDisplayController.searchResultsTableView reloadData];
 		[self.tableView reloadData];
 	}
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
 	[searchBar resignFirstResponder];
+	searchBar.showsCancelButton = NO;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
