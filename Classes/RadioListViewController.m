@@ -20,7 +20,6 @@
  */
 
 #import "RadioListViewController.h"
-#import "TagRadioViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
@@ -233,13 +232,6 @@
 		NSLog(@"Station: %@", station);
 		if([station hasPrefix:@"lastfm://"])
 			[self playRadioStation:station];
-		else if([station isEqualToString:@"tags"]) {
-			TagRadioViewController *tags = [[TagRadioViewController alloc] initWithUsername:_username];
-			if(tags) {
-				[self.navigationController pushViewController:tags animated:YES];
-				[tags release];
-			}
-		}
 	} else if([[_data objectAtIndex:[indexPath section]] isEqualToString:@"debug"]) {
 		DebugViewController *controller = [[DebugViewController alloc] initWithNibName:@"DebugView" bundle:nil];
 		[self.navigationController pushViewController:controller animated:YES];
