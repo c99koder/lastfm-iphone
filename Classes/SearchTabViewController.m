@@ -55,6 +55,7 @@
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Music Search";
 	bar.delegate = self;
+	bar.showsCancelButton = true;
 	self.tableView.tableHeaderView = bar;
 	self.tableView.dataSource = _searchData;
 	self.tableView.delegate = self;
