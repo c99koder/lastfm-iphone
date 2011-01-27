@@ -259,7 +259,6 @@
 		22EB603A0E65A8B20021751A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60390E65A8B20021751A /* MainWindow.xib */; };
 		22EB603E0E65A8B20021751A /* PlaybackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB603D0E65A8B20021751A /* PlaybackView.xib */; };
 		22EB60400E65A8B30021751A /* FirstRunView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB603F0E65A8B30021751A /* FirstRunView.xib */; };
-		22EB60460E65A8B40021751A /* TagEditorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60450E65A8B40021751A /* TagEditorView.xib */; };
 		22F255210E75771E000965FA /* metadatagradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F255200E75771E000965FA /* metadatagradient.png */; };
 		22F2FE050E31045B000DDCDC /* noartplaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE040E31045A000DDCDC /* noartplaceholder.png */; };
 		22F2FE0B0E31046D000DDCDC /* rounded_table_cell_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE060E31046D000DDCDC /* rounded_table_cell_bottom.png */; };
@@ -934,7 +933,6 @@
 		22E42D0E0E507FA8009167EA /* event_map_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = event_map_btn.png; sourceTree = "<group>"; };
 		22E6E85F0E533F08009FD470 /* TagEditorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagEditorViewController.h; sourceTree = "<group>"; };
 		22E6E8600E533F08009FD470 /* TagEditorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagEditorViewController.m; sourceTree = "<group>"; };
-		22E6E8740E533FFB009FD470 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/TagEditorView.xib; sourceTree = "<group>"; };
 		22E6E93C0E534F2A009FD470 /* remove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = remove.png; sourceTree = "<group>"; };
 		22EB5F6B0E6492920021751A /* info_button_behind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_button_behind.png; sourceTree = "<group>"; };
 		22EB5FBF0E6499C80021751A /* ontourbadge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ontourbadge.png; sourceTree = "<group>"; };
@@ -1390,7 +1388,6 @@
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
 				22EB603D0E65A8B20021751A /* PlaybackView.xib */,
 				22EB603F0E65A8B30021751A /* FirstRunView.xib */,
-				22EB60450E65A8B40021751A /* TagEditorView.xib */,
 				22631EFC0E81395F00DC2D09 /* DebugView.xib */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -2028,7 +2025,6 @@
 				22E42D0C0E507EDC009167EA /* event_attendance_panel_middle_selected.png in Resources */,
 				22E42D0D0E507EDC009167EA /* event_attendance_panel_middle_rest.png in Resources */,
 				22E42D0F0E507FA8009167EA /* event_map_btn.png in Resources */,
-				22EB60460E65A8B40021751A /* TagEditorView.xib in Resources */,
 				22E6E93D0E534F2A009FD470 /* remove.png in Resources */,
 				22D1DEB30E5C61F700D1068D /* rounded_table_cell.png in Resources */,
 				22C03A2E0E5DA7E600EBF062 /* tag-bg.png in Resources */,
@@ -2248,15 +2244,6 @@
 				22117E8A0E1545110093BFED /* English */,
 			);
 			name = FirstRunView.xib;
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		22EB60450E65A8B40021751A /* TagEditorView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22E6E8740E533FFB009FD470 /* English */,
-			);
-			name = TagEditorView.xib;
 			path = Resources;
 			sourceTree = "<group>";
 		};
