@@ -178,6 +178,7 @@
 		2263275912A525AD006F34EA /* TrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263275812A525AD006F34EA /* TrackViewController.m */; };
 		226F604012A67CB400319DBC /* Search.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F603F12A67CB400319DBC /* Search.m */; };
 		226F611B12A6A5A600319DBC /* EventDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F611A12A6A5A600319DBC /* EventDetailsViewController.m */; };
+		227A662412F1E69B00A08DDA /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */; };
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
 		229122800E6C34F500F9C17C /* tagareabg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291227F0E6C34F500F9C17C /* tagareabg.png */; };
@@ -967,6 +968,7 @@
 				FB348C2712F0392A002EFA95 /* libThree20UI-Xcode3.2.5.a in Frameworks */,
 				FB348C2812F03930002EFA95 /* libThree20UICommon-Xcode3.2.5.a in Frameworks */,
 				FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */,
+				227A662412F1E69B00A08DDA /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

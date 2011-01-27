@@ -67,6 +67,8 @@ enum eventStatus {
 + (LastFMService *)sharedInstance;
 - (NSArray *)doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath withParameters:(NSString *)firstParam, ...;
 
+- (NSDictionary *)getSessionInfo;
+
 #pragma mark Artist methods
 
 - (NSDictionary *)metadataForArtist:(NSString *)artist inLanguage:(NSString *)lang;
