@@ -139,7 +139,7 @@ NSString *kUserAgent;
 		if(!playbackViewController) {
 			NSLog(@"Failed to load playback view!\n");
 		}
-		[rootViewController.tabBarController.selectedViewController pushViewController:playbackViewController animated:NO];
+		[rootViewController.selectedViewController pushViewController:playbackViewController animated:NO];
 		_hidPlaybackDueToLowMemory = NO;
 	}
 	if(playbackViewController != nil)
@@ -158,7 +158,7 @@ NSString *kUserAgent;
 	
 	if(_locked && playbackViewController && !releasedDetailsView && !cancelledPrebuffer) {
 		NSLog(@"Low memory, popping playback view as last resort");
-		[rootViewController.tabBarController.selectedViewController popViewControllerAnimated:NO];
+		[rootViewController.selectedViewController popViewControllerAnimated:NO];
 		[playbackViewController release];
 		playbackViewController = nil;
 		_hidPlaybackDueToLowMemory = YES;
@@ -563,12 +563,12 @@ NSString *kUserAgent;
 	}
 
 	[playbackViewController hideDetailsView];
-	[(UINavigationController *)(rootViewController.tabBarController.selectedViewController) pushViewController:playbackViewController animated:YES];
+	[(UINavigationController *)(rootViewController.selectedViewController) pushViewController:playbackViewController animated:YES];
 	//[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	//[rootViewController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
 }
 -(void)hidePlaybackView {
-	[(UINavigationController *)(rootViewController.tabBarController.selectedViewController) popViewControllerAnimated:YES];
+	[(UINavigationController *)(rootViewController.selectedViewController) popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 	[playbackViewController release];
 	playbackViewController = nil;

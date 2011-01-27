@@ -108,6 +108,8 @@
 		223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223129320DFF21A500EC3BF0 /* FirstRunViewController.m */; };
 		22327C140E700B1F002016DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22327C130E700B1F002016DD /* Settings.bundle */; };
 		22362B9B0E13E4600034F91A /* btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 22362B9A0E13E4600034F91A /* btn.png */; };
+		223652E112F0BBB200A6B4F5 /* RecentTracksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223652E012F0BBB200A6B4F5 /* RecentTracksViewController.m */; };
+		2236538212F0C7C900A6B4F5 /* WeeklyArtistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2236538112F0C7C900A6B4F5 /* WeeklyArtistsViewController.m */; };
 		223DFE7D0DBFFAFF00510722 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 223DFE7C0DBFFAFF00510722 /* SystemConfiguration.framework */; };
 		22416D4912A7CF7100B4A894 /* TagViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22416D4812A7CF7100B4A894 /* TagViewController.m */; };
 		2244DAEB0E3A554500C4F40B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2244DAEA0E3A554500C4F40B /* Localizable.strings */; };
@@ -732,6 +734,10 @@
 		223129320DFF21A500EC3BF0 /* FirstRunViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstRunViewController.m; sourceTree = "<group>"; };
 		22327C130E700B1F002016DD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		22362B9A0E13E4600034F91A /* btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn.png; sourceTree = "<group>"; };
+		223652DF12F0BBB200A6B4F5 /* RecentTracksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentTracksViewController.h; sourceTree = "<group>"; };
+		223652E012F0BBB200A6B4F5 /* RecentTracksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentTracksViewController.m; sourceTree = "<group>"; };
+		2236538012F0C7C900A6B4F5 /* WeeklyArtistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeeklyArtistsViewController.h; sourceTree = "<group>"; };
+		2236538112F0C7C900A6B4F5 /* WeeklyArtistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeeklyArtistsViewController.m; sourceTree = "<group>"; };
 		223DFE7C0DBFFAFF00510722 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		22416D4712A7CF7100B4A894 /* TagViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TagViewController.h; sourceTree = "<group>"; };
 		22416D4812A7CF7100B4A894 /* TagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagViewController.m; sourceTree = "<group>"; };
@@ -1008,6 +1014,8 @@
 				22233F650D8D86410040486A /* ProfileViewController.m */,
 				2212D23A0E40B36B0099DB03 /* RadioListViewController.h */,
 				2212D23B0E40B36B0099DB03 /* RadioListViewController.m */,
+				223652DF12F0BBB200A6B4F5 /* RecentTracksViewController.h */,
+				223652E012F0BBB200A6B4F5 /* RecentTracksViewController.m */,
 				22D21C221295C6FA00B3E520 /* RecsViewController.h */,
 				22D21C231295C6FA00B3E520 /* RecsViewController.m */,
 				221E6B020DC2BD300006E74C /* Scrobbler.h */,
@@ -1030,6 +1038,8 @@
 				220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */,
 				22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */,
 				22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */,
+				2236538012F0C7C900A6B4F5 /* WeeklyArtistsViewController.h */,
+				2236538112F0C7C900A6B4F5 /* WeeklyArtistsViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -2128,6 +2138,8 @@
 				2292952212AD23C500C31269 /* CTidy.m in Sources */,
 				22AA37A512DCF2D70000F121 /* SearchTabViewController.m in Sources */,
 				250B2B7A12F0846B00655451 /* NSString+LastFMTimeExtensions.m in Sources */,
+				223652E112F0BBB200A6B4F5 /* RecentTracksViewController.m in Sources */,
+				2236538212F0C7C900A6B4F5 /* WeeklyArtistsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
