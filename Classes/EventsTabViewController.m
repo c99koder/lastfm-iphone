@@ -356,7 +356,7 @@ UIImage *eventDateBGImage = nil;
 			cell.textLabel.text = @"Events Near Me";
 			break;
 		case 3:
-			cell.textLabel.text = @"My Friends Events";
+			cell.textLabel.text = @"My Friends' Events";
 			break;
 	}
 	[cell showProgress: NO];
