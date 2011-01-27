@@ -144,8 +144,8 @@
 			for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
 				if([_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]])
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
-																																 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],
-																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+																																 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]], @"noimage_artist.png",
+																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url",nil]]];
 			}
 			if([_weeklyArtists count] > 3)
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-weeklyartists://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
@@ -159,8 +159,8 @@
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_recentTracks count] && x < 5; x++) {
 				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"]) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] StringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
-																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"url",nil]]];
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] StringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"], @"noimage_album.png",
+																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"placeholder", @"url",nil]]];
 				}
 			}
 			if([_recentTracks count] > 5)
@@ -174,8 +174,8 @@
 		if([_friendsListeningNow count]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_friendsListeningNow count] && x < 3; x++) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
-																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"track", @"realname", @"url",nil]]];
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], @"noimage_user.png", [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
+																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder", @"track", @"realname", @"url",nil]]];
 			}
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Listening Now", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
@@ -294,6 +294,8 @@
 				cell.shouldRoundTop = YES;
 			if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 				cell.shouldRoundBottom = YES;
+			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"] isEqualToString:@"-"])
+				cell.placeholder = [[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"];
 			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
 				cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
 			else
@@ -309,6 +311,7 @@
 			NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
+			profilecell.placeholder = @"noimage_user.png";
 			profilecell.imageURL = [profile objectForKey:@"avatar"];
 			profilecell.shouldRoundTop = YES;
 			profilecell.shouldRoundBottom = YES;

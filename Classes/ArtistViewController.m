@@ -175,8 +175,8 @@
 			if([_albums count]) {
 				stations = [[NSMutableArray alloc] init];
 				for(int x=0; x<[_albums count] && x < 5; x++) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_albums objectAtIndex:x] objectForKey:@"name"], [[_albums objectAtIndex:x] objectForKey:@"image"],
-																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[[_albums objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_albums objectAtIndex:x] objectForKey:@"name"], [[_albums objectAtIndex:x] objectForKey:@"image"], @"noimage_album.png",
+																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[[_albums objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url",nil]]];
 				}
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Albums", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
@@ -189,8 +189,8 @@
 			if([_similarArtists count]) {
 				stations = [[NSMutableArray alloc] init];
 				for(int x=0; x<[_similarArtists count] && x < 20; x++) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_similarArtists objectAtIndex:x] objectForKey:@"name"], [[_similarArtists objectAtIndex:x] objectForKey:@"image"],
-																																	 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_similarArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_similarArtists objectAtIndex:x] objectForKey:@"name"], [[_similarArtists objectAtIndex:x] objectForKey:@"image"], @"noimage_artist.png",
+																																	 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_similarArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url",nil]]];
 				}
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
@@ -418,6 +418,7 @@
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
 			profilecell.contentView.bounds = CGRectMake(0,0,80,80);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
+			profilecell.placeholder = @"noimage_artist.png";
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldRoundTop = YES;
 			profilecell.shouldRoundBottom = YES;
@@ -472,6 +473,9 @@
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.shouldCacheArtwork = YES;
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"] != nil) {
+			cell.placeholder = [[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"];
+		}
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] != nil) {
 			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		} else {

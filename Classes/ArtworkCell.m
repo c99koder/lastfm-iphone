@@ -73,8 +73,6 @@
 }
 @end
 
-UIImage *avatarPlaceholder = nil;
-
 @implementation ArtworkCell
 
 @synthesize title, subtitle, barWidth, shouldCacheArtwork, shouldFillHeight, Yoffset;
@@ -92,6 +90,14 @@ UIImage *avatarPlaceholder = nil;
 }
 -(BOOL)shouldRoundBottom {
 	return shouldRoundBottom;
+}
+-(void)setPlaceholder:(NSString *)name {
+	[placeholder release];
+	placeholder = [name retain];
+	_artwork.image = [UIImage imageNamed:placeholder];
+}
+-(NSString *)placeholder {
+	return placeholder;
 }
 -(void)setImageURL:(NSString *)url {
 	if(imageURL) {
@@ -187,11 +193,10 @@ UIImage *avatarPlaceholder = nil;
 		
 		_bar = [[UIView alloc] init];
 		[self.contentView addSubview:_bar];
+
+		placeholder = @"noimage_user.png";
 		
-		if(!avatarPlaceholder)
-			avatarPlaceholder = [[UIImage imageNamed:@"avatarplaceholder.png"] retain];
-		
-		_artwork = [[UIImageView alloc] initWithImage:avatarPlaceholder];
+		_artwork = [[UIImageView alloc] initWithImage:[UIImage imageNamed:placeholder]];
 		_artwork.contentMode = UIViewContentModeScaleAspectFill;
 		_artwork.clipsToBounds = YES;
 		_artwork.opaque = NO;

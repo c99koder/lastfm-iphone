@@ -34,6 +34,7 @@
 	float barWidth;
 	float Yoffset;
 	NSString *imageURL;
+	NSString *placeholder;
 	BOOL _imageLoaded;
 	BOOL shouldCacheArtwork;
 	BOOL shouldRoundTop;
@@ -44,6 +45,7 @@
 @property (nonatomic, retain) UILabel *title;
 @property (nonatomic, retain) UILabel *subtitle;
 @property (nonatomic, retain) NSString *imageURL;
+@property (nonatomic, retain) NSString *placeholder;
 @property float barWidth;
 @property float Yoffset;
 @property BOOL shouldCacheArtwork;

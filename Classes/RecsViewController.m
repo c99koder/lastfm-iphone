@@ -333,6 +333,10 @@
 			cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"releasedate"];
 		}
 		cell.shouldCacheArtwork = YES;
+		if(toggle.selectedSegmentIndex == 0)
+			cell.placeholder = @"noimage_artist.png";
+		else
+			cell.placeholder = @"noimage_album.png";
 		cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		cell.shouldFillHeight = YES;
 		if([indexPath row] == 0)

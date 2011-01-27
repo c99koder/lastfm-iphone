@@ -219,6 +219,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.subtitle.opaque = YES;
 		[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 		cell.shouldCacheArtwork = YES;
+		cell.placeholder = @"noimage_user.png";
 		cell.imageURL = [[_searchResults objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		if(!delegate)
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -239,6 +240,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.subtitle.opaque = YES;
 		[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 		cell.shouldCacheArtwork = YES;
+		cell.placeholder = @"noimage_user.png";
 		cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		if(!delegate)
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -265,6 +267,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		cell.subtitle.backgroundColor = [UIColor whiteColor];
 		cell.subtitle.opaque = YES;
 		cell.shouldCacheArtwork = YES;
+		cell.placeholder = @"noimage_user.png";
 		cell.imageURL = [[_friendsListeningNow objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
