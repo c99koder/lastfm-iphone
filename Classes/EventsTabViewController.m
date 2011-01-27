@@ -185,7 +185,7 @@ UIImage *eventDateBGImage = nil;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(section == 0 && [_events count]) {
-		return @"Your Upcoming Events";
+		return @"My Upcoming Events";
 	} else if(section == 1 && [_recs count]) {
 		return @"Recommended Events";
 	} else {
