@@ -119,6 +119,9 @@
 	}
 	[searchBar resignFirstResponder];
 }
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+	[searchBar resignFirstResponder];
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
