@@ -245,7 +245,7 @@
 		else
 			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	if([subtitle.text length]) {
-		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + Yoffset, frame.size.width - _artwork.frame.size.width - 20 - detailWidth, 22);
+		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + Yoffset, frame.size.width - _artwork.frame.size.width - 20, 22);
 		float height = 20;
 		if(subtitle.numberOfLines != 1)
 			height = [subtitle.text sizeWithFont:subtitle.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.size.width - 20, frame.size.height - 20 - (Yoffset * 2)) lineBreakMode:subtitle.lineBreakMode].height;
@@ -257,8 +257,11 @@
 	}
 	if([self.detailTextLabel.text length]) {
 		if(_style == UITableViewCellStyleValue1) {
-			float detailX = title.frame.origin.x + [title.text sizeWithFont:title.font forWidth:title.bounds.size.width lineBreakMode:title.lineBreakMode].width + 2;
-			self.detailTextLabel.frame = CGRectMake(detailX, title.frame.origin.y, frame.size.width - detailX, title.frame.size.height);
+			CGSize textSize = [title.text sizeWithFont:title.font forWidth:title.bounds.size.width lineBreakMode:title.lineBreakMode];
+			CGSize subtitleSize = [subtitle.text sizeWithFont:subtitle.font forWidth:subtitle.bounds.size.width lineBreakMode:subtitle.lineBreakMode];
+			float detailX = subtitle.frame.origin.x + subtitleSize.width + 2;
+			float detailY = frame.origin.y + frame.size.height - textSize.height - 5;
+			self.detailTextLabel.frame = CGRectMake(detailX, detailY, frame.size.width - detailX, textSize.height);
 		}
 		if(_style == UITableViewCellStyleValue2) {
 			float detailY = subtitle.frame.origin.y + subtitle.frame.size.height;

@@ -24,4 +24,5 @@
 @interface NSString (LastFMTimeExtensions)
 - (NSString *)StringFromTimestamp;
 - (NSString *)StringFromUTS;
+- (NSString *)shortDateStringFromUTS;
 @end

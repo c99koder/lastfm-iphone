@@ -83,4 +83,30 @@
 	return output;
 	
 }
+
+- (NSString *)shortDateStringFromUTS {
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+	[formatter setDateFormat:@"dd MMM yyyy, HH:mm zzz"];
+	NSDate *date = [NSDate dateWithTimeIntervalSince1970: [self doubleValue]];
+	[formatter setLocale:[NSLocale currentLocale]];
+	NSDateComponents *components = [[NSCalendar currentCalendar] components:NSDayCalendarUnit|NSMonthCalendarUnit|NSYearCalendarUnit fromDate:[NSDate date]];
+	[components setHour: 23];
+	[components setMinute: 59];
+	[components setSecond:59];
+	NSDate *today = [[NSCalendar currentCalendar] dateFromComponents:components];
+	NSTimeInterval seconds = [today timeIntervalSinceDate:date];
+	
+	if(seconds/HOURS < 24) {
+		[formatter setTimeStyle:NSDateFormatterShortStyle];
+		[formatter setDateStyle:NSDateFormatterNoStyle];
+	} else {
+		[formatter setDateStyle:NSDateFormatterShortStyle];
+	}
+	
+	NSString *output = [formatter stringFromDate:date];
+	[formatter release];
+	return output;
+}
+
 @end

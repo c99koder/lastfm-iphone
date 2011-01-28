@@ -159,7 +159,7 @@
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_recentTracks count] && x < 5; x++) {
 				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"]) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] StringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"], @"noimage_album.png",
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] shortDateStringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"], @"noimage_album.png",
 																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"placeholder", @"url",nil]]];
 				}
 			}
@@ -177,7 +177,7 @@
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], @"noimage_user.png", [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
 																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder", @"track", @"realname", @"url",nil]]];
 			}
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat: @"More(%i)", friendsCount], @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Listening Now", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
 		} else if(friendsCount) {
@@ -280,7 +280,7 @@
 				cell.detailTextLabel.text = @"";
 			}
 			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
-				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
+				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
 				cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
@@ -336,8 +336,9 @@
 		[button setBackgroundImage:[UIImage imageNamed:@"red_button.png"] forState:UIControlStateNormal];
 		[button setTitle: @"Logout" forState:UIControlStateNormal];
 		[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+		button.titleLabel.font = [UIFont boldSystemFontOfSize:18];
 		button.titleLabel.textAlignment = UITextAlignmentCenter;
+		[button.titleLabel setShadowOffset:CGSizeMake(0, -1)];
 		button.opaque = YES;
 		[button addTarget:((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) action:@selector(logoutButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 		UIView* backView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
