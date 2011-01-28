@@ -274,6 +274,8 @@
 		FB348C2712F0392A002EFA95 /* libThree20UI-Xcode3.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348BEA12F03919002EFA95 /* libThree20UI-Xcode3.2.5.a */; };
 		FB348C2812F03930002EFA95 /* libThree20UICommon-Xcode3.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348BB512F03918002EFA95 /* libThree20UICommon-Xcode3.2.5.a */; };
 		FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348BCE12F03919002EFA95 /* libThree20UINavigator-Xcode3.2.5.a */; };
+		FB348EB912F19F94002EFA95 /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = FB348EB712F19F94002EFA95 /* red_button.png */; };
+		FB348EBA12F19F94002EFA95 /* red_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB348EB812F19F94002EFA95 /* red_button@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -948,6 +950,8 @@
 		250B2B7912F0846B00655451 /* NSString+LastFMTimeExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LastFMTimeExtensions.m"; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* MobileLastFM_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobileLastFM_Prefix.pch; sourceTree = "<group>"; };
+		FB348EB712F19F94002EFA95 /* red_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button.png; sourceTree = "<group>"; };
+		FB348EB812F19F94002EFA95 /* red_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_button@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1197,6 +1201,8 @@
 				227A668612F1FBCD00A08DDA /* noimage_artist@2x.png */,
 				227A668712F1FBCD00A08DDA /* noimage_user.png */,
 				227A668812F1FBCD00A08DDA /* noimage_user@2x.png */,
+				FB348EB712F19F94002EFA95 /* red_button.png */,
+				FB348EB812F19F94002EFA95 /* red_button@2x.png */,
 				224F67F912EA17ED00ABEECD /* icon@2x.png */,
 				224F67D812EA151200ABEECD /* icon.png */,
 				227A664512F1ECAE00A08DDA /* searchresults_tag.png */,
@@ -2094,6 +2100,8 @@
 				227A668C12F1FBCD00A08DDA /* noimage_artist@2x.png in Resources */,
 				227A668D12F1FBCD00A08DDA /* noimage_user.png in Resources */,
 				227A668E12F1FBCD00A08DDA /* noimage_user@2x.png in Resources */,
+				FB348EB912F19F94002EFA95 /* red_button.png in Resources */,
+				FB348EBA12F19F94002EFA95 /* red_button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
