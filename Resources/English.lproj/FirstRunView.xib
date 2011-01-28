@@ -12,8 +12,8 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="53"/>
 			<integer value="3"/>
+			<integer value="53"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -170,10 +170,12 @@ bSwgTHRkLg</string>
 					<object class="IBUIButton" id="689278323">
 						<reference key="NSNextResponder" ref="692418406"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{87, 378}, {146, 37}}</string>
+						<string key="NSFrame">{{8, 378}, {302, 37}}</string>
 						<reference key="NSSuperview" ref="692418406"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
+						<int key="IBUIContentMode">9</int>
+						<string key="IBUIContentStretch">{{0, 0}, {0, 0}}</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
@@ -187,7 +189,7 @@ bSwgTHRkLg</string>
 						<reference key="IBUINormalTitleShadowColor" ref="34290184"/>
 						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">red_button_dark_bkg_lower.png</string>
+							<string key="NSResourceName">red_button.png</string>
 						</object>
 					</object>
 					<object class="IBUILabel" id="401370767">
@@ -914,7 +916,7 @@ bSwgTHRkLg</string>
 					<string>FirstRunViewController</string>
 					<string>UIResponder</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{623, 373}, {320, 460}}</string>
+					<string>{{623, 296}, {320, 460}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<object class="NSMutableArray">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -927,7 +929,7 @@ bSwgTHRkLg</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>FirstRunViewBackground</string>
-					<string>{{298, 373}, {320, 460}}</string>
+					<string>{{298, 296}, {320, 460}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1032,6 +1034,7 @@ bSwgTHRkLg</string>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>_createAccountButton</string>
 							<string>_password</string>
 							<string>_regemail</string>
 							<string>_registrationView</string>
@@ -1041,6 +1044,7 @@ bSwgTHRkLg</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>UIButton</string>
 							<string>UITextField</string>
 							<string>UITextField</string>
 							<string>UIView</string>
@@ -1053,6 +1057,7 @@ bSwgTHRkLg</string>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>_createAccountButton</string>
 							<string>_password</string>
 							<string>_regemail</string>
 							<string>_registrationView</string>
@@ -1062,6 +1067,10 @@ bSwgTHRkLg</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">_createAccountButton</string>
+								<string key="candidateClassName">UIButton</string>
+							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_password</string>
 								<string key="candidateClassName">UITextField</string>
@@ -1371,7 +1380,7 @@ bSwgTHRkLg</string>
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>black_button_dark_bkg_upper.png</string>
 				<string>dark_bkg_gradient.png</string>
-				<string>red_button_dark_bkg_lower.png</string>
+				<string>red_button.png</string>
 				<string>red_button_dark_bkg_upper.png</string>
 				<string>rounded_table_cell.png</string>
 				<string>rounded_table_cell_bottom.png</string>
@@ -1382,7 +1391,7 @@ bSwgTHRkLg</string>
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{148, 37}</string>
 				<string>{320, 460}</string>
-				<string>{148, 37}</string>
+				<string>{301, 44}</string>
 				<string>{148, 37}</string>
 				<string>{302, 46}</string>
 				<string>{302, 46}</string>

@@ -227,8 +227,6 @@
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"myfriends"]) {
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]]]];
-	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) logoutButtonPressed:nil];
 	}
 	[self.tableView reloadData];
 }
@@ -327,11 +325,29 @@
 		}
 		return profilecell;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
-		UITableViewCell *logoutcell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
-		logoutcell.textLabel.text = @"Logout";
-		logoutcell.textLabel.textColor = [UIColor whiteColor];
-		logoutcell.textLabel.textAlignment = UITextAlignmentCenter;
-		logoutcell.backgroundColor = [UIColor redColor];
+		UITableViewCell *logoutcell = [tableView dequeueReusableCellWithIdentifier: @"logoutbutton"];
+		if( logoutcell )
+			return logoutcell;
+		
+		
+		logoutcell = [[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"logoutbutton"] autorelease];
+		[logoutcell setSelectionStyle:UITableViewCellSelectionStyleNone];
+		UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
+		[button setBackgroundImage:[UIImage imageNamed:@"red_button.png"] forState:UIControlStateNormal];
+		[button setTitle: @"Logout" forState:UIControlStateNormal];
+		[button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+		button.titleLabel.textAlignment = UITextAlignmentCenter;
+		button.opaque = YES;
+		[button addTarget:((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) action:@selector(logoutButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+		UIView* backView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+		logoutcell.backgroundColor = [UIColor clearColor];
+		logoutcell.backgroundView = backView;
+		
+		[button setFrame: CGRectMake(0, 0, logoutcell.contentView.bounds.size.width-20, logoutcell.contentView.bounds.size.height)];
+		[logoutcell.contentView addSubview: button ];
+		[logoutcell layoutSubviews];
+
 		return logoutcell;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"myfriends"]) {
 		UITableViewCell *friendscell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
