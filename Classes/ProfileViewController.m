@@ -171,7 +171,7 @@
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", @"Loading", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		}
 		
-		if([_friendsListeningNow count]) {
+		if([_friendsListeningNow count] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_friendsListeningNow count] && x < 3; x++) {
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], @"noimage_user.png", [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
@@ -335,7 +335,12 @@
 		return logoutcell;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"myfriends"]) {
 		UITableViewCell *friendscell = [[[UITableViewCell alloc] initWithFrame:CGRectZero] autorelease];
-		friendscell.textLabel.text = [NSString stringWithFormat:@"My Friends (%i)", friendsCount];
+		
+		if( [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username] )
+			friendscell.textLabel.text = [NSString stringWithFormat:@"My Friends (%i)", friendsCount];
+		else
+			friendscell.textLabel.text = [NSString stringWithFormat:@"%@'s Friends (%i)", _username, friendsCount];
+		
 		friendscell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		return friendscell;
 	}
