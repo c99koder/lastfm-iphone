@@ -53,6 +53,7 @@
 	}
 	[cell showProgress:NO];
 	cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	cell.placeholder = @"noimage_artist.png";
 	cell.imageURL = [_images objectForKey:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
   return cell;

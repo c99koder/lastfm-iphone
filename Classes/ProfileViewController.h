@@ -30,6 +30,7 @@
 	NSArray *_friendsListeningNow;
 	NSArray *_eqFrames;
 	int friendsCount;
+	BOOL _loading;
 	NSMutableDictionary *_weeklyArtistImages;
 	NSThread *_refreshThread;
 }

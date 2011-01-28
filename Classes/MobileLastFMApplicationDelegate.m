@@ -87,8 +87,9 @@ NSString *kUserAgent;
 																														 @"YES", @"showontour",
 																														 @"NO", @"showneighborradio",
 																														 @"64", @"bitrate",
-																														 @"30", @"trial_playsleft",
+																														 @"0", @"trial_playsleft",
 																														 @"0", @"trial_expired",
+																														 @"0", @"trial_playselapsed",
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
@@ -211,22 +212,23 @@ NSString *kUserAgent;
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"crashed"];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Send", @"Send")])
 		[NSThread detachNewThreadSelector:@selector(sendCrashReport) toTarget:self withObject:nil];
-	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Read About the Changes"])
+	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Info"])
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/stationchanges2010"]];
-	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Continue to Station"]) {
-		[self showPlaybackView];
-		[self performSelector:@selector(_playRadioStation:) withObject:_dmcaAlertStation afterDelay:2];
+	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Start Trial"]) {
+		[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_playselapsed"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[self performSelector:@selector(playRadioStation:animated:) withObject:_trialAlertStation afterDelay:1];
 	}
 
 	if(_pendingAlert) {
 		[_pendingAlert release];
 		_pendingAlert = nil;
 	}
-	if(_dmcaAlert) {
-		[_dmcaAlert release];
-		_dmcaAlert = nil;
-		[_dmcaAlertStation release];
-		_dmcaAlertStation = nil;
+	if(_trialAlert) {
+		[_trialAlert release];
+		_trialAlert = nil;
+		[_trialAlertStation release];
+		_trialAlertStation = nil;
 	}
 }
 - (void)showProfileView:(BOOL)animated {
@@ -234,13 +236,27 @@ NSString *kUserAgent;
 	if(!_scrobbler) {
 		_scrobbler = [[Scrobbler alloc] init];
 	}
+
 	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];
-	NSDictionary *info = [[LastFMService sharedInstance] profileForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	NSDictionary *info = [[LastFMService sharedInstance] getSessionInfo];
+
 	if([[info objectForKey:@"country"] length]) {
 		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"country"] forKey:@"country"];
 	}
 	if([[info objectForKey:@"subscriber"] length]) {
 		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"subscriber"] forKey:@"lastfm_subscriber"];
+	}
+	if([[info objectForKey:@"trial_enabled"] length]) {
+		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"trial_enabled"] forKey:@"trial_enabled"];
+	}
+	if([[info objectForKey:@"trial_playsleft"] length]) {
+		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"trial_playsleft"] forKey:@"trial_playsleft"];
+	}
+	if([[info objectForKey:@"trial_expired"] length]) {
+		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"trial_expired"] forKey:@"trial_expired"];
+	}
+	if([[info objectForKey:@"trial_playselapsed"] length]) {
+		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"trial_playselapsed"] forKey:@"trial_playselapsed"];
 	}
 	
 	[rootViewController release];
@@ -450,8 +466,13 @@ NSString *kUserAgent;
 			case errorCodeSubscribersOnly:
 				[self displayError:NSLocalizedString(@"ERROR_SUBSCRIPTION", @"Subscription required error") withTitle:NSLocalizedString(@"ERROR_SUBSCRIPTION_TITLE", @"Subscription required error title")];
 				return;
+			case errorCodeDeprecated:
+				[self displayError:@"This station is no longer available for streaming." withTitle:@"Station No Longer Available"];
+				return;
 			case errorCodeTrialExpired:
-				_pendingAlert = [[UIAlertView alloc] initWithTitle:@"Trial Expired" message:@"Your Last.fm radio free trial has expired." delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe",nil];
+				_pendingAlert = [[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
+															 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"[price]"]
+																												delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Subscribe", nil];
 				if(!_locked)
 					[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 				[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
@@ -470,11 +491,16 @@ NSString *kUserAgent;
 - (BOOL)playRadioStation:(NSString *)station animated:(BOOL)animated {
 	NSLog(@"Playing radio station: %@\n", station);
 	
-	if(!_dmcaAlert && !(([[LastFMRadio sharedInstance] state] != RADIO_IDLE) && [[[LastFMRadio sharedInstance] stationURL] isEqualToString:station])) {
+	if(!_trialAlert && !(([[LastFMRadio sharedInstance] state] != RADIO_IDLE) && [[[LastFMRadio sharedInstance] stationURL] isEqualToString:station])) {
 		if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
 			[[LastFMRadio sharedInstance] stop];
 		}
-		if(![[LastFMRadio sharedInstance] selectStation:station]) {
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playselapsed"] isEqualToString:@"0"]) {
+			_trialAlert = [[UIAlertView alloc] initWithTitle:@"Start Free Trial" message:
+										 [NSString stringWithFormat:@"Radio is a subscriber only feature.  Try it now with a free %@ track trial.", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]]
+																								delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Start Trial", nil];
+		}
+		else if(![[LastFMRadio sharedInstance] selectStation:station]) {
 			if([[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain] && [LastFMService sharedInstance].error.code >= 20) {
 				switch([LastFMService sharedInstance].error.code) {
 					case errorCodeNotEnoughContent:
@@ -489,25 +515,6 @@ NSString *kUserAgent;
 					case errorCodeNotEnoughNeighbours:
 						[self displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_NEIGHBOURS", @"Not enough neighbours") withTitle:NSLocalizedString(@"ERROR_STATION_TITLE", @"Station unavailable title")];
 						break;
-					case errorCodeDeprecated:
-						if([station hasPrefix:@"lastfm://usertags/"]) {
-							_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available" 
-																											message:@"Due to recent station changes, 'personal tag' radio is no longer available.\n\n(Don't worry, your tags haven't changed)." 
-																										 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
-						} else if([station hasPrefix:@"lastfm://playlist/"]) {
-							_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available"
-																											message:@"Due to recent station changes, playlists are no longer available.\n\n(Don't worry, the list of tracks in your playlists haven't changed)." 
-																										 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
-						} else if([station hasSuffix:@"/loved"]) {
-							_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"Station No Longer Available" 
-																											message:@"Due to recent station changes, 'loved tracks' radio is no longer available.\n\n(Don't worry, your list of loved tracks hasn't changed)." 
-																										 delegate:self cancelButtonTitle:@"Remove Station" otherButtonTitles:nil];
-						}
-						if(_dmcaAlert) {
-							_dmcaAlertStation = [station retain];
-							[_dmcaAlert show];
-						}
-						break;
 				}
 				return FALSE;
 			}
@@ -515,13 +522,6 @@ NSString *kUserAgent;
 				[self reportError:[LastFMService sharedInstance].error];
 			return FALSE;
 		}
-	}
-
-	if(![(NSString *)[[NSUserDefaults standardUserDefaults] objectForKey:@"hidedmcawarning"] isEqualToString:@"YES"]
-		 && ([station hasPrefix:@"lastfm://usertags/"] || [station hasPrefix:@"lastfm://playlist/"] || [station hasSuffix:@"/loved"])) {
-		_dmcaAlert = [[UIAlertView alloc] initWithTitle:@"This Station is Changing" 
-																						message:@"This station will soon be discontinued due to changes coming to Last.fm radio." 
-																					 delegate:self cancelButtonTitle:@"Continue to Station" otherButtonTitles:@"Read About the Changes", @"Don't Warn Again", nil];
 	}
 	
 	if(playbackViewController == nil) {
@@ -536,9 +536,9 @@ NSString *kUserAgent;
 		}
 	}
 	
-	if(_dmcaAlert) {
-		_dmcaAlertStation = [station retain];
-		[_dmcaAlert show];
+	if(_trialAlert) {
+		_trialAlertStation = [station retain];
+		[_trialAlert show];
 		return TRUE;
 	} else {
 		BOOL result = [self _playRadioStation:station];

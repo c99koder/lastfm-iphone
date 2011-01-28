@@ -387,6 +387,7 @@
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
+			profilecell.placeholder = @"noimage_album.png";
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
 			//profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];

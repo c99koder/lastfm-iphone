@@ -497,13 +497,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[notification.object play];
 		_errorSkipCounter = 0;
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] isEqualToString:@"1"]) {
-			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 30) {
-				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Welcome to Last.fm! You can listen to 30 tracks for free before a subscription is required." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
-				[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-			}
-			
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 5) {
-				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free trial is almost over!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Free Trial Almost Over" message:@"You have just 5 tracks left of your free trial." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
 				[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 			}
 		}
@@ -519,7 +514,9 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	} else {
 		[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Radio Trial" message:@"Your free has expired!" delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
+													 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"[price]"]
+																										delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Subscribe", nil] autorelease];
 		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		[self stop];
 	}

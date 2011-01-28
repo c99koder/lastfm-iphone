@@ -33,7 +33,7 @@
 		progress.center = progressView.center;
 		[progress startAnimating];
 		self.accessoryView = progressView;
-		if(self.detailTextLabel.textAlignment = UITextAlignmentRight)
+		if(self.detailTextLabel.textAlignment == UITextAlignmentRight)
 			self.detailTextLabel.text = @"";
 		[progress release];
 		[progressView release];

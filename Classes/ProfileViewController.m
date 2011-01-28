@@ -34,6 +34,7 @@
 @implementation ProfileViewController
 - (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	_loading = YES;
 	NSArray *tracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
 	NSArray *artists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
 	NSMutableDictionary *images = [[NSMutableDictionary alloc] init];
@@ -44,7 +45,8 @@
 	friendsCount = [[[LastFMService sharedInstance] friendsOfUser:_username] count];
 	NSArray *friendsListeningNow = nil;
 	if(friendsCount > 0)
-		friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
+		friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];
+	_loading = NO;
 	if(![[NSThread currentThread] isCancelled]) {
 		@synchronized(self) {
 			[_recentTracks release];
@@ -123,6 +125,7 @@
 	if(friendsCount > 0)
 		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
 	[LastFMService sharedInstance].cacheOnly = NO;
+	_loading = YES;
 	[self rebuildMenu];
 }
 - (void)rebuildMenu {
@@ -141,34 +144,38 @@
 			for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
 				if([_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]])
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
-																																 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]],
-																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+																																 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]], @"noimage_artist.png",
+																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url",nil]]];
 			}
 			if([_weeklyArtists count] > 3)
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-weeklyartists://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
+		} else if(_loading) {
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", @"Loading", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		}
 		
 		if([_recentTracks count]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_recentTracks count] && x < 5; x++) {
 				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"]) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] StringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"],
-																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"url",nil]]];
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] StringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"], @"noimage_album.png",
+																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"placeholder", @"url",nil]]];
 				}
 			}
 			if([_recentTracks count] > 5)
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-recenttracks://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened Tracks", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
+		} else if(_loading) {
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", @"Loading", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		}
-
+		
 		if([_friendsListeningNow count]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_friendsListeningNow count] && x < 3; x++) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
-																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"track", @"realname", @"url",nil]]];
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], @"noimage_user.png", [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
+																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder", @"track", @"realname", @"url",nil]]];
 			}
 			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Listening Now", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
@@ -190,7 +197,7 @@
 	return [_data count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
+	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:section] objectForKey:@"stations"] isKindOfClass:[NSArray class]])
 		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
 	else
 		return 1;
@@ -235,7 +242,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = nil;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
@@ -249,54 +256,62 @@
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
-		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
-		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
-			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]) {
-				cell.subtitle.text = [NSString stringWithFormat:@"    %@ - %@", [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"], [[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]];
-				UIImageView *eq = [[[UIImageView alloc] initWithFrame:CGRectMake(0,4,12,12)] autorelease];
-				eq.animationImages = _eqFrames;
-				eq.animationDuration = 2;
-				[eq startAnimating];
-				[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-				[cell.subtitle addSubview:eq];
-			} else {
-				cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+		if([[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
+			NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
+			cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
+			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
+				if([[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]) {
+					cell.subtitle.text = [NSString stringWithFormat:@"    %@ - %@", [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"], [[stations objectAtIndex:[indexPath row]] objectForKey:@"track"]];
+					UIImageView *eq = [[[UIImageView alloc] initWithFrame:CGRectMake(0,4,12,12)] autorelease];
+					eq.animationImages = _eqFrames;
+					eq.animationDuration = 2;
+					[eq startAnimating];
+					[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+					[cell.subtitle addSubview:eq];
+				} else {
+					cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+				}
 			}
-		}
-		cell.shouldCacheArtwork = YES;
-		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"]) {
-			cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"];
-			cell.detailTextLabel.textColor = [UIColor blackColor];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-			cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
-		}	else {
-			cell.detailTextLabel.text = @"";
-		}
-		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
-			cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
-			cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
-			cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
-			cell.detailTextLabel.textAlignment = UITextAlignmentRight;
-		}	else {
-			cell.detailTextLabel.text = @"";
-		}
-		cell.shouldFillHeight = YES;
-		if([indexPath row] == 0)
-			cell.shouldRoundTop = YES;
-		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
-			cell.shouldRoundBottom = YES;
-		if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
-			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
-		else
+			cell.shouldCacheArtwork = YES;
+			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"]) {
+				cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"];
+				cell.detailTextLabel.textColor = [UIColor blackColor];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+				cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+			}	else {
+				cell.detailTextLabel.text = @"";
+			}
+			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
+				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
+				cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
+				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
+				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
+			}	else {
+				cell.detailTextLabel.text = @"";
+			}
+			cell.shouldFillHeight = YES;
+			if([indexPath row] == 0)
+				cell.shouldRoundTop = YES;
+			if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
+				cell.shouldRoundBottom = YES;
+			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"] isEqualToString:@"-"])
+				cell.placeholder = [[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"];
+			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
+				cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+			else
+				[cell hideArtwork:YES];
+		} else {
+			cell.title.text = @"Loading";
+			[cell showProgress:YES];
 			[cell hideArtwork:YES];
-		
+		}
 	} else if([indexPath section] == 0) {
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:_username];
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
+			profilecell.placeholder = @"noimage_user.png";
 			profilecell.imageURL = [profile objectForKey:@"avatar"];
 			profilecell.shouldRoundTop = YES;
 			profilecell.shouldRoundBottom = YES;

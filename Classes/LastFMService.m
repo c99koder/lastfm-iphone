@@ -196,6 +196,22 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	return output;
 }
 
+- (NSDictionary *)getSessionInfo {
+	NSArray *nodes = [self doMethod:@"auth.getSessionInfo" maxCacheAge:0 XPath:@"./application" withParameters:nil];
+	if([nodes count])
+		return [self _convertNode:[nodes objectAtIndex:0]
+			 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./session/subscriber", @"./country", 
+															 @"./radioPermission/user[@type=\"you\"]/radio",
+															 @"./radioPermission/user[@type=\"you\"]/freetrial",
+															 @"./radioPermission/user[@type=\"you\"]/trial/expired", 
+															 @"./radioPermission/user[@type=\"you\"]/trial/playsleft", 
+															 @"./radioPermission/user[@type=\"you\"]/trial/playselapsed", 
+															 nil]
+											forKeys:[NSArray arrayWithObjects:@"subscriber", @"country", @"radio_enabled", @"trial_enabled", @"trial_expired", @"trial_playsleft", @"trial_playselapsed", nil]];
+	else
+		return nil;
+}
+
 #pragma mark Artist methods
 
 - (NSDictionary *)metadataForArtist:(NSString *)artist inLanguage:(NSString *)lang {

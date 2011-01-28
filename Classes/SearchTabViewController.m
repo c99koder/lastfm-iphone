@@ -52,16 +52,22 @@
 	return self;
 }
 - (void)viewDidLoad {
-	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	bar.placeholder = @"Music Search";
-	bar.delegate = self;
-	self.tableView.tableHeaderView = bar;
+	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
+	_searchBar.placeholder = @"Music Search";
+	_searchBar.delegate = self;
+	self.tableView.tableHeaderView = _searchBar;
 	self.tableView.dataSource = _searchData;
 	self.tableView.delegate = self;
 	
 	_emptyView = [[UIView alloc] initWithFrame:CGRectMake(0,60,self.view.frame.size.width,self.view.frame.size.height)];
 	_emptyView.backgroundColor = [UIColor whiteColor];
 	_emptyView.opaque = NO;
+	
+	_emptyButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_emptyButton.frame = CGRectMake(0,44,self.view.frame.size.width,self.view.frame.size.height);
+	_emptyButton.backgroundColor = [UIColor blackColor];
+	_emptyButton.alpha = 0.8;
+	[_emptyButton addTarget:self action:@selector(hideKeyboard:) forControlEvents:UIControlEventTouchUpInside];
 	
 	UILabel *hint = [[UILabel alloc] initWithFrame:CGRectMake(0,128,_emptyView.frame.size.width,40)];
 	hint.text = @"Search Last.fm for Information about\nartists, albums, tracks, and tags.";
@@ -83,23 +89,31 @@
 		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		[self.tableView addSubview: _emptyView];
 	}
-	[bar release];
 }
 - (void)_search:(NSTimer *)timer {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *query = [timer userInfo];
 	[_searchData search:query];
+	[_emptyButton removeFromSuperview];
+	self.tableView.scrollEnabled = YES;
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[pool release];
 }
+- (void)hideKeyboard:(id)sender {
+	[_searchBar resignFirstResponder];
+	[_emptyButton removeFromSuperview];
+	if([_searchData.data count] == 0) {
+		[self.tableView addSubview: _emptyView];
+	}
+}
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
 	[_emptyView removeFromSuperview];
-	self.tableView.scrollEnabled = YES;
-	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	[self.tableView reloadData];
-	searchBar.showsCancelButton = YES;
+	[self.tableView addSubview: _emptyButton];
 	return YES;
 }
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
@@ -117,12 +131,14 @@
 																										repeats:NO] retain];
 	}
 	[searchBar resignFirstResponder];
-	searchBar.showsCancelButton = NO;
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 	if(![searchText length]) {
 		[_searchData clear];
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		[self.tableView reloadData];
+		if(!_emptyButton.superview)
+			[self.tableView addSubview: _emptyButton];
 	}
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
@@ -155,5 +171,8 @@
 - (void)dealloc {
 	[super dealloc];
 	[_searchData release];
+	[_searchBar release];
+	[_emptyView release];
+	[_emptyButton release];
 }
 @end

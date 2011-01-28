@@ -53,6 +53,7 @@
 	cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
 	cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 	cell.detailTextLabel.textAlignment = UITextAlignmentRight;
+	cell.placeholder = @"noimage_album.png";
 	cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
   return cell;

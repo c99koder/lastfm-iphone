@@ -39,8 +39,8 @@
 	HomeViewController *rootViewController;
 	NSString *_launchURL;
 	UIAlertView *_pendingAlert;
-	UIAlertView *_dmcaAlert;
-	NSString *_dmcaAlertStation;
+	UIAlertView *_trialAlert;
+	NSString *_trialAlertStation;
 	BOOL _locked;
 	BOOL _hidPlaybackDueToLowMemory;
 	BOOL _launched;
