@@ -1034,7 +1034,6 @@ bSwgTHRkLg</string>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>_createAccountButton</string>
 							<string>_password</string>
 							<string>_regemail</string>
 							<string>_registrationView</string>
@@ -1044,7 +1043,6 @@ bSwgTHRkLg</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIButton</string>
 							<string>UITextField</string>
 							<string>UITextField</string>
 							<string>UIView</string>
@@ -1057,7 +1055,6 @@ bSwgTHRkLg</string>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>_createAccountButton</string>
 							<string>_password</string>
 							<string>_regemail</string>
 							<string>_registrationView</string>
@@ -1067,10 +1064,6 @@ bSwgTHRkLg</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">_createAccountButton</string>
-								<string key="candidateClassName">UIButton</string>
-							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_password</string>
 								<string key="candidateClassName">UITextField</string>
