@@ -23,6 +23,7 @@
 #import "PlaybackViewController.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "ProfileViewController.h"
+#import "NowPlayingInfoViewController.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
@@ -80,6 +81,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	_lock = [[NSLock alloc] init];
+	_reflectedArtworkView.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 	_noArtworkView = [[UIImageView alloc] initWithFrame:_artworkView.bounds];
 	_noArtworkView.image = [UIImage imageNamed:@"noartplaceholder.png"];
 	_noArtworkView.opaque = NO;
@@ -171,6 +173,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
 		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
 		_artworkView.image = artworkImage;
+		_reflectedArtworkView.image = artworkImage;
 		[artwork release];
 		artwork = artworkImage;
 		[UIView beginAnimations:nil context:nil];
@@ -216,6 +219,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
 	[UIView beginAnimations:nil context:nil];
 	_noArtworkView.alpha = 1;
+	_reflectedArtworkView.image = artwork;
 	_badge.alpha = 0;
 	[UIView commitAnimations];
 	[self _updateProgress:nil];
@@ -227,16 +231,20 @@ int tagSort(id tag1, id tag2, void *context) {
 	NSDictionary *trackInfo = [notification userInfo];
 	[self _displayTrackInfo:trackInfo];
 	NSLog(@"Free trial tracks remaining: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]);
-	if([[[LastFMRadio sharedInstance] suggestions] count]) {
-		_filterBar.hidden = NO;
+}
+-(void)artworkButtonPressed:(id)sender {
+	[UIView beginAnimations:nil context:nil];
+	if(_fullscreenMetadataView.alpha == 1) {
+		_fullscreenMetadataView.alpha = 0;
 	} else {
-		_filterBar.hidden = YES;
+		_fullscreenMetadataView.alpha = 1;
 	}
+	[UIView commitAnimations];
 }
 -(void)filterButtonPressed:(id)sender {
 	[_filter reloadAllComponents];
 	[UIView beginAnimations:nil context:nil];
-	_filterView.frame = CGRectMake(0,162,320,254);
+	_filterView.frame = CGRectMake(0,156,320,260);
 	[UIView commitAnimations];
 }
 -(void)_tuneNewStation:(NSDictionary *)filter {
@@ -253,7 +261,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 -(void)dismissFilterView:(id)sender {
 	[UIView beginAnimations:nil context:nil];
-	_filterView.frame = CGRectMake(0,416,320,254);
+	_filterView.frame = CGRectMake(0,480,320,254);
 	[UIView commitAnimations];
 	if([_filter selectedRowInComponent:0] == 0) {
 		//TODO: Special handling needed for the "ALL" option
@@ -636,6 +644,11 @@ Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
 }
 -(void)skipButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) skipButtonPressed:sender];	
+}
+-(void)infoButtonPressed:(id)sender {
+	NowPlayingInfoViewController *info = [[NowPlayingInfoViewController alloc] initWithTrackInfo:[[LastFMRadio sharedInstance] trackInfo]];
+	[self.navigationController pushViewController:info animated:YES];
+	[info release];
 }
 - (void)dealloc {
 	[super dealloc];

@@ -239,11 +239,13 @@
 		detailWidth = [self.detailTextLabel.text sizeWithFont:self.detailTextLabel.font].width;
 	}
 	
-	if(imageURL)
+	if(!_artwork.hidden) {
 		if(shouldRoundTop || shouldRoundBottom || shouldFillHeight)
 			_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
 		else
 			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
+	}
+	
 	if([subtitle.text length]) {
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + Yoffset, frame.size.width - _artwork.frame.size.width - 20, 22);
 		float height = 20;
@@ -281,6 +283,7 @@
 	} else {
 		_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	}
+	_artwork.hidden = hidden;
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];

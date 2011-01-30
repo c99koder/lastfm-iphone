@@ -174,7 +174,6 @@
 		2263275912A525AD006F34EA /* TrackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2263275812A525AD006F34EA /* TrackViewController.m */; };
 		226F604012A67CB400319DBC /* Search.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F603F12A67CB400319DBC /* Search.m */; };
 		226F611B12A6A5A600319DBC /* EventDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 226F611A12A6A5A600319DBC /* EventDetailsViewController.m */; };
-		227A662412F1E69B00A08DDA /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */; };
 		227A664912F1ECAE00A08DDA /* searchresults_tag.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A664512F1ECAE00A08DDA /* searchresults_tag.png */; };
 		227A664A12F1ECAE00A08DDA /* searchresults_tag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A664612F1ECAE00A08DDA /* searchresults_tag@2x.png */; };
 		227A664B12F1ECAE00A08DDA /* searchresults_track.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A664712F1ECAE00A08DDA /* searchresults_track.png */; };
@@ -185,6 +184,7 @@
 		227A668C12F1FBCD00A08DDA /* noimage_artist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A668612F1FBCD00A08DDA /* noimage_artist@2x.png */; };
 		227A668D12F1FBCD00A08DDA /* noimage_user.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A668712F1FBCD00A08DDA /* noimage_user.png */; };
 		227A668E12F1FBCD00A08DDA /* noimage_user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A668812F1FBCD00A08DDA /* noimage_user@2x.png */; };
+		227A674E12F4877600A08DDA /* NowPlayingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 227A674D12F4877600A08DDA /* NowPlayingInfoViewController.m */; };
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
 		229122800E6C34F500F9C17C /* tagareabg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2291227F0E6C34F500F9C17C /* tagareabg.png */; };
@@ -215,7 +215,6 @@
 		22C03A2E0E5DA7E600EBF062 /* tag-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A2D0E5DA7E600EBF062 /* tag-bg.png */; };
 		22C03A8F0E5DB19900EBF062 /* top_tags.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03A8E0E5DB19900EBF062 /* top_tags.png */; };
 		22C03C620E5F138300EBF062 /* buy.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C03C610E5F138300EBF062 /* buy.png */; };
-		22CAC580125F891100250917 /* DetailsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22CAC57E125F891100250917 /* DetailsView.xib */; };
 		22CBDFAF0DCE0AA300AE5DE0 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */; };
 		22CBDFBE0DCE0BCE00AE5DE0 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */; };
 		22CBE1360DCE3C9B00AE5DE0 /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CBE1350DCE3C9B00AE5DE0 /* NSString+MD5.m */; };
@@ -829,6 +828,8 @@
 		227A668612F1FBCD00A08DDA /* noimage_artist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noimage_artist@2x.png"; sourceTree = "<group>"; };
 		227A668712F1FBCD00A08DDA /* noimage_user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage_user.png; sourceTree = "<group>"; };
 		227A668812F1FBCD00A08DDA /* noimage_user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noimage_user@2x.png"; sourceTree = "<group>"; };
+		227A674C12F4877600A08DDA /* NowPlayingInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NowPlayingInfoViewController.h; sourceTree = "<group>"; };
+		227A674D12F4877600A08DDA /* NowPlayingInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NowPlayingInfoViewController.m; sourceTree = "<group>"; };
 		227F6F420DB26F4900C11B22 /* ArtworkCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtworkCell.h; sourceTree = "<group>"; };
 		227F6F430DB26F4900C11B22 /* ArtworkCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtworkCell.m; sourceTree = "<group>"; };
 		228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURLWithWarning.h"; sourceTree = "<group>"; };
@@ -885,7 +886,6 @@
 		22C03A2D0E5DA7E600EBF062 /* tag-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag-bg.png"; sourceTree = "<group>"; };
 		22C03A8E0E5DB19900EBF062 /* top_tags.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top_tags.png; sourceTree = "<group>"; };
 		22C03C610E5F138300EBF062 /* buy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buy.png; sourceTree = "<group>"; };
-		22CAC57F125F891100250917 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/DetailsView.xib; sourceTree = "<group>"; };
 		22CBDFAE0DCE0AA300AE5DE0 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		22CBDFBD0DCE0BCE00AE5DE0 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		22CBE1340DCE3C9B00AE5DE0 /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
@@ -977,7 +977,6 @@
 				FB348C2712F0392A002EFA95 /* libThree20UI-Xcode3.2.5.a in Frameworks */,
 				FB348C2812F03930002EFA95 /* libThree20UICommon-Xcode3.2.5.a in Frameworks */,
 				FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */,
-				227A662412F1E69B00A08DDA /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,6 +1018,8 @@
 				250B2B7912F0846B00655451 /* NSString+LastFMTimeExtensions.m */,
 				22F452FB0DD50EBD0060DF02 /* NSString+URLEscaped.h */,
 				22F452FC0DD50EBD0060DF02 /* NSString+URLEscaped.m */,
+				227A674C12F4877600A08DDA /* NowPlayingInfoViewController.h */,
+				227A674D12F4877600A08DDA /* NowPlayingInfoViewController.m */,
 				222342880D8DE8FC0040486A /* PlaybackViewController.h */,
 				222342890D8DE8FC0040486A /* PlaybackViewController.m */,
 				22233F640D8D86410040486A /* ProfileViewController.h */,
@@ -1387,7 +1388,6 @@
 				2292942812AD21A400C31269 /* Three20UINavigator.xcodeproj */,
 				2292942B12AD21A400C31269 /* Three20UI.xcodeproj */,
 				229293D312AD217400C31269 /* Three20.xcodeproj */,
-				22CAC57E125F891100250917 /* DetailsView.xib */,
 				224793070F8123C100EE0C52 /* Beacon.h */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
@@ -2050,7 +2050,6 @@
 				22327C140E700B1F002016DD /* Settings.bundle in Resources */,
 				22F255210E75771E000965FA /* metadatagradient.png in Resources */,
 				22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */,
-				22CAC580125F891100250917 /* DetailsView.xib in Resources */,
 				224F661212E898FC00ABEECD /* date-detail_view.png in Resources */,
 				224F662F12E8AE2600ABEECD /* tabbar_events.png in Resources */,
 				224F663012E8AE2600ABEECD /* tabbar_events@2x.png in Resources */,
@@ -2160,6 +2159,7 @@
 				250B2B7A12F0846B00655451 /* NSString+LastFMTimeExtensions.m in Sources */,
 				223652E112F0BBB200A6B4F5 /* RecentTracksViewController.m in Sources */,
 				2236538212F0C7C900A6B4F5 /* WeeklyArtistsViewController.m in Sources */,
+				227A674E12F4877600A08DDA /* NowPlayingInfoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2218,14 +2218,6 @@
 				22631EF90E81395200DC2D09 /* English */,
 			);
 			name = DebugView.xib;
-			sourceTree = "<group>";
-		};
-		22CAC57E125F891100250917 /* DetailsView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22CAC57F125F891100250917 /* English */,
-			);
-			name = DetailsView.xib;
 			sourceTree = "<group>";
 		};
 		22EB60390E65A8B20021751A /* MainWindow.xib */ = {

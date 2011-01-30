@@ -39,6 +39,7 @@ int tagSort(id tag1, id tag2, void *context);
 
 @interface TrackPlaybackViewController : PlaybackSubview {
 	IBOutlet UIImageView *_artworkView;
+	IBOutlet UIImageView *_reflectedArtworkView;
 	IBOutlet UILabel *_artistAndTrackTitle;
 	IBOutlet UILabel *_elapsed;
 	IBOutlet UILabel *_remaining;
@@ -46,7 +47,6 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UILabel *_bufferPercentage;
 	IBOutlet UIImageView *_fullscreenMetadataView;
 	IBOutlet UIButton *_badge;
-	IBOutlet UIView *_filterBar;
 	IBOutlet UIView *_filterView;
 	IBOutlet UIPickerView *_filter;
 	UIImage *artwork;
@@ -55,6 +55,7 @@ int tagSort(id tag1, id tag2, void *context);
 	NSTimer *_timer;
 	BOOL _showedMetadata;
 }
+-(void)artworkButtonPressed:(id)sender;
 -(void)filterButtonPressed:(id)sender;
 -(void)dismissFilterView:(id)sender;
 -(void)resignActive;
@@ -84,6 +85,7 @@ int tagSort(id tag1, id tag2, void *context);
 -(void)stopButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
 -(void)onTourButtonPressed:(id)sender;
+-(void)infoButtonPressed:(id)sender;
 -(void)hideDetailsView;
 -(void)resignActive;
 -(void)becomeActive;

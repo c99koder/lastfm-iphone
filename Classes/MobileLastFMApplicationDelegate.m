@@ -30,7 +30,6 @@
 #include <SystemConfiguration/SCNetworkReachability.h>
 #import "NSString+URLEscaped.h"
 #import "NSData+Compress.h"
-#import "TagRadioViewController.h"
 #import "HomeViewController.h"
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "Beacon.h"
