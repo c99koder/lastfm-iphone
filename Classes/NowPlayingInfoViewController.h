@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AddressBookUI/AddressBookUI.h>
+#import <MessageUI/MessageUI.h>
+#import "FriendsViewController.h"
+#import "TagEditorViewController.h"
 #import "Three20/Three20.h"
 
 
-@interface NowPlayingInfoViewController : UITableViewController {
+@interface NowPlayingInfoViewController : UITableViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,MFMailComposeViewControllerDelegate> {
 	NSDictionary *_trackInfo;
 	NSString *_artistImageURL;
 	TTStyledTextLabel *_trackStatsView;
