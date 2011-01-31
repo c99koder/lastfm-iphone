@@ -339,6 +339,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self becomeActive];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	[self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
+	[self.navigationController setToolbarHidden:YES];
 }
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillAppear:animated];
