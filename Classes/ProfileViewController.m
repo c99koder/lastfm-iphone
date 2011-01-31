@@ -293,7 +293,7 @@
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 				if( [[[stations objectAtIndex:[indexPath row]] objectForKey:@"nowplaying" ] isEqualToString: @"true"]) {
-					cell.detailTextLabel.text = @"  Now Playing";
+					cell.detailTextLabel.text = @"Now Playing  ";
 					UIImageView *eq = [[[UIImageView alloc] initWithFrame:CGRectMake(0,4,12,12)] autorelease];
 					eq.animationImages = _eqFrames;
 					eq.animationDuration = 2;
