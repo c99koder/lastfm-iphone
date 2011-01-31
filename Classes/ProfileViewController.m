@@ -162,10 +162,14 @@
 		if([_recentTracks count]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_recentTracks count] && x < 5; x++) {
-				if(![[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"] isEqualToString:@"true"]) {
-					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] shortDateStringFromUTS], [[_recentTracks objectAtIndex:x] objectForKey:@"image"], @"noimage_album.png",
-																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"placeholder", @"url",nil]]];
-				}
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], 
+																								  [[_recentTracks objectAtIndex:x] objectForKey:@"artist"], 
+																								  [[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] shortDateStringFromUTS], 
+																								  [[_recentTracks objectAtIndex:x] objectForKey:@"image"], 
+																								  @"noimage_album.png", 
+																								  [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]], 
+																								  [[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"], nil] 
+																forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"placeholder", @"url", @"nowplaying",nil]]];
 			}
 			if([_recentTracks count] > 5)
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-recenttracks://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
@@ -285,10 +289,22 @@
 				cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
 			}	else if ([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
 				cell.detailAtBottom = YES;
-				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
 				cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 				cell.detailTextLabel.textAlignment = UITextAlignmentRight;
+				if( [[[stations objectAtIndex:[indexPath row]] objectForKey:@"nowplaying" ] isEqualToString: @"true"]) {
+					cell.detailTextLabel.text = @"  Now Playing";
+					UIImageView *eq = [[[UIImageView alloc] initWithFrame:CGRectMake(0,4,12,12)] autorelease];
+					eq.animationImages = _eqFrames;
+					eq.animationDuration = 2;
+					[eq startAnimating];
+					cell.subtitle.text = [NSString stringWithFormat: @"    %@", cell.subtitle.text];
+					[cell.subtitle.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+					[cell.subtitle addSubview:eq];					
+				}else {
+					cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
+				}
+
 			}	else {
 				cell.detailTextLabel.text = @"";
 			}
