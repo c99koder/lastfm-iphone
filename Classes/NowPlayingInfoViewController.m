@@ -169,6 +169,7 @@ int tagSort(id tag1, id tag2, void *context);
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"InfoCell"] autorelease];
 	}
 	[cell showProgress:NO];
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
 	if([indexPath section] == 0) {
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
