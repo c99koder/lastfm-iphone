@@ -271,8 +271,9 @@
 				float detailY = frame.origin.y + frame.size.height - textSize.height - 5;
 				self.detailTextLabel.frame = CGRectMake(detailX, detailY, frame.size.width - detailX, textSize.height);
 			} else {
-				float detailX = title.frame.origin.x + [title.text sizeWithFont:title.font forWidth:title.bounds.size.width lineBreakMode:title.lineBreakMode].width + 2;
-				self.detailTextLabel.frame = CGRectMake(detailX, title.frame.origin.y, frame.size.width - detailX, title.frame.size.height);
+				CGSize detailSize = [title.text sizeWithFont:title.font forWidth:title.bounds.size.width lineBreakMode:title.lineBreakMode];
+				float detailX = title.frame.origin.x + detailSize.width + 2;
+				self.detailTextLabel.frame = CGRectMake(detailX, title.frame.origin.y + 1, frame.size.width - detailX, title.frame.size.height);
 			}
 
 		}
