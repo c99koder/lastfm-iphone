@@ -40,6 +40,7 @@
 	BOOL shouldRoundTop;
 	BOOL shouldRoundBottom;
 	BOOL shouldFillHeight;
+	BOOL detailAtBottom;
 	UITableViewCellStyle _style;
 }
 @property (nonatomic, retain) UILabel *title;
@@ -52,6 +53,7 @@
 @property BOOL shouldRoundTop;
 @property BOOL shouldRoundBottom;
 @property BOOL shouldFillHeight;
+@property BOOL detailAtBottom;
 -(void)fetchImage;
 -(void)addStreamIcon;
 -(void)hideArtwork:(BOOL)hidden;

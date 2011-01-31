@@ -280,6 +280,7 @@
 				cell.detailTextLabel.text = @"";
 			}
 			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
+				cell.detailAtBottom = YES;
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
 				cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
