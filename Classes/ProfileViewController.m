@@ -144,8 +144,12 @@
 			for(int x=0; x<[_weeklyArtists count] && x < 3; x++) {
 				if([_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]])
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"], /*[[_weeklyArtists objectAtIndex:x] objectForKey:@"image"],*/
-																																 [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]], @"noimage_artist.png",
-																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url",nil]]];
+																									  [_weeklyArtistImages objectForKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]], 
+																									  @"noimage_artist.png",
+																									  [NSString stringWithFormat:@"lastfm-artist://%@", [[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] URLEscaped]],
+																									  [[_weeklyArtists objectAtIndex:x] objectForKey: @"playcount"],
+																									  nil ] 
+																	forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url", @"playcount", nil]]];
 			}
 			if([_weeklyArtists count] > 3)
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-weeklyartists://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
@@ -269,6 +273,9 @@
 				} else {
 					cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 				}
+			}
+			if( [[stations objectAtIndex:[indexPath row]] objectForKey:@"playcount"]) {
+				cell.subtitle.text = [NSString stringWithFormat: @"%@ plays", [[stations objectAtIndex:[indexPath row]] objectForKey:@"playcount"]];
 			}
 			cell.shouldCacheArtwork = YES;
 			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"]) {

@@ -53,6 +53,8 @@
 	}
 	[cell showProgress:NO];
 	cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	NSString* playcount = [[_data objectAtIndex:[indexPath row]] objectForKey:@"playcount"];
+	cell.subtitle.text = [NSString stringWithFormat: @"%@ plays", playcount];
 	cell.placeholder = @"noimage_artist.png";
 	cell.imageURL = [_images objectForKey:[[_data objectAtIndex:[indexPath row]] objectForKey:@"name"]];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
