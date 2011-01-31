@@ -279,7 +279,8 @@
 				}
 			}
 			if( [[stations objectAtIndex:[indexPath row]] objectForKey:@"playcount"]) {
-				cell.subtitle.text = [NSString stringWithFormat: @"%@ plays", [[stations objectAtIndex:[indexPath row]] objectForKey:@"playcount"]];
+				int playcount = [[[stations objectAtIndex:[indexPath row]] objectForKey:@"playcount"] intValue ];
+				cell.subtitle.text = [NSString stringWithFormat: @"%i play%s", playcount, playcount > 1 ? "s" : "" ];
 			}
 			cell.shouldCacheArtwork = YES;
 			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"]) {
