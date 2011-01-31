@@ -211,7 +211,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }	
 - (void)_displayTrackInfo:(NSDictionary *)trackInfo {
 	_showedMetadata = NO;
-	_artistAndTrackTitle.text = [NSString stringWithFormat:@"%@ - %@", [trackInfo objectForKey:@"creator"], [trackInfo objectForKey:@"title"]];
+	_artistAndTrackTitle.text = [NSString stringWithFormat:@"%@ – %@", [trackInfo objectForKey:@"creator"], [trackInfo objectForKey:@"title"]];
 	_elapsed.text = @"0:00";
 	_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:([[trackInfo objectForKey:@"duration"] floatValue] / 1000.0f)]];
 	_progress.progress = 0;
