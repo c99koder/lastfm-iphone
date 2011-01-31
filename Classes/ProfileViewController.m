@@ -36,7 +36,7 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	_loading = YES;
 	NSArray *tracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
-	NSArray *artists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
+	NSArray *artists = [[[[LastFMService sharedInstance] weeklyArtistsForUser:_username] objectForKey:@"artists"] retain];
 	NSMutableDictionary *images = [[NSMutableDictionary alloc] init];
 	for(int x = 0; x < [artists count] && x < 3; x++) {
 		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[artists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
@@ -112,7 +112,7 @@
 	[_recentTracks release];
 	_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];
 	[_weeklyArtists release];
-	_weeklyArtists = [[[LastFMService sharedInstance] weeklyArtistsForUser:_username] retain];
+	_weeklyArtists = [[[[LastFMService sharedInstance] weeklyArtistsForUser:_username] objectForKey: @"artists"] retain];
 	[_weeklyArtistImages release];
 	_weeklyArtistImages = [[NSMutableDictionary alloc] init];
 	for(int x = 0; x < [_weeklyArtists count] && x < 3; x++) {

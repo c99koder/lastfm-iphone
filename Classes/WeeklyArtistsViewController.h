@@ -11,6 +11,8 @@
 
 @interface WeeklyArtistsViewController : UITableViewController {
 	NSArray *_data;
+	NSDate* _from;
+	NSDate* _to;
 	NSMutableDictionary *_images;
 }
 - (id)initWithUsername:(NSString *)username;
