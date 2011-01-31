@@ -221,6 +221,7 @@
 		self.selectionStyle = UITableViewCellSelectionStyleBlue;
 		_imageLoaded = NO;
 		shouldCacheArtwork = NO;
+		detailAtBottom = NO;
 		Yoffset = 6;
 	}
 	return self;
