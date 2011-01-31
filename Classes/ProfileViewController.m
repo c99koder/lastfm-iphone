@@ -181,7 +181,7 @@
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"artist"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"image"], @"noimage_user.png", [[_friendsListeningNow objectAtIndex:x] objectForKey:@"title"], [[_friendsListeningNow objectAtIndex:x] objectForKey:@"realname"],
 																																	 [NSString stringWithFormat:@"lastfm-user://%@", [[[_friendsListeningNow objectAtIndex:x] objectForKey:@"username"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder", @"track", @"realname", @"url",nil]]];
 			}
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat: @"More(%i)", friendsCount], @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat: @"More (%i)", friendsCount], @"-", [NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Listening Now", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
 		} else if(friendsCount) {
@@ -283,10 +283,7 @@
 				cell.detailTextLabel.textColor = [UIColor blackColor];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 				cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
-			}	else {
-				cell.detailTextLabel.text = @"";
-			}
-			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
+			}	else if ([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
 				cell.detailAtBottom = YES;
 				cell.detailTextLabel.text = [NSString stringWithFormat:@"%@  ", [[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]];
 				cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
