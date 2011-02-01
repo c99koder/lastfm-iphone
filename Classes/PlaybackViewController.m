@@ -386,6 +386,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	else
 		loveBtn.alpha = 1;
 	banBtn.alpha = 1;
+	if([[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://artist/"] || [[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://globaltags/"]) {
+		self.navigationItem.rightBarButtonItem = nil;
+	} else {
+		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:trackView action:@selector(filterButtonPressed:)];
+		self.navigationItem.rightBarButtonItem = item;
+		[item release];
+	}	
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
