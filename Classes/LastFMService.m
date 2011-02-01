@@ -422,6 +422,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 }
 - (NSDictionary *)weeklyArtistsForUser:(NSString *)username {
 	CXMLNode *node = [[self doMethod:@"user.getWeeklyArtistChart" maxCacheAge:5*MINUTES XPath:@"./weeklyartistchart" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil] objectAtIndex:0];
+	if( !node ) return nil;
+	
 	NSString* from = [node objectAtXPath: @"@from"];
 	NSString* to = [node objectAtXPath: @"@to"];
 	NSError* nodeError;
