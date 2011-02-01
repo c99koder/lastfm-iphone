@@ -16,6 +16,19 @@
 
 int tagSort(id tag1, id tag2, void *context);
 
+@interface NowPlayingInfoStyleSheet : TTDefaultStyleSheet {
+};
+@end
+
+@implementation NowPlayingInfoStyleSheet
+-(UIColor *)textColor {
+	return [UIColor grayColor];
+}
+-(UIColor *)linkTextColor {
+	return [UIColor colorWithRed:(100.0/256.0) green:(172.0/256.0) blue:(245.0/256.0) alpha:1.0];
+}
+@end
+
 @implementation NowPlayingInfoViewController
 - (void)_loadInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -79,19 +92,15 @@ int tagSort(id tag1, id tag2, void *context);
 		_trackInfo = [trackInfo retain];
 		self.title = @"Now Playing Info";
 		_trackStatsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
-		_trackStatsView.textColor = [UIColor grayColor];
 		_trackStatsView.backgroundColor = [UIColor blackColor];
 		_trackStatsView.font = [UIFont systemFontOfSize:12];
 		_artistStatsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
-		_artistStatsView.textColor = [UIColor grayColor];
 		_artistStatsView.backgroundColor = [UIColor blackColor];
 		_artistStatsView.font = [UIFont systemFontOfSize:12];
 		_trackTagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
-		_trackTagsView.textColor = [UIColor grayColor];
 		_trackTagsView.backgroundColor = [UIColor blackColor];
 		_trackTagsView.font = [UIFont systemFontOfSize:12];
 		_artistBioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
-		_artistBioView.textColor = [UIColor grayColor];
 		_artistBioView.backgroundColor = [UIColor blackColor];
 		_artistBioView.font = [UIFont systemFontOfSize:12];
 		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 64, 30)];
@@ -118,6 +127,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[super viewWillAppear:animated];
 	[self.navigationController setToolbarHidden:YES];
 	self.navigationController.toolbar.barStyle = UIBarStyleDefault;
+	[TTStyleSheet setGlobalStyleSheet:[[TTDefaultStyleSheet alloc] init]];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -129,6 +139,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
+	[TTStyleSheet setGlobalStyleSheet:[[NowPlayingInfoStyleSheet alloc] init]];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch([indexPath section]) {
@@ -203,8 +214,8 @@ int tagSort(id tag1, id tag2, void *context);
 	
 	if(_loaded) {
 		cell.backgroundView = [[[UIView alloc] init] autorelease];
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - 216 - 20,20)] autorelease];
-		titleLabel.font = [UIFont boldSystemFontOfSize: 14];
+		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - 220 - 20,14)] autorelease];
+		titleLabel.font = [UIFont boldSystemFontOfSize: 12];
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor blackColor];
 		titleLabel.textAlignment = UITextAlignmentRight;
