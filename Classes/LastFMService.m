@@ -420,11 +420,18 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
 }
-- (NSArray *)weeklyArtistsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getWeeklyArtistChart" maxCacheAge:5*MINUTES XPath:@"./weeklyartistchart/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
-	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"large\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
+- (NSDictionary *)weeklyArtistsForUser:(NSString *)username {
+	CXMLNode *node = [[self doMethod:@"user.getWeeklyArtistChart" maxCacheAge:5*MINUTES XPath:@"./weeklyartistchart" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil] objectAtIndex:0];
+	NSString* from = [node objectAtXPath: @"@from"];
+	NSString* to = [node objectAtXPath: @"@to"];
+	NSError* nodeError;
+	NSArray* nodes = [node nodesForXPath:@"./artist" error:&nodeError];
+	NSArray* artists = [self _convertNodes:nodes
+						toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"large\"]", nil]
+						forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
+	NSDictionary* result = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects: from, to, artists, nil ] 
+													   forKeys: [NSArray arrayWithObjects: @"from", @"to", @"artists", nil ]];
+	return result;
 }
 - (NSArray *)recommendedArtistsForUser:(NSString *)username {
 	NSArray *nodes = [self doMethod:@"user.getRecommendedArtists" maxCacheAge:5*MINUTES XPath:@"./recommendations/artist" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];

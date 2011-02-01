@@ -19,8 +19,11 @@
 @implementation WeeklyArtistsViewController
 
 - (id)initWithUsername:(NSString *)username {
-	if (self = [super initWithStyle:UITableViewStylePlain]) {
-		_data = [[[LastFMService sharedInstance] weeklyArtistsForUser:username] retain];
+	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+		NSDictionary* res = [[LastFMService sharedInstance] weeklyArtistsForUser:username];
+		_data = [[res objectForKey: @"artists"] retain];
+		_from = [[NSDate dateWithTimeIntervalSince1970:[[res objectForKey: @"from" ] intValue]] retain];
+		_to = [[NSDate dateWithTimeIntervalSince1970: [[res objectForKey: @"to" ] intValue]] retain];
 		_images = [[NSMutableDictionary alloc] init];
 		for(int x = 0; x < [_data count]; x++) {
 			NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_data objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
@@ -84,7 +87,28 @@
 - (void)dealloc {
 	[_data release];
 	[_images release];
+	[_to release];
+	[_from release];
   [super dealloc];
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	if( section != 0 ) return 0.0f;
+	return 40.0f;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	if( section != 0 ) return nil;
+	
+	UILabel* label = [[[UILabel alloc] initWithFrame:CGRectMake(20, 6, 300, 40)] autorelease];
+	label.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+	label.backgroundColor = [UIColor clearColor];
+	NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+	[formatter setTimeStyle: NSDateFormatterMediumStyle];
+	[formatter setDateFormat: @"d MMM"];
+	label.text = [NSString stringWithFormat: @"For the week of %@ - %@.", [formatter stringFromDate:_from], [formatter stringFromDate: _to ] ];
+	[formatter release];
+	label.textAlignment = UITextAlignmentCenter;
+	label.font = [UIFont systemFontOfSize:14];
+	return label;
 }
 @end
 
