@@ -32,7 +32,7 @@ UIImage *eventDateBGImage = nil;
 
 @implementation MiniEventCell
 
-@synthesize title, location, month, day;
+@synthesize title, location, month, day, attendees;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
@@ -78,6 +78,18 @@ UIImage *eventDateBGImage = nil;
 		location.opaque = YES;
 		[self.contentView addSubview:location];
 		
+		attendees = [[UILabel alloc] init];
+		attendees.textColor = [UIColor grayColor];
+		attendees.highlightedTextColor = [UIColor whiteColor];
+		attendees.backgroundColor = [UIColor whiteColor];
+		attendees.font = [UIFont systemFontOfSize:14];
+		attendees.clipsToBounds = YES;
+		attendees.opaque = YES;
+		[self.contentView addSubview:attendees];
+		
+		_attendeeIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"friendsevent.png"]];
+		[self.contentView addSubview:_attendeeIcon];
+		
 		self.selectionStyle = UITableViewCellSelectionStyleBlue;
 	}
 	return self;
@@ -96,6 +108,16 @@ UIImage *eventDateBGImage = nil;
 	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 4, frame.size.width - _datebg.frame.size.width - 12, 22);
 	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 24, frame.size.width - _datebg.frame.size.width - 12, 
 																[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 12, frame.size.height - 24) lineBreakMode:location.lineBreakMode].height);
+	if( [attendees.text length] ) {
+		attendees.hidden = NO;
+		_attendeeIcon.hidden = NO;
+	} else {
+		attendees.hidden = YES;
+		_attendeeIcon.hidden = YES;
+	}
+
+	_attendeeIcon.frame = CGRectMake(location.frame.origin.x, location.frame.origin.y + location.frame.size.height, _attendeeIcon.image.size.width, _attendeeIcon.image.size.height);
+	attendees.frame = CGRectMake(location.frame.origin.x + _attendeeIcon.frame.size.width + 3, location.frame.origin.y + location.frame.size.height, location.frame.size.width, location.frame.size.height);
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
@@ -109,6 +131,8 @@ UIImage *eventDateBGImage = nil;
 	[location release];
 	[day release];
 	[month release];
+	[attendees release];
+	[_attendeeIcon release];
 	[_datebg release];
 	[super dealloc];
 }
@@ -238,6 +262,17 @@ UIImage *eventDateBGImage = nil;
 			[_locationManager startUpdatingLocation];
 			return;
 			break;
+		case 3:
+		{
+			NSArray *data = [[LastFMService sharedInstance] eventsForFriendsOfUser:_username];
+			UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
+			if(controller) {
+				controller.title = @"Friends’ Events";
+				[self.navigationController pushViewController:controller animated:YES];
+				[controller autorelease];
+			}			
+			
+		}
 	}
 	
 	if(controller) {
@@ -260,6 +295,7 @@ UIImage *eventDateBGImage = nil;
 		UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
 		if(controller) {
 			controller.title = @"Events Near Me";
+			((EventListViewController*)controller).footerText = @"Based on a 50km/31 mile radius from your current location.";
 			[self.navigationController pushViewController:controller animated:YES];
 			[controller autorelease];
 		}
@@ -356,7 +392,7 @@ UIImage *eventDateBGImage = nil;
 			cell.textLabel.text = @"Upcoming Events Near Me";
 			break;
 		case 3:
-			cell.textLabel.text = @"My Friends' Events";
+			cell.textLabel.text = @"My Friends’ Events";
 			break;
 	}
 	[cell showProgress: NO];
@@ -415,7 +451,25 @@ UIImage *eventDateBGImage = nil;
 	
 	NSDictionary *event = [_events objectAtIndex:[indexPath row]];
 	eventCell.title.text = [event objectForKey:@"headliner"];
-	eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
+	if( [event objectForKey: @"attendees"] ) {
+		NSObject* attendees = [event objectForKey: @"attendees"];
+		NSString* attendeeString;
+		if( [attendees isKindOfClass:[NSString class]] )
+			attendeeString = (NSString*)attendees;
+		else if( [(NSArray*)attendees count] <= 2 )
+			attendeeString = [((NSArray*)attendees) componentsJoinedByString: @", " ];
+		else {
+			NSRange range;
+			range.location = 0;
+			range.length = 2;
+			NSArray* firstAttendees = [(NSArray*)attendees subarrayWithRange:range];
+			attendeeString = [NSString stringWithFormat: @"%@ (and %i more)", [firstAttendees componentsJoinedByString: @", "], [(NSArray*)attendees count] - 2];
+		}
+		eventCell.location.text = [NSString stringWithFormat:@"%@", [event objectForKey:@"venue"]];
+		eventCell.attendees.text = [NSString stringWithFormat:@"%@", attendeeString];		
+	} else {
+		eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
+	}
 	eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
 	eventCell.location.numberOfLines = 0;
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -437,11 +491,41 @@ UIImage *eventDateBGImage = nil;
 	
 	return eventCell;
 }
+- (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+	if( !footerText || [footerText length] == 0 ) return nil;
+	UILabel* label = [[[UILabel alloc] init] autorelease];
+	label.text = footerText;
+	label.frame = CGRectMake(10, 6, 300, 40);
+	label.backgroundColor = [UIColor clearColor];
+	label.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+	label.shadowColor = [UIColor whiteColor];
+	label.shadowOffset = CGSizeMake(0.0, 1.0);
+	label.font = [UIFont systemFontOfSize:14];
+	label.numberOfLines = 2;
+	label.textAlignment = UITextAlignmentCenter;
+	label.lineBreakMode = UILineBreakModeWordWrap;
+	
+	UIView *footer = [[UIView alloc] init];
+	[footer addSubview:label];
+	return [footer autorelease];
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+	if( !footerText || [footerText length] == 0 ) return 0.0f;
+	return 50.0f;
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 - (void)dealloc {
 	[super dealloc];
+	[footerText release];
 	[_events release];
+}
+- (NSString*)footerText {
+	return footerText;
+}
+- (void)setFooterText:(NSString *)string {
+	footerText = [string retain];
+	[self.tableView reloadData];
 }
 @end

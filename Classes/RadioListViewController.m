@@ -173,7 +173,7 @@
 		[stations release];
 		
 		stations = [[NSMutableArray alloc] init];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends Radio",
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends’ Radio",
 																						  [NSString stringWithFormat:@"lastfm://user/%@/friends", _username],
 																						  @"Music your friends like",
 																						  nil] 

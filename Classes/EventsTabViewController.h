@@ -27,19 +27,25 @@
 	UIImageView *_datebg;
 	UILabel *title;
 	UILabel *location;
+	UILabel *attendees;
 	UILabel *month;
 	UILabel *day;
+	UIImageView *_attendeeIcon;
 }
 @property (nonatomic, retain) UILabel *title;
 @property (nonatomic, retain) UILabel *location;
+@property (nonatomic, retain) UILabel *attendees;
 @property (nonatomic, retain) UILabel *month;
 @property (nonatomic, retain) UILabel *day;
 @end
 
 @interface EventListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSArray *_events;
+	NSString *footerText;
 }
 - (id)initWithEvents:(NSArray *)events;
+@property NSString *footerText;
+
 @end
 
 @interface EventsTabViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate> {
