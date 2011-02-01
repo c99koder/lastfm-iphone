@@ -29,7 +29,10 @@
 	NSArray *_releases;
 	NSArray *_recommendedReleases;
 	NSString *_releaseDataSource;
+	NSString *_recsExplanation;
+	NSString *_editRecsExplanation;
 	NSThread *_refreshThread;
+	BOOL _editingMode;
 }
 - (id)initWithUsername:(NSString *)username;
 @end

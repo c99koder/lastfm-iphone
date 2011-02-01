@@ -83,6 +83,9 @@
 		self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Recommended" style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.title = @"Recommended";
 		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_recs.png"];
+		_editingMode = NO;
+		_recsExplanation = @"New music from Last.fm, based on\nwhat you've been listening to.";
+		_editRecsExplanation = @"Dismiss artists you're not keen on to get fresh recommendations.";
 	}
 	return self;
 }
@@ -97,11 +100,15 @@
 - (void)doneButtonPressed:(id)sender {
 	[self.tableView setEditing:NO animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
+	_editingMode = NO;
+	[self.tableView reloadData];
 	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
  }
 - (void)editButtonPressed:(id)sender {
 	[self.tableView setEditing:YES animated:YES];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+	_editingMode = YES;
+	[self.tableView reloadData];
 	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 }
 - (void)viewDidUnload {
@@ -363,7 +370,7 @@
 	if((toggle.selectedSegmentIndex == 0 && section == 0) || (toggle.selectedSegmentIndex == 1 && section == 1)) {
 		// Create label with section title
 		UILabel *label = [[[UILabel alloc] init] autorelease];
-		label.frame = CGRectMake(20, 6, 300, 40);
+		label.frame = CGRectMake(10, 6, 300, 40);
 		label.backgroundColor = [UIColor clearColor];
 		label.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
 		label.shadowColor = [UIColor whiteColor];
@@ -372,9 +379,12 @@
 		label.numberOfLines = 2;
 		label.textAlignment = UITextAlignmentCenter;
 		label.lineBreakMode = UILineBreakModeWordWrap;
-		if(toggle.selectedSegmentIndex == 0)
-			label.text = @"New music from Last.fm, based on\nwhat you've been listening to.";
-		else
+		if(toggle.selectedSegmentIndex == 0) {
+			if( _editingMode )
+				label.text = _editRecsExplanation;
+			else
+				label.text = _recsExplanation;
+		} else
 			label.text = [NSString stringWithFormat:@"New releases data provided by\n%@", _releaseDataSource];
 		// Create header view and add label as a subview
 		UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
