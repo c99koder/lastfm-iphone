@@ -185,7 +185,7 @@ UIImage *eventDateBGImage = nil;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(section == 0 && [_events count]) {
-		return @"My Upcoming Events";
+		return @"Events I'm Attending";
 	} else if(section == 1 && [_recs count]) {
 		return @"Recommended Events";
 	} else {
@@ -353,7 +353,7 @@ UIImage *eventDateBGImage = nil;
 			return eventCell;
 		}
 		case 2:
-			cell.textLabel.text = @"Events Near Me";
+			cell.textLabel.text = @"Upcoming Events Near Me";
 			break;
 		case 3:
 			cell.textLabel.text = @"My Friends' Events";
