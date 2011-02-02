@@ -83,6 +83,13 @@
 	bar.placeholder = @"Enter an artist or genre";
 	bar.delegate = self;
 	self.tableView.tableHeaderView = bar;
+	
+	for ( UIView* view in [bar subviews] ) {
+		if( [ view isKindOfClass: [UITextField class] ] ) {
+			[((UITextField*)view) setReturnKeyType:UIReturnKeyGo];
+		}
+	}
+	
 	/*UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
 	searchController.delegate = self;
 	searchController.searchResultsDataSource = _searchData;
@@ -151,7 +158,7 @@
 		NSMutableArray *sections = [[NSMutableArray alloc] init];
 		
 		NSMutableArray *stations = [[NSMutableArray alloc] init];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library", @"My Library station"),
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library Radio", @"My Library station"),
 																						  [NSString stringWithFormat:@"lastfm://user/%@/personal", _username],
 																						  NSLocalizedString(@"Music you know and love", @"My Library description"),
 																						  nil] 
@@ -163,7 +170,7 @@
 																nil] 
 														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
 		
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recommended by Last.fm", @"Recommended by Last.fm station"),
+		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Recommended Radio", @"My Recommended Radio"),
 																						  [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],
 																					      NSLocalizedString(@"New Music from Last.fm", @"Recommendation Radio description"),
 																						  nil] 
@@ -191,7 +198,9 @@
 		if([_recent count]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_recent count]; x++) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recent objectAtIndex:x] objectForKey:@"name"],[[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+				NSMutableString* stationTitle = [NSMutableString stringWithString:[[_recent objectAtIndex:x] objectForKey:@"name"]];
+				[stationTitle replaceOccurrencesOfString:[NSString stringWithFormat:@"%@’s", _username] withString:@"My" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [stationTitle length])];
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:stationTitle, [[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
 			}
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recent Stations", @"Recent Stations heading"), stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
