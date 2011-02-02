@@ -176,7 +176,7 @@
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened Tracks", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
 		} else if(_loading) {
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Weekly Artists", @"Loading", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened Tracks", @"Loading", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		}
 		
 		if([_friendsListeningNow count] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
