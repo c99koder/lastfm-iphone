@@ -66,13 +66,29 @@
 	}
 	[pool release];
 }
+- (void)toggleChanged:(id)sender {
+	if ( self.tableView.editing == YES ) {
+		[self doneButtonPressed:sender];
+	}
+}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
 		_recsTitleLabel = [[UILabel alloc] init];
+		_recsTitleLabel.text = @"New Music Recommendations";
+		_recsTitleLabel.backgroundColor = [UIColor clearColor];
+		_recsTitleLabel.textColor = [UIColor darkGrayColor];
+		_recsTitleLabel.lineBreakMode = UILineBreakModeWordWrap;
+		_recsTitleLabel.font = [UIFont boldSystemFontOfSize:[UIFont labelFontSize]];
+		_recsTitleLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+		_recsTitleLabel.shadowColor = [UIColor whiteColor];
+		_recsTitleLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+		_recsTitleLabel.numberOfLines = 0;
+		
 		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"New Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
+		[toggle addTarget:self action:@selector(toggleChanged:) forControlEvents:UIControlEventValueChanged];
 		CGRect frame = toggle.frame;
 		frame.size.width = self.view.frame.size.width - 20;
 		toggle.frame = frame;
@@ -102,8 +118,6 @@
 	_recsTitleLabel.text = @"New Music Recommendations";
 	_recsTitleLabel.font = [UIFont boldSystemFontOfSize:[UIFont labelFontSize]];
 	_recsTitleLabel.textAlignment = UITextAlignmentLeft;
-	_recsTitleLabel.frame = CGRectMake( _recsTitleLabel.frame.origin.x, _recsTitleLabel.frame.origin.y + 5,
-									   _recsTitleLabel.frame.size.width, _recsTitleLabel.frame.size.height);
 	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
  }
 - (void)editButtonPressed:(id)sender {
@@ -111,8 +125,6 @@
 	_recsTitleLabel.text = @"Dismiss artists you're not keen on to get fresh recommendations.";
 	_recsTitleLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	_recsTitleLabel.textAlignment = UITextAlignmentCenter;
-	_recsTitleLabel.frame = CGRectMake( _recsTitleLabel.frame.origin.x, _recsTitleLabel.frame.origin.y - 5,
-									    _recsTitleLabel.frame.size.width, _recsTitleLabel.frame.size.height);
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
 	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 }
@@ -271,9 +283,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 
-	return [[self tableView:tableView titleForHeaderInSection:section] sizeWithFont:[UIFont systemFontOfSize:[UIFont labelFontSize]] 
-																  constrainedToSize:tableView.frame.size 
-																	  lineBreakMode:UILineBreakModeWordWrap].height + 20; 
+	return 45; 
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
@@ -287,26 +297,13 @@
 	
 	if( section != recListSection )
 		return nil;
-		
-	if(	self.tableView.editing == NO ) {
-		_recsTitleLabel.text = [self tableView:tableView titleForHeaderInSection:section];
-		_recsTitleLabel.backgroundColor = [UIColor clearColor];
-		_recsTitleLabel.textColor = [UIColor darkGrayColor];
-		_recsTitleLabel.lineBreakMode = UILineBreakModeWordWrap;
-		_recsTitleLabel.font = [UIFont boldSystemFontOfSize:[UIFont labelFontSize]];
-		_recsTitleLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
-		_recsTitleLabel.shadowColor = [UIColor whiteColor];
-		_recsTitleLabel.shadowOffset = CGSizeMake(0.0, 1.0);
-		_recsTitleLabel.numberOfLines = 0;
-		_recsTitleLabel.frame = CGRectMake( 20, 5,
-								 tableView.frame.size.width - 40,
-								 [self tableView:tableView heightForHeaderInSection:section]);
-		UIView* view = [[[UIView alloc] init] autorelease];
-		[view addSubview: _recsTitleLabel];
-		return view;
-	}
 	
-	return [[[UIView alloc] init] autorelease];
+	_recsTitleLabel.frame = CGRectMake( 20, 5,
+							 tableView.frame.size.width - 40,
+							 [self tableView:tableView heightForHeaderInSection:section]);
+	UIView* view = [[[UIView alloc] init] autorelease];
+	[view addSubview: _recsTitleLabel];
+	return view;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
