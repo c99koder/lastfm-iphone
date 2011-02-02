@@ -351,7 +351,7 @@ NSString *kUserAgent;
 #endif
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
-		if(sender.alpha == 1) {
+		if(!sender.selected) {
 			[_scrobbler rateTrack:[track objectForKey:@"title"]
 									 byArtist:[track objectForKey:@"creator"]
 										onAlbum:[track objectForKey:@"album"]
@@ -359,7 +359,7 @@ NSString *kUserAgent;
 							 withDuration:[[track objectForKey:@"duration"] intValue]
 								 fromSource:[track objectForKey:@"source"]
 										 rating:@"L"];
-			sender.alpha = 0.4;
+			sender.selected = YES;
 		} else {
 			[_scrobbler rateTrack:[track objectForKey:@"title"]
 									 byArtist:[track objectForKey:@"creator"]
@@ -368,7 +368,7 @@ NSString *kUserAgent;
 							 withDuration:[[track objectForKey:@"duration"] intValue]
 								 fromSource:[track objectForKey:@"source"]
 										 rating:@""];
-			sender.alpha = 1;
+			sender.selected = NO;
 		}
 	}
 }

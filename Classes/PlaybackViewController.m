@@ -382,9 +382,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	//	[self detailsButtonPressed:nil];
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
 	if([[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"loved"] isEqualToString:@"1"])
-		loveBtn.alpha = 0.4;
+		loveBtn.selected = YES;//loveBtn.image = [UIImage imageNamed:@"control_01_on.png"];
 	else
-		loveBtn.alpha = 1;
+		loveBtn.selected = NO;//loveBtn.image = [UIImage imageNamed:@"control_01_off.png"];
 	banBtn.alpha = 1;
 	if([[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://artist/"] || [[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://globaltags/"]) {
 		self.navigationItem.rightBarButtonItem = nil;
