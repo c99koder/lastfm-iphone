@@ -519,12 +519,11 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 																										delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Subscribe", nil] autorelease];
 		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		[self stop];
+		return;
 	}
 	[_busyLock lock];
-	//For some reason [_tracks removeObjectAtIndex:0] doesn't deallocate us properly, so we'll do it ourselves
-	LastFMTrack *t = [[_tracks objectAtIndex: 0] retain];
-	[_tracks removeObjectAtIndex:0];
-	[t release];
+	if([_tracks count])
+		[_tracks removeObjectAtIndex:0];
 	[_busyLock unlock];
 	if([_tracks count]) {
 		[[_tracks objectAtIndex:0] play];

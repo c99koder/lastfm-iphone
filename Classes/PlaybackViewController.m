@@ -295,7 +295,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[contentView sendSubviewToBack:trackView.view];
 	
 	CGRect frame = volumeView.frame;
-	frame.origin.y -= 2;
+	frame.origin.y += 6;
 	frame.size.height += 10;
 	
 #if !(TARGET_IPHONE_SIMULATOR)

@@ -44,7 +44,7 @@
 	NSString *footerText;
 }
 - (id)initWithEvents:(NSArray *)events;
-@property NSString *footerText;
+@property (nonatomic, retain) NSString *footerText;
 
 @end
 
