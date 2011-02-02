@@ -43,8 +43,8 @@
 			}
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"track"]) {
 				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[NSBundle mainBundle] pathForResource:@"searchresults_track" ofType:@"png"],@"searchresults_track.png",
-																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
-																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder",@"url", nil]]];
+																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], [[_results objectAtIndex:x] objectForKey:@"duration"], nil] 
+																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder",@"url", @"duration", nil]]];
 			}
 		}
 	}
@@ -93,6 +93,12 @@
 		} else {
 			cell.placeholder = [[_data objectAtIndex:[indexPath row]] objectForKey:@"placeholder"];
 			cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		}
+		if([[_data objectAtIndex:[indexPath row]] objectForKey:@"duration"] &&
+		   [[[_data objectAtIndex:[indexPath row]] objectForKey:@"duration"] intValue] > 0) {
+			cell.title.text = [NSString stringWithFormat: @"%@ (%i:%.2i)",  cell.title.text, [[[_data objectAtIndex:[indexPath row]] objectForKey:@"duration"] intValue] / 60,
+																				[[[_data objectAtIndex:[indexPath row]] objectForKey:@"duration"] intValue] % 60];
+			
 		}
 		cell.shouldFillHeight = YES;
 	}		

@@ -491,7 +491,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 }
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username {
 	//TODO: uncomment the limit so we can get more tracks in the future
-	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]]/*, @"limit=50"*/, nil];
+	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], @"lfm=true" /*, @"limit=50"*/, nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@nowplaying", @"./artist/name", @"./name", @"./date", @"./date/@uts", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"nowplaying", @"artist", @"name", @"date", @"uts", @"image", nil]];
@@ -751,8 +751,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 				[result release];
 			}
 			if([[node name] isEqualToString:@"track"]) {
-				NSDictionary *track = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"large\"]", nil]
-																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"artist", @"image", nil]];
+				NSDictionary *track = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./artist/name", @"./image[@size=\"large\"]", @"./duration", nil]
+																		 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"artist", @"image", @"duration", nil]];
 				NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithDictionary:track];
 				[result setObject:@"track" forKey:@"kind"];
 				[results addObject: result];
