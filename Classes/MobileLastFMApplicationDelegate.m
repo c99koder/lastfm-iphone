@@ -523,17 +523,18 @@ NSString *kUserAgent;
 		}
 	}
 	
-	if(playbackViewController == nil) {
+	/*if(playbackViewController == nil) {
 		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
 			if([object isKindOfClass:[PlaybackViewController class]]) {
 				playbackViewController = [object retain];
 				break;
 			}
 		}
+		playbackViewController = [[PlaybackViewController alloc] initWithNibName:@"PlaybackView" bundle:nil];
 		if(!playbackViewController) {
 			NSLog(@"Failed to load playback view!\n");
 		}
-	}
+	}*/
 	
 	if(_trialAlert) {
 		_trialAlertStation = [station retain];
@@ -541,7 +542,6 @@ NSString *kUserAgent;
 		return TRUE;
 	} else {
 		BOOL result = [self _playRadioStation:station];
-		[playbackViewController hideDetailsView];
 		if(result && animated) {
 			[self showPlaybackView];
 		}
@@ -561,7 +561,6 @@ NSString *kUserAgent;
 		}
 	}
 
-	[playbackViewController hideDetailsView];
 	[(UINavigationController *)(rootViewController.selectedViewController) pushViewController:playbackViewController animated:YES];
 	//[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	//[rootViewController.navigationBar setBarStyle:UIBarStyleBlackOpaque];

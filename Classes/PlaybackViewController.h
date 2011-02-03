@@ -24,20 +24,15 @@
 #import <MessageUI/MessageUI.h>
 #import "LastFMService.h"
 #import "ArtworkCell.h"
-#import "FriendsViewController.h"
-#import "TagEditorViewController.h"
 #import "ArtistViewController.h"
 
 int tagSort(id tag1, id tag2, void *context);
 
-@interface PlaybackSubview : UIViewController {
-	IBOutlet UIView *_loadingView;
-}
-- (void)showLoadingView;
-- (void)hideLoadingView;
-@end
-
-@interface TrackPlaybackViewController : PlaybackSubview {
+@interface PlaybackViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource> {
+	IBOutlet UILabel *_titleLabel;
+	IBOutlet UIView *volumeView;
+	IBOutlet UIButton *loveBtn;
+	IBOutlet UIButton *banBtn;
 	IBOutlet UIImageView *_artworkView;
 	IBOutlet UIImageView *_reflectedArtworkView;
 	IBOutlet UILabel *_artistAndTrackTitle;
@@ -49,45 +44,23 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UIButton *_badge;
 	IBOutlet UIView *_filterView;
 	IBOutlet UIPickerView *_filter;
+	IBOutlet UIView *_loadingView;
 	UIImage *artwork;
 	UIImageView *_noArtworkView;
 	NSLock *_lock;
 	NSTimer *_timer;
-	BOOL _showedMetadata;
-}
--(void)artworkButtonPressed:(id)sender;
--(void)filterButtonPressed:(id)sender;
--(void)dismissFilterView:(id)sender;
--(void)resignActive;
--(void)becomeActive;
-@property (nonatomic, readonly) UIImage *artwork;
-@end
-
-@interface PlaybackViewController : UIViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,MFMailComposeViewControllerDelegate> {
-	IBOutlet UILabel *_titleLabel;
-	IBOutlet UIToolbar *toolbar;
-	IBOutlet UIView *contentView;
-	IBOutlet UISegmentedControl *detailType;
-	IBOutlet TrackPlaybackViewController *trackView;
-	IBOutlet UIView *volumeView;
-	IBOutlet UIView *detailsBtnContainer;
-	IBOutlet UIButton *detailsBtn;
-	IBOutlet UIButton *loveBtn;
-	IBOutlet UIButton *banBtn;
 	
 	ArtistViewController *artistViewController;
 }
 -(void)backButtonPressed:(id)sender;
--(void)detailsButtonPressed:(id)sender;
--(void)actionButtonPressed:(id)sender;
 -(void)loveButtonPressed:(id)sender;
 -(void)banButtonPressed:(id)sender;
 -(void)stopButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
 -(void)onTourButtonPressed:(id)sender;
 -(void)infoButtonPressed:(id)sender;
--(void)hideDetailsView;
+-(void)dismissFilterView:(id)sender;
+-(void)filterButtonPressed:(id)sender;
 -(void)resignActive;
 -(void)becomeActive;
--(BOOL)releaseDetailsView;
 @end
