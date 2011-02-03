@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>UIPrerenderedIcon</key>
-	<false/>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
