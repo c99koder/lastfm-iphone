@@ -144,6 +144,7 @@ enum eventStatus {
 - (NSDictionary *)tuneRadioStation:(NSString *)stationURL;
 - (NSDictionary *)getPlaylist;
 - (NSArray *)suggestedTagsForStation:(NSString *)stationURL;
+- (NSDictionary *)userStations;
 
 #pragma mark Search methods
 
