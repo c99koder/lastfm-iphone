@@ -160,7 +160,7 @@ int tagSort(id tag1, id tag2, void *context);
 				_trackStatsView.text.width = 210;
 				return _trackStatsView.text.height;
 			} else {
-				return 64;
+				return 90;
 			}
 		case 2:
 			_artistStatsView.text.width = 210;
@@ -257,8 +257,20 @@ int tagSort(id tag1, id tag2, void *context);
 		}
 	} else {
 		UITableViewCell *loadingcell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
-		loadingcell.textLabel.text = @"Loading";
-		[loadingcell showProgress:YES];
+		loadingcell.backgroundView = [[[UIView alloc] init] autorelease];
+		loadingcell.backgroundColor = [UIColor blackColor];
+		loadingcell.textLabel.text = @"\n\n\nLoading";
+		loadingcell.textLabel.numberOfLines = 0;
+		loadingcell.textLabel.textAlignment = UITextAlignmentCenter;
+		loadingcell.textLabel.textColor = [UIColor whiteColor];
+		UIActivityIndicatorView *progress = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		[progress startAnimating];
+		CGRect frame = progress.frame;
+		frame.origin.y = 20;
+		frame.origin.x = 130;
+		progress.frame = frame;
+		[loadingcell.contentView addSubview: progress];
+		[progress release];
 		return loadingcell;
 	}
 	
@@ -428,6 +440,7 @@ int tagSort(id tag1, id tag2, void *context);
 	_trackInfo = [[[LastFMRadio sharedInstance] trackInfo] retain];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
 	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = NO;
+	[self.tableView reloadData];
 }
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
