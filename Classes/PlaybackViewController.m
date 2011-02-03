@@ -394,6 +394,10 @@ int tagSort(id tag1, id tag2, void *context) {
 														 [NSString stringWithFormat:@"After this track, you'll only hear '%@' music on this station.",[filter objectForKey:@"name"]]
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Don't show this message again", nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+		} else {
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Re-Tuned" message:@"After this track, you'll hear all music on this station."
+																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Don't show this message again", nil] autorelease];
+			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		}
 	}
 }
@@ -402,7 +406,12 @@ int tagSort(id tag1, id tag2, void *context) {
 	_filterView.frame = CGRectMake(0,480,320,254);
 	[UIView commitAnimations];
 	if([_filter selectedRowInComponent:0] == 0) {
-		//TODO: Special handling needed for the "ALL" option
+		NSRange range = [[[LastFMRadio sharedInstance] stationURL] rangeOfString:@"/tag/"];
+		if(range.location != NSNotFound) {
+			NSString *url = [[[LastFMRadio sharedInstance] stationURL] substringToIndex:range.location];
+			NSLog(@"New URL: %@", url);
+			[self performSelector:@selector(_tuneNewStation:) withObject:[NSDictionary dictionaryWithObjectsAndKeys:url,@"url",nil,nil] afterDelay:0.1];
+		}
 	} else if(![[[LastFMRadio sharedInstance] stationURL] isEqualToString:[[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:[_filter selectedRowInComponent:0]-1] objectForKey:@"url"]]) {
 		NSLog(@"New URL: %@", [[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:[_filter selectedRowInComponent:0]-1] objectForKey:@"url"]);
 		[self performSelector:@selector(_tuneNewStation:) withObject:[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:[_filter selectedRowInComponent:0]-1] afterDelay:0.1];

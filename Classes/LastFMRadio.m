@@ -676,7 +676,13 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		return FALSE;
 	} else {
 		[_suggestions release];
-		_suggestions = [[[LastFMService sharedInstance] suggestedTagsForStation:station] retain];
+		NSRange range = [station rangeOfString:@"/tag/"];
+		if(range.location != NSNotFound) {
+			NSString *url = [station substringToIndex:range.location];
+			_suggestions = [[[LastFMService sharedInstance] suggestedTagsForStation:url] retain];
+		} else {
+			_suggestions = [[[LastFMService sharedInstance] suggestedTagsForStation:station] retain];
+		}
 		[_playlist release];
 		_playlist = nil;
 		[_stationURL release];
