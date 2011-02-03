@@ -49,9 +49,10 @@
 	[cell showProgress:NO];
 	cell.title.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"name"];
 	cell.subtitle.text = [[_data objectAtIndex:[indexPath row]] objectForKey:@"artist"];
+	cell.detailAtBottom = YES;
+	cell.detailTextLabel.textColor = [UIColor colorWithRed:36.0f/255 green:112.0f/255 blue:216.0f/255 alpha:1.0];
+	cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[[_data objectAtIndex:[indexPath row]] objectForKey:@"uts"] StringFromUTS]];
-	cell.detailTextLabel.textColor = [UIColor colorWithRed:0.34 green:0.48 blue:0.64 alpha:1.0];
-	cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
 	cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 	cell.placeholder = @"noimage_album.png";
 	cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];

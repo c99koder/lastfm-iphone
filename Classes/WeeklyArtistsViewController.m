@@ -104,7 +104,7 @@
 	NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
 	[formatter setTimeStyle: NSDateFormatterMediumStyle];
 	[formatter setDateFormat: @"d MMM"];
-	label.text = [NSString stringWithFormat: @"For the week of %@ - %@.", [formatter stringFromDate:_from], [formatter stringFromDate: _to ] ];
+	label.text = [NSString stringWithFormat: @"For the week of %@ - %@", [formatter stringFromDate:_from], [formatter stringFromDate: _to ] ];
 	[formatter release];
 	label.textAlignment = UITextAlignmentCenter;
 	label.font = [UIFont systemFontOfSize:14];
