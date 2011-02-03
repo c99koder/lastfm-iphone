@@ -12,8 +12,8 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="3"/>
 			<integer value="53"/>
+			<integer value="3"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -131,42 +131,6 @@ bSwgTHRkLg</string>
 							<string key="NSResourceName">rounded_table_cell_bottom.png</string>
 						</object>
 					</object>
-					<object class="IBUIButton" id="672832228">
-						<reference key="NSNextResponder" ref="692418406"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{87, 188}, {146, 37}}</string>
-						<reference key="NSSuperview" ref="692418406"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<int key="IBUIContentHorizontalAlignment">0</int>
-						<int key="IBUIContentVerticalAlignment">0</int>
-						<object class="NSFont" key="IBUIFont" id="503808260">
-							<string key="NSName">Helvetica-Bold</string>
-							<double key="NSSize">15</double>
-							<int key="NSfFlags">16</int>
-						</object>
-						<string key="IBUIHighlightedTitle">Log In</string>
-						<string key="IBUIDisabledTitle">Log In</string>
-						<string key="IBUISelectedTitle">Log In</string>
-						<string key="IBUINormalTitle">Log In</string>
-						<object class="NSColor" key="IBUIHighlightedTitleColor" id="649291039">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MSAxIDEAA</bytes>
-						</object>
-						<object class="NSColor" key="IBUINormalTitleColor" id="583470059">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MQA</bytes>
-						</object>
-						<object class="NSColor" key="IBUINormalTitleShadowColor" id="34290184">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MAA</bytes>
-						</object>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="724461032">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">black_button_dark_bkg_upper.png</string>
-						</object>
-					</object>
 					<object class="IBUIButton" id="689278323">
 						<reference key="NSNextResponder" ref="692418406"/>
 						<int key="NSvFlags">292</int>
@@ -179,17 +143,27 @@ bSwgTHRkLg</string>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<reference key="IBUIFont" ref="503808260"/>
+						<object class="NSFont" key="IBUIFont" id="503808260">
+							<string key="NSName">Helvetica-Bold</string>
+							<double key="NSSize">15</double>
+							<int key="NSfFlags">16</int>
+						</object>
+						<int key="IBUIButtonType">1</int>
 						<string key="IBUIHighlightedTitle">Sign up</string>
 						<string key="IBUIDisabledTitle">Sign up</string>
 						<string key="IBUISelectedTitle">Sign up</string>
 						<string key="IBUINormalTitle">Sign up</string>
-						<reference key="IBUIHighlightedTitleColor" ref="649291039"/>
-						<reference key="IBUINormalTitleColor" ref="583470059"/>
-						<reference key="IBUINormalTitleShadowColor" ref="34290184"/>
-						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">red_button.png</string>
+						<object class="NSColor" key="IBUIHighlightedTitleColor" id="583470059">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MQA</bytes>
+						</object>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzE0IDAuMzA5ODAzOTIxNiAwLjUyMTU2ODYyNzUAA</bytes>
+						</object>
+						<object class="NSColor" key="IBUINormalTitleShadowColor">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MC41AA</bytes>
 						</object>
 					</object>
 					<object class="IBUILabel" id="401370767">
@@ -279,10 +253,10 @@ bSwgTHRkLg</string>
 						<float key="IBUIMinimumFontSize">24</float>
 						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 							<int key="IBUIAutocorrectionType">1</int>
-							<int key="IBUIKeyboardAppearance">1</int>
 							<int key="IBUIReturnKeyType">4</int>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
+						<int key="IBUIClearButtonMode">1</int>
 					</object>
 					<object class="IBUITextField" id="109653770">
 						<reference key="NSNextResponder" ref="692418406"/>
@@ -305,11 +279,11 @@ bSwgTHRkLg</string>
 						<float key="IBUIMinimumFontSize">24</float>
 						<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 							<int key="IBUIAutocorrectionType">1</int>
-							<int key="IBUIKeyboardAppearance">1</int>
 							<int key="IBUIReturnKeyType">1</int>
 							<bool key="IBUISecureTextEntry">YES</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
+						<int key="IBUIClearButtonMode">1</int>
 					</object>
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
@@ -399,6 +373,7 @@ bSwgTHRkLg</string>
 							<int key="IBUIReturnKeyType">4</int>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
+						<int key="IBUIClearButtonMode">1</int>
 					</object>
 					<object class="IBUILabel" id="439033494">
 						<reference key="NSNextResponder" ref="628209171"/>
@@ -474,6 +449,7 @@ bSwgTHRkLg</string>
 							<bool key="IBUISecureTextEntry">YES</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
+						<int key="IBUIClearButtonMode">1</int>
 					</object>
 					<object class="IBUITextField" id="966474925">
 						<reference key="NSNextResponder" ref="628209171"/>
@@ -500,6 +476,7 @@ bSwgTHRkLg</string>
 							<int key="IBUIReturnKeyType">1</int>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						</object>
+						<int key="IBUIClearButtonMode">1</int>
 					</object>
 					<object class="IBUIButton" id="492114827">
 						<reference key="NSNextResponder" ref="628209171"/>
@@ -516,9 +493,15 @@ bSwgTHRkLg</string>
 						<string key="IBUIDisabledTitle">Create Account</string>
 						<string key="IBUISelectedTitle">Create Account</string>
 						<string key="IBUINormalTitle">Create Account</string>
-						<reference key="IBUIHighlightedTitleColor" ref="649291039"/>
+						<object class="NSColor" key="IBUIHighlightedTitleColor" id="649291039">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MSAxIDEAA</bytes>
+						</object>
 						<reference key="IBUINormalTitleColor" ref="583470059"/>
-						<reference key="IBUINormalTitleShadowColor" ref="34290184"/>
+						<object class="NSColor" key="IBUINormalTitleShadowColor" id="34290184">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MAA</bytes>
+						</object>
 						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">red_button_dark_bkg_upper.png</string>
@@ -542,7 +525,10 @@ bSwgTHRkLg</string>
 						<reference key="IBUIHighlightedTitleColor" ref="649291039"/>
 						<reference key="IBUINormalTitleColor" ref="583470059"/>
 						<reference key="IBUINormalTitleShadowColor" ref="34290184"/>
-						<reference key="IBUINormalBackgroundImage" ref="724461032"/>
+						<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">black_button_dark_bkg_upper.png</string>
+						</object>
 					</object>
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
@@ -582,15 +568,6 @@ bSwgTHRkLg</string>
 						<reference key="destination" ref="193937685"/>
 					</object>
 					<int key="connectionID">45</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">loginButtonPressed:</string>
-						<reference key="source" ref="672832228"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">46</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -728,7 +705,6 @@ bSwgTHRkLg</string>
 							<reference ref="401370767"/>
 							<reference ref="457074362"/>
 							<reference ref="689278323"/>
-							<reference ref="672832228"/>
 							<reference ref="853399130"/>
 							<reference ref="10444556"/>
 							<reference ref="503091549"/>
@@ -758,11 +734,6 @@ bSwgTHRkLg</string>
 					<object class="IBObjectRecord">
 						<int key="objectID">36</int>
 						<reference key="object" ref="439044746"/>
-						<reference key="parent" ref="692418406"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">37</int>
-						<reference key="object" ref="672832228"/>
 						<reference key="parent" ref="692418406"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -892,7 +863,6 @@ bSwgTHRkLg</string>
 					<string>3.IBEditorWindowLastContentRect</string>
 					<string>3.IBPluginDependency</string>
 					<string>3.IBUserGuides</string>
-					<string>37.IBPluginDependency</string>
 					<string>38.IBPluginDependency</string>
 					<string>39.IBPluginDependency</string>
 					<string>40.IBPluginDependency</string>
@@ -921,7 +891,6 @@ bSwgTHRkLg</string>
 					<object class="NSMutableArray">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1373,7 +1342,6 @@ bSwgTHRkLg</string>
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>black_button_dark_bkg_upper.png</string>
 				<string>dark_bkg_gradient.png</string>
-				<string>red_button.png</string>
 				<string>red_button_dark_bkg_upper.png</string>
 				<string>rounded_table_cell.png</string>
 				<string>rounded_table_cell_bottom.png</string>
@@ -1384,7 +1352,6 @@ bSwgTHRkLg</string>
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{148, 37}</string>
 				<string>{320, 460}</string>
-				<string>{301, 44}</string>
 				<string>{148, 37}</string>
 				<string>{302, 46}</string>
 				<string>{302, 46}</string>

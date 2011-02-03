@@ -434,6 +434,5 @@
 	[_artists release];
 	[_releases release];
 	[_data release];
-	[_recsTitleLabel release];
 }
 @end
