@@ -321,6 +321,8 @@
 		FB66BAA412FB450100DB7579 /* bkgd_loading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BAA212FB450100DB7579 /* bkgd_loading@2x.png */; };
 		FB66BAB012FB46BF00DB7579 /* bkgd_login_signup.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BAAE12FB46BF00DB7579 /* bkgd_login_signup.png */; };
 		FB66BAB112FB46BF00DB7579 /* bkgd_login_signup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BAAF12FB46BF00DB7579 /* bkgd_login_signup@2x.png */; };
+		FB66BB7512FB551000DB7579 /* friendsevent.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BB7312FB551000DB7579 /* friendsevent.png */; };
+		FB66BB7612FB551000DB7579 /* friendsevent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BB7412FB551000DB7579 /* friendsevent@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1044,6 +1046,8 @@
 		FB66BAA212FB450100DB7579 /* bkgd_loading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bkgd_loading@2x.png"; sourceTree = "<group>"; };
 		FB66BAAE12FB46BF00DB7579 /* bkgd_login_signup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bkgd_login_signup.png; sourceTree = "<group>"; };
 		FB66BAAF12FB46BF00DB7579 /* bkgd_login_signup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bkgd_login_signup@2x.png"; sourceTree = "<group>"; };
+		FB66BB7312FB551000DB7579 /* friendsevent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friendsevent.png; sourceTree = "<group>"; };
+		FB66BB7412FB551000DB7579 /* friendsevent@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "friendsevent@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1375,6 +1379,8 @@
 				22F2FE090E31046D000DDCDC /* white_lfm_logo.png */,
 				FB66BAAE12FB46BF00DB7579 /* bkgd_login_signup.png */,
 				FB66BAAF12FB46BF00DB7579 /* bkgd_login_signup@2x.png */,
+				FB66BB7312FB551000DB7579 /* friendsevent.png */,
+				FB66BB7412FB551000DB7579 /* friendsevent@2x.png */,
 				22327C130E700B1F002016DD /* Settings.bundle */,
 			);
 			path = Resources;
@@ -2046,6 +2052,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB66BB7512FB551000DB7579 /* friendsevent.png in Resources */,
+				FB66BB7612FB551000DB7579 /* friendsevent@2x.png in Resources */,
 				22EB603A0E65A8B20021751A /* MainWindow.xib in Resources */,
 				22362B9B0E13E4600034F91A /* btn.png in Resources */,
 				22EB603E0E65A8B20021751A /* PlaybackView.xib in Resources */,
