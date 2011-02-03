@@ -714,7 +714,22 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./tag/name", @"./station/url", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"url", nil]];
 }
-
+- (NSDictionary *)userStations {
+	NSArray *nodes = [self doMethod:@"radio.getUserStations" maxCacheAge:0 XPath:@"./userstations/*" withParameters: nil];	
+	NSMutableDictionary* results = [NSMutableDictionary dictionary];
+	for ( CXMLNode* stationGroup in nodes ) {
+		NSArray* stationNodes = [stationGroup nodesForXPath: @"./station" error: &error];
+		
+		NSArray* stations = [self _convertNodes: stationNodes
+							  toArrayWithXPaths: [NSArray arrayWithObjects: @"./name", @"./url", @"@available", nil]
+										forKeys: [NSArray arrayWithObjects: @"name", @"url", @"available", nil]];
+		
+		
+		[results setValue:stations forKey: [stationGroup name]];
+	}
+	return results;
+}
+	
 #pragma mark Search methods
 
 - (NSArray *)search:(NSString *)query {
