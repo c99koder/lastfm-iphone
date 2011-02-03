@@ -80,7 +80,7 @@
 	self.tableView.sectionFooterHeight = 0;
 	self.tableView.backgroundColor = [UIColor blackColor];*/
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	bar.placeholder = @"Enter an artist or genre";
+	bar.placeholder = @"Type an artist or genre";
 	bar.delegate = self;
 	self.tableView.tableHeaderView = bar;
 	
