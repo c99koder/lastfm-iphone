@@ -337,6 +337,13 @@ int tagSort(id tag1, id tag2, void *context) {
 	_badge.alpha = 0;
 	[UIView commitAnimations];
 	[self _updateProgress:nil];
+	if([[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://artist/"] || [[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://globaltags/"]) {
+		self.navigationItem.rightBarButtonItem = nil;
+	} else {
+		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(filterButtonPressed:)];
+		self.navigationItem.rightBarButtonItem = item;
+		[item release];
+	}	
 	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:trackInfo];
@@ -397,13 +404,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		loveBtn.selected = YES;
 	else
 		loveBtn.selected = NO;
-	if([[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://artist/"] || [[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://globaltags/"]) {
-		self.navigationItem.rightBarButtonItem = nil;
-	} else {
-		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(filterButtonPressed:)];
-		self.navigationItem.rightBarButtonItem = item;
-		[item release];
-	}	
 	NSDictionary *trackInfo = [notification userInfo];
 	[self _displayTrackInfo:trackInfo];
 	NSLog(@"Free trial tracks remaining: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]);
