@@ -343,8 +343,30 @@ int tagSort(id tag1, id tag2, void *context) {
 		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(filterButtonPressed:)];
 		self.navigationItem.rightBarButtonItem = item;
 		[item release];
-	}	
+	}
+
+	[[self.navigationItem.titleView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	
+	
+	NSRange range = [[[LastFMRadio sharedInstance] stationURL] rangeOfString:@"/tag/"];
+	if(range.location != NSNotFound) {
+		NSString *tag = [[[[LastFMRadio sharedInstance] stationURL] substringFromIndex:range.location + 5] unURLEscape];
+		_titleLabel.frame = CGRectMake(0,0,200,14);
+		_titleLabel.font = [UIFont systemFontOfSize:14];
+		[self.navigationItem.titleView addSubview: _titleLabel];
+		UILabel *subtitle = [[UILabel alloc] initWithFrame:CGRectMake(0,14,200,14)];
+		subtitle.text = [NSString stringWithFormat:@"Playing just '%@'", tag];
+		subtitle.font = [UIFont systemFontOfSize:14];
+		subtitle.textColor = [UIColor grayColor];
+		subtitle.backgroundColor = [UIColor clearColor];
+		subtitle.textAlignment = UITextAlignmentCenter;
+		[self.navigationItem.titleView addSubview: subtitle];
+		[subtitle release];
+	} else {
+		_titleLabel.frame = CGRectMake(0,0,200,28);
+		_titleLabel.font = [UIFont boldSystemFontOfSize:21];
+		[self.navigationItem.titleView addSubview: _titleLabel];
+	}
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:trackInfo];
 }
