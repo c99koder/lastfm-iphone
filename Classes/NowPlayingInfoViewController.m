@@ -111,11 +111,13 @@ int tagSort(id tag1, id tag2, void *context);
 		self.navigationItem.leftBarButtonItem = item;
 		self.toolbarItems = [NSArray arrayWithObjects:
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
-												 [[[UIBarButtonItem alloc] initWithTitle:@"Tag" style:UIBarButtonItemStyleBordered target:self action:@selector(tagButtonPressed)] autorelease],
+												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_refresh.png"] style:UIBarButtonItemStylePlain target:self action:@selector(refreshButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
-												 [[[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStyleBordered target:self action:@selector(shareButtonPressed)] autorelease],
+												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_buy.png"] style:UIBarButtonItemStylePlain target:self action:@selector(buyButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
-												 [[[UIBarButtonItem alloc] initWithTitle:@"Buy" style:UIBarButtonItemStyleBordered target:self action:@selector(buyButtonPressed)] autorelease],
+												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_share.png"] style:UIBarButtonItemStylePlain target:self action:@selector(shareButtonPressed)] autorelease],
+												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
+												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_tag.png"] style:UIBarButtonItemStylePlain target:self action:@selector(tagButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],nil];
 		[item release];
 		[btn release];
@@ -411,6 +413,11 @@ int tagSort(id tag1, id tag2, void *context);
 	}
 	[sheet showFromTabBar:self.tabBarController.tabBar];
 	[sheet release];	
+}
+-(void)refreshButtonPressed {
+	_loaded = NO;
+	_trackInfo = [[[LastFMRadio sharedInstance] trackInfo] retain];
+	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
 }
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
