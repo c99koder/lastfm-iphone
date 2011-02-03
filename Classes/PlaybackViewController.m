@@ -218,6 +218,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	}
 	if(([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING || [[LastFMRadio sharedInstance] state] == RADIO_TUNING) && _loadingView.alpha < 1) {
 		_loadingView.alpha = 1;
+		loveBtn.alpha = 0.5;
+		banBtn.alpha = 0.5;
+		infoBtn.alpha = 0.5;
+		stopBtn.alpha = 0.5;
+		skipBtn.alpha = 0.5;
 #if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] startSubBeaconWithName:@"buffering" timeSession:YES];
 #endif
@@ -233,6 +238,11 @@ int tagSort(id tag1, id tag2, void *context) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.5];
 		_loadingView.alpha = 0;
+		loveBtn.alpha = 1;
+		banBtn.alpha = 1;
+		infoBtn.alpha = 1;
+		stopBtn.alpha = 1;
+		skipBtn.alpha = 1;
 		[UIView commitAnimations];
 #if !(TARGET_IPHONE_SIMULATOR)
 		[[Beacon shared] endSubBeaconWithName:@"buffering"];

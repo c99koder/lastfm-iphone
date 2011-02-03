@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="902"/>
+			<integer value="116"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -886,6 +886,39 @@
 					</object>
 					<int key="connectionID">922</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">infoBtn</string>
+						<reference key="source" ref="187518303"/>
+						<reference key="destination" ref="548372158"/>
+					</object>
+					<int key="connectionID">923</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">skipBtn</string>
+						<reference key="source" ref="187518303"/>
+						<reference key="destination" ref="983297981"/>
+					</object>
+					<int key="connectionID">924</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">stopBtn</string>
+						<reference key="source" ref="187518303"/>
+						<reference key="destination" ref="339684106"/>
+					</object>
+					<int key="connectionID">925</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">artworkButtonPressed:</string>
+						<reference key="source" ref="784523332"/>
+						<reference key="destination" ref="187518303"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">926</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1285,7 +1318,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">922</int>
+			<int key="maxID">926</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1297,6 +1330,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>artworkButtonPressed:</string>
 							<string>backButtonPressed:</string>
 							<string>banButtonPressed:</string>
 							<string>dismissFilterView:</string>
@@ -1309,6 +1343,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1324,6 +1359,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>artworkButtonPressed:</string>
 							<string>backButtonPressed:</string>
 							<string>banButtonPressed:</string>
 							<string>dismissFilterView:</string>
@@ -1336,6 +1372,10 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">artworkButtonPressed:</string>
+								<string key="candidateClassName">id</string>
+							</object>
 							<object class="IBActionInfo">
 								<string key="name">backButtonPressed:</string>
 								<string key="candidateClassName">id</string>
@@ -1392,7 +1432,10 @@
 							<string>_remaining</string>
 							<string>_titleLabel</string>
 							<string>banBtn</string>
+							<string>infoBtn</string>
 							<string>loveBtn</string>
+							<string>skipBtn</string>
+							<string>stopBtn</string>
 							<string>volumeView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1410,6 +1453,9 @@
 							<string>UIImageView</string>
 							<string>UILabel</string>
 							<string>UILabel</string>
+							<string>UIButton</string>
+							<string>UIButton</string>
+							<string>UIButton</string>
 							<string>UIButton</string>
 							<string>UIButton</string>
 							<string>UIView</string>
@@ -1433,7 +1479,10 @@
 							<string>_remaining</string>
 							<string>_titleLabel</string>
 							<string>banBtn</string>
+							<string>infoBtn</string>
 							<string>loveBtn</string>
+							<string>skipBtn</string>
+							<string>stopBtn</string>
 							<string>volumeView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1495,7 +1544,19 @@
 								<string key="candidateClassName">UIButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
+								<string key="name">infoBtn</string>
+								<string key="candidateClassName">UIButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
 								<string key="name">loveBtn</string>
+								<string key="candidateClassName">UIButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">skipBtn</string>
+								<string key="candidateClassName">UIButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">stopBtn</string>
 								<string key="candidateClassName">UIButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">

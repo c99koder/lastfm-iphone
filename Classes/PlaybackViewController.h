@@ -33,6 +33,9 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UIView *volumeView;
 	IBOutlet UIButton *loveBtn;
 	IBOutlet UIButton *banBtn;
+	IBOutlet UIButton *infoBtn;
+	IBOutlet UIButton *stopBtn;
+	IBOutlet UIButton *skipBtn;
 	IBOutlet UIImageView *_artworkView;
 	IBOutlet UIImageView *_reflectedArtworkView;
 	IBOutlet UILabel *_artistAndTrackTitle;
@@ -61,6 +64,7 @@ int tagSort(id tag1, id tag2, void *context);
 -(void)infoButtonPressed:(id)sender;
 -(void)dismissFilterView:(id)sender;
 -(void)filterButtonPressed:(id)sender;
+-(void)artworkButtonPressed:(id)sender;
 -(void)resignActive;
 -(void)becomeActive;
 @end
