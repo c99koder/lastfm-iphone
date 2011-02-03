@@ -284,7 +284,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		metadata = [self _convertNode:node
-					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./artist", @"./releasedate", @"./userplaycount", @"./image[@size=\"extralarge\"]", nil]
+					 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./name", @"./artist", @"./releasedate", @"./userplaycount", @"./image[@size=\"mega\"]", nil]
 													forKeys:[NSArray arrayWithObjects:@"name", @"artist", @"releasedate", @"userplaycount", @"image", nil]];
 	}
 	return metadata;
