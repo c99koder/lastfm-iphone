@@ -213,6 +213,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)_waitForPlaybackToFinish {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#if !(TARGET_IPHONE_SIMULATOR)
 	UInt32 isRunning = 0;
 	UInt32 size = sizeof(isRunning);
 	
@@ -233,6 +234,14 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		if([LastFMRadio sharedInstance].state == TRACK_PLAYING)
 			[self performSelectorOnMainThread:@selector(_notifyTrackFinishedPlaying) withObject:nil waitUntilDone:NO];
 	}
+#else
+	if(queue) {
+		AudioQueueFlush(queue);
+		AudioQueueStop(queue, false);
+	}
+	if([LastFMRadio sharedInstance].state == TRACK_PLAYING)
+		[self performSelectorOnMainThread:@selector(_notifyTrackFinishedPlaying) withObject:nil waitUntilDone:NO];
+#endif
 	[pool release];
 }
 -(void)_notifyTrackFinishedLoading {
