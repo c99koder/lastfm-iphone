@@ -214,7 +214,10 @@ int tagSort(id tag1, id tag2, void *context) {
 		_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:duration-elapsed]];
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
 	} else {
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) stopButtonPressed:nil];	
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) stopButtonPressed:nil];
+		[_timer invalidate];
+		_timer = nil;
+		return;
 	}
 	if(([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING || [[LastFMRadio sharedInstance] state] == RADIO_TUNING) && _loadingView.alpha < 1) {
 		_loadingView.alpha = 1;
@@ -394,7 +397,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		loveBtn.selected = YES;
 	else
 		loveBtn.selected = NO;
-	banBtn.alpha = 1;
 	if([[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://artist/"] || [[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://globaltags/"]) {
 		self.navigationItem.rightBarButtonItem = nil;
 	} else {

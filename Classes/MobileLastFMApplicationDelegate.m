@@ -566,7 +566,7 @@ NSString *kUserAgent;
 	//[rootViewController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
 }
 -(void)hidePlaybackView {
-	[(UINavigationController *)(rootViewController.selectedViewController) popViewControllerAnimated:YES];
+	[(UINavigationController *)(rootViewController.selectedViewController) popToRootViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 	[playbackViewController release];
 	playbackViewController = nil;

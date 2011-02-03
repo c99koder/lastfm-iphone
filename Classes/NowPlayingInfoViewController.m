@@ -85,6 +85,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[self.tableView visibleCells] waitUntilDone:YES];
 	[numberFormatter release];
+	self.title = @"Now Playing Info";
 	[pool release];
 }
 - (id)initWithTrackInfo:(NSDictionary *)trackInfo {
@@ -119,17 +120,23 @@ int tagSort(id tag1, id tag2, void *context);
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
 												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_tag.png"] style:UIBarButtonItemStylePlain target:self action:@selector(tagButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],nil];
+		((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = NO;
 		[item release];
 		[btn release];
 		_loaded = NO;
 	}
 	return self;
 }
+- (void)_trackDidChange:(NSNotification *)notification {
+	self.title = @"Recently Played Info";
+	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = YES;
+}
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self.navigationController setToolbarHidden:YES];
 	self.navigationController.toolbar.barStyle = UIBarStyleDefault;
 	[TTStyleSheet setGlobalStyleSheet:[[TTDefaultStyleSheet alloc] init]];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackDidChange object:nil];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -142,6 +149,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
 	[TTStyleSheet setGlobalStyleSheet:[[NowPlayingInfoStyleSheet alloc] init]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	switch([indexPath section]) {
@@ -193,20 +201,20 @@ int tagSort(id tag1, id tag2, void *context);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.placeholder = @"noimage_artist.png";
 			profilecell.shouldCacheArtwork = YES;
-			profilecell.title.text = [_trackInfo objectForKey:@"creator"];
 			profilecell.title.font = [UIFont boldSystemFontOfSize:16];
 			profilecell.title.textColor = [UIColor whiteColor];
 			profilecell.title.backgroundColor = [UIColor blackColor];
-			profilecell.subtitle.text = [_trackInfo objectForKey:@"title"];
 			profilecell.subtitle.font = [UIFont boldSystemFontOfSize:16];
 			profilecell.subtitle.textColor = [UIColor whiteColor];
 			profilecell.subtitle.backgroundColor = [UIColor blackColor];
-			profilecell.detailTextLabel.text = [_trackInfo objectForKey:@"album"];
 			profilecell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 			profilecell.detailTextLabel.textColor = [UIColor whiteColor];
 			profilecell.detailTextLabel.backgroundColor = [UIColor blackColor];
 			profilecell.accessoryType = UITableViewCellAccessoryNone;
 		}
+		profilecell.title.text = [_trackInfo objectForKey:@"creator"];
+		profilecell.subtitle.text = [_trackInfo objectForKey:@"title"];
+		profilecell.detailTextLabel.text = [_trackInfo objectForKey:@"album"];
 			
 		if(_loaded)
 			profilecell.imageURL = _artistImageURL;
@@ -416,8 +424,10 @@ int tagSort(id tag1, id tag2, void *context);
 }
 -(void)refreshButtonPressed {
 	_loaded = NO;
+	[_trackInfo release];
 	_trackInfo = [[[LastFMRadio sharedInstance] trackInfo] retain];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
+	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = NO;
 }
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
