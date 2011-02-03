@@ -66,11 +66,6 @@
 	}
 	[pool release];
 }
-- (void)toggleChanged:(id)sender {
-	if ( self.tableView.editing == YES ) {
-		[self doneButtonPressed:sender];
-	}
-}
 - (id)initWithUsername:(NSString *)username {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
@@ -88,7 +83,6 @@
 		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Music", @"New Releases", nil]];
 		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		toggle.selectedSegmentIndex = 0;
-		[toggle addTarget:self action:@selector(toggleChanged:) forControlEvents:UIControlEventValueChanged];
 		CGRect frame = toggle.frame;
 		frame.size.width = self.view.frame.size.width - 20;
 		toggle.frame = frame;
@@ -151,18 +145,22 @@
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 	if(self.navigationItem.rightBarButtonItem == nil)
 		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 
+	if ( self.tableView.editing == YES ) {
+		[self doneButtonPressed:nil];
+	}
+	
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.75];
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	
 	if(toggle.selectedSegmentIndex == 0)
 		self.navigationItem.rightBarButtonItem.enabled = YES;
 	else
 		self.navigationItem.rightBarButtonItem.enabled = NO;
 	[UIView commitAnimations];
-		
-	self.tableView.editing = NO;
+	
+	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 	
 	if(_refreshThread) {
 		[_refreshThread cancel];
