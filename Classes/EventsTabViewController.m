@@ -218,13 +218,22 @@ UIImage *eventDateBGImage = nil;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if(section == 0)
-		return ([_events count] > 3)?3:[_events count];
+		if([_events count])
+			return ([_events count] > 3)?4:[_events count];
+		else
+			return 0;
 	else if(section == 1)
-		return ([_recs count] > 3)?3:[_recs count];
+		if([_recs count])
+			return ([_recs count] > 3)?4:[_recs count];
+		else
+			return 0;
 	else
 		return 1;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if(([indexPath section] == 0  && [indexPath row] == 3) || ([indexPath section] == 1 && [indexPath row] == 3)) {
+		return 46;
+	}
 	if([indexPath section] == 0 || [indexPath section] == 1)
 		return 64;
 	else
@@ -237,16 +246,30 @@ UIImage *eventDateBGImage = nil;
 	switch([newIndexPath section]) {
 		case 0:
 		{
-			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
-			[self.navigationController pushViewController:details animated:YES];
-			[details release];
+			if([newIndexPath row]==3) {
+				UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_events];
+				controller.title = @"Events";
+				[self.navigationController pushViewController:controller animated:YES];
+				[controller release];
+			} else {
+				EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
+				[self.navigationController pushViewController:details animated:YES];
+				[details release];
+			}
 			break;
 		}
 		case 1:
 		{
-			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
-			[self.navigationController pushViewController:details animated:YES];
-			[details release];
+			if([newIndexPath row]==3) {
+				UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_recs];
+				controller.title = @"Recommended Events";
+				[self.navigationController pushViewController:controller animated:YES];
+				[controller release];
+			} else {
+				EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
+				[self.navigationController pushViewController:details animated:YES];
+				[details release];
+			}
 			break;
 		}
 		case 2:
@@ -316,6 +339,12 @@ UIImage *eventDateBGImage = nil;
 	}
 	
 	[cell showProgress: NO];
+	
+	if(([indexPath section] == 0 && [indexPath row] == 3) || ([indexPath section] == 1 && [indexPath row] == 3)) {
+		cell.textLabel.text = @"More";
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		return cell;
+	}
 	
 	switch([indexPath section]) {
 		case 0:
