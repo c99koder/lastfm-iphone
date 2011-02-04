@@ -144,12 +144,16 @@ UIImage *eventDateBGImage = nil;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
 	NSArray *recs = [[[LastFMService sharedInstance] recommendedEventsForUser:_username] retain];
+	NSArray *friendsEvents = [[LastFMService sharedInstance] eventsForFriendsOfUser:_username];
+
 	if(![[NSThread currentThread] isCancelled]) {
 		@synchronized(self) {
 			[_events release];
 			_events = events;
 			[_recs release];
 			_recs = recs;
+			[_friendsEvents release];
+			_friendsEvents = nil;
 			[_refreshThread release];
 			_refreshThread = nil;
 		}
@@ -181,6 +185,8 @@ UIImage *eventDateBGImage = nil;
 	_events = nil;
 	[_recs release];
 	_recs = nil;
+	[_friendsEvents release];
+	_friendsEvents = nil;
 }
 - (void)viewDidLoad {
 	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
@@ -206,7 +212,10 @@ UIImage *eventDateBGImage = nil;
 	if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
 		return 1;
 	} else {
-		return 4;
+		if([_friendsEvents count])
+			return 4;
+		else
+			return 3;
 	}
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -297,8 +306,7 @@ UIImage *eventDateBGImage = nil;
 			break;
 		case 3:
 		{
-			NSArray *data = [[LastFMService sharedInstance] eventsForFriendsOfUser:_username];
-			UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
+			UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_friendsEvents];
 			if(controller) {
 				controller.title = @"Friends’ Events";
 				[self.navigationController pushViewController:controller animated:YES];
@@ -478,6 +486,7 @@ UIImage *eventDateBGImage = nil;
 	[_username release];
 	[_events release];
 	[_recs release];
+	[_friendsEvents release];
 }
 @end
 
