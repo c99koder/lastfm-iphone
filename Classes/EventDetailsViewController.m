@@ -1,4 +1,4 @@
-/* EventsViewController.m - Display various kinds of events for a user
+/* EventDetailsViewController.m - Display event details
  * 
  * Copyright 2010 Last.fm Ltd.
  *   - Primarily authored by Sam Steele <sam@last.fm>

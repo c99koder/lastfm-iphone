@@ -1,6 +1,6 @@
 /* RadioListViewController.h - Display a Last.fm radio list
  * 
- * Copyright 2009 Last.fm Ltd.
+ * Copyright 2011 Last.fm Ltd.
  *   - Primarily authored by Sam Steele <sam@last.fm>
  *
  * This file is part of MobileLastFM.

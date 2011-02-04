@@ -1,6 +1,6 @@
-/* RecsViewController.h - Display recs
+/* ArtistViewController.h - Display an artist
  * 
- * Copyright 2009 Last.fm Ltd.
+ * Copyright 2011 Last.fm Ltd.
  *   - Primarily authored by Sam Steele <sam@last.fm>
  *
  * This file is part of MobileLastFM.
