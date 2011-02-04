@@ -29,6 +29,7 @@
 	NSArray *_weeklyArtists;
 	NSArray *_friendsListeningNow;
 	NSArray *_eqFrames;
+	NSDictionary *_profile;
 	int friendsCount;
 	BOOL _loading;
 	NSMutableDictionary *_weeklyArtistImages;
