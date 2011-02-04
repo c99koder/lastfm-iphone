@@ -506,7 +506,9 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[notification.object play];
 		_errorSkipCounter = 0;
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"]) {
-			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] == 5) {
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] <= 5 && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_almost_over_warning"] isEqualToString:@"1"]) {
+				[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_almost_over_warning"];
+				[[NSUserDefaults standardUserDefaults] synchronize];
 				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Free Trial Almost Over" message:@"You have just 5 tracks left of your free trial." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
 				[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 			}
@@ -517,11 +519,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	NSLog(@"Track did finish playing");
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"]) {
 		int playsleft = [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue];
-		if(playsleft > 0) {
-			playsleft--;
-			[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%i", playsleft] forKey:@"trial_playsleft"];
-			[[NSUserDefaults standardUserDefaults] synchronize];
-		} else {
+		if(playsleft == 0) {
 			[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
@@ -579,6 +577,14 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 																											selector:@selector(_softSkip:)
 																											userInfo:nil
 																											 repeats:NO];
+		}
+	}
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"]) {
+		int playsleft = [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue];
+		if(playsleft > 0) {
+			playsleft--;
+			[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%i", playsleft] forKey:@"trial_playsleft"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
 		}
 	}
 	[_busyLock unlock];

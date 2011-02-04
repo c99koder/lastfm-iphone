@@ -216,6 +216,7 @@ NSString *kUserAgent;
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/stationchanges2010"]];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Start Trial"]) {
 		[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_playselapsed"];
+		[[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:@"trial_almost_over_warning"];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		[self performSelector:@selector(playRadioStation:animated:) withObject:_trialAlertStation afterDelay:1];
 	}
