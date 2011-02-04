@@ -408,7 +408,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
 			_titleLabel.text = @"Friends’ Radio";
 		else
-			_titleLabel.text = [NSString stringWithFormat:@"%@'s Friends' Radio", user];
+			_titleLabel.text = [NSString stringWithFormat:@"%@'s Friends’ Radio", user];
 	}
 	
 	range = [stationURL rangeOfString:@"/neighbours"];
