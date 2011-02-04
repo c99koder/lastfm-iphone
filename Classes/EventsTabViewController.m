@@ -144,7 +144,7 @@ UIImage *eventDateBGImage = nil;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
 	NSArray *recs = [[[LastFMService sharedInstance] recommendedEventsForUser:_username] retain];
-	NSArray *friendsEvents = [[LastFMService sharedInstance] eventsForFriendsOfUser:_username];
+	NSArray *friendsEvents = [[[LastFMService sharedInstance] eventsForFriendsOfUser:_username] retain];
 
 	if(![[NSThread currentThread] isCancelled]) {
 		@synchronized(self) {
@@ -153,7 +153,7 @@ UIImage *eventDateBGImage = nil;
 			[_recs release];
 			_recs = recs;
 			[_friendsEvents release];
-			_friendsEvents = nil;
+			_friendsEvents = friendsEvents;
 			[_refreshThread release];
 			_refreshThread = nil;
 		}
@@ -161,6 +161,7 @@ UIImage *eventDateBGImage = nil;
 	} else {
 		[events release];
 		[recs release];
+		[friendsEvents release];
 	}
 	[pool release];
 }

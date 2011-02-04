@@ -546,27 +546,13 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 									 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
 }
 - (NSDictionary *)profileForUser:(NSString *)username {
-	NSDictionary *metadata = nil;
-	NSError *theError = nil;
-	NSData *theResponseData = [NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://ws.audioscrobbler.com/1.0/user/%@/profile.xml", [username URLEscaped]]]];
-	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
-	if(theError) {
-		error = [theError retain];
+	NSArray *nodes = [self doMethod:@"user.getInfo" maxCacheAge:0 XPath:@"./user" withParameters:[NSString stringWithFormat:@"user=%@", [[username lowercaseString] URLEscaped]], nil];
+	if([nodes count])
+		return [self _convertNode:[nodes objectAtIndex:0]
+			 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./realname", @"./registered/@unixtime", @"./age", @"./gender", @"./country", @"./playcount", @"./image[@size=\"extralarge\"]", nil]
+											forKeys:[NSArray arrayWithObjects:@"realname", @"registered", @"age", @"gender", @"country", @"playcount", @"avatar", nil]];
+	else
 		return nil;
-	}
-	
-	metadata = [NSDictionary dictionaryWithObjectsAndKeys:
-							[[d rootElement] objectAtXPath:@"./realname"], @"realname",
-							[[d rootElement] objectAtXPath:@"./registered"], @"registered",
-							[[d rootElement] objectAtXPath:@"./age"], @"age",
-							[[d rootElement] objectAtXPath:@"./gender"], @"gender",
-							[[d rootElement] objectAtXPath:@"./country"], @"country",
-							[[d rootElement] objectAtXPath:@"./playcount"], @"playcount",
-							[[d rootElement] objectAtXPath:@"./avatar"], @"avatar",
-							[[d rootElement] objectAtXPath:@"./icon"], @"icon",
-							nil
-							];
-	return metadata;
 }
 
 - (NSDictionary *)compareArtistsOfUser:(NSString *)username withUser:(NSString *)username2 {
