@@ -390,7 +390,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
-	if((toggle.selectedSegmentIndex == 0 && section == 0) || (toggle.selectedSegmentIndex == 1 && section == 1)) {
+	if((toggle.selectedSegmentIndex == 0 && section == 1) || (toggle.selectedSegmentIndex == 1 && (section == 1 || [_recommendedReleases count] == 0))) {
 		return 48;
 	} else {
 		return 0;
@@ -398,7 +398,7 @@
 }
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
-	if(toggle.selectedSegmentIndex == 1 && section == 1) {
+	if((toggle.selectedSegmentIndex == 0 && section == 1) || (toggle.selectedSegmentIndex == 1 && (section == 1 || [_recommendedReleases count] == 0))) {
 		// Create label with section title
 		UILabel *label = [[[UILabel alloc] init] autorelease];
 		label.frame = CGRectMake(10, 6, 300, 40);
@@ -410,7 +410,10 @@
 		label.numberOfLines = 2;
 		label.textAlignment = UITextAlignmentCenter;
 		label.lineBreakMode = UILineBreakModeWordWrap;
-		label.text = [NSString stringWithFormat:@"New releases data provided by\n%@", _releaseDataSource];
+		if(toggle.selectedSegmentIndex == 0)
+			label.text = @"This list updates over time based on your recent listening/activity.";
+		else
+			label.text = [NSString stringWithFormat:@"New releases data provided by\n%@", _releaseDataSource];
 		// Create header view and add label as a subview
 		UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
 		[view autorelease];
