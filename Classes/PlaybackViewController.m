@@ -446,12 +446,12 @@ int tagSort(id tag1, id tag2, void *context) {
 		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
 	} else {
 		if([filter objectForKey:@"name"]) {
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Re-Tuned" message:
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Retuned" message:
 														 [NSString stringWithFormat:@"After this track, you'll only hear '%@' music on this station.",[filter objectForKey:@"name"]]
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		} else {
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Re-Tuned" message:@"After this track, you'll hear all music on this station."
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Retuned" message:@"After this track, you'll hear all music on this station."
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		}
