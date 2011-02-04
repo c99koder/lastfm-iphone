@@ -1043,8 +1043,8 @@
 		FB0A8C7E12FAE38E008200D6 /* logo_animation_cropped0066@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_animation_cropped0066@2x.png"; sourceTree = "<group>"; };
 		FB0A8C7F12FAE38E008200D6 /* logo_animation_cropped0067@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_animation_cropped0067@2x.png"; sourceTree = "<group>"; };
 		FB0A8C8012FAE38E008200D6 /* logo_animation_cropped0068@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_animation_cropped0068@2x.png"; sourceTree = "<group>"; };
-		FB22265512FC64980060271D /* date-detail_view@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "date-detail_view@2x.png"; path = "Resources/date-detail_view@2x.png"; sourceTree = "<group>"; };
-		FB22265612FC64980060271D /* date@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "date@2x.png"; path = "Resources/date@2x.png"; sourceTree = "<group>"; };
+		FB22265512FC64980060271D /* date-detail_view@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date-detail_view@2x.png"; sourceTree = "<group>"; };
+		FB22265612FC64980060271D /* date@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date@2x.png"; sourceTree = "<group>"; };
 		FB2226BF12FC67660060271D /* logo_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_login.png; sourceTree = "<group>"; };
 		FB2226C012FC67660060271D /* logo_login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_login@2x.png"; sourceTree = "<group>"; };
 		FB222A0D12FC98630060271D /* UIColor+LastFMColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+LastFMColors.h"; sourceTree = "<group>"; };
@@ -1308,6 +1308,8 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FB22265512FC64980060271D /* date-detail_view@2x.png */,
+				FB22265612FC64980060271D /* date@2x.png */,
 				FB2226BF12FC67660060271D /* logo_login.png */,
 				FB2226C012FC67660060271D /* logo_login@2x.png */,
 				22224E9212FB88BB0008EBB9 /* toolbar_tag.png */,
@@ -1475,8 +1477,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				FB22265512FC64980060271D /* date-detail_view@2x.png */,
-				FB22265612FC64980060271D /* date@2x.png */,
 				2292941C12AD21A400C31269 /* Three20Core.xcodeproj */,
 				2292941F12AD21A400C31269 /* Three20Network.xcodeproj */,
 				2292942212AD21A400C31269 /* Three20Style.xcodeproj */,
