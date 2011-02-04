@@ -352,11 +352,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	if(range.location != NSNotFound) {
 		NSString *tag = [[[[LastFMRadio sharedInstance] stationURL] substringFromIndex:range.location + 5] unURLEscape];
 		_titleLabel.frame = CGRectMake(0,0,200,14);
-		_titleLabel.font = [UIFont systemFontOfSize:14];
+		_titleLabel.font = [UIFont systemFontOfSize:12];
 		[self.navigationItem.titleView addSubview: _titleLabel];
 		UILabel *subtitle = [[UILabel alloc] initWithFrame:CGRectMake(0,14,200,14)];
 		subtitle.text = [NSString stringWithFormat:@"Playing just '%@'", tag];
-		subtitle.font = [UIFont systemFontOfSize:14];
+		subtitle.font = [UIFont systemFontOfSize:12];
 		subtitle.textColor = [UIColor grayColor];
 		subtitle.backgroundColor = [UIColor clearColor];
 		subtitle.textAlignment = UITextAlignmentCenter;
