@@ -210,7 +210,7 @@
 		UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 		
 		if(toggle.selectedSegmentIndex == 0) {
-			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])
+			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"] && [_artists count])
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"", 
 																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"My Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], @"New music from Last.fm", nil]
 																																																										forKeys:[NSArray arrayWithObjects:@"title", @"url", @"details", nil]], nil]
@@ -224,6 +224,8 @@
 				}
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Music Recommendations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
+			} else {
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Music Recommendations", @"hint", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			}
 		} else {
 			if([_releases count]) {
@@ -243,6 +245,8 @@
 				}
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"From Artists In Your Library", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
+			} else {
+				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"From Artists In Your Library", @"hint", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			}
 
 			if([_recommendedReleases count]) {
@@ -274,13 +278,12 @@
 	return @"Dismiss";
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
+	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:section] objectForKey:@"stations"] isKindOfClass:[NSArray class]])
 		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
 	else
 		return 1;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-
 	return 45; 
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -304,12 +307,16 @@
 	return view;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	
 	if(toggle.selectedSegmentIndex == 1)
 		return 72;
 	else
 		return 52;
+	} else {
+		return 100;
+	}
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
@@ -329,7 +336,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	ArtworkCell *cell = nil;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"]];
 		if (cell == nil) {
@@ -344,7 +351,7 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0 && ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])) {
+	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0 && ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"] && [_artists count])) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
@@ -353,7 +360,7 @@
 		return stationCell;
 	}
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell.title.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"]) {
@@ -381,6 +388,21 @@
 			cell.shouldRoundTop = YES;
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
+	} else {
+		UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+		hintCell.backgroundView = [[[UIView alloc] init] autorelease];
+		hintCell.backgroundColor = [UIColor clearColor];
+		hintCell.textLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+		hintCell.textLabel.shadowColor = [UIColor whiteColor];
+		hintCell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+		hintCell.textLabel.font = [UIFont systemFontOfSize:14];
+		hintCell.textLabel.numberOfLines = 0;
+		//hintCell.textLabel.textAlignment = UITextAlignmentCenter;
+		hintCell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+		hintCell.textLabel.text = @"\
+When you have a listening history, Last.fm will give you new music here\n\n\
+Install the Last.fm Scrobbler on your computer to import your listening history.";
+		return hintCell;
 	}
 	
 	if(cell.accessoryType == UITableViewCellAccessoryNone) {
