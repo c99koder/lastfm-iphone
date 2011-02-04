@@ -16,6 +16,7 @@
 	NSString* _artist;
 	NSString* _track;
 	UIViewController* viewController;
+	UIStatusBarStyle barStyle;
 }
 
 - (id)initWithTrack:(NSString*)track forArtist:(NSString*)artist;

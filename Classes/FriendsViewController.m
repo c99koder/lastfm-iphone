@@ -43,16 +43,6 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_username = [username retain];
 		self.title = @"Friends";
-		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Listening Now", @"All Friends", nil]];
-		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
-		toggle.selectedSegmentIndex = 0;
-		CGRect frame = toggle.frame;
-		frame.size.width = self.view.frame.size.width - 20;
-		toggle.frame = frame;
-		[toggle addTarget:self
-							 action:@selector(viewWillAppear:)
-		 forControlEvents:UIControlEventValueChanged];
-		self.navigationItem.titleView = toggle;
 		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Friends", @"Friends back button title") style:UIBarButtonItemStylePlain target:nil action:nil];
 		self.navigationItem.backBarButtonItem = backBarButtonItem;
 		[backBarButtonItem release];
@@ -92,7 +82,21 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 		[self release];
 		return nil;
 	}
-	_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
+	if(!delegate)
+		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];
+	
+	if([_friendsListeningNow count]) {
+		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Listening Now", @"All Friends", nil]];
+		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
+		toggle.selectedSegmentIndex = 0;
+		CGRect frame = toggle.frame;
+		frame.size.width = self.view.frame.size.width - 20;
+		toggle.frame = frame;
+		[toggle addTarget:self
+							 action:@selector(viewWillAppear:)
+		 forControlEvents:UIControlEventValueChanged];
+		self.navigationItem.titleView = toggle;
+	}		
 }
 - (void)viewDidUnload {
 	[super viewDidUnload];
