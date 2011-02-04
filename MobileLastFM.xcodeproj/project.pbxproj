@@ -1047,8 +1047,8 @@
 		FB22265612FC64980060271D /* date@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "date@2x.png"; path = "Resources/date@2x.png"; sourceTree = "<group>"; };
 		FB2226BF12FC67660060271D /* logo_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_login.png; sourceTree = "<group>"; };
 		FB2226C012FC67660060271D /* logo_login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_login@2x.png"; sourceTree = "<group>"; };
-		FB222A0D12FC98630060271D /* UIColor+LastFMColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+LastFMColors.h"; path = "Classes/UIColor+LastFMColors.h"; sourceTree = "<group>"; };
-		FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+LastFMColors.m"; path = "Classes/UIColor+LastFMColors.m"; sourceTree = "<group>"; };
+		FB222A0D12FC98630060271D /* UIColor+LastFMColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+LastFMColors.h"; sourceTree = "<group>"; };
+		FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+LastFMColors.m"; sourceTree = "<group>"; };
 		FB348EB712F19F94002EFA95 /* red_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button.png; sourceTree = "<group>"; };
 		FB348EB812F19F94002EFA95 /* red_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_button@2x.png"; sourceTree = "<group>"; };
 		FB66BA9912FB446800DB7579 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -1154,6 +1154,8 @@
 				2263275812A525AD006F34EA /* TrackViewController.m */,
 				228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */,
 				228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */,
+				FB222A0D12FC98630060271D /* UIColor+LastFMColors.h */,
+				FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */,
 				220CEBD10DCCB420007F888D /* UITableViewCell+ProgressIndicator.h */,
 				220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */,
 				22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */,
@@ -1168,8 +1170,6 @@
 			isa = PBXGroup;
 			children = (
 				224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */,
-				FB222A0D12FC98630060271D /* UIColor+LastFMColors.h */,
-				FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
