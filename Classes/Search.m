@@ -36,11 +36,14 @@
 	_results = [[[LastFMService sharedInstance] search:query] retain];
 	
 	NSMutableArray *stations = [[NSMutableArray alloc] init];
+	float scale = 1.0f;
+	if([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+		scale = [[UIScreen mainScreen] scale];
 	
 	if([_results count]) {
 		for(int x=0; x<[_results count]; x++) {
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[NSBundle mainBundle] pathForResource:@"searchresults_tag" ofType:@"png"],@"searchresults_tag.png",
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],(scale==1.0f)?[[NSBundle mainBundle] pathForResource:@"searchresults_tag" ofType:@"png"]:[[NSBundle mainBundle] pathForResource:@"searchresults_tag@2x" ofType:@"png"],@"searchresults_tag.png",
 																																 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url", nil]]];
 			}
@@ -55,7 +58,7 @@
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder",@"url", nil]]];
 			}
 			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"track"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],[[NSBundle mainBundle] pathForResource:@"searchresults_track" ofType:@"png"],@"searchresults_track.png",
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],(scale==1.0f)?[[NSBundle mainBundle] pathForResource:@"searchresults_track" ofType:@"png"]:[[NSBundle mainBundle] pathForResource:@"searchresults_track@2x" ofType:@"png"],@"searchresults_track.png",
 																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], [[_results objectAtIndex:x] objectForKey:@"duration"], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder",@"url", @"duration", nil]]];
 			}
