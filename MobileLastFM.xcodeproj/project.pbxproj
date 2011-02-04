@@ -121,6 +121,7 @@
 		22224E9F12FB88BB0008EBB9 /* toolbar_tag@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22224E9712FB88BB0008EBB9 /* toolbar_tag@2x.png */; };
 		22224EA012FB88BB0008EBB9 /* toolbar_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22224E9812FB88BB0008EBB9 /* toolbar_share@2x.png */; };
 		22224EA112FB88BB0008EBB9 /* toolbar_refresh@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22224E9912FB88BB0008EBB9 /* toolbar_refresh@2x.png */; };
+		22224FE412FBB2440008EBB9 /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */; };
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
 		222340DB0D8DAB140040486A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222340DA0D8DAB140040486A /* AudioToolbox.framework */; };
 		2223428A0D8DE8FC0040486A /* PlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 222342890D8DE8FC0040486A /* PlaybackViewController.m */; };
@@ -1073,6 +1074,7 @@
 				FB348C2712F0392A002EFA95 /* libThree20UI-Xcode3.2.5.a in Frameworks */,
 				FB348C2812F03930002EFA95 /* libThree20UICommon-Xcode3.2.5.a in Frameworks */,
 				FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */,
+				22224FE412FBB2440008EBB9 /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

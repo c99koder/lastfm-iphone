@@ -383,6 +383,8 @@
 	[imageURL release];
 	[_bar release];
 	[_artwork release];
+	[_reflectedArtwork release];
+	[_reflectionMask release];
 	[super dealloc];
 }
 @end
