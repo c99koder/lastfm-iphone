@@ -35,9 +35,6 @@
 - (void)paintItBlack {
 	_paintItBlack = YES;
 }
-- (void)jumpToEventsPage {
-	_toggle.selectedSegmentIndex = 1;
-}
 - (void)_loadEventsTab {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	_events = [[[LastFMService sharedInstance] eventsForArtist:_artist] retain];
@@ -78,7 +75,17 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	if(_paintItBlack) {
+		self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 61, 31)];
+		[btn setBackgroundImage:[UIImage imageNamed:@"nowplaying_back.png"] forState:UIControlStateNormal];
+		btn.adjustsImageWhenHighlighted = YES;
+		[btn addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
+		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
+		self.navigationItem.leftBarButtonItem = item;
+	} else {
+		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
+	}
 	[self rebuildMenu];
 }
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -91,32 +98,26 @@
 	return YES;
 }
 - (void)viewDidLoad {
-	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-	//self.tableView.sectionHeaderHeight = 0;
-	//self.tableView.sectionFooterHeight = 0;
-	if(_paintItBlack)
+	if(_paintItBlack) {
 		self.tableView.backgroundColor = [UIColor blackColor];
+	} else {
+		_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Events", @"Similar Artists", nil]];
+		_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
+		_toggle.selectedSegmentIndex = 0;
+		_toggle.frame = CGRectMake(6,6,self.view.frame.size.width - 12, _toggle.frame.size.height);
+		[_toggle addTarget:self
+								action:@selector(rebuildMenu)
+			forControlEvents:UIControlEventValueChanged];
+		
+		UINavigationBar *toggleContainer = [[UINavigationBar alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width,_toggle.frame.size.height + 12)];
+		[toggleContainer addSubview: _toggle];
+		self.tableView.tableHeaderView = toggleContainer;
+		[toggleContainer release];
+	}
 	self.tableView.scrollsToTop = NO;
 	
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
-
-	_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Events", @"Similar Artists", nil]];
-	_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
-	_toggle.selectedSegmentIndex = 0;
-	_toggle.frame = CGRectMake(6,6,self.view.frame.size.width - 12, _toggle.frame.size.height);
-	[_toggle addTarget:self
-						 action:@selector(rebuildMenu)
-	 forControlEvents:UIControlEventValueChanged];
-	
-	//UIView *toggleContainer = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width, _toggle.frame.size.height + 12)];
-	UINavigationBar *toggleContainer = [[UINavigationBar alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width,_toggle.frame.size.height + 12)];
-	if(_paintItBlack)
-		toggleContainer.barStyle = UIBarStyleBlackOpaque;
-	[toggleContainer addSubview: _toggle];
-	self.tableView.tableHeaderView = toggleContainer;
-	[toggleContainer release];
-	//self.navigationItem.titleView = _toggle;
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
@@ -244,13 +245,13 @@
 	return view;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	if(_toggle.selectedSegmentIndex == 1)
+	if(_toggle.selectedSegmentIndex == 1 || _paintItBlack)
 		return 1;
 	else
 		return [_data count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if(_toggle.selectedSegmentIndex == 1)
+	if(_toggle.selectedSegmentIndex == 1 || _paintItBlack)
 		return (_eventsTabLoaded&&[_events count])?[_events count]:1;
 	else if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
@@ -264,7 +265,7 @@
  return 0;
  }*/
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if(_toggle.selectedSegmentIndex == 1)
+	if(_toggle.selectedSegmentIndex == 1 || _paintItBlack)
 		return nil;
 	else if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
@@ -281,7 +282,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 0)
 		return 86;
-	else if(_toggle.selectedSegmentIndex == 1 && [_events count]) {
+	else if((_toggle.selectedSegmentIndex == 1 || _paintItBlack) && [_events count]) {
 		return 64;
 	} else if(_toggle.selectedSegmentIndex == 0 && [[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		_bioView.text.width = self.view.frame.size.width - 32;
@@ -298,7 +299,7 @@
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController dismissModalViewControllerAnimated:YES];
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-	if(_toggle.selectedSegmentIndex == 1) {
+	if(_toggle.selectedSegmentIndex == 1 || _paintItBlack) {
 		if([_events count]) {
 			EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[indexPath row]]];
 			if([[self.navigationController topViewController] isKindOfClass:[PlaybackViewController class]]) {
@@ -358,7 +359,7 @@
 		return loadingCell;
 	}
 	
-	if(_toggle.selectedSegmentIndex == 1 && !_eventsTabLoaded) {
+	if((_toggle.selectedSegmentIndex == 1 || _paintItBlack) && !_eventsTabLoaded) {
 		return loadingCell;
 	}
 
@@ -375,7 +376,7 @@
 		return stationCell;
 	}
 	
-	if(_toggle.selectedSegmentIndex == 1) {
+	if(_toggle.selectedSegmentIndex == 1 || _paintItBlack) {
 		if([_events count]) {
 			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
 			if (eventCell == nil) {
