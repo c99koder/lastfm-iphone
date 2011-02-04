@@ -144,7 +144,6 @@
 }
 - (id)initWithArtist:(NSString *)artist {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		self.tableView.backgroundView = nil;
 		self.tableView.backgroundColor = [UIColor colorWithRed:0.77f green:0.8f blue:0.83f alpha:1.0f];
 		_artist = [artist retain];
 		_infoTabLoaded = NO;
