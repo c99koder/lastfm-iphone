@@ -98,7 +98,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
 	[self.navigationController setToolbarHidden:YES];
 }
-- (void)viewDidAppear {
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
 	if( [[UIApplication sharedApplication] respondsToSelector: @selector(beginReceivingRemoteControlEvents)] )
 		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 	[self becomeFirstResponder];
