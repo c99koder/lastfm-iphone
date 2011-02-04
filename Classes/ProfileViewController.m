@@ -357,12 +357,12 @@ Or, use this app to listen to radio and see how Last.fm tracks your music taste.
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
+			profilecell.placeholder = @"noimage_user.png";
+			profilecell.imageURL = [_profile objectForKey:@"avatar"];
+			profilecell.shouldRoundTop = YES;
+			profilecell.shouldRoundBottom = YES;
 		}
 		profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
-		profilecell.placeholder = @"noimage_user.png";
-		profilecell.imageURL = [_profile objectForKey:@"avatar"];
-		profilecell.shouldRoundTop = YES;
-		profilecell.shouldRoundBottom = YES;
 		if([[_profile objectForKey:@"realname"] length])
 			profilecell.title.text = [_profile objectForKey:@"realname"];
 		else
