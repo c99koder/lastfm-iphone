@@ -347,9 +347,9 @@
 		hintCell.textLabel.numberOfLines = 0;
 		//hintCell.textLabel.textAlignment = UITextAlignmentCenter;
 		hintCell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-		hintCell.textLabel.text = @"\
-Last.fm Radio is a subscription service. You have a free trial of 50 tracks.\n\n\
-Type an artist or genre to start listening.";
+		hintCell.textLabel.text = [NSString stringWithFormat:@"\
+Last.fm Radio is a subscription service. You have a free trial of %@ tracks.\n\n\
+Type an artist or genre to start listening.", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]];
 		return hintCell;
 	} else {
 		cell.textLabel.text = @"Debug";
