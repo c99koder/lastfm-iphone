@@ -402,7 +402,7 @@
 		//hintCell.textLabel.textAlignment = UITextAlignmentCenter;
 		hintCell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
 		hintCell.textLabel.text = @"\
-When you have a listening history, Last.fm will give you new music here\n\n\
+When you have a listening history, Last.fm will give you new music here.\n\n\
 Install the Last.fm Scrobbler on your computer to import your listening history.";
 		return hintCell;
 	}
