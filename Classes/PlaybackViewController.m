@@ -350,10 +350,11 @@ int tagSort(id tag1, id tag2, void *context) {
 
 	[[self.navigationItem.titleView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	
-	
+	NSString *stationURL = [[LastFMRadio sharedInstance] stationURL];
 	NSRange range = [[[LastFMRadio sharedInstance] stationURL] rangeOfString:@"/tag/"];
 	if(range.location != NSNotFound) {
 		NSString *tag = [[[[LastFMRadio sharedInstance] stationURL] substringFromIndex:range.location + 5] unURLEscape];
+		stationURL = [[[LastFMRadio sharedInstance] stationURL] substringToIndex:range.location];
 		_titleLabel.frame = CGRectMake(0,0,200,14);
 		_titleLabel.font = [UIFont systemFontOfSize:12];
 		[self.navigationItem.titleView addSubview: _titleLabel];
@@ -370,6 +371,53 @@ int tagSort(id tag1, id tag2, void *context) {
 		_titleLabel.font = [UIFont boldSystemFontOfSize:21];
 		[self.navigationItem.titleView addSubview: _titleLabel];
 	}
+	
+	range = [stationURL rangeOfString:@"/personal"];
+	if(range.location != NSNotFound && [stationURL hasSuffix:@"/personal"]) {
+		NSString *user = [[[stationURL substringFromIndex:14] substringToIndex:range.location - 14] unURLEscape];
+		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+			_titleLabel.text = @"My Library Radio";
+		else
+			_titleLabel.text = [NSString stringWithFormat:@"%@'s Library Radio", user];
+	}
+	
+	range = [stationURL rangeOfString:@"/mix"];
+	if(range.location != NSNotFound && [stationURL hasSuffix:@"/mix"]) {
+		NSString *user = [[[stationURL substringFromIndex:14] substringToIndex:range.location - 14] unURLEscape];
+		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+			_titleLabel.text = @"My Mix Radio";
+		else
+			_titleLabel.text = [NSString stringWithFormat:@"%@'s Mix Radio", user];
+	}
+	
+	range = [stationURL rangeOfString:@"/recommended"];
+	if(range.location != NSNotFound && [stationURL hasSuffix:@"/recommended"]) {
+		NSString *user = [[[stationURL substringFromIndex:14] substringToIndex:range.location - 14] unURLEscape];
+		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+			_titleLabel.text = @"My Recommended Radio";
+		else
+			_titleLabel.text = [NSString stringWithFormat:@"%@'s Recommended Radio", user];
+	}
+	
+	range = [stationURL rangeOfString:@"/friends"];
+	if(range.location != NSNotFound && [stationURL hasSuffix:@"/friends"]) {
+		NSString *user = [[[stationURL substringFromIndex:14] substringToIndex:range.location - 14] unURLEscape];
+		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+			_titleLabel.text = @"Friends' Radio";
+		else
+			_titleLabel.text = [NSString stringWithFormat:@"%@'s Friends' Radio", user];
+	}
+	
+	range = [stationURL rangeOfString:@"/neighbours"];
+	if(range.location != NSNotFound && [stationURL hasSuffix:@"/neighbours"]) {
+		NSString *user = [[[stationURL substringFromIndex:14] substringToIndex:range.location - 14] unURLEscape];
+		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+			_titleLabel.text = @"Neighbourhood Radio";
+		else
+			_titleLabel.text = [NSString stringWithFormat:@"%@'s Neighbourhood Radio", user];
+	}
+	
+	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:trackInfo];
 }
@@ -395,11 +443,11 @@ int tagSort(id tag1, id tag2, void *context) {
 		if([filter objectForKey:@"name"]) {
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Re-Tuned" message:
 														 [NSString stringWithFormat:@"After this track, you'll only hear '%@' music on this station.",[filter objectForKey:@"name"]]
-																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Don't show this message again", nil] autorelease];
+																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		} else {
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Re-Tuned" message:@"After this track, you'll hear all music on this station."
-																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Don't show this message again", nil] autorelease];
+																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		}
 	}
