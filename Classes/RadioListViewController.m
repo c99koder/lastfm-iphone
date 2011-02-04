@@ -222,7 +222,7 @@
 		stations = [[NSMutableArray alloc] init];
 		if(_stations) {
 			for(int i = 0; i < [[_stations objectForKey:@"networkstations"] count]; i++) {
-				NSDictionary *station = [[_stations objectForKey:@"personalstations"] objectAtIndex:i];
+				NSDictionary *station = [[_stations objectForKey:@"networkstations"] objectAtIndex:i];
 				
 				if([[station objectForKey:@"url"] hasSuffix:@"/friends"] && [[station objectForKey:@"available"] isEqualToString:@"1"]) {
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends’ Radio",
