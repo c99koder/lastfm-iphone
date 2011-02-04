@@ -211,7 +211,7 @@ UIImage *eventDateBGImage = nil;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(section == 0) {
-		return @"Events I'm Attending";
+		return @"Events I’m Attending";
 	} else if(section == 1) {
 		return @"Recommended Events";
 	} else {
