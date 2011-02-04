@@ -226,7 +226,7 @@ int tagSort(id tag1, id tag2, void *context);
 			profilecell.detailTextLabel.textColor = [UIColor whiteColor];
 			profilecell.detailTextLabel.backgroundColor = [UIColor blackColor];
 			profilecell.accessoryType = UITableViewCellAccessoryNone;
-			[profilecell addReflection];
+			[profilecell addReflection:@"reflectionmask.png"];
 		}
 		profilecell.title.text = [_trackInfo objectForKey:@"creator"];
 		profilecell.subtitle.text = [_trackInfo objectForKey:@"title"];

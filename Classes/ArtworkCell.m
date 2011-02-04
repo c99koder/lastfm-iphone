@@ -223,7 +223,7 @@
 	}
 	return self;
 }
-- (void)addReflection {
+- (void)addReflection:(NSString *)maskName {
 	_reflectedArtwork = [[UIImageView alloc] initWithFrame:CGRectZero];
 	_reflectedArtwork.contentMode = UIViewContentModeBottom;
 	_reflectedArtwork.clipsToBounds = YES;
@@ -232,7 +232,7 @@
 	_reflectedArtwork.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
 	[self.contentView addSubview:_reflectedArtwork];
 	
-	_reflectionMask = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"reflectionmask.png"]];
+	_reflectionMask = [[UIImageView alloc] initWithImage:[UIImage imageNamed:maskName]];
 	_reflectionMask.contentMode = UIViewContentModeTop;
 	_reflectionMask.clipsToBounds = YES;
 	_reflectionMask.opaque = NO;
@@ -261,10 +261,10 @@
 	}
 	
 	if(_reflectedArtwork) {
-		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, frame.size.height, 24);
+		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, frame.size.height, 20);
 		_reflectedArtwork.frame = artframe;
 		_reflectionMask.frame = artframe;
-		_reflectedArtwork.image = [self roundedImage:_artwork.image];
+		_reflectedArtwork.image = _artwork.image;
 	}
 	
 	if([subtitle.text length]) {

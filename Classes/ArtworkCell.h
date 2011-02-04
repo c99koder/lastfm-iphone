@@ -60,6 +60,6 @@
 -(void)addStreamIcon;
 -(void)hideArtwork:(BOOL)hidden;
 -(void)addBorder;
--(void)addReflection;
+-(void)addReflection:(NSString *)maskName;
 -(UIImage *)roundedImage:(UIImage *)image;
 @end

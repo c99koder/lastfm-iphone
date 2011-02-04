@@ -516,6 +516,8 @@
 			profilecell.placeholder = @"noimage_artist.png";
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
+			profilecell.shouldFillHeight = YES;
+			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.title.text = _artist;
 			profilecell.accessoryType = UITableViewCellAccessoryNone;
 			profilecell.backgroundView = [[[UIView alloc]initWithFrame:CGRectZero] autorelease];

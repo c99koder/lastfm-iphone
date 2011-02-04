@@ -213,6 +213,7 @@
 		229808D00E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CB0E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png */; };
 		229808D10E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */; };
 		229808D30E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png in Resources */ = {isa = PBXBuildFile; fileRef = 229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */; };
+		22A5924B12FCBA2C000A347C /* reflectionmask-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A5924A12FCBA2C000A347C /* reflectionmask-blue.png */; };
 		22AA37A512DCF2D70000F121 /* SearchTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AA37A412DCF2D70000F121 /* SearchTabViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
@@ -934,6 +935,7 @@
 		229808CB0E6DAA44009CEDF9 /* black_button_dark_bkg_lower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_lower.png; sourceTree = "<group>"; };
 		229808CC0E6DAA44009CEDF9 /* red_button_dark_bkg_lower.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button_dark_bkg_lower.png; sourceTree = "<group>"; };
 		229808CE0E6DAA44009CEDF9 /* black_button_dark_bkg_upper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = black_button_dark_bkg_upper.png; sourceTree = "<group>"; };
+		22A5924A12FCBA2C000A347C /* reflectionmask-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reflectionmask-blue.png"; sourceTree = "<group>"; };
 		22AA37A312DCF2D70000F121 /* SearchTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTabViewController.h; sourceTree = "<group>"; };
 		22AA37A412DCF2D70000F121 /* SearchTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTabViewController.m; sourceTree = "<group>"; };
 		22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NowPlayingButton.h"; sourceTree = "<group>"; };
@@ -1308,6 +1310,7 @@
 		225934CA0DA85D8E0035A1AA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				22A5924A12FCBA2C000A347C /* reflectionmask-blue.png */,
 				FB22265512FC64980060271D /* date-detail_view@2x.png */,
 				FB22265612FC64980060271D /* date@2x.png */,
 				FB2226BF12FC67660060271D /* logo_login.png */,
@@ -2323,6 +2326,7 @@
 				FB22265812FC64980060271D /* date@2x.png in Resources */,
 				FB2226C112FC67660060271D /* logo_login.png in Resources */,
 				FB2226C212FC67660060271D /* logo_login@2x.png in Resources */,
+				22A5924B12FCBA2C000A347C /* reflectionmask-blue.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
