@@ -117,7 +117,7 @@
  }
 - (void)editButtonPressed:(id)sender {
 	[self.tableView setEditing:YES animated:YES];
-	_recsTitleLabel.text = @"Dismiss artists you're not keen on to get fresh recommendations.";
+	_recsTitleLabel.text = @"Dismiss artists you’re not keen on to get fresh recommendations.";
 	_recsTitleLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	_recsTitleLabel.textAlignment = UITextAlignmentCenter;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];

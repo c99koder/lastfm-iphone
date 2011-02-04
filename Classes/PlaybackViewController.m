@@ -383,7 +383,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
 			_titleLabel.text = @"My Library Radio";
 		else
-			_titleLabel.text = [NSString stringWithFormat:@"%@'s Library Radio", user];
+			_titleLabel.text = [NSString stringWithFormat:@"%@’s Library Radio", user];
 	}
 	
 	range = [stationURL rangeOfString:@"/mix"];
@@ -392,7 +392,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
 			_titleLabel.text = @"My Mix Radio";
 		else
-			_titleLabel.text = [NSString stringWithFormat:@"%@'s Mix Radio", user];
+			_titleLabel.text = [NSString stringWithFormat:@"%@’s Mix Radio", user];
 	}
 	
 	range = [stationURL rangeOfString:@"/recommended"];
@@ -401,7 +401,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
 			_titleLabel.text = @"My Recommended Radio";
 		else
-			_titleLabel.text = [NSString stringWithFormat:@"%@'s Recommended Radio", user];
+			_titleLabel.text = [NSString stringWithFormat:@"%@’s Recommended Radio", user];
 	}
 	
 	range = [stationURL rangeOfString:@"/friends"];
@@ -410,7 +410,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
 			_titleLabel.text = @"Friends’ Radio";
 		else
-			_titleLabel.text = [NSString stringWithFormat:@"%@'s Friends’ Radio", user];
+			_titleLabel.text = [NSString stringWithFormat:@"%@’s Friends’ Radio", user];
 	}
 	
 	range = [stationURL rangeOfString:@"/neighbours"];
@@ -419,7 +419,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
 			_titleLabel.text = @"Neighbourhood Radio";
 		else
-			_titleLabel.text = [NSString stringWithFormat:@"%@'s Neighbourhood Radio", user];
+			_titleLabel.text = [NSString stringWithFormat:@"%@’s Neighbourhood Radio", user];
 	}
 	
 	

@@ -405,7 +405,7 @@ Or, use this app to listen to radio and see how Last.fm tracks your music taste.
 		if( [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username] )
 			friendscell.textLabel.text = [NSString stringWithFormat:@"My Friends (%i)", friendsCount];
 		else
-			friendscell.textLabel.text = [NSString stringWithFormat:@"%@'s Friends (%i)", _username, friendsCount];
+			friendscell.textLabel.text = [NSString stringWithFormat:@"%@’s Friends (%i)", _username, friendsCount];
 		
 		friendscell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		return friendscell;
