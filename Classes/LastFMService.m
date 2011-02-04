@@ -493,7 +493,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 }
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username {
 	//TODO: uncomment the limit so we can get more tracks in the future
-	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], @"lfm=true" /*, @"limit=50"*/, nil];
+	NSArray *nodes = [self doMethod:@"user.getRecentTracks" maxCacheAge:0 XPath:@"./recenttracks/track" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], @"extended=true" /*, @"limit=50"*/, nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@nowplaying", @"./artist/name", @"./name", @"./date", @"./date/@uts", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"nowplaying", @"artist", @"name", @"date", @"uts", @"image", nil]];
