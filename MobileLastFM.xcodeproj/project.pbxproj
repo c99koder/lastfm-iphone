@@ -310,6 +310,7 @@
 		FB22265812FC64980060271D /* date@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB22265612FC64980060271D /* date@2x.png */; };
 		FB2226C112FC67660060271D /* logo_login.png in Resources */ = {isa = PBXBuildFile; fileRef = FB2226BF12FC67660060271D /* logo_login.png */; };
 		FB2226C212FC67660060271D /* logo_login@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB2226C012FC67660060271D /* logo_login@2x.png */; };
+		FB222A0F12FC98630060271D /* UIColor+LastFMColors.m in Sources */ = {isa = PBXBuildFile; fileRef = FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */; };
 		FB348C2312F03920002EFA95 /* libThree20-Xcode3.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348C0712F03919002EFA95 /* libThree20-Xcode3.2.5.a */; };
 		FB348C2412F03924002EFA95 /* libThree20Core-Xcode3.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348B6C12F03918002EFA95 /* libThree20Core-Xcode3.2.5.a */; };
 		FB348C2512F03926002EFA95 /* libThree20Network-Xcode3.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348B8412F03918002EFA95 /* libThree20Network-Xcode3.2.5.a */; };
@@ -1046,6 +1047,8 @@
 		FB22265612FC64980060271D /* date@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "date@2x.png"; path = "Resources/date@2x.png"; sourceTree = "<group>"; };
 		FB2226BF12FC67660060271D /* logo_login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_login.png; sourceTree = "<group>"; };
 		FB2226C012FC67660060271D /* logo_login@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_login@2x.png"; sourceTree = "<group>"; };
+		FB222A0D12FC98630060271D /* UIColor+LastFMColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+LastFMColors.h"; path = "Classes/UIColor+LastFMColors.h"; sourceTree = "<group>"; };
+		FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+LastFMColors.m"; path = "Classes/UIColor+LastFMColors.m"; sourceTree = "<group>"; };
 		FB348EB712F19F94002EFA95 /* red_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button.png; sourceTree = "<group>"; };
 		FB348EB812F19F94002EFA95 /* red_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_button@2x.png"; sourceTree = "<group>"; };
 		FB66BA9912FB446800DB7579 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -1165,6 +1168,8 @@
 			isa = PBXGroup;
 			children = (
 				224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */,
+				FB222A0D12FC98630060271D /* UIColor+LastFMColors.h */,
+				FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
@@ -2378,6 +2383,7 @@
 				2236538212F0C7C900A6B4F5 /* WeeklyArtistsViewController.m in Sources */,
 				227A674E12F4877600A08DDA /* NowPlayingInfoViewController.m in Sources */,
 				FB66BE0412FB7FE100DB7579 /* ShareActionSheet.m in Sources */,
+				FB222A0F12FC98630060271D /* UIColor+LastFMColors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

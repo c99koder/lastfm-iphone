@@ -26,6 +26,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
+#import "UIColor+LastFMColors.h"
 #import <QuartzCore/QuartzCore.h>
 
 UIImage *eventDateBGImage = nil;
@@ -182,6 +183,7 @@ UIImage *eventDateBGImage = nil;
 	_recs = nil;
 }
 - (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 	[LastFMService sharedInstance].cacheOnly = YES;
 	[self _refresh];
 	[LastFMService sharedInstance].cacheOnly = NO;
@@ -492,6 +494,9 @@ UIImage *eventDateBGImage = nil;
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView reloadData];
+}
+- (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;

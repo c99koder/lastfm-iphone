@@ -29,6 +29,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "ArtistViewController.h"
 #import "UIApplication+openURLWithWarning.h"
+#import "UIColor+LastFMColors.h"
 
 @implementation SearchTabViewController
 - (void)viewDidUnload {
@@ -55,11 +56,12 @@
 	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	_searchBar.placeholder = @"Music Search";
 	_searchBar.delegate = self;
+	self.tableView.backgroundColor = [UIColor whiteColor];
 	self.tableView.tableHeaderView = _searchBar;
 	self.tableView.dataSource = _searchData;
 	self.tableView.delegate = self;
 	
-	_emptyView = [[UIView alloc] initWithFrame:CGRectMake(0,60,self.view.frame.size.width,self.view.frame.size.height)];
+	_emptyView = [[UIView alloc] initWithFrame:CGRectMake(0,40,self.view.frame.size.width,self.view.frame.size.height)];
 	_emptyView.backgroundColor = [UIColor whiteColor];
 	_emptyView.opaque = NO;
 	

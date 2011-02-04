@@ -32,6 +32,7 @@
 #import "EventDetailsViewController.h"
 #import "ShareActionSheet.h"
 #import "TagEditorViewController.h"
+#import "UIColor+LastFMColors.h"
 #import <Three20UI/TTPickerViewCell.h>
 
 @interface ArtistButtonsCell : UITableViewCell
@@ -144,7 +145,6 @@
 }
 - (id)initWithArtist:(NSString *)artist {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		self.tableView.backgroundColor = [UIColor colorWithRed:0.77f green:0.8f blue:0.83f alpha:1.0f];
 		_artist = [artist retain];
 		_infoTabLoaded = NO;
 		_similarTabLoaded = NO;
@@ -187,6 +187,7 @@
 	if(_paintItBlack) {
 		self.tableView.backgroundColor = [UIColor blackColor];
 	} else {
+		self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 		_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Events", @"Similar Artists", nil]];
 		_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		_toggle.selectedSegmentIndex = 0;

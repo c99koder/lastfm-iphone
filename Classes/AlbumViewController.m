@@ -28,6 +28,7 @@
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIApplication+openURLWithWarning.h"
+#import "UIColor+LastFMColors.h"
 
 @implementation AlbumViewController
 - (id)initWithAlbum:(NSString *)album byArtist:(NSString *)artist {
@@ -50,6 +51,7 @@
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	//self.tableView.sectionHeaderHeight = 0;
 	//self.tableView.sectionFooterHeight = 0;
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
 }
 - (void)rebuildMenu {

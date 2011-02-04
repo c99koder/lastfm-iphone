@@ -29,6 +29,7 @@
 #import </usr/include/objc/objc-class.h>
 #import "DebugViewController.h"
 #import "MobileLastFMApplicationDelegate.h"
+#import "UIColor+LastFMColors.h"
 
 @implementation RadioListViewController
 - (void)_refresh {
@@ -86,8 +87,8 @@
 - (void)viewDidLoad {
 	/*self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	self.tableView.sectionHeaderHeight = 0;
-	self.tableView.sectionFooterHeight = 0;
-	self.tableView.backgroundColor = [UIColor blackColor];*/
+	self.tableView.sectionFooterHeight = 0;*/
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Type an artist or genre";
 	bar.delegate = self;

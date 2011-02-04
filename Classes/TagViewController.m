@@ -28,6 +28,7 @@
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIApplication+openURLWithWarning.h"
+#import "UIColor+LastFMColors.h"
 
 @implementation TagViewController
 - (void)_loadAlbums {
@@ -81,6 +82,7 @@
 	[self rebuildMenu];
 }
 - (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 }

@@ -30,6 +30,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "ArtistViewController.h"
 #import "UIApplication+openURLWithWarning.h"
+#import "UIColor+LastFMColors.h"
 
 @implementation ProfileViewController
 - (void)_refresh {
@@ -104,7 +105,6 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	
 	if(_refreshThread) {
 		[_refreshThread cancel];
 		[_refreshThread release];
@@ -114,6 +114,7 @@
 	[_refreshThread start];
 }
 - (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 	[LastFMService sharedInstance].cacheOnly = YES;
 	[_recentTracks release];
 	_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];

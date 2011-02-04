@@ -27,6 +27,7 @@
 #import "NSString+URLEscaped.h"
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
+#import "UIColor+LastFMColors.h"
 
 @implementation RecsViewController
 - (void)_dismiss:(NSString *)artist {
@@ -187,6 +188,7 @@
 	}
 }
 - (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 	[LastFMService sharedInstance].cacheOnly = YES;
 	[_artists release];
 	_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];

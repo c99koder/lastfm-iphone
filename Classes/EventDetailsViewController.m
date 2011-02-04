@@ -27,6 +27,7 @@
 #include "version.h"
 #import "NSString+URLEscaped.h"
 #import "UIApplication+openURLWithWarning.h"
+#import "UIColor+LastFMColors.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation EventDetailCell
@@ -173,6 +174,9 @@
 	[_event release];
 	_event = [event retain];
 	_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
+}
+- (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -421,6 +425,9 @@
 	}
 	return self;
 }
+- (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
@@ -502,6 +509,9 @@
 		_artists = [artists retain];
 	}
 	return self;
+}
+- (void)viewDidLoad {
+	self.tableView.backgroundColor = [UIColor tableBackgroundColor];	
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
