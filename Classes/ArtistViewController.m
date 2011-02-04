@@ -628,8 +628,8 @@
 }
 - (BOOL)share {
 	ShareActionSheet* action = [[ShareActionSheet alloc] initWithArtist:_artist];
-	action.viewController = self;
-	[action showInView: self.view];
+	action.viewController = self.tabBarController;
+	[action showFromTabBar: self.tabBarController.tabBar];
 	[action release];
 	return YES;
 }
