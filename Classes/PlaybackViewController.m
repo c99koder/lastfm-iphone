@@ -59,7 +59,6 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	self.hidesBottomBarWhenPushed = YES;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 	
 	CGRect frame = volumeView.frame;
 	frame.origin.y += 6;

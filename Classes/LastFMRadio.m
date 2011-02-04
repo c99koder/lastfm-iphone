@@ -823,7 +823,9 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	} else {
 		if([_playlist count])
 			[_playlist removeObjectAtIndex:0];
+		[_busyLock unlock];
 		[self play];
+		[_busyLock lock];
 	}
 	[_softSkipTimer invalidate];
 	_softSkipTimer = nil;
