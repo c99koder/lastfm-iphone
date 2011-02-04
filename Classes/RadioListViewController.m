@@ -48,6 +48,8 @@
 		self.title = @"Radio";
 		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_radio.png"];
 		_username = [username retain];
+		if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+			_stations = [[[LastFMService sharedInstance] userStations] retain];
 		_searchData = [[RadioSearchDataSource alloc] init];
 		_refreshThread = [[NSThread alloc] initWithTarget:self selector:@selector(_refresh) object:nil];
 		[_refreshThread start];
@@ -158,41 +160,93 @@
 		NSMutableArray *sections = [[NSMutableArray alloc] init];
 		
 		NSMutableArray *stations = [[NSMutableArray alloc] init];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library Radio", @"My Library station"),
-																						  [NSString stringWithFormat:@"lastfm://user/%@/personal", _username],
-																						  NSLocalizedString(@"Music you know and love", @"My Library description"),
-																						  nil] 
-														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description",nil]]];
-		
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),
-																[NSString stringWithFormat:@"lastfm://user/%@/mix", _username],
-																NSLocalizedString(@"Your library + new music", @"Mix Radio description"),
-																nil] 
-														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
-		
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Recommended Radio", @"My Recommended Radio"),
-																						  [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],
-																					      NSLocalizedString(@"New Music from Last.fm", @"Recommendation Radio description"),
-																						  nil] 
-														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description" ,nil]]];
-		
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Personal Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		if(_stations) {
+			for(int i = 0; i < [[_stations objectForKey:@"personalstations"] count]; i++) {
+				NSDictionary *station = [[_stations objectForKey:@"personalstations"] objectAtIndex:i];
+				
+				if([[station objectForKey:@"url"] hasSuffix:@"/personal"] && [[station objectForKey:@"available"] isEqualToString:@"1"]) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library Radio", @"My Library station"),
+																																	 [NSString stringWithFormat:@"lastfm://user/%@/personal", _username],
+																																	 NSLocalizedString(@"Music you know and love", @"My Library description"),
+																																	 nil] 
+																													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description",nil]]];
+				}
+				if([[station objectForKey:@"url"] hasSuffix:@"/mix"] && [[station objectForKey:@"available"] isEqualToString:@"1"]) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),
+																																	 [NSString stringWithFormat:@"lastfm://user/%@/mix", _username],
+																																	 NSLocalizedString(@"Your library + new music", @"Mix Radio description"),
+																																	 nil] 
+																													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+				}
+				if([[station objectForKey:@"url"] hasSuffix:@"/recommended"] && [[station objectForKey:@"available"] isEqualToString:@"1"]) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Recommended Radio", @"My Recommended Radio"),
+																																	 [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],
+																																	 NSLocalizedString(@"New Music from Last.fm", @"Recommendation Radio description"),
+																																	 nil] 
+																													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description" ,nil]]];
+				}
+			}
+		} else {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library Radio", @"My Library station"),
+																								[NSString stringWithFormat:@"lastfm://user/%@/personal", _username],
+																								NSLocalizedString(@"Music you know and love", @"My Library description"),
+																								nil] 
+															forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description",nil]]];
+			
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Mix Radio", @"My Mix Radio"),
+																	[NSString stringWithFormat:@"lastfm://user/%@/mix", _username],
+																	NSLocalizedString(@"Your library + new music", @"Mix Radio description"),
+																	nil] 
+															forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+			
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Recommended Radio", @"My Recommended Radio"),
+																								[NSString stringWithFormat:@"lastfm://user/%@/recommended", _username],
+																									NSLocalizedString(@"New Music from Last.fm", @"Recommendation Radio description"),
+																								nil] 
+															forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description" ,nil]]];
+		}
+		if([stations count])
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Personal Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+		else
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Personal Stations", @"hint", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 		
 		stations = [[NSMutableArray alloc] init];
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends’ Radio",
-																						  [NSString stringWithFormat:@"lastfm://user/%@/friends", _username],
-																						  @"Music your friends like",
-																						  nil] 
-														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+		if(_stations) {
+			for(int i = 0; i < [[_stations objectForKey:@"networkstations"] count]; i++) {
+				NSDictionary *station = [[_stations objectForKey:@"personalstations"] objectAtIndex:i];
+				
+				if([[station objectForKey:@"url"] hasSuffix:@"/friends"] && [[station objectForKey:@"available"] isEqualToString:@"1"]) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends’ Radio",
+																																	 [NSString stringWithFormat:@"lastfm://user/%@/friends", _username],
+																																	 @"Music your friends like",
+																																	 nil] 
+																													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+				}
+				if([[station objectForKey:@"url"] hasSuffix:@"/neighbours"] && [[station objectForKey:@"available"] isEqualToString:@"1"]) {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Neighbourhood Radio",
+																																	 [NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],
+																																	 @"Music from listeners like you",
+																																	 nil] 
+																													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+				}
+			}
+		} else {
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Friends’ Radio",
+																						[NSString stringWithFormat:@"lastfm://user/%@/friends", _username],
+																						@"Music your friends like",
+																						nil] 
+													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
 
-		[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Neighbourhood Radio",
-																						  [NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],
-																						  @"Music from listeners like you",
-																						  nil] 
-														forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
-		
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Network Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Neighbourhood Radio",
+																						[NSString stringWithFormat:@"lastfm://user/%@/neighbours", _username],
+																						@"Music from listeners like you",
+																						nil] 
+													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description", nil]]];
+		}
+
+		if([stations count])
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Network Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 		
 		if([_recent count]) {
@@ -220,13 +274,16 @@
 	return [_data count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
+	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:section] objectForKey:@"stations"] isKindOfClass:[NSArray class]])
 		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
 	else
 		return 1;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 52;
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]])
+		return 52;
+	else
+		return 70;
 }
 -(void)playRadioStation:(NSString *)url {
 	if(![(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
@@ -265,12 +322,27 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		cell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
 		cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"description"];
 		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"url"] isEqualToString:@"tags"])
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+		UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+		hintCell.backgroundView = [[[UIView alloc] init] autorelease];
+		hintCell.backgroundColor = [UIColor clearColor];
+		hintCell.textLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+		hintCell.textLabel.shadowColor = [UIColor whiteColor];
+		hintCell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+		hintCell.textLabel.font = [UIFont systemFontOfSize:14];
+		hintCell.textLabel.numberOfLines = 0;
+		//hintCell.textLabel.textAlignment = UITextAlignmentCenter;
+		hintCell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+		hintCell.textLabel.text = @"\
+Last.fm Radio is a subscription service. You have a free trial of 50 tracks.\n\n\
+Type an artist or genre to start listening.";
+		return hintCell;
 	} else {
 		cell.textLabel.text = @"Debug";
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -295,5 +367,6 @@
 	[_recent release];
 	[_searchData release];
 	[_data release];
+	[_stations release];
 }
 @end

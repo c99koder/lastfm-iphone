@@ -26,6 +26,7 @@
 @interface RadioListViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate> {
 	NSString *_username;
 	NSArray *_recent;
+	NSDictionary *_stations;
 	NSArray *_data;
 	NSTimer *_searchTimer;
 	NSThread *_refreshThread;
