@@ -406,7 +406,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	if(range.location != NSNotFound && [stationURL hasSuffix:@"/friends"]) {
 		NSString *user = [[[stationURL substringFromIndex:14] substringToIndex:range.location - 14] unURLEscape];
 		if([user isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
-			_titleLabel.text = @"Friends' Radio";
+			_titleLabel.text = @"Friends’ Radio";
 		else
 			_titleLabel.text = [NSString stringWithFormat:@"%@'s Friends' Radio", user];
 	}
