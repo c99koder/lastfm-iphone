@@ -208,9 +208,9 @@ UIImage *eventDateBGImage = nil;
 	}
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	if(section == 0 && [_events count]) {
+	if(section == 0) {
 		return @"Events I'm Attending";
-	} else if(section == 1 && [_recs count]) {
+	} else if(section == 1) {
 		return @"Recommended Events";
 	} else {
 		return nil;
@@ -221,12 +221,12 @@ UIImage *eventDateBGImage = nil;
 		if([_events count])
 			return ([_events count] > 3)?4:[_events count];
 		else
-			return 0;
+			return 1;
 	else if(section == 1)
 		if([_recs count])
 			return ([_recs count] > 3)?4:[_recs count];
 		else
-			return 0;
+			return 1;
 	else
 		return 1;
 }
@@ -234,10 +234,18 @@ UIImage *eventDateBGImage = nil;
 	if(([indexPath section] == 0  && [indexPath row] == 3) || ([indexPath section] == 1 && [indexPath row] == 3)) {
 		return 46;
 	}
-	if([indexPath section] == 0 || [indexPath section] == 1)
-		return 64;
+	if([indexPath section] == 0)
+		if([_events count])
+			return 64;
+		else
+			return 40;
+	else if([indexPath section] == 1)
+		if([_recs count])
+			return 64;
+		else
+			return 70;
 	else
-		return 46;
+	return 46;
 }
 -(void)_rowSelected:(NSIndexPath *)newIndexPath {
 	UINavigationController *controller = nil;
@@ -349,6 +357,20 @@ UIImage *eventDateBGImage = nil;
 	switch([indexPath section]) {
 		case 0:
 		{
+			if([_events count] == 0) {
+				UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+				hintCell.backgroundView = [[[UIView alloc] init] autorelease];
+				hintCell.backgroundColor = [UIColor clearColor];
+				hintCell.textLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+				hintCell.textLabel.shadowColor = [UIColor whiteColor];
+				hintCell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+				hintCell.textLabel.font = [UIFont systemFontOfSize:14];
+				hintCell.textLabel.numberOfLines = 0;
+				//hintCell.textLabel.textAlignment = UITextAlignmentCenter;
+				hintCell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+				hintCell.textLabel.text = @"When you say you're coming to an event, it will appear here.";
+				return hintCell;
+			}
 			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
 			if (eventCell == nil) {
 				eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
@@ -384,6 +406,20 @@ UIImage *eventDateBGImage = nil;
 		}
 		case 1:
 		{
+			if([_recs count] == 0) {
+				UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+				hintCell.backgroundView = [[[UIView alloc] init] autorelease];
+				hintCell.backgroundColor = [UIColor clearColor];
+				hintCell.textLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
+				hintCell.textLabel.shadowColor = [UIColor whiteColor];
+				hintCell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
+				hintCell.textLabel.font = [UIFont systemFontOfSize:14];
+				hintCell.textLabel.numberOfLines = 0;
+				//hintCell.textLabel.textAlignment = UITextAlignmentCenter;
+				hintCell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+				hintCell.textLabel.text = @"These are based on your music taste. Install the Last.fm Scrobbler on your computer to import your listening history.";
+				return hintCell;
+			}
 			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
 			if (eventCell == nil) {
 				eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
