@@ -201,6 +201,7 @@ int tagSort(id tag1, id tag2, void *context);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.placeholder = @"noimage_artist.png";
 			profilecell.shouldCacheArtwork = YES;
+			profilecell.shouldFillHeight = YES;
 			profilecell.title.font = [UIFont boldSystemFontOfSize:16];
 			profilecell.title.textColor = [UIColor whiteColor];
 			profilecell.title.backgroundColor = [UIColor blackColor];
@@ -211,6 +212,7 @@ int tagSort(id tag1, id tag2, void *context);
 			profilecell.detailTextLabel.textColor = [UIColor whiteColor];
 			profilecell.detailTextLabel.backgroundColor = [UIColor blackColor];
 			profilecell.accessoryType = UITableViewCellAccessoryNone;
+			[profilecell addReflection];
 		}
 		profilecell.title.text = [_trackInfo objectForKey:@"creator"];
 		profilecell.subtitle.text = [_trackInfo objectForKey:@"title"];

@@ -27,6 +27,8 @@
 
 @interface ArtworkCell : UITableViewCell {
 	UIImageView *_artwork;
+	UIImageView *_reflectedArtwork;
+	UIImageView *_reflectionMask;
 	UILabel *title;
 	UILabel *subtitle;
 	UIView *_bar;
@@ -58,5 +60,6 @@
 -(void)addStreamIcon;
 -(void)hideArtwork:(BOOL)hidden;
 -(void)addBorder;
+-(void)addReflection;
 -(UIImage *)roundedImage:(UIImage *)image;
 @end

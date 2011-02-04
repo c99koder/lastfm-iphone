@@ -127,9 +127,6 @@
 	return imageURL;
 }
 -(UIImage *)roundedImage:(UIImage *)image {
-	if(!shouldRoundTop && !shouldRoundBottom)
-		return image;
-
 	UIImage *img = image;
 	float scale = 1.0f;
 	if([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
@@ -226,6 +223,22 @@
 	}
 	return self;
 }
+- (void)addReflection {
+	_reflectedArtwork = [[UIImageView alloc] initWithFrame:CGRectZero];
+	_reflectedArtwork.contentMode = UIViewContentModeBottom;
+	_reflectedArtwork.clipsToBounds = YES;
+	_reflectedArtwork.opaque = NO;
+	_reflectedArtwork.alpha = 0.4;
+	_reflectedArtwork.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+	[self.contentView addSubview:_reflectedArtwork];
+	
+	_reflectionMask = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"reflectionmask.png"]];
+	_reflectionMask.contentMode = UIViewContentModeTop;
+	_reflectionMask.clipsToBounds = YES;
+	_reflectionMask.opaque = NO;
+	_reflectionMask.backgroundColor = [UIColor clearColor];
+	[self.contentView addSubview:_reflectionMask];
+}
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -245,6 +258,13 @@
 			_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
 		else
 			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
+	}
+	
+	if(_reflectedArtwork) {
+		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, frame.size.height, 24);
+		_reflectedArtwork.frame = artframe;
+		_reflectionMask.frame = artframe;
+		_reflectedArtwork.image = [self roundedImage:_artwork.image];
 	}
 	
 	if([subtitle.text length]) {
@@ -339,6 +359,11 @@
 	_artwork.image = image;
 	_artwork.alpha = 1;
 	_artwork.opaque = YES;
+	if(_reflectedArtwork) {
+		_reflectedArtwork.image = image;
+		_reflectedArtwork.alpha = 1;
+		_reflectedArtwork.opaque = YES;
+	}
 }
 -(void)fetchImage {
 	if(!_imageLoaded)
