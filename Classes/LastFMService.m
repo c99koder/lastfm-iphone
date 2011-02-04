@@ -217,7 +217,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSDictionary *)metadataForArtist:(NSString *)artist inLanguage:(NSString *)lang {
 	NSDictionary *metadata = nil;
 	NSArray *nodes = [self doMethod:@"artist.getInfo" maxCacheAge:7*DAYS XPath:@"./artist" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], 
-										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], nil];
+					  [NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], [NSString stringWithFormat:@"lang=%@", lang] , nil];
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		metadata = [self _convertNode:node
@@ -280,7 +280,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	NSDictionary *metadata = nil;
 	NSArray *nodes = [self doMethod:@"album.getInfo" maxCacheAge:7*DAYS XPath:@"./album" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], 
 										[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
-										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], nil];
+										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], 
+										[NSString stringWithFormat:@"lang=%@", lang], nil];
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		metadata = [self _convertNode:node
@@ -328,7 +329,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	NSDictionary *metadata = nil;
 	NSArray *nodes = [self doMethod:@"track.getInfo" maxCacheAge:7*DAYS XPath:@"./track" withParameters:[NSString stringWithFormat:@"track=%@", [track URLEscaped]], 
 										[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
-										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], nil];
+										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], 
+										[NSString stringWithFormat:@"lang=%@", lang], nil];
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		metadata = [self _convertNode:node
@@ -583,7 +585,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSDictionary *)metadataForTag:(NSString *)tag inLanguage:(NSString *)lang {
 	NSDictionary *metadata = nil;
 	NSArray *nodes = [self doMethod:@"tag.getInfo" maxCacheAge:7*DAYS XPath:@"./tag" withParameters:[NSString stringWithFormat:@"tag=%@", [tag URLEscaped]], 
-										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], nil];
+										[NSString stringWithFormat:@"username=%@", [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped]], 
+										[NSString stringWithFormat:@"lang=%@", lang], nil];
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		metadata = [self _convertNode:node
