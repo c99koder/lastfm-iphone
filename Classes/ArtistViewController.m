@@ -357,7 +357,7 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if(_toggle.selectedSegmentIndex == 0 && !_infoTabLoaded) {
+	if(_toggle.selectedSegmentIndex == 0 && !_infoTabLoaded && !_paintItBlack) {
 		return loadingCell;
 	}
 	
@@ -365,7 +365,7 @@
 		return loadingCell;
 	}
 
-	if(_toggle.selectedSegmentIndex == 2 && !_similarTabLoaded) {
+	if(_toggle.selectedSegmentIndex == 2 && !_similarTabLoaded && !_paintItBlack) {
 		return loadingCell;
 	}
 	
