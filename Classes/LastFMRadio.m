@@ -509,7 +509,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue] <= 5 && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_almost_over_warning"] isEqualToString:@"1"]) {
 				[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_almost_over_warning"];
 				[[NSUserDefaults standardUserDefaults] synchronize];
-				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Free Trial Almost Over" message:@"You have just 5 tracks left of your free trial." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
+				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Free Trial Almost Over" message:[NSString stringWithFormat:@"You have just %@ tracks left of your free trial.", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]] delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
 				[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 			}
 		}
