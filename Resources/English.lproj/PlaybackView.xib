@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="861"/>
+			<integer value="116"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -317,7 +317,7 @@
 							<int key="IBUIContentHorizontalAlignment">0</int>
 							<int key="IBUIContentVerticalAlignment">0</int>
 							<reference key="IBUIFont" ref="437759127"/>
-							<object class="NSColor" key="IBUIHighlightedTitleColor">
+							<object class="NSColor" key="IBUIHighlightedTitleColor" id="947346006">
 								<int key="NSColorSpace">3</int>
 								<bytes key="NSWhite">MQA</bytes>
 							</object>
@@ -466,8 +466,29 @@
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 									<bool key="IBUIShowsSelectionIndicator">YES</bool>
 								</object>
+								<object class="IBUILabel" id="127114168">
+									<reference key="NSNextResponder" ref="226251063"/>
+									<int key="NSvFlags">292</int>
+									<string key="NSFrame">{{8, 11}, {220, 22}}</string>
+									<reference key="NSSuperview" ref="226251063"/>
+									<bool key="IBUIOpaque">NO</bool>
+									<bool key="IBUIClipsSubviews">YES</bool>
+									<int key="IBUIContentMode">7</int>
+									<bool key="IBUIUserInteractionEnabled">NO</bool>
+									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+									<string key="IBUIText">Limit this station to a tag</string>
+									<object class="NSFont" key="IBUIFont">
+										<string key="NSName">Helvetica-Bold</string>
+										<double key="NSSize">18</double>
+										<int key="NSfFlags">16</int>
+									</object>
+									<reference key="IBUITextColor" ref="947346006"/>
+									<reference key="IBUIHighlightedColor" ref="947346006"/>
+									<int key="IBUIBaselineAdjustment">1</int>
+									<float key="IBUIMinimumFontSize">10</float>
+								</object>
 							</object>
-							<string key="NSFrame">{{0, 480}, {320, 260}}</string>
+							<string key="NSFrame">{{0, 417}, {320, 260}}</string>
 							<reference key="NSSuperview" ref="609645942"/>
 							<object class="NSColor" key="IBUIBackgroundColor">
 								<int key="NSColorSpace">3</int>
@@ -586,7 +607,7 @@
 								<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
 							</object>
 							<reference key="IBUINormalTitleShadowColor" ref="1000000658"/>
-							<object class="NSCustomResource" key="IBUINormalBackgroundImage">
+							<object class="NSCustomResource" key="IBUINormalImage">
 								<string key="NSClassName">NSImage</string>
 								<string key="NSResourceName">radio_back.png</string>
 							</object>
@@ -1106,6 +1127,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="407994361"/>
 							<reference ref="90599710"/>
+							<reference ref="127114168"/>
 						</object>
 						<reference key="parent" ref="609645942"/>
 					</object>
@@ -1169,6 +1191,11 @@
 						<reference key="object" ref="942732438"/>
 						<reference key="parent" ref="609475281"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">927</int>
+						<reference key="object" ref="127114168"/>
+						<reference key="parent" ref="226251063"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1221,6 +1248,8 @@
 					<string>902.IBViewBoundsToFrameTransform</string>
 					<string>903.IBPluginDependency</string>
 					<string>904.IBPluginDependency</string>
+					<string>927.IBPluginDependency</string>
+					<string>927.IBViewBoundsToFrameTransform</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1296,6 +1325,10 @@
 					<object class="NSAffineTransform"/>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<object class="NSAffineTransform">
+						<bytes key="NSTransformStruct">AUCgAABBQAAAA</bytes>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="unlocalizedProperties">
@@ -1314,7 +1347,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">926</int>
+			<int key="maxID">927</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
