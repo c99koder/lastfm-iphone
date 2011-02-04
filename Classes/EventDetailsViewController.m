@@ -237,6 +237,7 @@
 			} else {
 				ArtistViewController* artistVC = [[ArtistViewController alloc] initWithArtist:[_event objectForKey:@"artists"]];
 				[self.navigationController pushViewController: artistVC animated: YES];
+				[artistVC release];
 			}
 
 			break;
@@ -305,7 +306,7 @@
 	[tableView reloadData];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"simplecell"];
+	UITableViewCell *cell = nil;
 
 	int section = [indexPath section];
 
@@ -349,7 +350,7 @@
 			return eventCell;
 		}
 		case 1:
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier: nil];
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier: nil] autorelease];
 			cell.textLabel.text = @"Playing";
 			cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
 			cell.detailTextLabel.text = [self formatArtistsFromEvent: _event];
@@ -358,7 +359,7 @@
 			break;
 		case 2:
 		{
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier: nil];
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier: nil] autorelease];
 			int row = [indexPath row];
 			if( row == 0 ) {
 				cell.textLabel.text = NSLocalizedString( @"Address", @"Address label" );

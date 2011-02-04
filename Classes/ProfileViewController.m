@@ -65,6 +65,7 @@
 		[tracks release];
 		[artists release];
 		[images release];
+		[friendsListeningNow release];
 	}
 	[pool release];
 }

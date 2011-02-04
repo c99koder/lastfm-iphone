@@ -146,6 +146,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]];
 	[artist paintItBlack];
 	[self.navigationController pushViewController:artist animated:YES];
+	[artist release];
 #if !(TARGET_IPHONE_SIMULATOR)
 	[[Beacon shared] startSubBeaconWithName:@"on-tour-strap" timeSession:NO];
 #endif

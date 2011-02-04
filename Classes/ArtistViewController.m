@@ -83,6 +83,8 @@
 		[btn addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
 		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
 		self.navigationItem.leftBarButtonItem = item;
+		[btn release];
+		[item release];
 	} else {
 		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	}
@@ -312,11 +314,11 @@
 				details.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
 				UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:details];
 				[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:n animated:YES];
-				[details release];
 				[n release];
 			} else {
 				[self.navigationController pushViewController:details animated:YES];
 			}
+			[details release];
 		}
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
@@ -444,7 +446,7 @@
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"] && _toggle.selectedSegmentIndex == 0) {
 		UITableViewCell *tagcell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"TagCell"];
 		if(tagcell == nil) {
-			tagcell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TagCell"];
+			tagcell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TagCell"] autorelease];
 			tagcell.selectionStyle = UITableViewCellSelectionStyleNone;
 			_tagsView.frame = CGRectMake(8,8,self.view.frame.size.width - 32, _tagsView.text.height);
 			_tagsView.textColor = [UIColor blackColor];

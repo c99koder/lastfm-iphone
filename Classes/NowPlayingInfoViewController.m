@@ -148,7 +148,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[super viewWillAppear:animated];
 	[self.navigationController setToolbarHidden:YES];
 	self.navigationController.toolbar.barStyle = UIBarStyleDefault;
-	[TTStyleSheet setGlobalStyleSheet:[[TTDefaultStyleSheet alloc] init]];
+	[TTStyleSheet setGlobalStyleSheet:[[[TTDefaultStyleSheet alloc] init] autorelease]];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackDidChange object:nil];
 }
 - (void)viewWillAppear:(BOOL)animated {
@@ -161,7 +161,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
-	[TTStyleSheet setGlobalStyleSheet:[[NowPlayingInfoStyleSheet alloc] init]];
+	[TTStyleSheet setGlobalStyleSheet:[[[NowPlayingInfoStyleSheet alloc] init] autorelease]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
