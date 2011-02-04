@@ -78,23 +78,13 @@
 			sharedItem = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@'>%@</a>", 
 						  [_artist URLEscaped], _artist];
 		}
-		[mail setMessageBody:[NSString stringWithFormat:@"Hi there,<br/>\
-							  <br/>\
-							  %@ at Last.fm wants to share this with you:<br/>\
-							  <br/>\
-							  %@<br/>\
-							  <br/>\
-							  If you like this, add it to your Library. <br/>\
-							  This will make it easier to find, and will tell your Last.fm profile a bit more<br/>\
-							  about your music taste. This improves your recommendations and your Last.fm Radio.<br/>\
-							  <br/>\
-							  The more good music you add to your Last.fm Profile, the better it becomes :)<br/>\
-							  <br/>\
-							  Best Regards,<br/>\
-							  The Last.fm Team<br/>\
-							  --<br/>\
-							  Visit Last.fm for personal radio, tons of recommended music, and free downloads.<br/>\
-							  Create your own music profile at <a href='http://www.last.fm'>Last.fm</a><br/>",
+		[mail setMessageBody:[NSString stringWithFormat:@"<p>Hi there,</p>\
+							  <p>%@ has shared %@ with you on Last.fm!</p>\
+							  <p>Click the link for more information about this music.</p>\
+							  <p>Don't have a Last.fm account?<br/>\
+							  Last.fm helps you find new music, effortlessly keeping a record of what you listen to from almost any player.</p>\
+							  </p><a href='http://www.last.fm/join'>Join Last.fm for free</a> and create a music profile.</p>\
+							  <p>- The Last.fm Team</p>",
 							  [[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"],
 							  sharedItem
 							  ] isHTML:YES];
