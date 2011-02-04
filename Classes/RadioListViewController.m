@@ -33,13 +33,20 @@
 @implementation RadioListViewController
 - (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSDictionary *stations = nil;
 	[[LastFMRadio sharedInstance] fetchRecentURLs];
+	if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+		stations = [[[LastFMService sharedInstance] userStations] retain];
 	if(![[NSThread currentThread] isCancelled]) {
 		@synchronized(self) {
+			[_stations release];
+			_stations = stations;
 			[_refreshThread release];
 			_refreshThread = nil;
 		}
 		[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
+	} else {
+		[stations release];
 	}
 	[pool release];
 }
