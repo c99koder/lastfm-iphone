@@ -49,6 +49,10 @@
 	return self;
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+	barStyle = [UIApplication sharedApplication].statusBarStyle;
+}
+
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
 	   [[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"E-mail Address"]) {
@@ -152,7 +156,7 @@
 		[friends release];
 		[viewController presentModalViewController:nav animated:YES];
 		[nav release];
-		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+		[[UIApplication sharedApplication] setStatusBarStyle:barStyle animated:YES];
 	}
 }
 
@@ -170,11 +174,11 @@
 	else
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
 	
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:barStyle animated:YES];
 	[viewController dismissModalViewControllerAnimated:YES];
 }
 - (void)friendsViewControllerDidCancel:(FriendsViewController *)friends {
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:barStyle animated:YES];
 	[viewController dismissModalViewControllerAnimated:YES];
 }
 
