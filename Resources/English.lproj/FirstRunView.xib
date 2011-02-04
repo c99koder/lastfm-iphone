@@ -71,7 +71,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">white_lfm_logo.png</string>
+							<string key="NSResourceName">logo_login.png</string>
 						</object>
 					</object>
 					<object class="IBUIImageView" id="439044746">
@@ -1333,18 +1333,18 @@
 			<object class="NSArray" key="dict.sortedKeys">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>bkgd_login_signup.png</string>
+				<string>logo_login.png</string>
 				<string>rounded_table_cell.png</string>
 				<string>rounded_table_cell_bottom.png</string>
 				<string>rounded_table_cell_top.png</string>
-				<string>white_lfm_logo.png</string>
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{320, 460}</string>
+				<string>{143, 36}</string>
 				<string>{302, 46}</string>
 				<string>{302, 46}</string>
 				<string>{302, 46}</string>
-				<string>{146, 38}</string>
 			</object>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">132</string>
