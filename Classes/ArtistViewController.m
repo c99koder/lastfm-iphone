@@ -30,6 +30,89 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "EventsTabViewController.h"
 #import "EventDetailsViewController.h"
+#import "ShareActionSheet.h"
+#import "TagEditorViewController.h"
+#import <Three20UI/TTPickerViewCell.h>
+
+@interface ArtistButtonsCell : UITableViewCell
+{
+	struct {
+		UIButton* addToLibrary;
+		UIButton* share;
+		UIButton* addTags;
+	} _buttons;
+	
+	NSString* _artist;
+	NSObject<ArtistButtonsCellDelegate>* _delegate;
+}
+
+- (id)initWithArtist:(NSString*)artist reuseIdentifier:(NSString*)identifier;
+@property (readwrite, assign) NSObject<ArtistButtonsCellDelegate>* delegate;
+@property (readonly) UIButton* addToLibrary;
+@property (readonly) UIButton* share;
+@property (readonly) UIButton* addTags;
+
+@end
+
+@implementation ArtistButtonsCell
+
+
+- (UIButton*)addToLibrary { return _buttons.addToLibrary; }
+- (UIButton*)share { return _buttons.share; }
+- (UIButton*)addTags { return _buttons.addTags; }
+
+- (id)initWithArtist:(NSString*)artist reuseIdentifier:(NSString*)identifier {
+	if ( self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier] ) {
+		_artist = [artist retain];
+		self.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+		self.selectionStyle = UITableViewCellSelectionStyleNone;
+		_buttons.addToLibrary = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		_buttons.addToLibrary.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+		[_buttons.addToLibrary setTitle: @"Add to Library" forState:UIControlStateNormal];
+		[_buttons.addToLibrary setTitle: @"Added to Library" forState:UIControlStateDisabled];
+		[_buttons.addToLibrary setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+		[self.contentView addSubview: _buttons.addToLibrary];		
+		
+		_buttons.share = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		_buttons.share.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+		[_buttons.share setTitle: @"Share" forState:UIControlStateNormal];
+		[self.contentView addSubview: _buttons.share];		
+		
+		_buttons.addTags = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+		_buttons.addTags.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+		[_buttons.addTags setTitle: @"Add Tags" forState:UIControlStateNormal];
+		[self.contentView addSubview: _buttons.addTags];		
+	}
+	return self;
+}
+
+- (void)layoutSubviews {
+	[super layoutSubviews];
+	float buttonWidth = floor(self.contentView.bounds.size.width / 2) - 7;
+	float buttonHeight = floor( self.contentView.bounds.size.height / 2 ) - 10;
+	_buttons.addToLibrary.frame = CGRectMake(0, 0, buttonWidth, buttonHeight);
+	_buttons.share.frame = CGRectMake(10 + buttonWidth, 0, buttonWidth, buttonHeight);
+	_buttons.addTags.frame = CGRectMake(0, 10 + buttonHeight, buttonWidth, buttonHeight);
+}
+
+- (void)dealloc {
+	[super dealloc];
+	[_artist release];
+}
+
+- (void)setDelegate:(NSObject <ArtistButtonsCellDelegate>*)delegate {
+	_delegate = delegate;
+	[_buttons.addToLibrary addTarget:delegate action:@selector(addToLibrary) forControlEvents:UIControlEventTouchUpInside];
+	[_buttons.share addTarget:delegate action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+	[_buttons.addTags addTarget:delegate action:@selector(addTags) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (id)delegate {
+	return _delegate;
+}
+
+@end
+
 
 @implementation ArtistViewController
 - (void)paintItBlack {
@@ -61,6 +144,8 @@
 }
 - (id)initWithArtist:(NSString *)artist {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+		self.tableView.backgroundView = nil;
+		self.tableView.backgroundColor = [UIColor colorWithRed:0.77f green:0.8f blue:0.83f alpha:1.0f];
 		_artist = [artist retain];
 		_infoTabLoaded = NO;
 		_similarTabLoaded = NO;
@@ -140,7 +225,7 @@
 			
 			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-																															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
+																															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
 																																																										 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 
@@ -155,13 +240,14 @@
 						taghtml = [taghtml stringByAppendingFormat:@"%@", [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
 				} else {
 					if(i < [_tags count]-1 && i < 9)
-						taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@, </a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+						taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
 					else
 						taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
 				}
 			}
 			
 			_tagsView.html = taghtml;
+			_tagsView.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
 			
 			[sections addObject:@"bio"];
 			
@@ -184,6 +270,8 @@
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Albums", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
 			}
+			
+			[sections addObject:@"buttons"];
 		}
 	} else if(_toggle.selectedSegmentIndex == 2) {
 		if(!_similarTabLoaded) {
@@ -268,7 +356,7 @@
  }*/
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(_toggle.selectedSegmentIndex == 1 || _paintItBlack)
-		return nil;
+		return [NSString stringWithFormat:@"Upcoming performances", _artist];
 	else if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
 	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"tags"])
@@ -289,6 +377,8 @@
 	} else if(_toggle.selectedSegmentIndex == 0 && [[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		_bioView.text.width = self.view.frame.size.width - 32;
 		return _bioView.text.height + 16;
+	} else if(_toggle.selectedSegmentIndex == 0 && [[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buttons"]) {
+		return 90;
 	} else if(_toggle.selectedSegmentIndex == 0 && [[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
 		_tagsView.text.width = self.view.frame.size.width - 32;
 		return _tagsView.text.height + 16;
@@ -339,6 +429,8 @@
 	UITableViewCell *loadingCell = [tableView dequeueReusableCellWithIdentifier:@"LoadingCell"];
 	if(!loadingCell) {
 		loadingCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
+		loadingCell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+		loadingCell.backgroundColor = [UIColor clearColor];
 		loadingCell.textLabel.text = @"Loading";
 		[loadingCell showProgress:YES];
 	}
@@ -423,19 +515,22 @@
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.placeholder = @"noimage_artist.png";
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
-			profilecell.shouldRoundTop = YES;
-			profilecell.shouldRoundBottom = YES;
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.title.text = _artist;
 			profilecell.accessoryType = UITableViewCellAccessoryNone;
+			profilecell.backgroundView = [[[UIView alloc]initWithFrame:CGRectZero] autorelease];
+			profilecell.title.backgroundColor = [UIColor clearColor];
+			profilecell.subtitle.backgroundColor = [UIColor clearColor];
+			profilecell.subtitle.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+			profilecell.subtitle.textColor = [UIColor blackColor];
 			
 			NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 			[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
 			profilecell.subtitle.lineBreakMode = UILineBreakModeWordWrap;
 			profilecell.subtitle.numberOfLines = 0;
-			profilecell.subtitle.text = [NSString stringWithFormat:@"%@ plays\n%@ listeners\n%@ plays in your library",
-																	 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"playcount"] intValue]]],
+			profilecell.subtitle.text = [NSString stringWithFormat:@"Listeners: %@\nTotal scrobbles: %@\nYour scrobbles: %@",
 																	 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"listeners"] intValue]]],
+																	 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"playcount"] intValue]]],
 																	 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"userplaycount"] intValue]]]
 																	 ];
 			[numberFormatter release];
@@ -467,6 +562,18 @@
 			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;
+	}
+	
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buttons"] && _toggle.selectedSegmentIndex == 0) {
+		ArtistButtonsCell *buttonscell = (ArtistButtonsCell *)[tableView dequeueReusableCellWithIdentifier:@"ButtonsCell"];
+		if(buttonscell == nil) {
+			buttonscell = [[ArtistButtonsCell alloc] initWithArtist:_artist reuseIdentifier:@"ButtonsCell"];
+			buttonscell.delegate = self;
+		}
+		if( [[_metadata objectForKey:@"userplaycount"] intValue] > 0 ) {
+			buttonscell.addToLibrary.enabled = NO;
+		}
+		return buttonscell;
 	}
 
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
@@ -510,5 +617,45 @@
 	[_similarArtists release];
 	[_bioView release];
 	[_data release];
+}
+- (BOOL)addToLibrary {
+	[[LastFMService sharedInstance] addArtistToLibrary: _artist];
+	if([LastFMService sharedInstance].error) {
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+		return NO;
+	}
+	return YES;
+}
+- (BOOL)share {
+	ShareActionSheet* action = [[ShareActionSheet alloc] initWithArtist:_artist];
+	action.viewController = self;
+	[action showInView: self.view];
+	[action release];
+	return YES;
+}
+- (BOOL)addTags {
+	TagEditorViewController* tagEditor = [[TagEditorViewController alloc] initWithTopTags:_tags userTags:[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]];
+	tagEditor.delegate = self;
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+	[self presentModalViewController:tagEditor animated:YES];
+	[tagEditor release];
+	return YES;
+}
+
+-(void)tagEditorDidCancel {
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+}
+- (void)tagEditorAddTags:(NSArray *)tags {
+	[[LastFMService sharedInstance] addTags:tags toArtist:_artist];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	[self dismissModalViewControllerAnimated:YES];
+}
+- (void)tagEditorRemoveTags:(NSArray *)tags {
+	for(NSString *tag in tags) {
+		[[LastFMService sharedInstance] removeTag:tag fromArtist:_artist];
+		if([LastFMService sharedInstance].error)
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	}
 }
 @end

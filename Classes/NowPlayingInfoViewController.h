@@ -27,7 +27,7 @@
 #import "Three20/Three20.h"
 
 
-@interface NowPlayingInfoViewController : UITableViewController<ABPeoplePickerNavigationControllerDelegate,FriendsViewControllerDelegate,UIActionSheetDelegate,TagEditorViewControllerDelegate,MFMailComposeViewControllerDelegate> {
+@interface NowPlayingInfoViewController : UITableViewController<TagEditorViewControllerDelegate> {
 	NSDictionary *_trackInfo;
 	NSString *_artistImageURL;
 	TTStyledTextLabel *_trackStatsView;

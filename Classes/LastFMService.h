@@ -81,6 +81,8 @@ enum eventStatus {
 - (NSArray *)topAlbumsForArtist:(NSString *)artist;
 - (NSArray *)topTracksForArtist:(NSString *)artist;
 - (void)dismissRecommendedArtist:(NSString *)artist;
+- (void)addArtistToLibrary:(NSString *)artist;
+- (void)recommendArtist:(NSString *)artist toEmailAddress:(NSString *)emailAddress;
 
 #pragma mark Album methods
 

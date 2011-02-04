@@ -22,8 +22,15 @@
 #import <UIKit/UIKit.h>
 #import "Three20/Three20.h"
 #import "LastFMService.h"
+#import "TagEditorViewController.h"
 
-@interface ArtistViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@protocol ArtistButtonsCellDelegate
+- (BOOL)share;
+- (BOOL)addToLibrary;
+- (BOOL)addTags;
+@end
+
+@interface ArtistViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, ArtistButtonsCellDelegate, TagEditorViewControllerDelegate> {
 	NSString *_artist;
 	NSArray *_data;
 	NSArray *_tracks;

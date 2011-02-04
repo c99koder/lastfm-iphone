@@ -273,6 +273,14 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (void)dismissRecommendedArtist:(NSString *)artist {
 	[self doMethod:@"user.dismissArtistRecommendation" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
 }
+- (void)addArtistToLibrary:(NSString *)artist {
+	[self doMethod:@"library.addArtist" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+}
+- (void)recommendArtist:(NSString *)artist toEmailAddress:(NSString *)emailAddress {
+	[self doMethod:@"artist.share" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+																		   [NSString stringWithFormat:@"recipient=%@", [emailAddress URLEscaped]],
+																		   nil];
+}
 
 #pragma mark Album methods
 
