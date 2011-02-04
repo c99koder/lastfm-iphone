@@ -126,6 +126,7 @@ NSString *kUserAgent;
 		[playbackViewController resignActive];
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+	[((UINavigationController *)rootViewController.selectedViewController) viewWillAppear:NO];
 	_locked = NO;
 	if(_pendingAlert)
 		[_pendingAlert show];
