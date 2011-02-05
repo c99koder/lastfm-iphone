@@ -282,8 +282,12 @@
 		cell.shouldFillHeight = YES;
 		if([indexPath row] == 0)
 			cell.shouldRoundTop = YES;
+		else
+			cell.shouldRoundTop = NO;
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
+		else
+			cell.shouldRoundBottom = NO;
 	}		
 	if(cell.accessoryType == UITableViewCellAccessoryNone) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

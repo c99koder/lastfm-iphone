@@ -441,8 +441,12 @@
 		cell.shouldFillHeight = YES;
 		if([indexPath row] == 0)
 			cell.shouldRoundTop = YES;
+		else
+			cell.shouldRoundTop = NO;
 		if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
 			cell.shouldRoundBottom = YES;
+		else
+			cell.shouldRoundBottom = NO;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
