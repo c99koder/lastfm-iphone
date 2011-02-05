@@ -188,7 +188,7 @@
 	}
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	[LastFMService sharedInstance].cacheOnly = YES;
 	[_artists release];
 	_artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];

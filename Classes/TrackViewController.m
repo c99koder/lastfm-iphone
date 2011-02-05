@@ -53,7 +53,7 @@
 	//self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	//self.tableView.sectionHeaderHeight = 0;
 	//self.tableView.sectionFooterHeight = 0;
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 	

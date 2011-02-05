@@ -187,7 +187,7 @@
 	if(_paintItBlack) {
 		self.tableView.backgroundColor = [UIColor blackColor];
 	} else {
-		self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+		self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 		_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Events", @"Similar Artists", nil]];
 		_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
 		_toggle.selectedSegmentIndex = 0;
