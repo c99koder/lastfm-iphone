@@ -204,7 +204,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if([[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSDictionary class]]) {
 		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	}
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];

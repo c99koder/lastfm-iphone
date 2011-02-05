@@ -153,8 +153,8 @@
 		_bioView.text.width = self.view.frame.size.width - 32;
 		return _bioView.text.height + 16;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
-			_tagsView.text.width = self.view.frame.size.width - 32;
-			return _tagsView.text.height + 16;
+		_tagsView.text.width = self.view.frame.size.width - 32;
+		return _tagsView.text.height + 16;
 	} else
 		return 52;
 }

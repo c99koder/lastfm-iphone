@@ -53,6 +53,7 @@
 	//self.tableView.sectionFooterHeight = 0;
 	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
+	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 }
 - (void)rebuildMenu {
 	[self.tableView setContentOffset:CGPointMake(0,0)];
@@ -70,7 +71,21 @@
 																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", _artist], nil]
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-			
+	if([_tags count]) {
+		[sections addObject:@"tags"];
+		NSString *taghtml = @"";
+		
+		for(int i = 0; i < [_tags count] && i < 10; i++) {
+			if(i < [_tags count]-1 && i < 9)
+				taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+			else
+				taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+		}
+		
+		_tagsView.html = taghtml;
+		_tagsView.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
+	}
+	
 	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 											 _artist,
 											 _album];
@@ -92,16 +107,6 @@
 																															 [NSString stringWithFormat:@"lastfm-track://%@/%@", [_artist URLEscaped], [[[_tracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Track Listings", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
-	}
-
-	if([_tags count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_tags count] && x < 10; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tags objectAtIndex:x] objectForKey:@"name"],
-																															 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_tags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Related Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 	}
 	
@@ -128,6 +133,8 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]]) {
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
+	}	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"tags"]) {
+		return @"Popular Tags";
 	} else {
 		return nil;
 	}
@@ -138,7 +145,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0)
 		return 112;
-	else
+	else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
+		_tagsView.text.width = self.view.frame.size.width - 32;
+		return _tagsView.text.height + 16;
+	} else
 		return 52;
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
@@ -247,6 +257,18 @@
 			cell.shouldRoundBottom = YES;
 		else
 			cell.shouldRoundBottom = NO;
+	} else 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
+		UITableViewCell *tagcell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"TagCell"];
+		if(tagcell == nil) {
+			tagcell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TagCell"] autorelease];
+			tagcell.selectionStyle = UITableViewCellSelectionStyleNone;
+			_tagsView.frame = CGRectMake(8,8,self.view.frame.size.width - 32, _tagsView.text.height);
+			_tagsView.textColor = [UIColor blackColor];
+			_tagsView.backgroundColor = [UIColor clearColor];
+			
+			[tagcell.contentView addSubview:_tagsView];
+		}
+		return tagcell;
 	}		
 	if(cell.accessoryType == UITableViewCellAccessoryNone) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -264,5 +286,6 @@
 	[_tags release];
 	[_tracks release];
 	[_data release];
+	[_tagsView release];
 }
 @end

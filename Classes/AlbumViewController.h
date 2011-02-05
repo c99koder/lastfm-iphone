@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
+#import "Three20/Three20.h"
 
 @interface AlbumViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSString *_artist;
@@ -29,6 +30,7 @@
 	NSArray *_tags;
 	NSArray *_tracks;
 	NSDictionary *_metadata;
+	TTStyledTextLabel *_tagsView;
 }
 - (id)initWithAlbum:(NSString *)album byArtist:(NSString *)artist;
 @end
