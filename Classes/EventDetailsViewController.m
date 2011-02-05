@@ -177,7 +177,7 @@
 	_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -427,7 +427,7 @@
 	return self;
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -512,7 +512,7 @@
 	return self;
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];	
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];	
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];

@@ -82,7 +82,7 @@
 	[self rebuildMenu];
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 }

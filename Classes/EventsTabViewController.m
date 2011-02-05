@@ -190,7 +190,7 @@ UIImage *eventDateBGImage = nil;
 	_friendsEvents = nil;
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	[LastFMService sharedInstance].cacheOnly = YES;
 	[self _refresh];
 	[LastFMService sharedInstance].cacheOnly = NO;
@@ -516,7 +516,7 @@ UIImage *eventDateBGImage = nil;
 	[self.tableView reloadData];
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;

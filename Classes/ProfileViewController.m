@@ -114,7 +114,7 @@
 	[_refreshThread start];
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	[LastFMService sharedInstance].cacheOnly = YES;
 	[_recentTracks release];
 	_recentTracks = [[NSMutableArray arrayWithArray:[[LastFMService sharedInstance] recentlyPlayedTracksForUser:_username]] retain];

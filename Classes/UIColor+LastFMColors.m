@@ -24,7 +24,7 @@
 
 
 @implementation UIColor (LastFMColors)
-+ (UIColor*)tableBackgroundColor {
++ (UIColor*)lfmTableBackgroundColor {
 	return [UIColor colorWithRed:0.77f green:0.8f blue:0.83f alpha:1.0f];
 }
 @end

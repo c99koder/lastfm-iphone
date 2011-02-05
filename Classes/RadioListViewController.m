@@ -88,7 +88,7 @@
 	/*self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	self.tableView.sectionHeaderHeight = 0;
 	self.tableView.sectionFooterHeight = 0;*/
-	self.tableView.backgroundColor = [UIColor tableBackgroundColor];
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Type an artist or genre";
 	bar.delegate = self;
