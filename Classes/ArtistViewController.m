@@ -103,9 +103,9 @@
 
 - (void)setDelegate:(NSObject <ArtistButtonsCellDelegate>*)delegate {
 	_delegate = delegate;
-	[_buttons.addToLibrary addTarget:delegate action:@selector(addToLibrary) forControlEvents:UIControlEventTouchUpInside];
-	[_buttons.share addTarget:delegate action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
-	[_buttons.addTags addTarget:delegate action:@selector(addTags) forControlEvents:UIControlEventTouchUpInside];
+	[_buttons.addToLibrary addTarget:delegate action:@selector(addToLibrary:) forControlEvents:UIControlEventTouchUpInside];
+	[_buttons.share addTarget:delegate action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+	[_buttons.addTags addTarget:delegate action:@selector(addTags:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (id)delegate {
@@ -624,28 +624,25 @@
 	[_bioView release];
 	[_data release];
 }
-- (BOOL)addToLibrary {
+- (void)addToLibrary:(id)sender {
 	[[LastFMService sharedInstance] addArtistToLibrary: _artist];
 	if([LastFMService sharedInstance].error) {
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-		return NO;
 	}
-	return YES;
+	((ArtistButtonsCell*)sender).addToLibrary.enabled = NO;
 }
-- (BOOL)share {
+- (void)share:(id)sender {
 	ShareActionSheet* action = [[ShareActionSheet alloc] initWithArtist:_artist];
 	action.viewController = self.tabBarController;
 	[action showFromTabBar: self.tabBarController.tabBar];
 	[action release];
-	return YES;
 }
-- (BOOL)addTags {
+- (void)addTags:(id)sender {
 	TagEditorViewController* tagEditor = [[TagEditorViewController alloc] initWithTopTags:_tags userTags:[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]];
 	tagEditor.delegate = self;
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
 	[self presentModalViewController:tagEditor animated:YES];
 	[tagEditor release];
-	return YES;
 }
 
 -(void)tagEditorDidCancel {

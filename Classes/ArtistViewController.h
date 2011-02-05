@@ -25,9 +25,9 @@
 #import "TagEditorViewController.h"
 
 @protocol ArtistButtonsCellDelegate
-- (BOOL)share;
-- (BOOL)addToLibrary;
-- (BOOL)addTags;
+- (void)share:(id)sender;
+- (void)addToLibrary:(id)sender;
+- (void)addTags:(id)sender;
 @end
 
 @interface ArtistViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, ArtistButtonsCellDelegate, TagEditorViewControllerDelegate> {
