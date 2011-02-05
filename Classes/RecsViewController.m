@@ -139,8 +139,6 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self.tableView reloadData];
-	[self loadContentForCells:[self.tableView visibleCells]];
 	[self.tableView.tableHeaderView resignFirstResponder];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 	if(self.navigationItem.rightBarButtonItem == nil)
@@ -161,6 +159,8 @@
 	[UIView commitAnimations];
 	
 	[self rebuildMenu];
+	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
 	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 	
 	if(_refreshThread) {
