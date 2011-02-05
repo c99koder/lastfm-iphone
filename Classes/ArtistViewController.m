@@ -370,7 +370,7 @@
  return [[[UIView alloc] init] autorelease];
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 0)
+	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 0 && !_paintItBlack)
 		return 86;
 	else if((_toggle.selectedSegmentIndex == 1 || _paintItBlack) && [_events count]) {
 		return 64;
