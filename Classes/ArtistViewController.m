@@ -429,10 +429,20 @@
 	UITableViewCell *loadingCell = [tableView dequeueReusableCellWithIdentifier:@"LoadingCell"];
 	if(!loadingCell) {
 		loadingCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
-		loadingCell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+		loadingCell.backgroundView = [[[UIView alloc] init] autorelease];
 		loadingCell.backgroundColor = [UIColor clearColor];
-		loadingCell.textLabel.text = @"Loading";
-		[loadingCell showProgress:YES];
+		loadingCell.textLabel.text = @"\n\n\nLoading";
+		loadingCell.textLabel.numberOfLines = 0;
+		loadingCell.textLabel.textAlignment = UITextAlignmentCenter;
+		loadingCell.textLabel.textColor = [UIColor blackColor];
+		UIActivityIndicatorView *progress = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+		[progress startAnimating];
+		CGRect frame = progress.frame;
+		frame.origin.y = 20;
+		frame.origin.x = 130;
+		progress.frame = frame;
+		[loadingCell.contentView addSubview: progress];
+		[progress release];
 	}
 	ArtworkCell *cell = nil;
 	
