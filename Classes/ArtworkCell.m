@@ -242,8 +242,6 @@
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	_artwork.image = [self roundedImage:_artwork.image];
-
 	CGRect frame = [self.contentView bounds];
 	if(self.accessoryView != nil)
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
@@ -260,8 +258,10 @@
 			_artwork.frame = CGRectMake(frame.origin.x+4, frame.origin.y+4, frame.size.height-8, frame.size.height-8);
 	}
 	
+	_artwork.image = [self roundedImage:_artwork.image];
+	
 	if(_reflectedArtwork) {
-		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, frame.size.height, 20);
+		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, _artwork.frame.size.width, 20);
 		_reflectedArtwork.frame = artframe;
 		_reflectionMask.frame = artframe;
 		_reflectedArtwork.image = _artwork.image;
