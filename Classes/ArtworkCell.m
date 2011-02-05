@@ -131,6 +131,8 @@
 	int w = self.contentView.bounds.size.height;
 	int h = self.contentView.bounds.size.height;
 
+	NSLog(@"%i, %i", w, h);
+	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 	CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
 	

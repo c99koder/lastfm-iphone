@@ -193,14 +193,15 @@
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
+			profilecell.contentView.bounds = CGRectMake(0,0,111,111);
 			profilecell.backgroundView = [[[UIView alloc] init] autorelease];
 			profilecell.backgroundColor = [UIColor clearColor];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.placeholder = @"noimage_album.png";
+			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.shouldFillHeight = YES;
-			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.title.text = _artist;
 			profilecell.title.backgroundColor = [UIColor clearColor];
 			profilecell.subtitle.backgroundColor = [UIColor clearColor];

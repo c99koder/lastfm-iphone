@@ -521,13 +521,13 @@
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
-			profilecell.contentView.bounds = CGRectMake(0,0,80,80);
+			profilecell.contentView.bounds = CGRectMake(0,0,85,85);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.placeholder = @"noimage_artist.png";
+			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.shouldFillHeight = YES;
-			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.title.text = _artist;
 			profilecell.accessoryType = UITableViewCellAccessoryNone;
 			profilecell.backgroundView = [[[UIView alloc]initWithFrame:CGRectZero] autorelease];
