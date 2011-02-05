@@ -352,6 +352,8 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
+	if(_toggle.selectedSegmentIndex == 2)
+		return;
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
@@ -458,6 +460,9 @@
 			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;
+	}
+	if(_toggle.selectedSegmentIndex == 2) {
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
 	if(cell.accessoryType == UITableViewCellAccessoryNone && _toggle.selectedSegmentIndex == 1) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

@@ -283,7 +283,6 @@
 		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, _artwork.frame.size.width, 20);
 		_reflectedArtwork.frame = artframe;
 		_reflectionMask.frame = artframe;
-		_reflectedArtwork.image = [self reflectionImage: _artwork.image];
 	}
 	
 	if([subtitle.text length]) {
@@ -382,7 +381,7 @@
 	_artwork.alpha = 1;
 	_artwork.opaque = YES;
 	if(_reflectedArtwork) {
-		_reflectedArtwork.image = image;
+		_reflectedArtwork.image = [self reflectionImage: image];
 		_reflectedArtwork.alpha = 1;
 		_reflectedArtwork.opaque = YES;
 	}
