@@ -126,6 +126,25 @@
 -(NSString *)imageURL {
 	return imageURL;
 }
+-(UIImage *)reflectionImage:(UIImage *)image {
+	UIImage *img = image;
+	int w = self.contentView.bounds.size.height;
+	int h = self.contentView.bounds.size.height;
+
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
+	
+	CGRect rect = CGRectMake(0, 0, w, h);
+	CGContextDrawImage(context, rect, img.CGImage);
+	
+	CGImageRef imageMasked = CGBitmapContextCreateImage(context);
+	CGContextRelease(context);
+	CGColorSpaceRelease(colorSpace);
+	
+	img = [UIImage imageWithCGImage:imageMasked];
+	CFRelease(imageMasked);
+	return img;
+}
 -(UIImage *)roundedImage:(UIImage *)image {
 	UIImage *img = image;
 	float scale = 1.0f;
@@ -264,7 +283,7 @@
 		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, _artwork.frame.size.width, 20);
 		_reflectedArtwork.frame = artframe;
 		_reflectionMask.frame = artframe;
-		_reflectedArtwork.image = _artwork.image;
+		_reflectedArtwork.image = [self reflectionImage: _artwork.image];
 	}
 	
 	if([subtitle.text length]) {
