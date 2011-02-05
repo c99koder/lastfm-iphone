@@ -125,15 +125,13 @@ int tagSort(id tag1, id tag2, void *context);
 		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
 		self.navigationItem.leftBarButtonItem = item;
 		self.toolbarItems = [NSArray arrayWithObjects:
-												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
 												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_refresh.png"] style:UIBarButtonItemStylePlain target:self action:@selector(refreshButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
 												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_buy.png"] style:UIBarButtonItemStylePlain target:self action:@selector(buyButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
 												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_share.png"] style:UIBarButtonItemStylePlain target:self action:@selector(shareButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
-												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_tag.png"] style:UIBarButtonItemStylePlain target:self action:@selector(tagButtonPressed)] autorelease],
-												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],nil];
+												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_tag.png"] style:UIBarButtonItemStylePlain target:self action:@selector(tagButtonPressed)] autorelease],nil];
 		((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = NO;
 		[item release];
 		[btn release];
