@@ -37,7 +37,6 @@
 		_track = [track retain];
 		_metadata = [[[LastFMService sharedInstance] metadataForTrack:track byArtist:artist inLanguage:@"en"] retain];
 		_tags = [[[LastFMService sharedInstance] topTagsForTrack:track byArtist:artist] retain];
-		_shouts = [[[LastFMService sharedInstance] shoutsForTrack:track byArtist:artist] retain];
 		_loved = NO;
 		_addedToLibrary = NO;
 		self.title = track;
@@ -56,22 +55,7 @@
 	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
-	
-	_toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Info", @"Related Tags", @"Shouts", nil]];
-	_toggle.segmentedControlStyle = UISegmentedControlStyleBar;
-	_toggle.selectedSegmentIndex = 0;
-	_toggle.frame = CGRectMake(6,6,self.view.frame.size.width - 12, _toggle.frame.size.height);
-	[_toggle addTarget:self
-							action:@selector(rebuildMenu)
-		forControlEvents:UIControlEventValueChanged];
-	
-	UINavigationBar *toggleContainer = [[UINavigationBar alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width,_toggle.frame.size.height + 12)];
-	//if(_paintItBlack)
-	//	toggleContainer.barStyle = UIBarStyleBlackOpaque;
-	[toggleContainer addSubview: _toggle];
-	self.tableView.tableHeaderView = toggleContainer;
-	[toggleContainer release];
-	
+	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
@@ -84,59 +68,50 @@
 	NSMutableArray *sections = [[NSMutableArray alloc] init];
 	NSMutableArray *stations;
 	
-	if(_toggle.selectedSegmentIndex == 0) {
-		[sections addObject:@"heading"];
-		
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
-																																																									 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
-																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-
-		if([[_metadata objectForKey:@"wiki"] length])
-			[sections addObject:@"bio"];
-
-		NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
-												 _artist,
-												 _track];
-		NSString *URL;
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"country"] isEqualToString:@"United States"])
-			URL = [NSString stringWithFormat:@"http://click.linksynergy.com/fs-bin/stat?id=bKEBG4*hrDs&offerid=78941&type=3&subid=0&tmpid=1826&RD_PARM1=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
-		else
-			URL = [NSString stringWithFormat:@"http://clk.tradedoubler.com/click?p=23761&a=1474288&url=%@&tduid=lastfm&partnerId=2003", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+	[sections addObject:@"heading"];
+	
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue])
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Buy on iTunes", URL, nil]
-																																																									 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
-																															[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Love Track", @"love://", nil]
-																																													forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
-																															[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Add To Library", @"library://", nil]
-																																													forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
-																															[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Tag Track", @"tag://", nil]
-																																													forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
-																															[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Share Track", @"share://", nil]
-																																																									 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
-																														 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-	} else if(_toggle.selectedSegmentIndex == 1) {	
-		if([_tags count]) {
-			stations = [[NSMutableArray alloc] init];
-			for(int x=0; x<[_tags count] && x < 10; x++) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tags objectAtIndex:x] objectForKey:@"name"],
-																																 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_tags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-			}
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-			[stations release];
-		}
-	} else if(_toggle.selectedSegmentIndex == 2) {	
-		if([_shouts count]) {
-			stations = [[NSMutableArray alloc] init];
-			for(int x=0; x<[_shouts count] && x < 10; x++) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_shouts objectAtIndex:x] objectForKey:@"author"], [[_shouts objectAtIndex:x] objectForKey:@"body"],
-																																 @"",nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"url",nil]]];
-			}
-			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-			[stations release];
-		}
+																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
+																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
+																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+
+	[sections addObject:@"tags"];
+	NSString *taghtml = @"";
+	
+	for(int i = 0; i < [_tags count] && i < 10; i++) {
+		if(i < [_tags count]-1 && i < 9)
+			taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+		else
+			taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
 	}
+	
+	_tagsView.html = taghtml;
+	_tagsView.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
+
+	if([[_metadata objectForKey:@"wiki"] length])
+		[sections addObject:@"bio"];
+
+	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
+											 _artist,
+											 _track];
+	NSString *URL;
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"country"] isEqualToString:@"United States"])
+		URL = [NSString stringWithFormat:@"http://click.linksynergy.com/fs-bin/stat?id=bKEBG4*hrDs&offerid=78941&type=3&subid=0&tmpid=1826&RD_PARM1=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+	else
+		URL = [NSString stringWithFormat:@"http://clk.tradedoubler.com/click?p=23761&a=1474288&url=%@&tduid=lastfm&partnerId=2003", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
+																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Buy on iTunes", URL, nil]
+																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
+																														[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Love Track", @"love://", nil]
+																																												forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
+																														[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Add To Library", @"library://", nil]
+																																												forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
+																														[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Tag Track", @"tag://", nil]
+																																												forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]],
+																														[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Share Track", @"share://", nil]
+																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
+																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	_data = sections;
 	
 	[self.tableView reloadData];
@@ -162,6 +137,8 @@
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
 	}	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"bio"]) {
 		return @"About This Track";
+	}	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"tags"]) {
+		return @"Popular Tags";
 	} else {
 		return nil;
 	}
@@ -170,16 +147,15 @@
  return [[[UIView alloc] init] autorelease];
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if([indexPath section] == 0 && _toggle.selectedSegmentIndex == 0)
+	if([indexPath section] == 0)
 		return 112;
-	else if(_toggle.selectedSegmentIndex == 0 && [[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
+	else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		_bioView.text.width = self.view.frame.size.width - 32;
 		return _bioView.text.height + 16;
-	} else if(_toggle.selectedSegmentIndex == 2) {
-		ArtworkCell *cell = (ArtworkCell *)[self tableView:tableView cellForRowAtIndexPath:indexPath];
-		return [cell.subtitle.text sizeWithFont:cell.subtitle.font constrainedToSize:CGSizeMake(self.tableView.frame.size.width - 38, MAXFLOAT) lineBreakMode:cell.subtitle.lineBreakMode].height + 36;
-	}
-	else
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
+			_tagsView.text.width = self.view.frame.size.width - 32;
+			return _tagsView.text.height + 16;
+	} else
 		return 52;
 }
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
@@ -299,7 +275,7 @@
 	}
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-	if([indexPath section] == 0 && _toggle.selectedSegmentIndex == 0) {
+	if([indexPath section] == 0) {
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[_metadata objectForKey:@"album"] URLEscaped]]]];
 	}
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
@@ -352,8 +328,6 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	if(_toggle.selectedSegmentIndex == 2)
-		return;
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
@@ -378,7 +352,7 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 1 && _toggle.selectedSegmentIndex == 0 && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+	if([indexPath section] == 1 && ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
@@ -386,19 +360,25 @@
 		return stationCell;
 	}
 	
-	if([indexPath section] == 0 && _toggle.selectedSegmentIndex == 0) {
+	if([indexPath section] == 0) {
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
+			profilecell.contentView.frame = CGRectMake(0,0,111,111);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
+			profilecell.shouldFillHeight = YES;
 			profilecell.placeholder = @"noimage_album.png";
+			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
-			//profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-			//profilecell.backgroundColor = [UIColor clearColor];
+			profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+			profilecell.backgroundColor = [UIColor clearColor];
 			profilecell.title.text = _artist;
-			[profilecell addBorder];
-
+			profilecell.title.backgroundColor = [UIColor clearColor];
+			profilecell.subtitle.backgroundColor = [UIColor clearColor];
+			profilecell.subtitle.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+			profilecell.subtitle.textColor = [UIColor blackColor];
+			
 			NSString *duration = @"";
 			int seconds = [[_metadata objectForKey:@"duration"] floatValue] / 1000.0f;
 			if(seconds <= 0) {
@@ -449,6 +429,18 @@
 			cell.shouldRoundBottom = YES;
 		else
 			cell.shouldRoundBottom = NO;
+	} else 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
+		UITableViewCell *tagcell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"TagCell"];
+		if(tagcell == nil) {
+			tagcell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TagCell"] autorelease];
+			tagcell.selectionStyle = UITableViewCellSelectionStyleNone;
+			_tagsView.frame = CGRectMake(8,8,self.view.frame.size.width - 32, _tagsView.text.height);
+			_tagsView.textColor = [UIColor blackColor];
+			_tagsView.backgroundColor = [UIColor clearColor];
+			
+			[tagcell.contentView addSubview:_tagsView];
+		}
+		return tagcell;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
@@ -461,15 +453,9 @@
 		}
 		return biocell;
 	}
-	if(_toggle.selectedSegmentIndex == 2) {
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	}
-	if(cell.accessoryType == UITableViewCellAccessoryNone && _toggle.selectedSegmentIndex == 1) {
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	}
-	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 3 && [indexPath row] == 1 && _loved)
+	if([indexPath section] == 3 && [indexPath row] == 1 && _loved)
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	if(_toggle.selectedSegmentIndex == 0 && [indexPath section] == 3 && [indexPath row] == 2 && _addedToLibrary)
+	if([indexPath section] == 3 && [indexPath row] == 2 && _addedToLibrary)
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	return cell;
 }
@@ -478,13 +464,12 @@
 }
 - (void)dealloc {
 	[super dealloc];
-	[_shouts release];
-	[_toggle release];
 	[_tags release];
 	[_artist release];
 	[_track release];
 	[_metadata release];
 	[_bioView release];
+	[_tagsView release];
 	[_data release];
 }
 @end

@@ -32,10 +32,9 @@
 	NSString *_track;
 	NSArray *_data;
 	NSArray *_tags;
-	NSArray *_shouts;
 	NSDictionary *_metadata;
 	TTStyledTextLabel *_bioView;
-	UISegmentedControl *_toggle;
+	TTStyledTextLabel *_tagsView;
 	BOOL _loved;
 	BOOL _addedToLibrary;
 }
