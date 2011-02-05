@@ -103,7 +103,8 @@
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
-	[sections addObject:@"bio"];
+	if([[_metadata objectForKey:@"wiki"] length])
+		[sections addObject:@"bio"];
 	
 	if(!_artistsDidLoad) {
 		[sections addObject:@"loading"];
@@ -203,7 +204,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	if([newIndexPath row] > 0) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	}
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
