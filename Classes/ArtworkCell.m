@@ -276,7 +276,10 @@
 		float height = 20;
 		if(subtitle.numberOfLines != 1)
 			height = [subtitle.text sizeWithFont:subtitle.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.size.width - 20, frame.size.height - 20 - (Yoffset * 2)) lineBreakMode:subtitle.lineBreakMode].height;
-		subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 20 + Yoffset, frame.size.width - _artwork.frame.size.width - detailWidth - 20, height);
+		if( detailAtBottom ) 
+			subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 20 + Yoffset, frame.size.width - _artwork.frame.size.width - detailWidth - 20, height);
+		else
+			subtitle.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, frame.origin.y + 20 + Yoffset, frame.size.width - _artwork.frame.size.width - 20, height);
 	} else {
 		title.font = [UIFont boldSystemFontOfSize:18];
 		title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 6, Yoffset, frame.size.width - _artwork.frame.size.width - 20 - detailWidth, frame.size.height - (Yoffset * 2));
