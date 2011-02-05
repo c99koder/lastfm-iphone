@@ -37,6 +37,8 @@
 		SearchTabViewController *searchController = [[SearchTabViewController alloc] initWithStyle:UITableViewStylePlain];
 		
 		if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
+			eventsController.navigationItem.title = [NSString stringWithFormat:@"%@'s Events", _username];
+			radioController.navigationItem.title = [NSString stringWithFormat:@"%@'s Radio", _username];
 			[self setViewControllers:[NSArray arrayWithObjects:[[[UINavigationController alloc] initWithRootViewController:profileController] autorelease],
 																[[[UINavigationController alloc] initWithRootViewController:eventsController] autorelease],
 																[[[UINavigationController alloc] initWithRootViewController:searchController] autorelease],
