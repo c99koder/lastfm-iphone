@@ -54,7 +54,7 @@
 }
 - (void)_loadTags {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	_similarTags = [[[LastFMService sharedInstance] tagsSimilarTo:_tag] retain];
+	_tags = [[[LastFMService sharedInstance] tagsSimilarTo:_tag] retain];
 	_similarTagsDidLoad = YES;
 	[self performSelectorOnMainThread:@selector(rebuildMenu) withObject:nil waitUntilDone:YES];
 	[pool release];
@@ -85,6 +85,7 @@
 	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
+	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
@@ -103,6 +104,21 @@
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
+	if([_tags count]) {
+		[sections addObject:@"tags"];
+		NSString *taghtml = @"";
+		
+		for(int i = 0; i < [_tags count] && i < 10; i++) {
+			if(i < [_tags count]-1 && i < 9)
+				taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+			else
+				taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+		}
+		
+		_tagsView.html = taghtml;
+		_tagsView.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
+	}
+
 	if([[_metadata objectForKey:@"wiki"] length])
 		[sections addObject:@"bio"];
 	
@@ -142,18 +158,6 @@
 		[stations release];
 	}
 	
-	if(!_similarTagsDidLoad) {
-		[sections addObject:@"loading"];
-	} else if([_similarTags count]) {
-		stations = [[NSMutableArray alloc] init];
-		for(int x=0; x<[_similarTags count] && x < 5; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_similarTags objectAtIndex:x] objectForKey:@"name"],
-																															 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_similarTags objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
-		}
-		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Similar Tags", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-		[stations release];
-	}
-	
 	_data = sections;
 	
 	[self.tableView reloadData];
@@ -179,6 +183,8 @@
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
 	}	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"bio"]) {
 			return @"About This Tag";
+	}	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"tags"]) {
+		return @"Similar Tags";
 	} else {
 		return nil;
 	}
@@ -190,6 +196,9 @@
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		_bioView.text.width = self.view.frame.size.width - 32;
 		return _bioView.text.height + 16;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
+		_tagsView.text.width = self.view.frame.size.width - 32;
+		return _tagsView.text.height + 16;
 	} else {
 		return 52;
 	}
@@ -255,6 +264,20 @@
 		return stationCell;
 	}
 	
+ 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
+		UITableViewCell *tagcell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"TagCell"];
+		if(tagcell == nil) {
+			tagcell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TagCell"] autorelease];
+			tagcell.selectionStyle = UITableViewCellSelectionStyleNone;
+			_tagsView.frame = CGRectMake(8,8,self.view.frame.size.width - 32, _tagsView.text.height);
+			_tagsView.textColor = [UIColor blackColor];
+			_tagsView.backgroundColor = [UIColor clearColor];
+			
+			[tagcell.contentView addSubview:_tagsView];
+		}
+		return tagcell;
+	}
+
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		UITableViewCell *biocell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BioCell"];
 		if(biocell == nil) {
@@ -301,12 +324,13 @@
 - (void)dealloc {
 	[super dealloc];
 	[_tracks release];
-	[_similarTags release];
+	[_tags release];
 	[_tag release];
 	[_metadata release];
 	[_artists release];
 	[_albums release];
 	[_data release];
 	[_bioView release];
+	[_tagsView release];
 }
 @end

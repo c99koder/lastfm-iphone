@@ -29,9 +29,10 @@
 	NSArray *_tracks;
 	NSArray *_albums;
 	NSArray *_artists;
-	NSArray *_similarTags;
+	NSArray *_tags;
 	NSDictionary *_metadata;
 	TTStyledTextLabel *_bioView;
+	TTStyledTextLabel *_tagsView;
 	BOOL _tracksDidLoad;
 	BOOL _albumsDidLoad;
 	BOOL _artistsDidLoad;
