@@ -208,9 +208,10 @@ int tagSort(id tag1, id tag2, void *context);
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:@"ProfileCell"] autorelease];
-			profilecell.contentView.frame = CGRectMake(0,0,96,96);
+			profilecell.contentView.frame = CGRectMake(0,0,89,89);
 			profilecell.backgroundView = [[[UIView alloc] init] autorelease];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
+			[profilecell addReflection:@"reflectionmask.png"];
 			profilecell.placeholder = @"noimage_artist.png";
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.shouldFillHeight = YES;
@@ -224,7 +225,6 @@ int tagSort(id tag1, id tag2, void *context);
 			profilecell.detailTextLabel.textColor = [UIColor whiteColor];
 			profilecell.detailTextLabel.backgroundColor = [UIColor blackColor];
 			profilecell.accessoryType = UITableViewCellAccessoryNone;
-			[profilecell addReflection:@"reflectionmask.png"];
 		}
 		profilecell.title.text = [_trackInfo objectForKey:@"creator"];
 		profilecell.subtitle.text = [_trackInfo objectForKey:@"title"];
