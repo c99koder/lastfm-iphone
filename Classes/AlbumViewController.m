@@ -180,14 +180,12 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 1 && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue]) {
+	if([indexPath section] == 1 && 
+		 ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
-		UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"streaming.png"]];
-		img.opaque = YES;
-		stationCell.accessoryView = img;
-		[img release];
+		stationCell.imageView.image = [UIImage imageNamed:@"radiostarter.png"];
 		return stationCell;
 	}
 	
@@ -195,12 +193,19 @@
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
 		if(profilecell == nil) {
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
+			profilecell.backgroundView = [[[UIView alloc] init] autorelease];
+			profilecell.backgroundColor = [UIColor clearColor];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.placeholder = @"noimage_album.png";
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
+			profilecell.shouldFillHeight = YES;
+			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.title.text = _artist;
-			[profilecell addBorder];
+			profilecell.title.backgroundColor = [UIColor clearColor];
+			profilecell.subtitle.backgroundColor = [UIColor clearColor];
+			profilecell.subtitle.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+			profilecell.subtitle.textColor = [UIColor blackColor];
 			
 			NSString *releaseDate = @"";
 			NSRange range = [[_metadata objectForKey:@"releasedate"] rangeOfString:@", "];
