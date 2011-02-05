@@ -40,6 +40,7 @@
 - (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];
+	NSLog(@"%@", artists);
 	NSArray *releases = [[[LastFMService sharedInstance] releasesForUser:_username] retain];
 	NSArray *recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:_username] retain];
 	NSString *releaseDataSource = [[[LastFMService sharedInstance] releaseDataSourceForUser:_username] retain];
