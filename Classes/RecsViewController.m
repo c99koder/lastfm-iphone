@@ -40,7 +40,6 @@
 - (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *artists = [[[LastFMService sharedInstance] recommendedArtistsForUser:_username] retain];
-	NSLog(@"%@", artists);
 	NSArray *releases = [[[LastFMService sharedInstance] releasesForUser:_username] retain];
 	NSArray *recommendedReleases = [[[LastFMService sharedInstance] recommendedReleasesForUser:_username] retain];
 	NSString *releaseDataSource = [[[LastFMService sharedInstance] releaseDataSourceForUser:_username] retain];
@@ -140,7 +139,6 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self rebuildMenu];
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[self.tableView.tableHeaderView resignFirstResponder];
@@ -162,6 +160,7 @@
 		self.navigationItem.rightBarButtonItem.enabled = NO;
 	[UIView commitAnimations];
 	
+	[self rebuildMenu];
 	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
 	
 	if(_refreshThread) {
@@ -228,6 +227,7 @@
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Music Recommendations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
 			} else {
+				self.navigationItem.rightBarButtonItem.enabled = NO;
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Music Recommendations", @"hint", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			}
 		} else {
