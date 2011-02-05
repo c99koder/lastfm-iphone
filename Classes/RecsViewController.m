@@ -241,7 +241,9 @@
 					[formatter setLocale:[NSLocale currentLocale]];
 					
 					[formatter setDateStyle:NSDateFormatterMediumStyle];
-					NSString *releaseDate = [NSString stringWithFormat:@"Released %@", [formatter stringFromDate:date]];
+					NSString *releaseDate = @""; 
+					if([formatter stringFromDate:date])
+						releaseDate = [NSString stringWithFormat:@"Released %@", [formatter stringFromDate:date]];
 					[formatter release];
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_releases objectAtIndex:x] objectForKey:@"name"], [[_releases objectAtIndex:x] objectForKey:@"image"], [[_releases objectAtIndex:x] objectForKey:@"artist"], releaseDate,
 																																	 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_releases objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_releases objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"artist", @"releasedate", @"url", nil]]];
