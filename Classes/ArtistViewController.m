@@ -512,7 +512,12 @@
 			return eventCell;
 		} else {
 			UITableViewCell *emptyCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
+			emptyCell.selectionStyle = UITableViewCellSelectionStyleNone;
+			emptyCell.backgroundView = [[[UIView alloc] init] autorelease];
+			emptyCell.backgroundColor = [UIColor clearColor];
 			emptyCell.textLabel.text = @"No Upcoming Events";
+			emptyCell.textLabel.backgroundColor = [UIColor clearColor];
+			emptyCell.textLabel.textAlignment = UITextAlignmentCenter;
 			return emptyCell;
 		}
 	}
