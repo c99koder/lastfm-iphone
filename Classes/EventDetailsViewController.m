@@ -173,6 +173,7 @@
 - (void)_updateEvent:(NSDictionary *)event {
 	[_event release];
 	_event = [event retain];
+	[LastFMService sharedInstance].cacheOnly = NO;
 	_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
 }
 - (void)viewDidLoad {
