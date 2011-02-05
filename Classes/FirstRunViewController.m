@@ -87,8 +87,14 @@
 #endif
 	}	
 }
+- (BOOL)validateEmail: (NSString *) candidate {
+	NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"; 
+	NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex]; 
+	
+	return [emailTest evaluateWithObject:candidate];
+}
 -(IBAction)createButtonPressed:(id)sender {
-	if([_regusername.text length] && [_regpassword.text length] && [_regemail.text length]) {
+	if([_regusername.text length] && [_regpassword.text length] && [_regemail.text length] && [self validateEmail:_regemail.text]) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 		_regusername.enabled = NO;
 		_regpassword.enabled = NO;
