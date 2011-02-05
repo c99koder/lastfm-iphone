@@ -266,29 +266,33 @@ UIImage *eventDateBGImage = nil;
 	switch([newIndexPath section]) {
 		case 0:
 		{
-			if([newIndexPath row]==3) {
-				UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_events];
-				controller.title = @"Events";
-				[self.navigationController pushViewController:controller animated:YES];
-				[controller release];
-			} else {
-				EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
-				[self.navigationController pushViewController:details animated:YES];
-				[details release];
+			if([_events count]) {
+				if([newIndexPath row]==3) {
+					UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_events];
+					controller.title = @"Events";
+					[self.navigationController pushViewController:controller animated:YES];
+					[controller release];
+				} else {
+					EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[newIndexPath row]]];
+					[self.navigationController pushViewController:details animated:YES];
+					[details release];
+				}
 			}
 			break;
 		}
 		case 1:
 		{
-			if([newIndexPath row]==3) {
-				UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_recs];
-				controller.title = @"Recommended Events";
-				[self.navigationController pushViewController:controller animated:YES];
-				[controller release];
-			} else {
-				EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
-				[self.navigationController pushViewController:details animated:YES];
-				[details release];
+			if([_recs count]) {
+				if([newIndexPath row]==3) {
+					UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_recs];
+					controller.title = @"Recommended Events";
+					[self.navigationController pushViewController:controller animated:YES];
+					[controller release];
+				} else {
+					EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_recs objectAtIndex:[newIndexPath row]]];
+					[self.navigationController pushViewController:details animated:YES];
+					[details release];
+				}
 			}
 			break;
 		}
@@ -347,6 +351,10 @@ UIImage *eventDateBGImage = nil;
 	}
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+	if([newIndexPath section] == 0 && [_events count] == 0)
+		return;
+	if([newIndexPath section] == 1 && [_recs count] == 0)
+		return;
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.5];
@@ -372,6 +380,7 @@ UIImage *eventDateBGImage = nil;
 				UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
 				hintCell.backgroundView = [[[UIView alloc] init] autorelease];
 				hintCell.backgroundColor = [UIColor clearColor];
+				hintCell.selectionStyle = UITableViewCellSelectionStyleNone;
 				hintCell.textLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
 				hintCell.textLabel.shadowColor = [UIColor whiteColor];
 				hintCell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
@@ -421,6 +430,7 @@ UIImage *eventDateBGImage = nil;
 				UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
 				hintCell.backgroundView = [[[UIView alloc] init] autorelease];
 				hintCell.backgroundColor = [UIColor clearColor];
+				hintCell.selectionStyle = UITableViewCellSelectionStyleNone;
 				hintCell.textLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
 				hintCell.textLabel.shadowColor = [UIColor whiteColor];
 				hintCell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);

@@ -321,7 +321,7 @@
 	}
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
 		[[UIApplication sharedApplication] performSelectorOnMainThread:@selector(openURLWithWarning:) withObject:[NSURL URLWithString:station] waitUntilDone:YES];
@@ -394,6 +394,7 @@
 		UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
 		hintCell.backgroundView = [[[UIView alloc] init] autorelease];
 		hintCell.backgroundColor = [UIColor clearColor];
+		hintCell.selectionStyle = UITableViewCellSelectionStyleNone;
 		hintCell.textLabel.textColor = [UIColor colorWithRed:(76.0f / 255.0f) green:(86.0f / 255.0f) blue:(108.0f / 255.0f) alpha:1.0];
 		hintCell.textLabel.shadowColor = [UIColor whiteColor];
 		hintCell.textLabel.shadowOffset = CGSizeMake(0.0, 1.0);
