@@ -80,6 +80,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	_noArtworkView.opaque = NO;
 	[_artworkView addSubview: _noArtworkView];
 }
+- (void)viewDidUnload {
+	[super viewDidUnload];
+	[_lock release];
+	_lock = nil;
+}
 - (void)_systemVolumeChanged:(NSNotification *)notification {
 	float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
 	for(UIView *v in [volumeView subviews]) {
@@ -178,6 +183,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[artistViewController release];
 		artistViewController = nil;
 	}
+	[_lock release];
 }
 - (void)becomeActive {
 	NSLog(@"Resuming timer and subscribing to track changes");
