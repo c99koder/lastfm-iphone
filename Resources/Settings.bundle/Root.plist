@@ -60,20 +60,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Show Neighborhood</string>
-			<key>Key</key>
-			<string>showneighborradio</string>
-			<key>DefaultValue</key>
-			<string>NO</string>
-			<key>TrueValue</key>
-			<string>YES</string>
-			<key>FalseValue</key>
-			<string>NO</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>High Quality Audio</string>
 			<key>Key</key>
 			<string>bitrate</string>
@@ -85,20 +71,20 @@
 			<string>64</string>
 		</dict>
 		<dict>
-		    <key>Type</key>
-		    <string>PSGroupSpecifier</string>
-		    <key>Title</key>
-		    <string>Anonymous Usage Statistics</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Anonymous Usage Statistics</string>
 		</dict>
 		<dict>
-		    <key>Type</key>
-		    <string>PSToggleSwitchSpecifier</string>
-		    <key>Title</key>
-		    <string>Send Statistics</string>
-		    <key>Key</key>
-		    <string>kEnablePinchMediaStatsCollection</string>
-		    <key>DefaultValue</key>
-		    <true/>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Send Statistics</string>
+			<key>Key</key>
+			<string>kEnablePinchMediaStatsCollection</string>
+			<key>DefaultValue</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -119,10 +105,10 @@
 			<string>High Quaility Audio will use higher quality audio over your cellular connection, however tracks will take longer to buffer.  High quality is always used for WiFi networks.</string>
 		</dict>
 		<dict>
-		    <key>Type</key>
-		    <string>PSGroupSpecifier</string>
-		    <key>Title</key>
-		    <string>Anonymous usage statistics are used by this application&apos;s developers to help understand their applications and make them better.</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Anonymous usage statistics are used by this application&apos;s developers to help understand their applications and make them better.</string>
 		</dict>
 	</array>
 </dict>
