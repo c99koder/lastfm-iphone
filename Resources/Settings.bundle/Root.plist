@@ -96,12 +96,6 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Neighbor radio will play music that people with similar music tastes to you enjoy.</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
 			<string>High Quaility Audio will use higher quality audio over your cellular connection, however tracks will take longer to buffer.  High quality is always used for WiFi networks.</string>
 		</dict>
 		<dict>
