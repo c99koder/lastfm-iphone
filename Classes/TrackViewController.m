@@ -232,7 +232,7 @@
 			profilecell.shouldFillHeight = YES;
 			profilecell.placeholder = @"noimage_album.png";
 			[profilecell addReflection:@"reflectionmask-blue.png"];
-			profilecell.imageURL = @"searchresults_track.png"; //[_metadata objectForKey:@"image"];
+			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 			profilecell.backgroundColor = [UIColor clearColor];
