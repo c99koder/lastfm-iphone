@@ -88,8 +88,9 @@
 	[super viewWillDisappear:animated];
 	self.navigationController.navigationBarHidden = NO;
 }
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController {
 	[(UINavigationController *)tabBarController.selectedViewController popToRootViewControllerAnimated:NO];
+	return YES;
 }
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.

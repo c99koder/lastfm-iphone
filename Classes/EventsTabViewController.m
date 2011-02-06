@@ -260,9 +260,6 @@ UIImage *eventDateBGImage = nil;
 	return 46;
 }
 -(void)_rowSelected:(NSIndexPath *)newIndexPath {
-	UINavigationController *controller = nil;
-	NSArray *data = nil;
-	
 	switch([newIndexPath section]) {
 		case 0:
 		{
@@ -315,15 +312,10 @@ UIImage *eventDateBGImage = nil;
 			if(controller) {
 				controller.title = @"Friends’ Events";
 				[self.navigationController pushViewController:controller animated:YES];
-				[controller autorelease];
+				[controller release];
 			}			
 			
 		}
-	}
-	
-	if(controller) {
-		[self.navigationController pushViewController:controller animated:YES];
-		[controller release];
 	}
 	[[self tableView] reloadData];
 }
@@ -343,7 +335,7 @@ UIImage *eventDateBGImage = nil;
 			controller.title = @"Events Near Me";
 			((EventListViewController*)controller).footerText = @"Based on a 50km/31 mile radius from your current location.";
 			[self.navigationController pushViewController:controller animated:YES];
-			[controller autorelease];
+			[controller release];
 		}
 		[_locationManager autorelease];
 		_locationManager = nil;
