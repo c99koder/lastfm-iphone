@@ -232,7 +232,7 @@
 			profilecell.shouldFillHeight = YES;
 			profilecell.placeholder = @"noimage_album.png";
 			[profilecell addReflection:@"reflectionmask-blue.png"];
-			profilecell.imageURL = [_metadata objectForKey:@"image"];
+			profilecell.imageURL = @"searchresults_track.png"; //[_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 			profilecell.backgroundColor = [UIColor clearColor];
@@ -425,7 +425,7 @@
 	[t release];
 }
 - (void)share:(id)sender {
-	ShareActionSheet* action = [[ShareActionSheet alloc] initWithTrack:_track forArtist:_artist];
+	ShareActionSheet* action = [[ShareActionSheet alloc] initWithTrack:_track byArtist:_artist];
 	action.viewController = self.tabBarController;
 	[action showFromTabBar: self.tabBarController.tabBar];
 	[action release];

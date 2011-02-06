@@ -22,8 +22,9 @@
 #import <UIKit/UIKit.h>
 #import "LastFMService.h"
 #import "Three20/Three20.h"
+#import "TagEditorViewController.h"
 
-@interface AlbumViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface AlbumViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, TagEditorViewControllerDelegate> {
 	NSString *_artist;
 	NSString *_album;
 	NSArray *_data;

@@ -44,11 +44,12 @@
 	}
 	return self;
 }
-- (id)initWithTrack:(NSString*)track forArtist:(NSString*)artist {
+- (id)initWithTrack:(NSString*)track byArtist:(NSString*)artist {
 	self = [self initSuperWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share track sheet title")];
 	if ( self ) {
 		_track = [track retain];
 		_artist = [artist retain];
+		_album = nil;
 	}
 	return self;
 }
@@ -57,6 +58,17 @@
 	self = [self initSuperWithTitle:NSLocalizedString(@"Who would you like to share this artist with?", @"Share artist sheet title") ];
 	if ( self ) {
 		_track = nil;
+		_album = nil;
+		_artist = [artist retain];
+	}
+	return self;
+}
+
+- (id)initWithAlbum:(NSString*)album byArtist:(NSString *)artist {
+	self = [self initSuperWithTitle:NSLocalizedString(@"Who would you like to share this album with?", @"Share album sheet title") ];
+	if ( self ) {
+		_track = nil;
+		_album = [album retain];
 		_artist = [artist retain];
 	}
 	return self;
@@ -82,13 +94,22 @@
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 		MFMailComposeViewController *mail = [[MFMailComposeViewController alloc] init];
 		[mail setMailComposeDelegate:self];
-		[mail setSubject:[NSString stringWithFormat:@"Last.fm: %@ shared %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"], _track ? _track : _artist]];
+		
 		NSString* sharedItem;
+		if ( _track ) sharedItem = _track;
+		else if ( _album ) sharedItem = _album;
+		else sharedItem = _track;
+		
+		[mail setSubject:[NSString stringWithFormat:@"Last.fm: %@ shared %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"], sharedItem]];
+		NSString* sharedLink;
 		if( _track ) {
-			sharedItem = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@/_/%@'>%@</a>", 
+			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@/_/%@'>%@</a>", 
 													[_artist URLEscaped], [_track URLEscaped], _track];
+		} else if ( _album ) {
+			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@/%@'>%@</a>", 
+						  [_artist URLEscaped], [_album URLEscaped], _album];
 		} else {
-			sharedItem = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@'>%@</a>", 
+			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@'>%@</a>", 
 						  [_artist URLEscaped], _artist];
 		}
 		[mail setMessageBody:[NSString stringWithFormat:@"<p>Hi there,</p>\
@@ -99,7 +120,7 @@
 							  </p><a href='http://www.last.fm/join'>Join Last.fm for free</a> and create a music profile.</p>\
 							  <p>- The Last.fm Team</p>",
 							  [[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"],
-							  sharedItem
+							  sharedLink
 							  ] isHTML:YES];
 		[self retain];
 		[viewController presentModalViewController:mail animated:YES];
@@ -126,6 +147,10 @@
 		[[LastFMService sharedInstance] recommendTrack:_track
 											  byArtist:_artist
 										toEmailAddress:email];
+	} else if ( _album ) {
+		[[LastFMService sharedInstance] recommendAlbum:_album
+											  byArtist:_artist
+										toEmailAddress:email];			
 	} else {
 		[[LastFMService sharedInstance] recommendArtist:_artist
 										 toEmailAddress:email ];
@@ -168,6 +193,10 @@
 		[[LastFMService sharedInstance] recommendTrack:_track
 											  byArtist:_artist
 										toEmailAddress:username];
+	} else if ( _album ) {
+		[[LastFMService sharedInstance] recommendAlbum:_album
+											  byArtist:_artist
+										toEmailAddress:username];
 	} else {
 		[[LastFMService sharedInstance] recommendArtist:_artist
 										 toEmailAddress:username];		
@@ -189,6 +218,7 @@
     [super dealloc];
 	[_artist release];
 	[_track release];
+	[_album release];
 }
 
 

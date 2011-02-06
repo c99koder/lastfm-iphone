@@ -26,9 +26,11 @@
 #include "version.h"
 #import "NSString+URLEscaped.h"
 #import "ArtworkCell.h"
+#import "ButtonsCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "UIColor+LastFMColors.h"
+#import "ShareActionSheet.h"
 
 @implementation AlbumViewController
 - (id)initWithAlbum:(NSString *)album byArtist:(NSString *)artist {
@@ -120,6 +122,8 @@
 		[stations release];
 	}
 	
+	[sections addObject:@"buttons"];
+	
 	_data = sections;
 	
 	[self.tableView reloadData];
@@ -158,6 +162,8 @@
 	else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
 		_tagsView.text.width = self.view.frame.size.width - 32;
 		return _tagsView.text.height + 16;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buttons"]) {
+		return 90;
 	} else
 		return 52;
 }
@@ -279,7 +285,37 @@
 			[tagcell.contentView addSubview:_tagsView];
 		}
 		return tagcell;
-	}		
+	} else 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buttons"]) {
+		ButtonsCell *buttonscell = (ButtonsCell *)[tableView dequeueReusableCellWithIdentifier:@"ButtonsCell"];
+		if(buttonscell == nil) {
+			UIButton* addToLibrary = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+			addToLibrary.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+			[addToLibrary setTitle: @"Add to Library" forState:UIControlStateNormal];
+			[addToLibrary setTitle: @"Added to Library" forState:UIControlStateDisabled];
+			[addToLibrary setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+			[addToLibrary addTarget:self action:@selector(addToLibrary:) forControlEvents:UIControlEventTouchUpInside];
+			if( [[_metadata objectForKey:@"userplaycount"] intValue] > 0 ) {
+				addToLibrary.enabled = NO;
+			}
+			
+			UIButton* share = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+			share.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+			[share setTitle: @"Share" forState:UIControlStateNormal];
+			[share addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+			
+			UIButton* addTags = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+			addTags.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+			[addTags setTitle: @"Add Tags" forState:UIControlStateNormal];
+			[addTags addTarget:self action:@selector(addTags:) forControlEvents:UIControlEventTouchUpInside];
+			
+			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:addToLibrary, share, addTags, nil];
+			[addToLibrary release];
+			[share release];
+			[addTags release];
+		}
+		return buttonscell;
+	}
+	
 	if(cell.accessoryType == UITableViewCellAccessoryNone) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
@@ -297,5 +333,42 @@
 	[_tags release];
 	[_tracks release];
 	[_data release];
+}
+- (void)addToLibrary:(id)sender {
+	[[LastFMService sharedInstance] addAlbumToLibrary:_album byArtist:_artist];
+	if([LastFMService sharedInstance].error) {
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+	}
+	((UIButton*)sender).enabled = NO;
+}
+- (void)share:(id)sender {
+	ShareActionSheet* action = [[ShareActionSheet alloc] initWithAlbum:_album byArtist:_artist];
+	action.viewController = self.tabBarController;
+	[action showFromTabBar: self.tabBarController.tabBar];
+	[action release];
+}
+- (void)addTags:(id)sender {
+	TagEditorViewController* tagEditor = [[TagEditorViewController alloc] initWithTopTags:_tags userTags:[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]];
+	tagEditor.delegate = self;
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+	[self presentModalViewController:tagEditor animated:YES];
+	[tagEditor release];
+}
+
+-(void)tagEditorDidCancel {
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+}
+- (void)tagEditorAddTags:(NSArray *)tags {
+	[[LastFMService sharedInstance] addTags:tags toAlbum:_album byArtist:_artist];
+	if([LastFMService sharedInstance].error)
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	[self dismissModalViewControllerAnimated:YES];
+}
+- (void)tagEditorRemoveTags:(NSArray *)tags {
+	for(NSString *tag in tags) {
+		[[LastFMService sharedInstance] removeTag:tag fromAlbum:_album byArtist:_artist];
+		if([LastFMService sharedInstance].error)
+			[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
+	}
 }
 @end

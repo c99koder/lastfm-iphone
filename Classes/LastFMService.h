@@ -86,12 +86,14 @@ enum eventStatus {
 
 #pragma mark Album methods
 
+- (void)addAlbumToLibrary:(NSString *)album byArtist:(NSString *)artist;
 - (NSDictionary *)metadataForAlbum:(NSString *)album byArtist:(NSString *)artist inLanguage:(NSString *)lang;
 - (NSArray *)topTagsForAlbum:(NSString *)track byArtist:(NSString *)artist;
 - (void)addTags:(NSArray *)tags toAlbum:(NSString *)album byArtist:(NSString *)artist;
 - (void)removeTag:(NSString *)tag fromAlbum:(NSString *)album byArtist:(NSString *)artist;
 - (NSArray *)tagsForAlbum:(NSString *)album byArtist:(NSString *)artist;
 - (NSArray *)tracksForAlbum:(NSString *)album byArtist:(NSString *)artist;
+- (void)recommendAlbum:(NSString *)album byArtist:(NSString *)artist toEmailAddress:(NSString *)emailAddress;
 
 #pragma mark Track methods
 

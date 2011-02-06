@@ -334,7 +334,7 @@ int tagSort(id tag1, id tag2, void *context);
 	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:URL]];
 }
 - (void)shareButtonPressed {
-	ShareActionSheet *sheet = [[ShareActionSheet alloc]initWithTrack:[_trackInfo objectForKey:@"title"] forArtist:[_trackInfo objectForKey:@"creator"]];
+	ShareActionSheet *sheet = [[ShareActionSheet alloc]initWithTrack:[_trackInfo objectForKey:@"title"] byArtist:[_trackInfo objectForKey:@"creator"]];
 	sheet.viewController = self;
 	[sheet showFromTabBar:self.tabBarController.tabBar];
 	[sheet release];

@@ -28,6 +28,7 @@
 @interface ShareActionSheet : UIActionSheet<UIActionSheetDelegate,ABPeoplePickerNavigationControllerDelegate, FriendsViewControllerDelegate, MFMailComposeViewControllerDelegate> {
 	NSString* _artist;
 	NSString* _track;
+	NSString* _album;
 	UIViewController* viewController;
 	UIStatusBarStyle barStyle;
 }
