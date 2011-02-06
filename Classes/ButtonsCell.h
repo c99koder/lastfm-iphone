@@ -1,4 +1,4 @@
-/* TrackViewController.h - Display a track
+/* ButtonsCell.h - A table cell that contains some UIButtons
  * 
  * Copyright 2011 Last.fm Ltd.
  *   - Primarily authored by Sam Steele <sam@last.fm>
@@ -19,24 +19,15 @@
  * along with MobileLastFM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <AddressBookUI/AddressBookUI.h>
-#import <MessageUI/MessageUI.h>
-#import "Three20/Three20.h"
-#import "LastFMService.h"
-#import "TagEditorViewController.h"
-#import "FriendsViewController.h"
 
-@interface TrackViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, TagEditorViewControllerDelegate, UIWebViewDelegate> {
-	NSString *_artist;
-	NSString *_track;
-	NSArray *_data;
-	NSArray *_tags;
-	NSDictionary *_metadata;
-	TTStyledTextLabel *_bioView;
-	TTStyledTextLabel *_tagsView;
-	BOOL _loved;
-	BOOL _addedToLibrary;
+@interface ButtonsCell : UITableViewCell
+{
+	NSMutableArray* _buttons;
+	NSString* _artist;
 }
-- (id)initWithTrack:(NSString *)track byArtist:(NSString *)artist;
+
+- (id)initWithReuseIdentifier:(NSString*)identifier buttons:(UIButton*)button,...;
+
 @end

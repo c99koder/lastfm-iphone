@@ -24,13 +24,7 @@
 #import "LastFMService.h"
 #import "TagEditorViewController.h"
 
-@protocol ArtistButtonsCellDelegate
-- (void)share:(id)sender;
-- (void)addToLibrary:(id)sender;
-- (void)addTags:(id)sender;
-@end
-
-@interface ArtistViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, ArtistButtonsCellDelegate, TagEditorViewControllerDelegate> {
+@interface ArtistViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource, TagEditorViewControllerDelegate> {
 	NSString *_artist;
 	NSArray *_data;
 	NSArray *_tracks;

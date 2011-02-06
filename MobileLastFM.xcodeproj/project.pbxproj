@@ -329,6 +329,7 @@
 		FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348BCE12F03919002EFA95 /* libThree20UINavigator-Xcode3.2.5.a */; };
 		FB348EB912F19F94002EFA95 /* red_button.png in Resources */ = {isa = PBXBuildFile; fileRef = FB348EB712F19F94002EFA95 /* red_button.png */; };
 		FB348EBA12F19F94002EFA95 /* red_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB348EB812F19F94002EFA95 /* red_button@2x.png */; };
+		FB48AB5312FF0BA100E5CDC0 /* ButtonsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FB48AB5212FF0BA100E5CDC0 /* ButtonsCell.m */; };
 		FB66BAA312FB450100DB7579 /* bkgd_loading.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BAA112FB450100DB7579 /* bkgd_loading.png */; };
 		FB66BAA412FB450100DB7579 /* bkgd_loading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BAA212FB450100DB7579 /* bkgd_loading@2x.png */; };
 		FB66BAB012FB46BF00DB7579 /* bkgd_login_signup.png in Resources */ = {isa = PBXBuildFile; fileRef = FB66BAAE12FB46BF00DB7579 /* bkgd_login_signup.png */; };
@@ -1068,6 +1069,8 @@
 		FB222A0E12FC98630060271D /* UIColor+LastFMColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+LastFMColors.m"; sourceTree = "<group>"; };
 		FB348EB712F19F94002EFA95 /* red_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_button.png; sourceTree = "<group>"; };
 		FB348EB812F19F94002EFA95 /* red_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_button@2x.png"; sourceTree = "<group>"; };
+		FB48AB5112FF0BA100E5CDC0 /* ButtonsCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonsCell.h; sourceTree = "<group>"; };
+		FB48AB5212FF0BA100E5CDC0 /* ButtonsCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonsCell.m; sourceTree = "<group>"; };
 		FB66BAA112FB450100DB7579 /* bkgd_loading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bkgd_loading.png; sourceTree = "<group>"; };
 		FB66BAA212FB450100DB7579 /* bkgd_loading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bkgd_loading@2x.png"; sourceTree = "<group>"; };
 		FB66BAAE12FB46BF00DB7579 /* bkgd_login_signup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bkgd_login_signup.png; sourceTree = "<group>"; };
@@ -1110,6 +1113,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				FB48AB5112FF0BA100E5CDC0 /* ButtonsCell.h */,
+				FB48AB5212FF0BA100E5CDC0 /* ButtonsCell.m */,
 				FB66BE0212FB7FE100DB7579 /* ShareActionSheet.h */,
 				FB66BE0312FB7FE100DB7579 /* ShareActionSheet.m */,
 				2263268E12A51133006F34EA /* AlbumViewController.h */,
@@ -2416,6 +2421,7 @@
 				227A674E12F4877600A08DDA /* NowPlayingInfoViewController.m in Sources */,
 				FB66BE0412FB7FE100DB7579 /* ShareActionSheet.m in Sources */,
 				FB222A0F12FC98630060271D /* UIColor+LastFMColors.m in Sources */,
+				FB48AB5312FF0BA100E5CDC0 /* ButtonsCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

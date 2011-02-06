@@ -26,6 +26,7 @@
 #include "version.h"
 #import "NSString+URLEscaped.h"
 #import "ArtworkCell.h"
+#import "ButtonsCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "EventsTabViewController.h"
@@ -34,86 +35,6 @@
 #import "TagEditorViewController.h"
 #import "UIColor+LastFMColors.h"
 #import <Three20UI/TTPickerViewCell.h>
-
-@interface ArtistButtonsCell : UITableViewCell
-{
-	struct {
-		UIButton* addToLibrary;
-		UIButton* share;
-		UIButton* addTags;
-	} _buttons;
-	
-	NSString* _artist;
-	NSObject<ArtistButtonsCellDelegate>* _delegate;
-}
-
-- (id)initWithArtist:(NSString*)artist reuseIdentifier:(NSString*)identifier;
-@property (readwrite, assign) NSObject<ArtistButtonsCellDelegate>* delegate;
-@property (readonly) UIButton* addToLibrary;
-@property (readonly) UIButton* share;
-@property (readonly) UIButton* addTags;
-
-@end
-
-@implementation ArtistButtonsCell
-
-
-- (UIButton*)addToLibrary { return _buttons.addToLibrary; }
-- (UIButton*)share { return _buttons.share; }
-- (UIButton*)addTags { return _buttons.addTags; }
-
-- (id)initWithArtist:(NSString*)artist reuseIdentifier:(NSString*)identifier {
-	if ( self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier] ) {
-		_artist = [artist retain];
-		self.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-		self.selectionStyle = UITableViewCellSelectionStyleNone;
-		_buttons.addToLibrary = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-		_buttons.addToLibrary.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
-		[_buttons.addToLibrary setTitle: @"Add to Library" forState:UIControlStateNormal];
-		[_buttons.addToLibrary setTitle: @"Added to Library" forState:UIControlStateDisabled];
-		[_buttons.addToLibrary setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-		[self.contentView addSubview: _buttons.addToLibrary];		
-		
-		_buttons.share = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-		_buttons.share.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
-		[_buttons.share setTitle: @"Share" forState:UIControlStateNormal];
-		[self.contentView addSubview: _buttons.share];		
-		
-		_buttons.addTags = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-		_buttons.addTags.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
-		[_buttons.addTags setTitle: @"Add Tags" forState:UIControlStateNormal];
-		[self.contentView addSubview: _buttons.addTags];		
-	}
-	return self;
-}
-
-- (void)layoutSubviews {
-	[super layoutSubviews];
-	float buttonWidth = floor(self.contentView.bounds.size.width / 2) - 7;
-	float buttonHeight = floor( self.contentView.bounds.size.height / 2 ) - 10;
-	_buttons.addToLibrary.frame = CGRectMake(0, 0, buttonWidth, buttonHeight);
-	_buttons.share.frame = CGRectMake(10 + buttonWidth, 0, buttonWidth, buttonHeight);
-	_buttons.addTags.frame = CGRectMake(0, 10 + buttonHeight, buttonWidth, buttonHeight);
-}
-
-- (void)dealloc {
-	[super dealloc];
-	[_artist release];
-}
-
-- (void)setDelegate:(NSObject <ArtistButtonsCellDelegate>*)delegate {
-	_delegate = delegate;
-	[_buttons.addToLibrary addTarget:delegate action:@selector(addToLibrary:) forControlEvents:UIControlEventTouchUpInside];
-	[_buttons.share addTarget:delegate action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
-	[_buttons.addTags addTarget:delegate action:@selector(addTags:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (id)delegate {
-	return _delegate;
-}
-
-@end
-
 
 @implementation ArtistViewController
 - (void)paintItBlack {
@@ -608,13 +529,32 @@
 	}
 	
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buttons"] && _toggle.selectedSegmentIndex == 0) {
-		ArtistButtonsCell *buttonscell = (ArtistButtonsCell *)[tableView dequeueReusableCellWithIdentifier:@"ButtonsCell"];
+		ButtonsCell *buttonscell = (ButtonsCell *)[tableView dequeueReusableCellWithIdentifier:@"ButtonsCell"];
 		if(buttonscell == nil) {
-			buttonscell = [[ArtistButtonsCell alloc] initWithArtist:_artist reuseIdentifier:@"ButtonsCell"];
-			buttonscell.delegate = self;
-		}
-		if( [[_metadata objectForKey:@"userplaycount"] intValue] > 0 ) {
-			buttonscell.addToLibrary.enabled = NO;
+			UIButton* addToLibrary = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+			addToLibrary.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+			[addToLibrary setTitle: @"Add to Library" forState:UIControlStateNormal];
+			[addToLibrary setTitle: @"Added to Library" forState:UIControlStateDisabled];
+			[addToLibrary setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+			[addToLibrary addTarget:self action:@selector(addToLibrary:) forControlEvents:UIControlEventTouchUpInside];
+			if( [[_metadata objectForKey:@"userplaycount"] intValue] > 0 ) {
+				addToLibrary.enabled = NO;
+			}
+			
+			UIButton* share = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+			share.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+			[share setTitle: @"Share" forState:UIControlStateNormal];
+			[share addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+			
+			UIButton* addTags = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+			addTags.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+			[addTags setTitle: @"Add Tags" forState:UIControlStateNormal];
+			[addTags addTarget:self action:@selector(addTags:) forControlEvents:UIControlEventTouchUpInside];
+			
+			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:addToLibrary, share, addTags, nil];
+			[addToLibrary release];
+			[share release];
+			[addTags release];
 		}
 		return buttonscell;
 	}
@@ -682,7 +622,7 @@
 	if([LastFMService sharedInstance].error) {
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
 	}
-	((ArtistButtonsCell*)sender).addToLibrary.enabled = NO;
+	((UIButton*)sender).enabled = NO;
 }
 - (void)share:(id)sender {
 	ShareActionSheet* action = [[ShareActionSheet alloc] initWithArtist:_artist];
