@@ -31,5 +31,5 @@
 	NSString *_username;
 }
 -(id)initWithUsername:(NSString *)user;
-
+-(void)setBackButton:(UIImage *)image;
 @end

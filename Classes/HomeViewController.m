@@ -68,20 +68,20 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	self.navigationController.navigationBarHidden = YES;
-	if(self.navigationController) {
-		for(int i = 0; i < [self.viewControllers count]; i++) {
-			if([(UINavigationController *)[[[self.viewControllers objectAtIndex:i] viewControllers] objectAtIndex:0] isKindOfClass:[ProfileViewController class]]) {
-				((UINavigationController *)[[[self.viewControllers objectAtIndex:i] viewControllers] objectAtIndex:0]).navigationItem.title = _username;
-			}
-			UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 42, 30)];
-			[btn setBackgroundImage:[UIImage imageNamed:@"blueBackBtn.png"] forState:UIControlStateNormal];
-			btn.adjustsImageWhenHighlighted = YES;
-			[btn addTarget:self action:@selector(backButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-			UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: btn];
-			[btn release];
-			((UINavigationController *)[[[self.viewControllers objectAtIndex:i] viewControllers] objectAtIndex:0]).navigationItem.leftBarButtonItem = backBarButtonItem;
-			[backBarButtonItem release];
+}
+- (void)setBackButton:(UIImage *)image {
+	for(int i = 0; i < [self.viewControllers count]; i++) {
+		if([(UINavigationController *)[[[self.viewControllers objectAtIndex:i] viewControllers] objectAtIndex:0] isKindOfClass:[ProfileViewController class]]) {
+			((UINavigationController *)[[[self.viewControllers objectAtIndex:i] viewControllers] objectAtIndex:0]).navigationItem.title = _username;
 		}
+		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, image.size.width, image.size.height)];
+		[btn setBackgroundImage:image forState:UIControlStateNormal];
+		btn.adjustsImageWhenHighlighted = YES;
+		[btn addTarget:self action:@selector(backButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+		UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: btn];
+		[btn release];
+		((UINavigationController *)[[[self.viewControllers objectAtIndex:i] viewControllers] objectAtIndex:0]).navigationItem.leftBarButtonItem = backBarButtonItem;
+		[backBarButtonItem release];
 	}
 }
 - (void)viewWillDisappear:(BOOL)animated {
