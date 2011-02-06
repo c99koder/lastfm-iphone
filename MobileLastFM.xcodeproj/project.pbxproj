@@ -217,6 +217,7 @@
 		22A593EC12FDD43A000A347C /* rounded_table_cell_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593E812FDD43A000A347C /* rounded_table_cell_top@2x.png */; };
 		22A593ED12FDD43A000A347C /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593E912FDD43A000A347C /* default.png */; };
 		22A593EE12FDD43A000A347C /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593EA12FDD43A000A347C /* default@2x.png */; };
+		22A5959712FE23F3000A347C /* libPMAnalytics-r91.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */; };
 		22AA37A512DCF2D70000F121 /* SearchTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AA37A412DCF2D70000F121 /* SearchTabViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
@@ -1091,6 +1092,7 @@
 				FB348C2712F0392A002EFA95 /* libThree20UI-Xcode3.2.5.a in Frameworks */,
 				FB348C2812F03930002EFA95 /* libThree20UICommon-Xcode3.2.5.a in Frameworks */,
 				FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */,
+				22A5959712FE23F3000A347C /* libPMAnalytics-r91.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
