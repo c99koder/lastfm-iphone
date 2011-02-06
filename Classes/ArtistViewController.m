@@ -149,10 +149,6 @@
 		_infoTabLoaded = NO;
 		_similarTabLoaded = NO;
 		_eventsTabLoaded = NO;
-		
-		[NSThread detachNewThreadSelector:@selector(_loadInfoTab) toTarget:self withObject:nil];
-		[NSThread detachNewThreadSelector:@selector(_loadSimilarTab) toTarget:self withObject:nil];
-		[NSThread detachNewThreadSelector:@selector(_loadEventsTab) toTarget:self withObject:nil];
 		self.title = artist;
 	}
 	return self;
@@ -205,6 +201,35 @@
 	
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
+	[NSThread detachNewThreadSelector:@selector(_loadInfoTab) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_loadSimilarTab) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_loadEventsTab) toTarget:self withObject:nil];
+}
+- (void)viewDidUnload {
+	[super viewDidUnload];
+	[_tagsView release];
+	_tagsView = nil;
+	[_tracks release];
+	_tracks = nil;
+	[_albums release];
+	_albums = nil;
+	[_events release];
+	_events = nil;
+	[_tags release];
+	_tags = nil;
+	[_metadata release];
+	_metadata = nil;
+	[_toggle release];
+	_toggle = nil;
+	[_similarArtists release];
+	_similarArtists = nil;
+	[_bioView release];
+	_bioView = nil;
+	[_data release];
+	_data = nil;
+	_infoTabLoaded = NO;
+	_eventsTabLoaded = NO;
+	_similarTabLoaded = NO;
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
@@ -628,16 +653,28 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	[_tagsView release];
+	_tagsView = nil;
 	[_tracks release];
+	_tracks = nil;
 	[_albums release];
+	_albums = nil;
 	[_events release];
+	_events = nil;
 	[_tags release];
+	_tags = nil;
 	[_artist release];
+	_artist = nil;
 	[_metadata release];
+	_metadata = nil;
 	[_toggle release];
+	_toggle = nil;
 	[_similarArtists release];
+	_similarArtists = nil;
 	[_bioView release];
+	_bioView = nil;
 	[_data release];
+	_data = nil;
 }
 - (void)addToLibrary:(id)sender {
 	[[LastFMService sharedInstance] addArtistToLibrary: _artist];

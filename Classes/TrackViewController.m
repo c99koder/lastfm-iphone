@@ -35,8 +35,6 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_artist = [artist retain];
 		_track = [track retain];
-		_metadata = [[[LastFMService sharedInstance] metadataForTrack:track byArtist:artist inLanguage:@"en"] retain];
-		_tags = [[[LastFMService sharedInstance] topTagsForTrack:track byArtist:artist] retain];
 		_loved = NO;
 		_addedToLibrary = NO;
 		self.title = track;
@@ -56,6 +54,22 @@
 	self.tableView.scrollsToTop = NO;
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
+	_metadata = [[[LastFMService sharedInstance] metadataForTrack:_track byArtist:_artist inLanguage:@"en"] retain];
+	_tags = [[[LastFMService sharedInstance] topTagsForTrack:_track byArtist:_artist] retain];
+}
+- (void)viewDidUnload {
+	[_tagsView release];
+	_tagsView = nil;
+	[_bioView release];
+	_bioView = nil;
+	[_tagsView release];
+	_tagsView = nil;
+	[_metadata release];
+	_metadata = nil;
+	[_tags release];
+	_tags = nil;
+	[_data release];
+	_data = nil;
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
@@ -464,12 +478,12 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	[_tagsView release];
 	[_tags release];
 	[_artist release];
 	[_track release];
 	[_metadata release];
 	[_bioView release];
-	[_tagsView release];
 	[_data release];
 }
 @end

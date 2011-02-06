@@ -62,15 +62,6 @@
 - (id)initWithTag:(NSString *)tag {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_tag = [tag retain];
-		_metadata = [[[LastFMService sharedInstance] metadataForTag:tag inLanguage:@"en"] retain];
-		_tracksDidLoad = NO;
-		_albumsDidLoad = NO;
-		_artistsDidLoad = NO;
-		_similarTagsDidLoad = NO;
-		[NSThread detachNewThreadSelector:@selector(_loadTracks) toTarget:self withObject:nil];
-		[NSThread detachNewThreadSelector:@selector(_loadAlbums) toTarget:self withObject:nil];
-		[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
-		[NSThread detachNewThreadSelector:@selector(_loadTags) toTarget:self withObject:nil];
 
 		self.title = [tag capitalizedString];
 	}
@@ -86,6 +77,33 @@
 	self.tableView.scrollsToTop = NO;
 	_bioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
+	_tracksDidLoad = NO;
+	_albumsDidLoad = NO;
+	_artistsDidLoad = NO;
+	_similarTagsDidLoad = NO;
+	_metadata = [[[LastFMService sharedInstance] metadataForTag:_tag inLanguage:@"en"] retain];
+	[NSThread detachNewThreadSelector:@selector(_loadTracks) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_loadAlbums) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_loadArtists) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(_loadTags) toTarget:self withObject:nil];
+}
+- (void)viewDidUnload {
+	[_tracks release];
+	_tracks = nil;
+	[_tags release];
+	_tags = nil;
+	[_metadata release];
+	_metadata = nil;
+	[_artists release];
+	_artists = nil;
+	[_albums release];
+	_albums = nil;
+	[_data release];
+	_data = nil;
+	[_bioView release];
+	_bioView = nil;
+	[_tagsView release];
+	_tagsView = nil;
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];

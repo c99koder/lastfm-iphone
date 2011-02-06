@@ -35,9 +35,6 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_artist = [artist retain];
 		_album = [album retain];
-		_metadata = [[[LastFMService sharedInstance] metadataForAlbum:album byArtist:artist inLanguage:@"en"] retain];
-		_tags = [[[LastFMService sharedInstance] topTagsForAlbum:album byArtist:artist] retain]; 
-		_tracks = [[[LastFMService sharedInstance] tracksForAlbum:album byArtist:artist] retain];
 		self.title = album;
 	}
 	return self;
@@ -54,6 +51,19 @@
 	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	self.tableView.scrollsToTop = NO;
 	_tagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
+	_metadata = [[[LastFMService sharedInstance] metadataForAlbum:_album byArtist:_artist inLanguage:@"en"] retain];
+	_tags = [[[LastFMService sharedInstance] topTagsForAlbum:_album byArtist:_artist] retain]; 
+	_tracks = [[[LastFMService sharedInstance] tracksForAlbum:_album byArtist:_artist] retain];
+}
+- (void)voidDidUnload {
+	[_tagsView release];
+	_tagsView = nil;
+	[_metadata release];
+	_metadata = nil;
+	[_tags release];
+	_tags = nil;
+	[_tracks release];
+	_tracks = nil;
 }
 - (void)rebuildMenu {
 	[self.tableView setContentOffset:CGPointMake(0,0)];
@@ -280,12 +290,12 @@
 }
 - (void)dealloc {
 	[super dealloc];
+	[_tagsView release];
 	[_artist release];
 	[_album release];
 	[_metadata release];
 	[_tags release];
 	[_tracks release];
 	[_data release];
-	[_tagsView release];
 }
 @end
