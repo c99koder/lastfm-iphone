@@ -93,6 +93,8 @@
 - (void)viewDidUnload {
 	[super viewDidUnload];
 	NSLog(@"Releasing profile data");
+	[_friendsListeningNow release];
+	_friendsListeningNow = nil;
 	[_recentTracks release];
 	_recentTracks = nil;
 	[_weeklyArtists release];
