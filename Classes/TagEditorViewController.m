@@ -220,7 +220,7 @@ int tagSort(id tag1, id tag2, void *context);
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)txtField {
-	if([textField.text length]) {
+	if([[txtField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] length]) {
 		TTTableItem *item = [TTTableTextItem itemWithText:[txtField.text stringByTrimmingCharactersInSet:
 																											 [NSCharacterSet whitespaceAndNewlineCharacterSet]] URL:nil];
 		[textField addCellWithObject: item];
