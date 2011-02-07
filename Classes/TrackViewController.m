@@ -154,7 +154,7 @@
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0)
-		return 112;
+		return 86;
 	else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"bio"]) {
 		_bioView.text.width = self.view.frame.size.width - 32;
 		return _bioView.text.height + 16;
@@ -242,7 +242,6 @@
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.shouldFillHeight = YES;
 			profilecell.placeholder = @"noimage_album_large.png";
-			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.backgroundView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
@@ -273,7 +272,7 @@
 			NSString *plays = [NSString stringWithFormat:@"%@ plays in your library",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_metadata objectForKey:@"userplaycount"] intValue]]]];
 			profilecell.subtitle.lineBreakMode = UILineBreakModeWordWrap;
 			profilecell.subtitle.numberOfLines = 0;
-			profilecell.subtitle.text = [NSString stringWithFormat:@"%@\n(%@)\n\n%@", _track, duration, plays];
+			profilecell.subtitle.text = [NSString stringWithFormat:@"%@ (%@)\n\n%@", _track, duration, plays];
 			[numberFormatter release];
 		}
 		[profilecell showProgress: NO];

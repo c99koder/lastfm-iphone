@@ -168,7 +168,7 @@
  }*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([indexPath section] == 0)
-		return 112;
+		return 86;
 	else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"tags"]) {
 		_tagsView.text.width = self.view.frame.size.width - 32;
 		return _tagsView.text.height + 16;
@@ -236,7 +236,6 @@
 			profilecell.backgroundColor = [UIColor clearColor];
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.placeholder = @"noimage_album_large.png";
-			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
 			profilecell.shouldFillHeight = YES;
