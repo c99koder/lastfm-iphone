@@ -179,25 +179,27 @@
 																																																										 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 
-			[sections addObject:@"tags"];
-			NSString *taghtml = @"";
-			
-			for(int i = 0; i < [_tags count] && i < 10; i++) {
-				if(_paintItBlack) {
-					if(i < [_tags count]-1 && i < 9)
-						taghtml = [taghtml stringByAppendingFormat:@"%@, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
-					else
-						taghtml = [taghtml stringByAppendingFormat:@"%@", [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
-				} else {
-					if(i < [_tags count]-1 && i < 9)
-						taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
-					else
-						taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+			if ( [_tags count ] > 0 ) {
+				[sections addObject:@"tags"];
+				NSString *taghtml = @"";
+				
+				for(int i = 0; i < [_tags count] && i < 10; i++) {
+					if(_paintItBlack) {
+						if(i < [_tags count]-1 && i < 9)
+							taghtml = [taghtml stringByAppendingFormat:@"%@, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+						else
+							taghtml = [taghtml stringByAppendingFormat:@"%@", [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+					} else {
+						if(i < [_tags count]-1 && i < 9)
+							taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>, ", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+						else
+							taghtml = [taghtml stringByAppendingFormat:@"<a href='lastfm-tag://%@'>%@</a>", [[[_tags objectAtIndex: i] objectForKey:@"name"] URLEscaped], [[[_tags objectAtIndex: i] objectForKey:@"name"] lowercaseString]];
+					}
 				}
+				
+				_tagsView.html = taghtml;
+				_tagsView.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
 			}
-			
-			_tagsView.html = taghtml;
-			_tagsView.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
 			
 			[sections addObject:@"bio"];
 			
