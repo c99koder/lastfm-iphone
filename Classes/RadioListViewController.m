@@ -263,7 +263,7 @@
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Network Stations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
 		
-		if([_recent count]) {
+		if([_recent count] && [_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
 			stations = [[NSMutableArray alloc] init];
 			for(int x=0; x<[_recent count]; x++) {
 				NSMutableString* stationTitle = [NSMutableString stringWithString:[[_recent objectAtIndex:x] objectForKey:@"name"]];
