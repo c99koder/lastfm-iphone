@@ -93,7 +93,11 @@
 																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", [_artist URLEscaped]], nil]
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
-
+	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
+															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"View %@'s profile", _artist], [NSString stringWithFormat:@"lastfm-artist://%@", [_artist URLEscaped]], nil]
+																												   forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
+															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	
 	if ( [_tags count] > 0 ) {
 		[sections addObject:@"tags"];
 		NSString *taghtml = @"";
@@ -178,10 +182,10 @@
 	}
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-	if([indexPath section] == 0) {
-		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[_metadata objectForKey:@"album"] URLEscaped]]]];
-		return;
-	}
+//	if([indexPath section] == 0) {
+//		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[_metadata objectForKey:@"album"] URLEscaped]]]];
+//		return;
+//	}
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
@@ -192,8 +196,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
 	
-	//don't show spinner in button cell
-	if([[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString:@"buttons"]) 
+	//don't show spinner in button cell or the info cell
+	if([newIndexPath section] == 0 ||
+	   [[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString:@"buttons"]) 
 		return;
 	
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
@@ -270,7 +275,7 @@
 			[numberFormatter release];
 		}
 		[profilecell showProgress: NO];
-		profilecell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		profilecell.accessoryType = UITableViewCellAccessoryNone;
 		return profilecell;
 	}
 	

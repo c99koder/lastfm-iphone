@@ -86,6 +86,13 @@
 																													 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@ Radio", _artist], [NSString stringWithFormat:@"lastfm://artist/%@/similarartists", _artist], nil]
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+
+		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
+																 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"View %@'s profile", _artist], [NSString stringWithFormat:@"lastfm-artist://%@", [_artist URLEscaped]], nil]
+																													   forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
+																 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
+	
+	
 	if([_tags count]) {
 		[sections addObject:@"tags"];
 		NSString *taghtml = @"";
@@ -183,6 +190,8 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
+	if( [newIndexPath row] == 0 ) return;
+	
 	if([newIndexPath row] > 0) {
 		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	}
@@ -250,7 +259,7 @@
 			profilecell.subtitle.numberOfLines = 0;
 			profilecell.subtitle.text = [NSString stringWithFormat:@"%@\n\n%@\n%@", _album, releaseDate, plays];
 			[numberFormatter release];
-			profilecell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			profilecell.accessoryType = UITableViewCellAccessoryNone;
 		}		
 		return profilecell;
 	}
@@ -319,7 +328,8 @@
 		return buttonscell;
 	}
 	
-	if(cell.accessoryType == UITableViewCellAccessoryNone) {
+	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] &&
+		[[[_data objectAtIndex:[indexPath section]] objectForKey:@"title"] length] ) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	return cell;
