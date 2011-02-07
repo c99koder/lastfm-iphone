@@ -31,7 +31,7 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "NSString+MD5.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "Beacon.h"
+#import "FlurryAPI.h"
 #endif
 
 int tagSort(id tag1, id tag2, void *context) {
@@ -157,7 +157,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.navigationController pushViewController:artist animated:YES];
 	[artist release];
 #if !(TARGET_IPHONE_SIMULATOR)
-	[[Beacon shared] startSubBeaconWithName:@"on-tour-strap" timeSession:NO];
+	[FlurryAPI logEvent:@"on-tour-strap"];
 #endif
 }
 -(void)loveButtonPressed:(id)sender {
@@ -241,7 +241,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		stopBtn.alpha = 0.5;
 		skipBtn.alpha = 0.5;
 #if !(TARGET_IPHONE_SIMULATOR)
-		[[Beacon shared] startSubBeaconWithName:@"buffering" timeSession:YES];
+		[FlurryAPI logEvent:@"buffering" timed:YES];
 #endif
 	}
 	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
@@ -262,7 +262,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		skipBtn.alpha = 1;
 		[UIView commitAnimations];
 #if !(TARGET_IPHONE_SIMULATOR)
-		[[Beacon shared] endSubBeaconWithName:@"buffering"];
+		[FlurryAPI endTimedEvent:@"buffering" withParameters:nil];
 #endif
 	}
 }

@@ -200,6 +200,7 @@
 		227A674E12F4877600A08DDA /* NowPlayingInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 227A674D12F4877600A08DDA /* NowPlayingInfoViewController.m */; };
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
+		228380D312FFC85B0078177D /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 228380D112FFC85B0078177D /* libFlurry.a */; };
 		229130CE0E1C153F007F5E63 /* blueBackBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 229130CD0E1C153F007F5E63 /* blueBackBtn.png */; };
 		2292951712AD23C500C31269 /* CXMLDocument_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 229294FE12AD23C500C31269 /* CXMLDocument_CreationExtensions.m */; };
 		2292951812AD23C500C31269 /* CXMLNode_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2292950012AD23C500C31269 /* CXMLNode_CreationExtensions.m */; };
@@ -830,7 +831,6 @@
 		22416D4812A7CF7100B4A894 /* TagViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TagViewController.m; sourceTree = "<group>"; };
 		2244DAE70E3A553D00C4F40B /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2244DAFA0E3A55C700C4F40B /* reflectionmask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reflectionmask.png; sourceTree = "<group>"; };
-		224793070F8123C100EE0C52 /* Beacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beacon.h; sourceTree = "<group>"; };
 		224F661112E898FC00ABEECD /* date-detail_view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date-detail_view.png"; sourceTree = "<group>"; };
 		224F662512E8AE2600ABEECD /* tabbar_events.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabbar_events.png; sourceTree = "<group>"; };
 		224F662612E8AE2600ABEECD /* tabbar_events@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_events@2x.png"; sourceTree = "<group>"; };
@@ -868,7 +868,6 @@
 		224F672212E8CFC600ABEECD /* radiostarter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radiostarter@2x.png"; sourceTree = "<group>"; };
 		224F679D12EA0EA400ABEECD /* search_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_icon.png; sourceTree = "<group>"; };
 		224F679E12EA0EA400ABEECD /* search_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_icon@2x.png"; sourceTree = "<group>"; };
-		224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libPMAnalytics-r91.a"; sourceTree = "<group>"; };
 		2259349A0DA85CD30035A1AA /* LastFMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMService.m; sourceTree = "<group>"; };
 		2259349B0DA85CD30035A1AA /* LastFMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LastFMService.h; sourceTree = "<group>"; };
 		2259349C0DA85CD30035A1AA /* LastFMRadio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LastFMRadio.m; sourceTree = "<group>"; };
@@ -909,6 +908,8 @@
 		227F6F430DB26F4900C11B22 /* ArtworkCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtworkCell.m; sourceTree = "<group>"; };
 		228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURLWithWarning.h"; sourceTree = "<group>"; };
 		228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURLWithWarning.m"; sourceTree = "<group>"; };
+		228380D112FFC85B0078177D /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
+		228380D212FFC85B0078177D /* FlurryAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAPI.h; sourceTree = "<group>"; };
 		229124490E6D7CC700F9C17C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.entitlements"; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		229293D312AD217400C31269 /* Three20.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20.xcodeproj; path = three20/src/Three20/Three20.xcodeproj; sourceTree = "<group>"; };
@@ -1104,6 +1105,7 @@
 				FB348C2712F0392A002EFA95 /* libThree20UI-Xcode3.2.5.a in Frameworks */,
 				FB348C2812F03930002EFA95 /* libThree20UICommon-Xcode3.2.5.a in Frameworks */,
 				FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */,
+				228380D312FFC85B0078177D /* libFlurry.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1190,7 +1192,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				224F6A4912EE14C000ABEECD /* libPMAnalytics-r91.a */,
+				228380D112FFC85B0078177D /* libFlurry.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
@@ -1513,7 +1515,6 @@
 				2292942812AD21A400C31269 /* Three20UINavigator.xcodeproj */,
 				2292942B12AD21A400C31269 /* Three20UI.xcodeproj */,
 				229293D312AD217400C31269 /* Three20.xcodeproj */,
-				224793070F8123C100EE0C52 /* Beacon.h */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
@@ -1532,6 +1533,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				228380D212FFC85B0078177D /* FlurryAPI.h */,
 				222F3DF80E59E87600F2BBD5 /* apikey.h */,
 				229294FB12AD23C500C31269 /* Source */,
 				22E42B680E4F4E05009167EA /* pldb */,
@@ -2526,8 +2528,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/mobclix.lib/ARM\"",
-					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;
@@ -2539,10 +2539,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MobileLastFM_Prefix.pch;
@@ -2562,7 +2559,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Last.fm";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DISTRIBUTION,
@@ -2581,6 +2577,10 @@
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_LDFLAGS = (
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+					"-weak_framework",
+					UIKit,
 					"-all_load",
 					"-lxml2",
 					"-lsqlite3",
@@ -2588,7 +2588,6 @@
 				);
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1B37DCB5-FEE8-4168-8D30-2B11E7C21682";
 				SDKROOT = iphoneos4.2;
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv6 i386 ppc";
@@ -2600,10 +2599,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MobileLastFM_Prefix.pch;
@@ -2611,8 +2607,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/mobclix.lib/ARM\"",
-					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;
@@ -2644,8 +2638,12 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_LDFLAGS = (
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+					"-weak_framework",
+					UIKit,
 					"-all_load",
 					"-lxml2",
 					"-lsqlite3",
@@ -2666,10 +2664,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MobileLastFM_Prefix.pch;
@@ -2677,8 +2672,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
-					"\"$(SRCROOT)/mobclix.lib/ARM\"",
-					"\"$(SRCROOT)/mobclix.lib/X86\"",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = Last.fm;
@@ -2708,9 +2701,13 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+					"-weak_framework",
+					UIKit,
 					"-all_load",
 					"-lxml2",
 					"-lsqlite3",
@@ -2743,8 +2740,12 @@
 				IBC_WARNINGS = NO;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_PREPROCESS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 2.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_LDFLAGS = (
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+					"-weak_framework",
+					UIKit,
 					"-all_load",
 					"-lxml2",
 					"-lsqlite3",

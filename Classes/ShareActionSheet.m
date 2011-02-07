@@ -78,6 +78,9 @@
 }
 
 - (void)shareToAddressBook {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"share-addressbook"];
+#endif
 	if(NSClassFromString(@"MFMailComposeViewController") != nil && [MFMailComposeViewController canSendMail]) {
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 		MFMailComposeViewController *mail = [[MFMailComposeViewController alloc] init];
@@ -151,6 +154,9 @@
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 - (void)shareToFriend {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"share-friend"];
+#endif
 	FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	if(friends) {
 		friends.delegate = self;

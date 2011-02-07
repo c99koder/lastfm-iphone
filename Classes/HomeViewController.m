@@ -22,6 +22,9 @@
 #import "HomeViewController.h"
 #import "UIViewController+NowPlayingButton.h"
 #import "MobileLastFMApplicationDelegate.h"
+#if !(TARGET_IPHONE_SIMULATOR)
+#import "FlurryAPI.h"
+#endif
 
 @implementation HomeViewController
 
@@ -36,6 +39,13 @@
 		RadioListViewController *radioController = [[RadioListViewController alloc] initWithUsername:_username];
 		SearchTabViewController *searchController = [[SearchTabViewController alloc] initWithStyle:UITableViewStylePlain];
 		
+#if !(TARGET_IPHONE_SIMULATOR)
+		[FlurryAPI countPageViews:profileController];
+		[FlurryAPI countPageViews:eventsController];
+		[FlurryAPI countPageViews:radioController];
+		[FlurryAPI countPageViews:searchController];
+#endif
+		
 		if(![_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]) {
 			eventsController.navigationItem.title = [NSString stringWithFormat:@"%@'s Events", _username];
 			radioController.navigationItem.title = [NSString stringWithFormat:@"%@'s Radio", _username];
@@ -45,6 +55,9 @@
 																[[[UINavigationController alloc] initWithRootViewController:radioController] autorelease], nil]];
 		} else {
 			RecsViewController *recsController = [[RecsViewController alloc] initWithUsername:_username];
+#if !(TARGET_IPHONE_SIMULATOR)
+			[FlurryAPI countPageViews:recsController];
+#endif
 			[self setViewControllers:[NSArray arrayWithObjects:[[[UINavigationController alloc] initWithRootViewController:profileController] autorelease],
 																[[[UINavigationController alloc] initWithRootViewController:recsController] autorelease],
 																[[[UINavigationController alloc] initWithRootViewController:eventsController] autorelease],
@@ -68,6 +81,9 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	self.navigationController.navigationBarHidden = YES;
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI countPageView];
+#endif
 }
 - (void)setBackButton:(UIImage *)image {
 	for(int i = 0; i < [self.viewControllers count]; i++) {

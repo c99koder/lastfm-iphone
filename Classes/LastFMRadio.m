@@ -27,7 +27,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "Beacon.h"
+#import "FlurryAPI.h"
 #endif
 
 void audioRouteChangeListenerCallback(void *inUserData, AudioSessionPropertyID inPropertyID, UInt32 inPropertyValueSize, const void *inPropertyValue) {
@@ -712,12 +712,14 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			_radioType = @"neighborhood";
 		} else if([_stationURL hasSuffix:@"/loved"]) {
 			_radioType = @"loved tracks";
+		} else if([_stationURL hasSuffix:@"/mix"]) {
+			_radioType = @"mix";
 		} else {
 			_radioType = @"radio";
 		}
 		tuning = YES;
 #if !(TARGET_IPHONE_SIMULATOR)
-		[[Beacon shared] startSubBeaconWithName:_radioType timeSession:YES];
+		[FlurryAPI logEvent:_radioType timed:YES];
 #endif
 		return TRUE;
 	}
@@ -758,7 +760,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 			else
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
 #if !(TARGET_IPHONE_SIMULATOR)
-			[[Beacon shared] startSubBeaconWithName:@"NEC error" timeSession:NO];
+			[FlurryAPI logEvent:@"NEC error"];
 #endif
 			[self stop];
 		}
@@ -795,7 +797,7 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(void)stop {
 	[_busyLock lock];
 #if !(TARGET_IPHONE_SIMULATOR)
-	[[Beacon shared] endSubBeaconWithName:_radioType];
+	[FlurryAPI endTimedEvent:_radioType withParameters:nil];
 #endif
 	NSLog(@"Stopping playback\n");
 	if([_tracks count]) {

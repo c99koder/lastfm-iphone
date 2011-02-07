@@ -32,7 +32,7 @@
 #import "NSData+Compress.h"
 #import "HomeViewController.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "Beacon.h"
+#import "FlurryAPI.h"
 #endif
 
 NSString *kUserAgent;
@@ -45,9 +45,6 @@ NSString *kUserAgent;
 @synthesize rootViewController;
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-#if !(TARGET_IPHONE_SIMULATOR)
-	[[Beacon shared] endBeacon];
-#endif
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE)
 		[[LastFMRadio sharedInstance] stop];
 	
@@ -87,14 +84,17 @@ NSString *kUserAgent;
 																														 @"YES", @"scrobbling",
 																														 @"YES", @"disableautolock",
 																														 @"YES", @"showontour",
-																														 @"NO", @"showneighborradio",
 																														 @"64", @"bitrate",
 																														 @"0", @"trial_playsleft",
 																														 @"0", @"trial_expired",
 																														 @"0", @"trial_playselapsed",
+																														 @"YES", @"kEnablePinchMediaStatsCollection",
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
+		
+		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"kEnablePinchMediaStatsCollection"] isKindOfClass:[NSString class]])
+			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"kEnablePinchMediaStatsCollection"];
 		
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		
@@ -260,7 +260,6 @@ NSString *kUserAgent;
 	
 	[rootViewController release];
 	rootViewController = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-
 	//rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
 	//[home release];
 	//rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
@@ -298,7 +297,9 @@ NSString *kUserAgent;
 		firstRunView = [[FirstRunViewController alloc] initWithNibName:@"FirstRunView" bundle:nil];
 		firstRunView.view.frame = [UIScreen mainScreen].applicationFrame;
 	}
-
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI countPageViews:firstRunView];
+#endif
 	if(animated) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:_mainView cache:YES];
@@ -315,7 +316,10 @@ NSString *kUserAgent;
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[Beacon initAndStartBeaconWithApplicationCode:PINCHMEDIA_ID useCoreLocation:NO useOnlyWiFi:NO];
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"kEnablePinchMediaStatsCollection"] isEqualToString:@"YES"]) {
+		NSLog(@"Flurry is enabled");
+		[FlurryAPI startSession:PINCHMEDIA_ID];
+	}
 #endif
 	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];
 	
@@ -347,7 +351,7 @@ NSString *kUserAgent;
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[[Beacon shared] startSubBeaconWithName:@"love" timeSession:NO];
+	[FlurryAPI logEvent:@"love"];
 #endif
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
@@ -374,7 +378,7 @@ NSString *kUserAgent;
 }
 - (IBAction)banButtonPressed:(UIButton *)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[[Beacon shared] startSubBeaconWithName:@"ban" timeSession:NO];
+	[FlurryAPI logEvent:@"ban"];
 #endif
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
@@ -391,7 +395,7 @@ NSString *kUserAgent;
 }
 - (IBAction)skipButtonPressed:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[[Beacon shared] startSubBeaconWithName:@"skip" timeSession:NO];
+	[FlurryAPI logEvent:@"skip"];
 #endif
 	[[LastFMRadio sharedInstance] skip];
 }
@@ -574,6 +578,9 @@ NSString *kUserAgent;
 	//[rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logError:title message:error exception:nil];
+#endif
 	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
 	if(!_locked)
 		[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];

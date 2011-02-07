@@ -275,6 +275,9 @@
 				if([[_event objectForKey:@"country"] length]) {
 					[query appendFormat:@" %@", [_event objectForKey:@"country"]];
 				}
+#if !(TARGET_IPHONE_SIMULATOR)
+				[FlurryAPI logEvent:@"map"];
+#endif
 				[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?f=q&q=%@&ie=UTF8&om=1&iwloc=addr", [query URLEscaped]]]];
 				[query release];
 				break;
@@ -283,11 +286,17 @@
 				NSString* str = [NSString stringWithFormat:@"tel://%@", [_event objectForKey:@"phonenumber"]];
 				NSString* trimmedStr = [str stringByReplacingOccurrencesOfString:@" " withString:@""];
 				NSURL* url = [NSURL URLWithString: trimmedStr];
+#if !(TARGET_IPHONE_SIMULATOR)
+				[FlurryAPI logEvent:@"phone"];
+#endif
 				[[UIApplication sharedApplication] openURL:url];
 				break;
 			}
 			if( row == 2) {
 				NSURL* url = [NSURL URLWithString:[_event objectForKey:@"website"]];
+#if !(TARGET_IPHONE_SIMULATOR)
+				[FlurryAPI logEvent:@"website"];
+#endif
 				if( ![[url scheme] length] )
 						url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", [_event objectForKey: @"website"]]];
 				[[UIApplication sharedApplication] openURLWithWarning: url];

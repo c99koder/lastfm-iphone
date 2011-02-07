@@ -25,7 +25,7 @@
 #import "NSString+URLEscaped.h"
 #import "version.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "Beacon.h"
+#import "FlurryAPI.h"
 #endif
 
 @implementation FirstRunViewController
@@ -83,7 +83,7 @@
 		[self cancelButtonPressed:nil];
 		[self loginButtonPressed:nil];
 #if !(TARGET_IPHONE_SIMULATOR)
-		[[Beacon shared] startSubBeaconWithName:@"signup" timeSession:NO];
+		[FlurryAPI logEvent:@"signup"];
 #endif
 	}	
 }
