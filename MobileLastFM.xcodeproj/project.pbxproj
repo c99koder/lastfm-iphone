@@ -2124,6 +2124,8 @@
 				22F2FE0F0E31046D000DDCDC /* transparent_grey_button.png in Resources */,
 				2244DAEB0E3A554500C4F40B /* Localizable.strings in Resources */,
 				2244DAFE0E3A55C700C4F40B /* reflectionmask.png in Resources */,
+				FBE5F17413000E8F00394A8F /* reflectionmask@2x.png in Resources */,
+				FBE5F17313000E8F00394A8F /* reflectionmask-blue@2x.png in Resources */,
 				2212D2E40E40C4F20099DB03 /* dark_bkg_gradient.png in Resources */,
 				FB66BAA312FB450100DB7579 /* bkgd_loading.png in Resources */,
 				FB66BAA412FB450100DB7579 /* bkgd_loading@2x.png in Resources */,
@@ -2368,8 +2370,6 @@
 				22669AB812FF49CD0028CC40 /* back_profile.png in Resources */,
 				22669AB912FF49CD0028CC40 /* back_friends@2x.png in Resources */,
 				22669ABA12FF49CD0028CC40 /* back_profile@2x.png in Resources */,
-				FBE5F17313000E8F00394A8F /* reflectionmask-blue@2x.png in Resources */,
-				FBE5F17413000E8F00394A8F /* reflectionmask@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
