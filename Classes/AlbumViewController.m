@@ -190,7 +190,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	[tableView deselectRowAtIndexPath:newIndexPath animated:NO];
-	if( [newIndexPath row] == 0 ) return;
+	if( [newIndexPath section] == 0 ) return;
 	
 	if([newIndexPath row] > 0) {
 		[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
