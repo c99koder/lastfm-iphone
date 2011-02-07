@@ -284,6 +284,9 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 
 #pragma mark Album methods
 
+- (void)addAlbumToLibrary:(NSString *)album byArtist:(NSString *)artist {
+	[self doMethod:@"library.addAlbum" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], [NSString stringWithFormat:@"album=%@", [album URLEscaped]], nil];
+}
 - (NSDictionary *)metadataForAlbum:(NSString *)album byArtist:(NSString *)artist inLanguage:(NSString *)lang {
 	NSDictionary *metadata = nil;
 	NSArray *nodes = [self doMethod:@"album.getInfo" maxCacheAge:7*DAYS XPath:@"./album" withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]], 
@@ -329,6 +332,12 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./artist/name", @"./image[@size=\"large\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"artist", @"image", nil]];
+}
+- (void)recommendAlbum:(NSString *)album byArtist:(NSString *)artist toEmailAddress:(NSString *)emailAddress {
+	[self doMethod:@"album.share" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"album=%@", [album URLEscaped]],
+	 [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]],
+	 [NSString stringWithFormat:@"recipient=%@", [emailAddress URLEscaped]],
+	 nil];
 }
 
 #pragma mark Track methods

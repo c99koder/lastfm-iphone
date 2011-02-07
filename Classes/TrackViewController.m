@@ -425,7 +425,7 @@
 	[t release];
 }
 - (void)share:(id)sender {
-	ShareActionSheet* action = [[ShareActionSheet alloc] initWithTrack:_track forArtist:_artist];
+	ShareActionSheet* action = [[ShareActionSheet alloc] initWithTrack:_track byArtist:_artist];
 	action.viewController = self.tabBarController;
 	[action showFromTabBar: self.tabBarController.tabBar];
 	[action release];
