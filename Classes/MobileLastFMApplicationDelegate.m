@@ -453,11 +453,14 @@ NSString *kUserAgent;
 } 
 - (void)reportError:(NSError *)error {
 	NSLog(@"Error encountered: %@\n", error);
-	if([[LastFMService sharedInstance].error.domain isEqualToString:NSURLErrorDomain]) {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logError:error.domain message:[NSString stringWithFormat:@"Error code %i: %@",error.code,[error.userInfo objectForKey:NSLocalizedDescriptionKey]] error:error];
+#endif
+	if([error.domain isEqualToString:NSURLErrorDomain]) {
 		[self displayError:NSLocalizedString(@"ERROR_NONETWORK", @"Network error") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE", @"Network error title")];
 		return;
-	} else if([[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain]) {
-		switch([LastFMService sharedInstance].error.code) {
+	} else if([error.domain isEqualToString:LastFMServiceErrorDomain]) {
+		switch(error.code) {
 			case errorCodeInvalidAPIKey:
 				[self displayError:NSLocalizedString(@"ERROR_UPGRADE", @"Upgrade required error") withTitle:NSLocalizedString(@"ERROR_UPGRADE_TITLE", @"Upgrade required error title")];
 				return;
@@ -504,41 +507,10 @@ NSString *kUserAgent;
 																								delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Start Trial", nil];
 		}
 		else if(![[LastFMRadio sharedInstance] selectStation:station]) {
-			if([[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain] && [LastFMService sharedInstance].error.code >= 20) {
-				switch([LastFMService sharedInstance].error.code) {
-					case errorCodeNotEnoughContent:
-						[self displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content") withTitle:NSLocalizedString(@"ERROR_STATION_TITLE", @"Station unavailable title")];
-						break;
-					case errorCodeNotEnoughMembers:
-						[self displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_MEMBERS", @"Not enough members") withTitle:NSLocalizedString(@"ERROR_STATION_TITLE", @"Station unavailable title")];
-						break;
-					case errorCodeNotEnoughFans:
-						[self displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_FANS", @"Not enough fans") withTitle:NSLocalizedString(@"ERROR_STATION_TITLE", @"Station unavailable title")];
-						break;
-					case errorCodeNotEnoughNeighbours:
-						[self displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_NEIGHBOURS", @"Not enough neighbours") withTitle:NSLocalizedString(@"ERROR_STATION_TITLE", @"Station unavailable title")];
-						break;
-				}
-				return FALSE;
-			}
-			else
-				[self reportError:[LastFMService sharedInstance].error];
+			[self reportError:[LastFMService sharedInstance].error];
 			return FALSE;
 		}
 	}
-	
-	/*if(playbackViewController == nil) {
-		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
-			if([object isKindOfClass:[PlaybackViewController class]]) {
-				playbackViewController = [object retain];
-				break;
-			}
-		}
-		playbackViewController = [[PlaybackViewController alloc] initWithNibName:@"PlaybackView" bundle:nil];
-		if(!playbackViewController) {
-			NSLog(@"Failed to load playback view!\n");
-		}
-	}*/
 	
 	if(_trialAlert) {
 		_trialAlertStation = [station retain];
@@ -578,9 +550,6 @@ NSString *kUserAgent;
 	//[rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
-#if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logError:title message:error exception:nil];
-#endif
 	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
 	if(!_locked)
 		[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
