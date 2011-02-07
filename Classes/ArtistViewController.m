@@ -158,6 +158,10 @@
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+
+	//Fix Relative URL with a search replace hack:
+	bio = [bio stringByReplacingOccurrencesOfString:@"href=\"/" withString:@"href=\"http://www.last.fm/"];
+	
 	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/music/%@/+wiki\">Read More »</a>", bio, [_artist URLEscaped]];
 	_bioView.html = html;
 	
