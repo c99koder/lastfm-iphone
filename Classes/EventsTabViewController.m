@@ -221,7 +221,10 @@ UIImage *eventDateBGImage = nil;
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if(section == 0) {
-		return @"Events I’m Attending";
+		if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+			return @"Events I’m Attending";
+		else
+			return @"Upcoming Events";
 	} else if(section == 1) {
 		return @"Recommended Events";
 	} else {
@@ -380,7 +383,10 @@ UIImage *eventDateBGImage = nil;
 				hintCell.textLabel.numberOfLines = 0;
 				//hintCell.textLabel.textAlignment = UITextAlignmentCenter;
 				hintCell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-				hintCell.textLabel.text = @"When you say you're coming to an event, it will appear here.";
+				if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
+					hintCell.textLabel.text = @"When you say you're coming to an event, it will appear here.";
+				else
+					hintCell.textLabel.text = @"When this user is coming to an event, it will appear here.";
 				return hintCell;
 			}
 			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
