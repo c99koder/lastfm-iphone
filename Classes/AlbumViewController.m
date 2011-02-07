@@ -88,7 +88,7 @@
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-																 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"View %@'s profile", _artist], [NSString stringWithFormat:@"lastfm-artist://%@", [_artist URLEscaped]], nil]
+																 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"View Artist profile", _artist], [NSString stringWithFormat:@"lastfm-artist://%@", [_artist URLEscaped]], nil]
 																													   forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
@@ -329,8 +329,7 @@
 		return buttonscell;
 	}
 	
-	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] &&
-		[[[_data objectAtIndex:[indexPath section]] objectForKey:@"title"] length] ) {
+	if(cell.accessoryType == UITableViewCellAccessoryNone) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	return cell;

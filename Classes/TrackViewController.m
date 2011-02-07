@@ -94,7 +94,7 @@
 																																																								 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 																													 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
-															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"View %@'s profile", _artist], [NSString stringWithFormat:@"lastfm-artist://%@", [_artist URLEscaped]], nil]
+															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"View Artist profile", _artist], [NSString stringWithFormat:@"lastfm-artist://%@", [_artist URLEscaped]], nil]
 																												   forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
 															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 	
@@ -116,6 +116,7 @@
 	if([[_metadata objectForKey:@"wiki"] length])
 		[sections addObject:@"bio"];
 
+	[sections addObject:@"buy"];
 	[sections addObject:@"buttons"];
 	_data = sections;
 	
@@ -161,7 +162,7 @@
 		_tagsView.text.width = self.view.frame.size.width - 32;
 		return _tagsView.text.height + 16;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buttons"]) {
-		return 175;
+		return 90;
 	} else
 		return 52;
 }
@@ -182,10 +183,6 @@
 	}
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
-//	if([indexPath section] == 0) {
-//		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-album://%@/%@", [_artist URLEscaped], [[_metadata objectForKey:@"album"] URLEscaped]]]];
-//		return;
-//	}
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
@@ -201,6 +198,10 @@
 	   [[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString:@"buttons"]) 
 		return;
 	
+	if( [[_data objectAtIndex:[newIndexPath section]] isEqualToString: @"buy"] ) {
+		[self buy:nil];
+		return;
+	}
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.1];
 }
@@ -326,16 +327,17 @@
 			[biocell.contentView addSubview:_bioView];
 		}
 		return biocell;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buy"]) {
+		UITableViewCell *buycell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"BuyCell"];
+		if( buycell == nil ) {
+			buycell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BuyCell"] autorelease];
+			buycell.textLabel.text = @"Buy on iTunes";
+			buycell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		}
+		return buycell;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"buttons"]) {
 		ButtonsCell *buttonscell = (ButtonsCell *)[tableView dequeueReusableCellWithIdentifier:@"ButtonsCell"];
 		if(buttonscell == nil) {
-
-			
-			UIButton* buy = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-			buy.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
-			[buy setTitle: @"Buy" forState:UIControlStateNormal];
-			[buy addTarget:self action:@selector(buy:) forControlEvents:UIControlEventTouchUpInside];			
-			
 			UIButton* love = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 			love.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
 			[love setTitle: @"Love" forState:UIControlStateNormal];
@@ -366,8 +368,7 @@
 			[share setTitle: @"Share" forState:UIControlStateNormal];
 			[share addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
 			
-			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:buy, love, addToLibrary, addTags, share, nil];
-			[buy release];
+			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:love, addToLibrary, addTags, share, nil];
 			[love release];
 			[addToLibrary release];
 			[addTags release];
