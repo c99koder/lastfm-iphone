@@ -202,6 +202,10 @@
 	[_artwork.layer setBorderColor: [[UIColor blackColor] CGColor]];
 	[_artwork.layer setBorderWidth: 1.0];
 }
+-(void)addBorderWithColor:(UIColor*)color {
+	[_artwork.layer setBorderColor: [color CGColor]];
+	[_artwork.layer setBorderWidth: 1.0];
+}
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
 		self.contentView.bounds = CGRectMake(0,0,52,52);
@@ -280,7 +284,7 @@
 	_artwork.image = [self roundedImage:_artwork.image];
 	
 	if(_reflectedArtwork) {
-		CGRect artframe = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y + _artwork.frame.size.height, _artwork.frame.size.width, 20);
+		CGRect artframe = CGRectMake(_artwork.frame.origin.x + [_artwork.layer borderWidth], _artwork.frame.origin.y + _artwork.frame.size.height, _artwork.frame.size.width - (2*[_artwork.layer borderWidth]), 20);
 		_reflectedArtwork.frame = artframe;
 		_reflectionMask.frame = artframe;
 	}

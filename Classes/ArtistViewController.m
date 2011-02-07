@@ -492,6 +492,7 @@
 			profilecell.subtitle.backgroundColor = [UIColor clearColor];
 			profilecell.subtitle.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 			profilecell.subtitle.textColor = [UIColor blackColor];
+			[profilecell addBorderWithColor: [UIColor colorWithRed:0.67f green:0.67f blue:0.67f alpha:1.0f]];
 			
 			NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 			[numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];

@@ -251,6 +251,7 @@
 			profilecell.subtitle.backgroundColor = [UIColor clearColor];
 			profilecell.subtitle.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 			profilecell.subtitle.textColor = [UIColor blackColor];
+			[profilecell addBorderWithColor: [UIColor colorWithRed:0.67f green:0.67f blue:0.67f alpha:1.0f]];
 			
 			NSString *duration = @"";
 			int seconds = [[_metadata objectForKey:@"duration"] floatValue] / 1000.0f;
