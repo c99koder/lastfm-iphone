@@ -25,6 +25,9 @@
 #include "version.h"
 #import "NSString+URLEscaped.h"
 #import "LastFMRadio.h"
+#if !(TARGET_IPHONE_SIMULATOR)
+#import "FlurryAPI.h"
+#endif
 
 #ifdef SCROBBLED
 #import "ScrobblerApp.h"
@@ -223,6 +226,9 @@
 				}
 				[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
 				if([LastFMService sharedInstance].error == nil) {
+#if !(TARGET_IPHONE_SIMULATOR)
+					[FlurryAPI logEvent:@"scrobble"];
+#endif
 					[_queue removeObject:track];
 					[self saveQueue];
 				} else {

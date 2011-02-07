@@ -29,6 +29,9 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "UIColor+LastFMColors.h"
 #import <QuartzCore/QuartzCore.h>
+#if !(TARGET_IPHONE_SIMULATOR)
+#import "FlurryAPI.h"
+#endif
 
 @implementation EventDetailCell
 

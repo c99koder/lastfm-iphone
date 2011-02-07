@@ -22,6 +22,9 @@
 #import "ShareActionSheet.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "NSString+URLEscaped.h"
+#if !(TARGET_IPHONE_SIMULATOR)
+#import "FlurryAPI.h"
+#endif
 
 
 @implementation ShareActionSheet

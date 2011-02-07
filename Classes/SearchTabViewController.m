@@ -30,6 +30,9 @@
 #import "ArtistViewController.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "UIColor+LastFMColors.h"
+#if !(TARGET_IPHONE_SIMULATOR)
+#import "FlurryAPI.h"
+#endif
 
 @implementation SearchTabViewController
 - (void)viewDidUnload {
@@ -133,6 +136,9 @@
 																										repeats:NO] retain];
 	}
 	[searchBar resignFirstResponder];
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"music-search"];
+#endif
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
 	if(![searchText length]) {

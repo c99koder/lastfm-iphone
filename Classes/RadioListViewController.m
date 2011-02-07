@@ -30,6 +30,9 @@
 #import "DebugViewController.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIColor+LastFMColors.h"
+#if !(TARGET_IPHONE_SIMULATOR)
+#import "FlurryAPI.h"
+#endif
 
 @implementation RadioListViewController
 - (void)_refresh {
@@ -128,6 +131,9 @@
 																									 userInfo:searchBar.text
 																										repeats:NO] retain];
 	}
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"radio-search"];
+#endif
 }
 - (void)_search:(NSTimer *)timer {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

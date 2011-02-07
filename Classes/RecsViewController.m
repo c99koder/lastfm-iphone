@@ -28,6 +28,9 @@
 #import "ArtworkCell.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIColor+LastFMColors.h"
+#if !(TARGET_IPHONE_SIMULATOR)
+#import "FlurryAPI.h"
+#endif
 
 @implementation RecsViewController
 - (void)_dismiss:(NSString *)artist {
@@ -116,6 +119,9 @@
 	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
  }
 - (void)editButtonPressed:(id)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"recs-edit"];
+#endif
 	[self.tableView setEditing:YES animated:YES];
 	_recsTitleLabel.text = @"Dismiss artists you’re not keen on to get fresh recommendations.";
 	_recsTitleLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
@@ -173,6 +179,9 @@
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(editingStyle == UITableViewCellEditingStyleDelete) {
+#if !(TARGET_IPHONE_SIMULATOR)
+		[FlurryAPI logEvent:@"recs-dismiss"];
+#endif
 		NSMutableArray *newArtists = [NSMutableArray arrayWithArray:_artists];
 		[self performSelectorInBackground:@selector(_dismiss:) withObject:[[_artists objectAtIndex:[indexPath row]] objectForKey:@"name"]];
 		[newArtists removeObjectAtIndex:[indexPath row]];
