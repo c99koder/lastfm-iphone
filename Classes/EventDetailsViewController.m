@@ -528,7 +528,6 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 }
