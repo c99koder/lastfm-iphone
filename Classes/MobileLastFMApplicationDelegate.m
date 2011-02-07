@@ -257,7 +257,7 @@ NSString *kUserAgent;
 	if([[info objectForKey:@"trial_playselapsed"] length]) {
 		[[NSUserDefaults standardUserDefaults] setObject:[info objectForKey:@"trial_playselapsed"] forKey:@"trial_playselapsed"];
 	}
-	
+
 	[rootViewController release];
 	rootViewController = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	//rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
