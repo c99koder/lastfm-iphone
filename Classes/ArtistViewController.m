@@ -205,7 +205,8 @@
 				_tagsView.font = [UIFont systemFontOfSize:[UIFont labelFontSize]];
 			}
 			
-			[sections addObject:@"bio"];
+			if([[_metadata objectForKey:@"summary"] length])
+				[sections addObject:@"bio"];
 			
 			if([_tracks count]) {
 				stations = [[NSMutableArray alloc] init];
