@@ -173,6 +173,9 @@ int tagSort(id tag1, id tag2, void *context) {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) skipButtonPressed:sender];	
 }
 -(void)infoButtonPressed:(id)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"details"];
+#endif
 	NowPlayingInfoViewController *info = [[NowPlayingInfoViewController alloc] initWithTrackInfo:[[LastFMRadio sharedInstance] trackInfo]];
 	[self.navigationController pushViewController:info animated:YES];
 	[info release];
@@ -452,11 +455,17 @@ int tagSort(id tag1, id tag2, void *context) {
 		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate reportError:[LastFMService sharedInstance].error];
 	} else {
 		if([filter objectForKey:@"name"]) {
+#if !(TARGET_IPHONE_SIMULATOR)
+			[FlurryAPI logEvent:@"filter"];
+#endif
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Retuned" message:
 														 [NSString stringWithFormat:@"After this track, you'll only hear '%@' music on this station.",[filter objectForKey:@"name"]]
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		} else {
+#if !(TARGET_IPHONE_SIMULATOR)
+			[FlurryAPI logEvent:@"unfilter"];
+#endif
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Retuned" message:@"After this track, you'll hear all music on this station."
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];

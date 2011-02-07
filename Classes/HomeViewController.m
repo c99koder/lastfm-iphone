@@ -77,9 +77,6 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	self.navigationController.navigationBarHidden = YES;
-#if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI countPageView];
-#endif
 }
 - (void)setBackButton:(UIImage *)image {
 	for(int i = 0; i < [self.viewControllers count]; i++) {
