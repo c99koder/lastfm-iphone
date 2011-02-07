@@ -240,7 +240,7 @@
 			profilecell.contentView.frame = CGRectMake(0,0,111,111);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
 			profilecell.shouldFillHeight = YES;
-			profilecell.placeholder = @"noimage_album.png";
+			profilecell.placeholder = @"noimage_album_large.png";
 			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;

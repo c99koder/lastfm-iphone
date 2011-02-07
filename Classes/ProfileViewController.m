@@ -177,11 +177,11 @@
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_recentTracks objectAtIndex:x] objectForKey:@"name"], 
 																										[[_recentTracks objectAtIndex:x] objectForKey:@"artist"], 
 																										[[[_recentTracks objectAtIndex:x] objectForKey:@"uts"] shortDateStringFromUTS], 
-																										[[_recentTracks objectAtIndex:x] objectForKey:@"image"], 
-																										@"noimage_album.png", 
+																										//[[_recentTracks objectAtIndex:x] objectForKey:@"image"], 
+//																										@"noimage_album.png", 
 																										[NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_recentTracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_recentTracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]], 
 																										[[_recentTracks objectAtIndex:x] objectForKey:@"nowplaying"], nil] 
-																	forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", @"image", @"placeholder", @"url", @"nowplaying",nil]]];
+																	forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"date", /*@"image", @"placeholder",*/ @"url", @"nowplaying",nil]]];
 				}
 				if([_recentTracks count] > 5)
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"More", @"-", [NSString stringWithFormat:@"lastfm-recenttracks://%@", [_username URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url",nil]]];

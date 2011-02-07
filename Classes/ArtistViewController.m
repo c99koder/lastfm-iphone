@@ -480,7 +480,7 @@
 			profilecell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProfileCell"] autorelease];
 			profilecell.contentView.bounds = CGRectMake(0,0,85,85);
 			profilecell.selectionStyle = UITableViewCellSelectionStyleNone;
-			profilecell.placeholder = @"noimage_artist.png";
+			profilecell.placeholder = @"noimage_artist_large.png";
 			[profilecell addReflection:@"reflectionmask-blue.png"];
 			profilecell.imageURL = [_metadata objectForKey:@"image"];
 			profilecell.shouldCacheArtwork = YES;
