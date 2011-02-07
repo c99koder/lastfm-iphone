@@ -75,7 +75,7 @@
 
 @implementation ArtworkCell
 
-@synthesize title, subtitle, barWidth, shouldCacheArtwork, shouldFillHeight, Yoffset, detailAtBottom;
+@synthesize title, subtitle, barWidth, shouldCacheArtwork, shouldFillHeight, Yoffset, detailAtBottom, noArtwork;
 
 -(void)setShouldRoundTop:(BOOL)round {
 	shouldRoundTop = round;
@@ -274,7 +274,11 @@
 		detailWidth = [self.detailTextLabel.text sizeWithFont:self.detailTextLabel.font].width;
 	}
 	
-	if(!_artwork.hidden) {
+	if( noArtwork ) {
+		_artwork.frame = CGRectMake(_artwork.frame.origin.x, _artwork.frame.origin.y, 5.0f, _artwork.frame.size.height);
+	}
+	
+	if(!noArtwork && !_artwork.hidden) {
 		if(shouldRoundTop || shouldRoundBottom || shouldFillHeight)
 			_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.height, frame.size.height);
 		else

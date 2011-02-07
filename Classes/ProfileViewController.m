@@ -303,6 +303,7 @@
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 				cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
 			}	else if ([[stations objectAtIndex:[indexPath row]] objectForKey:@"date"]) {
+				cell.noArtwork = YES;
 				cell.detailAtBottom = YES;
 				cell.detailTextLabel.textColor = [UIColor colorWithRed:36.0f/255 green:112.0f/255 blue:216.0f/255 alpha:1.0];
 				cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
