@@ -180,7 +180,7 @@
 				
 				if([[station objectForKey:@"url"] hasSuffix:@"/personal"] && [[station objectForKey:@"available"] isEqualToString:@"1"]) {
 					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"My Library Radio", @"My Library station"),
-																																	 [NSString stringWithFormat:@"lastfm://user/%@/loved", _username],
+																																	 [NSString stringWithFormat:@"lastfm://user/%@/library", _username],
 																																	 NSLocalizedString(@"Music you know and love", @"My Library description"),
 																																	 nil] 
 																													forKeys:[NSArray arrayWithObjects:@"title", @"url", @"description",nil]]];
