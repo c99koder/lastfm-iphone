@@ -75,7 +75,7 @@
 	[_emptyButton addTarget:self action:@selector(hideKeyboard:) forControlEvents:UIControlEventTouchUpInside];
 	
 	UILabel *hint = [[UILabel alloc] initWithFrame:CGRectMake(0,128,_emptyView.frame.size.width,40)];
-	hint.text = @"Search Last.fm for Information about\nartists, albums, tracks, and tags.";
+	hint.text = @"Search Last.fm for information about\nartists, albums, tracks, and tags.";
 	hint.numberOfLines = 2;
 	hint.font = [UIFont boldSystemFontOfSize:16];
 	hint.textColor = [UIColor grayColor];
