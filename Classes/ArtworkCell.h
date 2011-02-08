@@ -60,7 +60,6 @@
 @property BOOL noArtwork;
 -(void)fetchImage;
 -(void)addStreamIcon;
--(void)hideArtwork:(BOOL)hidden;
 -(void)addBorder;
 -(void)addBorderWithColor:(UIColor*)color;
 -(void)addReflection:(NSString *)maskName;

@@ -319,7 +319,7 @@
 		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] != nil) {
 			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		} else {
-			[cell hideArtwork:YES];
+			cell.noArtwork = YES;
 		}
 		cell.shouldFillHeight = YES;
 		if([indexPath row] == 0)

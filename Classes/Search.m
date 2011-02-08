@@ -105,7 +105,7 @@
 		}
 		cell.shouldCacheArtwork = YES;
 		if([[[_data objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"]) {
-			[cell hideArtwork:YES];
+			cell.noArtwork = YES;
 		} else {
 			cell.placeholder = [[_data objectAtIndex:[indexPath row]] objectForKey:@"placeholder"];
 			cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
@@ -203,7 +203,7 @@
 		}
 		cell.shouldCacheArtwork = YES;
 		if([[[_data objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"]) {
-			[cell hideArtwork:YES];
+			cell.noArtwork = YES;
 		} else {
 			cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
 		}

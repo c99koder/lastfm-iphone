@@ -75,7 +75,7 @@
 
 @implementation ArtworkCell
 
-@synthesize title, subtitle, barWidth, shouldCacheArtwork, shouldFillHeight, Yoffset, detailAtBottom, noArtwork;
+@synthesize title, subtitle, barWidth, shouldCacheArtwork, shouldFillHeight, Yoffset, detailAtBottom;
 
 -(void)setShouldRoundTop:(BOOL)round {
 	shouldRoundTop = round;
@@ -104,7 +104,7 @@
 		[imageURL release];
 		imageURL = nil;
 	}
-	[self hideArtwork: NO];
+	self.noArtwork = NO;
 	imageURL = [url retain];
 	NSData *imageData;
 	
@@ -339,7 +339,10 @@
 		_bar.opaque = NO;
 	}
 }
-- (void)hideArtwork:(BOOL)hidden {
+- (BOOL)noArtwork {
+	return noArtwork;
+}
+- (void)setNoArtwork:(BOOL)hidden {
 	CGRect frame = [self.contentView bounds];
 	if(hidden) {
 		_artwork.frame = CGRectMake(4, 0, 0, 0);

@@ -67,7 +67,7 @@
 	cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[[_data objectAtIndex:[indexPath row]] objectForKey:@"uts"] StringFromUTS]];
 	cell.detailTextLabel.textAlignment = UITextAlignmentRight;
-	[cell hideArtwork: YES];
+	cell.noArtwork = YES;
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
   return cell;
 }

@@ -297,6 +297,20 @@
 				cell.subtitle.text = [NSString stringWithFormat: @"%i play%s", playcount, playcount > 1 ? "s" : "" ];
 			}
 			cell.shouldCacheArtwork = YES;
+			if([indexPath row] == 0)
+				cell.shouldRoundTop = YES;
+			else
+				cell.shouldRoundTop = NO;
+			if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
+				cell.shouldRoundBottom = YES;
+			else
+				cell.shouldRoundBottom = NO;
+			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"] isEqualToString:@"-"])
+				cell.placeholder = [[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"];
+			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
+				cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+			else
+				cell.noArtwork = YES;
 			if([[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"]) {
 				cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"realname"];
 				cell.detailTextLabel.textColor = [UIColor blackColor];
@@ -325,20 +339,6 @@
 				cell.detailTextLabel.text = @"";
 			}
 			cell.shouldFillHeight = YES;
-			if([indexPath row] == 0)
-				cell.shouldRoundTop = YES;
-			else
-				cell.shouldRoundTop = NO;
-			if([indexPath row] == [self tableView:tableView numberOfRowsInSection:[indexPath section]]-1)
-				cell.shouldRoundBottom = YES;
-			else
-				cell.shouldRoundBottom = NO;
-			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"] isEqualToString:@"-"])
-				cell.placeholder = [[stations objectAtIndex:[indexPath row]] objectForKey:@"placeholder"];
-			if(![[[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] isEqualToString:@"-"])
-				cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
-			else
-				[cell hideArtwork:YES];
 		} else if([[_profile objectForKey:@"playcount"] isEqualToString:@"0"]) {
 			UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
 			hintCell.backgroundView = [[[UIView alloc] init] autorelease];
@@ -359,7 +359,7 @@ Or, use this app to listen to radio and see how Last.fm tracks your music taste.
 		} else {
 			cell.title.text = @"Loading";
 			[cell showProgress:YES];
-			[cell hideArtwork:YES];
+			cell.noArtwork = YES;
 		}
 	} else if([indexPath section] == 0) {
 		ArtworkCell *profilecell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:@"ProfileCell"];
