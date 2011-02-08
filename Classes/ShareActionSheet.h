@@ -33,7 +33,7 @@
 	UIStatusBarStyle barStyle;
 }
 
-- (id)initWithTrack:(NSString*)track forArtist:(NSString*)artist;
+- (id)initWithTrack:(NSString*)track byArtist:(NSString*)artist;
 - (id)initWithArtist:(NSString*)artist;
 
 @property (readwrite, assign) UIViewController* viewController;
