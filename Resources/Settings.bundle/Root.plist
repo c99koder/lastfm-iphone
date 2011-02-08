@@ -12,35 +12,21 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Radio Settings</string>
+			<string>Radio</string>
 		</dict>
 		<dict>
+			<key>DefaultValue</key>
+			<true/>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>Scrobble Radio</string>
 			<key>Key</key>
 			<string>scrobbling</string>
-			<key>DefaultValue</key>
-			<string>YES</string>
 			<key>TrueValue</key>
 			<string>YES</string>
 			<key>FalseValue</key>
-			<string>NO</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Disable Auto-Lock</string>
-			<key>Key</key>
-			<string>disableautolock</string>
-			<key>DefaultValue</key>
-			<string>YES</string>
-			<key>TrueValue</key>
-			<string>YES</string>
-			<key>FalseValue</key>
-			<string>NO</string>
+			<string>OFF</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -57,6 +43,36 @@
 			<string>NO</string>
 		</dict>
 		<dict>
+			<key>Title</key>
+			<string></string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Prevents your screen from locking while music is playing.</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Disable Auto-Lock</string>
+			<key>Key</key>
+			<string>disableautolock</string>
+			<key>DefaultValue</key>
+			<string>YES</string>
+			<key>TrueValue</key>
+			<string>YES</string>
+			<key>FalseValue</key>
+			<string>NO</string>
+		</dict>
+		<dict>
+			<key>Title</key>
+			<string></string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>This will take longer to buffer over your data connection. (Last.fm always uses high quality audio over Wi-Fi).</string>
+		</dict>
+		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
@@ -71,10 +87,12 @@
 			<string>64</string>
 		</dict>
 		<dict>
+			<key>Title</key>
+			<string>General</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Anonymous Usage Statistics</string>
+			<key>FooterText</key>
+			<string>Helps the developers of this app make it it better by sending them anonymous usage stats</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -91,22 +109,20 @@
 			<string>NO</string>
 		</dict>
 		<dict>
+			<key>Title</key>
+			<string></string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Disable auto lock will prevent your iPhone / iPod Touch&apos;s screen from going to sleep while music is playing.</string>
+			<key>FooterText</key>
+			<string>Last.fm version 3.0.0</string>
 		</dict>
 		<dict>
+			<key>Title</key>
+			<string></string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>High Quaility Audio will use higher quality audio over your cellular connection, however tracks will take longer to buffer.  High quality is always used for WiFi networks.</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Anonymous usage statistics are used by this application&apos;s developers to help understand their applications and make them better.</string>
+			<key>FooterText</key>
+			<string>For help and support, visit: www.last.fm/iphone</string>
 		</dict>
 	</array>
 </dict>
