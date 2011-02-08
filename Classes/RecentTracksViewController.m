@@ -67,8 +67,7 @@
 	cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[[_data objectAtIndex:[indexPath row]] objectForKey:@"uts"] StringFromUTS]];
 	cell.detailTextLabel.textAlignment = UITextAlignmentRight;
-	cell.placeholder = @"noimage_album.png";
-	cell.imageURL = [[_data objectAtIndex:[indexPath row]] objectForKey:@"image"];
+	[cell hideArtwork: YES];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
   return cell;
 }
