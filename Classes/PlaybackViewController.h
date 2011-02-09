@@ -52,8 +52,6 @@ int tagSort(id tag1, id tag2, void *context);
 	UIImageView *_noArtworkView;
 	NSLock *_lock;
 	NSTimer *_timer;
-	
-	ArtistViewController *artistViewController;
 }
 -(void)backButtonPressed:(id)sender;
 -(void)loveButtonPressed:(id)sender;

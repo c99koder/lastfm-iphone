@@ -81,6 +81,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_artworkView addSubview: _noArtworkView];
 }
 - (void)viewDidUnload {
+	NSLog(@"Playback view unloaded");
 	[super viewDidUnload];
 	[_lock release];
 	_lock = nil;
@@ -182,10 +183,6 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)dealloc {
 	[super dealloc];
-	if(artistViewController) {
-		[artistViewController release];
-		artistViewController = nil;
-	}
 	[_lock release];
 }
 - (void)becomeActive {
