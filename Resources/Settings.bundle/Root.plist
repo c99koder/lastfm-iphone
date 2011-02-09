@@ -88,6 +88,28 @@
 		</dict>
 		<dict>
 			<key>Title</key>
+			<string></string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Stop playback when headphones are removed</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Headset Interruption</string>
+			<key>Key</key>
+			<string>headsetinterrupt</string>
+			<key>DefaultValue</key>
+			<string>YES</string>
+			<key>TrueValue</key>
+			<string>YES</string>
+			<key>FalseValue</key>
+			<string>NO</string>
+		</dict>
+		<dict>
+			<key>Title</key>
 			<string>General</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

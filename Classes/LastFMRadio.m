@@ -43,7 +43,7 @@ void audioRouteChangeListenerCallback(void *inUserData, AudioSessionPropertyID i
 		SInt32 routeChangeReason;
 		CFNumberGetValue(routeChangeReasonRef, kCFNumberSInt32Type, &routeChangeReason);
 		
-		if (routeChangeReason == kAudioSessionRouteChangeReason_OldDeviceUnavailable) {
+		if (routeChangeReason == kAudioSessionRouteChangeReason_OldDeviceUnavailable && [[[NSUserDefaults standardUserDefaults] objectForKey:@"headsetinterrupt"] isEqualToString:@"YES"]) {
 			[[LastFMRadio sharedInstance] stop];
 		}
 	}

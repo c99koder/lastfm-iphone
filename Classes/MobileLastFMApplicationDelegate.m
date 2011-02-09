@@ -120,6 +120,7 @@ NSString *kUserAgent;
 																														 @"0", @"trial_expired",
 																														 @"0", @"trial_playselapsed",
 																														 @"YES", @"kEnablePinchMediaStatsCollection",
+																														 @"YES", @"headsetinterrupt",
 																														 nil]];
 		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
 			[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
