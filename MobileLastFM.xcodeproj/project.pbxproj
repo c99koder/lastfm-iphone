@@ -200,6 +200,7 @@
 		227F6F440DB26F4900C11B22 /* ArtworkCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 227F6F430DB26F4900C11B22 /* ArtworkCell.m */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
 		228380D312FFC85B0078177D /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 228380D112FFC85B0078177D /* libFlurry.a */; };
+		2283831C130309670078177D /* PlaybackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2283831A130309670078177D /* PlaybackView.xib */; };
 		229130CE0E1C153F007F5E63 /* blueBackBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 229130CD0E1C153F007F5E63 /* blueBackBtn.png */; };
 		2292951712AD23C500C31269 /* CXMLDocument_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 229294FE12AD23C500C31269 /* CXMLDocument_CreationExtensions.m */; };
 		2292951812AD23C500C31269 /* CXMLNode_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2292950012AD23C500C31269 /* CXMLNode_CreationExtensions.m */; };
@@ -239,7 +240,6 @@
 		22E42B7E0E4F4E05009167EA /* PLSqliteResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E42B760E4F4E05009167EA /* PLSqliteResultSet.m */; };
 		22E6E8610E533F08009FD470 /* TagEditorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22E6E8600E533F08009FD470 /* TagEditorViewController.m */; };
 		22EB603A0E65A8B20021751A /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB60390E65A8B20021751A /* MainWindow.xib */; };
-		22EB603E0E65A8B20021751A /* PlaybackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB603D0E65A8B20021751A /* PlaybackView.xib */; };
 		22EB60400E65A8B30021751A /* FirstRunView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EB603F0E65A8B30021751A /* FirstRunView.xib */; };
 		22F2FE050E31045B000DDCDC /* noartplaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE040E31045A000DDCDC /* noartplaceholder.png */; };
 		22F2FE0B0E31046D000DDCDC /* rounded_table_cell_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F2FE060E31046D000DDCDC /* rounded_table_cell_bottom.png */; };
@@ -701,7 +701,6 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		220CEBD10DCCB420007F888D /* UITableViewCell+ProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewCell+ProgressIndicator.h"; sourceTree = "<group>"; };
 		220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewCell+ProgressIndicator.m"; sourceTree = "<group>"; };
-		22117E880E1545050093BFED /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/PlaybackView.xib; sourceTree = "<group>"; };
 		22117E8A0E1545110093BFED /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FirstRunView.xib; sourceTree = "<group>"; };
 		221185DB0E1676620093BFED /* date.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = date.png; sourceTree = "<group>"; };
 		2212D23A0E40B36B0099DB03 /* RadioListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioListViewController.h; sourceTree = "<group>"; };
@@ -916,6 +915,7 @@
 		228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURLWithWarning.m"; sourceTree = "<group>"; };
 		228380D112FFC85B0078177D /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
 		228380D212FFC85B0078177D /* FlurryAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAPI.h; sourceTree = "<group>"; };
+		2283831B130309670078177D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/PlaybackView.xib; sourceTree = "<group>"; };
 		229124490E6D7CC700F9C17C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.entitlements"; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		229293D312AD217400C31269 /* Three20.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20.xcodeproj; path = three20/src/Three20/Three20.xcodeproj; sourceTree = "<group>"; };
@@ -1535,8 +1535,8 @@
 				229293D312AD217400C31269 /* Three20.xcodeproj */,
 				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
+				2283831A130309670078177D /* PlaybackView.xib */,
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
-				22EB603D0E65A8B20021751A /* PlaybackView.xib */,
 				22EB603F0E65A8B30021751A /* FirstRunView.xib */,
 				22631EFC0E81395F00DC2D09 /* DebugView.xib */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -2124,7 +2124,6 @@
 				FB66BB7612FB551000DB7579 /* friendsevent@2x.png in Resources */,
 				22EB603A0E65A8B20021751A /* MainWindow.xib in Resources */,
 				22362B9B0E13E4600034F91A /* btn.png in Resources */,
-				22EB603E0E65A8B20021751A /* PlaybackView.xib in Resources */,
 				22EB60400E65A8B30021751A /* FirstRunView.xib in Resources */,
 				221185DC0E1676620093BFED /* date.png in Resources */,
 				FB66BAB012FB46BF00DB7579 /* bkgd_login_signup.png in Resources */,
@@ -2386,6 +2385,7 @@
 				22669AB812FF49CD0028CC40 /* back_profile.png in Resources */,
 				22669AB912FF49CD0028CC40 /* back_friends@2x.png in Resources */,
 				22669ABA12FF49CD0028CC40 /* back_profile@2x.png in Resources */,
+				2283831C130309670078177D /* PlaybackView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2508,21 +2508,20 @@
 			name = DebugView.xib;
 			sourceTree = "<group>";
 		};
+		2283831A130309670078177D /* PlaybackView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2283831B130309670078177D /* English */,
+			);
+			name = PlaybackView.xib;
+			sourceTree = "<group>";
+		};
 		22EB60390E65A8B20021751A /* MainWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				223128F60DFF1ECB00EC3BF0 /* English */,
 			);
 			name = MainWindow.xib;
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		22EB603D0E65A8B20021751A /* PlaybackView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				22117E880E1545050093BFED /* English */,
-			);
-			name = PlaybackView.xib;
 			path = Resources;
 			sourceTree = "<group>";
 		};

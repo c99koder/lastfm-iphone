@@ -29,7 +29,6 @@
 int tagSort(id tag1, id tag2, void *context);
 
 @interface PlaybackViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource> {
-	IBOutlet UILabel *_titleLabel;
 	IBOutlet UIView *volumeView;
 	IBOutlet UIButton *loveBtn;
 	IBOutlet UIButton *banBtn;
@@ -48,11 +47,13 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UIView *_filterView;
 	IBOutlet UIPickerView *_filter;
 	IBOutlet UIView *_loadingView;
+	UILabel *_titleLabel;
 	UIImage *artwork;
 	UIImageView *_noArtworkView;
 	NSLock *_lock;
 	NSTimer *_timer;
 }
+@property (readonly) UIButton *loveBtn;
 -(void)backButtonPressed:(id)sender;
 -(void)loveButtonPressed:(id)sender;
 -(void)banButtonPressed:(id)sender;

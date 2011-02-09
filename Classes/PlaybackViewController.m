@@ -44,6 +44,8 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 
 @implementation PlaybackViewController
+@synthesize loveBtn;
+
 - (void)showLoadingView {
 	_loadingView.alpha = 1;
 }
@@ -58,7 +60,26 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.hidesBottomBarWhenPushed = YES;
+
+	UIImage *image = [UIImage imageNamed:@"radio_back.png"];
+	UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, image.size.width, image.size.height)];
+	[btn setBackgroundImage:image forState:UIControlStateNormal];
+	btn.adjustsImageWhenHighlighted = YES;
+	[btn addTarget:self action:@selector(backButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *backBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: btn];
+	[btn release];
+	self.navigationItem.leftBarButtonItem = backBarButtonItem;
+	[backBarButtonItem release];
+	
+	UIView *titleContainer = [[UIView alloc] initWithFrame:CGRectMake(0,0,200,28)];
+	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0,0,200,28)];
+	_titleLabel.font = [UIFont boldSystemFontOfSize:21];
+	_titleLabel.textAlignment = UITextAlignmentCenter;
+	_titleLabel.backgroundColor = [UIColor clearColor];
+	_titleLabel.textColor = [UIColor whiteColor];
+	[titleContainer addSubview:_titleLabel];
+	self.navigationItem.titleView = titleContainer;
+	[titleContainer release];
 	
 	CGRect frame = volumeView.frame;
 	frame.origin.y += 6;
@@ -83,6 +104,8 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)viewDidUnload {
 	NSLog(@"Playback view unloaded");
 	[super viewDidUnload];
+	[_titleLabel release];
+	_titleLabel = nil;
 	[_lock release];
 	_lock = nil;
 }
@@ -103,54 +126,17 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
 	[self.navigationController setToolbarHidden:YES];
 }
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-	if( [[UIApplication sharedApplication] respondsToSelector: @selector(beginReceivingRemoteControlEvents)] )
-		[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-	[self becomeFirstResponder];
-}
 - (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillAppear:animated];
-	if( [[UIApplication sharedApplication] respondsToSelector:@selector(endReceivingRemoteControlEvents)])
-		[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-	[self resignFirstResponder];
+	[super viewWillDisappear:animated];
 	[self resignActive];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 	[self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
-}
-- (void)remoteControlReceivedWithEvent:(UIEvent*)theEvent {
-
-	if (theEvent.type == UIEventTypeRemoteControl) {
-		switch(theEvent.subtype) {
-			case UIEventSubtypeRemoteControlPlay:
-				[self stopButtonPressed:nil];
-				break;
-			case UIEventSubtypeRemoteControlPause:
-				[self stopButtonPressed:nil];
-				break;
-			case UIEventSubtypeRemoteControlTogglePlayPause:
-			case UIEventSubtypeRemoteControlStop:
-				[self stopButtonPressed:nil];
-				break;
-			case UIEventSubtypeRemoteControlNextTrack:
-				[self skipButtonPressed:nil];
-				break;
-			case UIEventSubtypeRemoteControlBeginSeekingBackward:
-				[self loveButtonPressed:loveBtn];
-				break;
-			case UIEventSubtypeRemoteControlBeginSeekingForward:
-				[self banButtonPressed:banBtn];
-				break;
-			default:
-				return;
-		}
-	}
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 - (void)backButtonPressed:(id)sender {
-	[self.navigationController popViewControllerAnimated:YES];
+	[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hidePlaybackView];
 }
 -(void)onTourButtonPressed:(id)sender {
 	ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]];
@@ -184,18 +170,19 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)dealloc {
 	[super dealloc];
 	[_lock release];
+	[_titleLabel release];
 }
 - (void)becomeActive {
-	NSLog(@"Resuming timer and subscribing to track changes");
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
-	if(!(_timer && [_timer isValid])) 
+	if(!(_timer && [_timer isValid])) {
+		NSLog(@"Resuming timer and subscribing to track changes");
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 		_timer = [NSTimer scheduledTimerWithTimeInterval:0.5
 																							target:self
 																						selector:@selector(_updateProgress:)
 																						userInfo:nil
 																						 repeats:YES];
-	
-	[self _displayTrackInfo:[[LastFMRadio sharedInstance] trackInfo]];
+		[self _displayTrackInfo:[[LastFMRadio sharedInstance] trackInfo]];
+	}
 }
 - (void)resignActive {
 	NSLog(@"Stopping timer and ignoring track changes");

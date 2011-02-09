@@ -36,6 +36,8 @@
 			[btn release];
 		} else {
 			self.navigationItem.rightBarButtonItem = nil;
+			if( [[UIApplication sharedApplication] respondsToSelector:@selector(endReceivingRemoteControlEvents)])
+				[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
 		}
 	}
 }

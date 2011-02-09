@@ -774,6 +774,8 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		UInt32 category = kAudioSessionCategory_MediaPlayback;
 		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(category), &category);
 		AudioSessionAddPropertyListener(kAudioSessionProperty_AudioRouteChange,audioRouteChangeListenerCallback,nil);
+		if( [[UIApplication sharedApplication] respondsToSelector: @selector(beginReceivingRemoteControlEvents)] )
+			[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
 
 		[_tracks addObject:track];
 		if([_tracks count] == 1)

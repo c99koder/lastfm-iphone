@@ -27,8 +27,12 @@
 #import "RadioListViewController.h"
 #import "HomeViewController.h"
 
+@interface MobileLastFMAppWindow : UIWindow {
+}
+@end
+
 @interface MobileLastFMApplicationDelegate : NSObject<UIApplicationDelegate,UIActionSheetDelegate> {
-  IBOutlet UIWindow *window;
+  IBOutlet MobileLastFMAppWindow *window;
 	Scrobbler *_scrobbler;
 	FirstRunViewController *firstRunView;
 	PlaybackViewController *playbackViewController;
@@ -46,10 +50,10 @@
 	BOOL _launched;
 }
 
-@property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, retain) FirstRunViewController *firstRunView;
-@property (nonatomic, retain) PlaybackViewController *playbackViewController;
-@property (nonatomic, retain) HomeViewController *rootViewController;
+@property (readonly) MobileLastFMAppWindow *window;
+@property (readonly) FirstRunViewController *firstRunView;
+@property (readonly) PlaybackViewController *playbackViewController;
+@property (readonly) HomeViewController *rootViewController;
 
 -(BOOL)hasNetworkConnection;
 -(BOOL)hasWiFiConnection;

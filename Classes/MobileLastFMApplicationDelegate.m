@@ -37,6 +37,37 @@
 
 NSString *kUserAgent;
 
+@implementation MobileLastFMAppWindow
+- (void)remoteControlReceivedWithEvent:(UIEvent*)theEvent {
+	if (theEvent.type == UIEventTypeRemoteControl) {
+		switch(theEvent.subtype) {
+			case UIEventSubtypeRemoteControlPlay:
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
+				break;
+			case UIEventSubtypeRemoteControlPause:
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
+				break;
+			case UIEventSubtypeRemoteControlTogglePlayPause:
+			case UIEventSubtypeRemoteControlStop:
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
+				break;
+			case UIEventSubtypeRemoteControlNextTrack:
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate skipButtonPressed:nil];
+				break;
+			case UIEventSubtypeRemoteControlBeginSeekingBackward:
+				if(((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController)
+					[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate loveButtonPressed:((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).playbackViewController.loveBtn];
+				break;
+			case UIEventSubtypeRemoteControlBeginSeekingForward:
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate banButtonPressed:nil];
+				break;
+			default:
+				return;
+		}
+	}
+}
+@end
+
 @implementation MobileLastFMApplicationDelegate
 
 @synthesize window;
@@ -127,8 +158,13 @@ NSString *kUserAgent;
 	_locked = YES;
 	if(playbackViewController != nil)
 		[playbackViewController resignActive];
+	if(![self isPlaying]) {
+		if( [[UIApplication sharedApplication] respondsToSelector:@selector(endReceivingRemoteControlEvents)])
+			[[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+	}
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+	[window makeKeyAndVisible];
 	[((UINavigationController *)rootViewController.selectedViewController) viewWillAppear:NO];
 	_locked = NO;
 	if(_pendingAlert)
@@ -516,28 +552,20 @@ NSString *kUserAgent;
 }
 -(void)showPlaybackView {
 	if(playbackViewController == nil) {
-		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
-			if([object isKindOfClass:[PlaybackViewController class]]) {
-				playbackViewController = [object retain];
-				break;
-			}
-		}
+		playbackViewController = [[PlaybackViewController alloc] initWithNibName:@"PlaybackView" bundle:nil];
+		playbackViewController.hidesBottomBarWhenPushed = YES;
 		if(!playbackViewController) {
 			NSLog(@"Failed to load playback view!\n");
 		}
 	}
 
 	[(UINavigationController *)(rootViewController.selectedViewController) pushViewController:playbackViewController animated:YES];
-	//[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-	//[rootViewController.navigationBar setBarStyle:UIBarStyleBlackOpaque];
 }
 -(void)hidePlaybackView {
-	[(UINavigationController *)(rootViewController.selectedViewController) popToRootViewControllerAnimated:YES];
+	[(UINavigationController *)(rootViewController.selectedViewController) popViewControllerAnimated:YES];
 	[_scrobbler flushQueue:nil];
 	[playbackViewController release];
 	playbackViewController = nil;
-	//[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-	//[rootViewController.navigationBar setBarStyle:UIBarStyleDefault];
 }
 -(void)displayError:(NSString *)error withTitle:(NSString *)title {
 	_pendingAlert = [[UIAlertView alloc] initWithTitle:title message:error delegate:self cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil];
