@@ -46,7 +46,6 @@
 	UIAlertView *_trialAlert;
 	NSString *_trialAlertStation;
 	BOOL _locked;
-	BOOL _hidPlaybackDueToLowMemory;
 	BOOL _launched;
 }
 

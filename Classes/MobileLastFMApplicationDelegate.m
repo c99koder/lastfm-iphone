@@ -169,19 +169,6 @@ NSString *kUserAgent;
 	_locked = NO;
 	if(_pendingAlert)
 		[_pendingAlert show];
-	if(_hidPlaybackDueToLowMemory) {
-		for(NSObject *object in [[NSBundle mainBundle] loadNibNamed:@"PlaybackView" owner:self options:nil]) {
-			if([object isKindOfClass:[PlaybackViewController class]]) {
-				playbackViewController = [object retain];
-				break;
-			}
-		}
-		if(!playbackViewController) {
-			NSLog(@"Failed to load playback view!\n");
-		}
-		[rootViewController.selectedViewController pushViewController:playbackViewController animated:NO];
-		_hidPlaybackDueToLowMemory = NO;
-	}
 	if(playbackViewController != nil)
 		[playbackViewController becomeActive];
 }
