@@ -77,6 +77,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	_titleLabel.textAlignment = UITextAlignmentCenter;
 	_titleLabel.backgroundColor = [UIColor clearColor];
 	_titleLabel.textColor = [UIColor whiteColor];
+	_titleLabel.adjustsFontSizeToFitWidth = YES;
 	[titleContainer addSubview:_titleLabel];
 	self.navigationItem.titleView = titleContainer;
 	[titleContainer release];

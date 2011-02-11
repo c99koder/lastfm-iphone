@@ -133,7 +133,7 @@
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		_event = [event retain];
 		_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
-
+		
 		self.title = [_event objectForKey:@"title"];
 	}
 	return self;
