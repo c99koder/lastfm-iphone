@@ -107,17 +107,19 @@ UIImage *eventDateBGImage = nil;
 	day.frame = CGRectMake(0,13,40,38);
 	
 	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 4, frame.size.width - _datebg.frame.size.width - 12, 22);
-	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 24, frame.size.width - _datebg.frame.size.width - 12, 
-																[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 12, frame.size.height - 24) lineBreakMode:location.lineBreakMode].height);
+	float locationHeight = [location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 12, frame.size.height - 24) lineBreakMode:location.lineBreakMode].height;
 	if( [attendees.text length] ) {
 		attendees.hidden = NO;
 		_attendeeIcon.hidden = NO;
+		locationHeight = 18;
 	} else {
 		attendees.hidden = YES;
 		_attendeeIcon.hidden = YES;
 	}
+	
+	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 6, frame.origin.y + 24, frame.size.width - _datebg.frame.size.width - 12, locationHeight);
 
-	_attendeeIcon.frame = CGRectMake(location.frame.origin.x, location.frame.origin.y + location.frame.size.height, _attendeeIcon.image.size.width, _attendeeIcon.image.size.height);
+	_attendeeIcon.frame = CGRectMake(location.frame.origin.x, location.frame.origin.y + location.frame.size.height + 2, _attendeeIcon.image.size.width, _attendeeIcon.image.size.height);
 	attendees.frame = CGRectMake(location.frame.origin.x + _attendeeIcon.frame.size.width + 3, location.frame.origin.y + location.frame.size.height, location.frame.size.width, location.frame.size.height);
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -144,7 +146,7 @@ UIImage *eventDateBGImage = nil;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
 	NSArray *recs = [[[LastFMService sharedInstance] recommendedEventsForUser:_username] retain];
-	NSArray *friendsEvents = [[[LastFMService sharedInstance] eventsForFriendsOfUser:_username] retain];
+	NSArray *friendsEvents = [[[LastFMService sharedInstance] eventsForFriendsOfUser:@"Han"/*_username*/] retain];
 
 	if(![[NSThread currentThread] isCancelled]) {
 		@synchronized(self) {
@@ -553,13 +555,15 @@ UIImage *eventDateBGImage = nil;
 			NSArray* firstAttendees = [(NSArray*)attendees subarrayWithRange:range];
 			attendeeString = [NSString stringWithFormat: @"%@ (and %i more)", [firstAttendees componentsJoinedByString: @", "], [(NSArray*)attendees count] - 2];
 		}
+		eventCell.location.lineBreakMode = UILineBreakModeTailTruncation;
+		eventCell.location.numberOfLines = 1;
 		eventCell.location.text = [NSString stringWithFormat:@"%@", [event objectForKey:@"venue"]];
 		eventCell.attendees.text = [NSString stringWithFormat:@"%@", attendeeString];		
 	} else {
+		eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+		eventCell.location.numberOfLines = 0;
 		eventCell.location.text = [NSString stringWithFormat:@"%@\n%@, %@", [event objectForKey:@"venue"], [event objectForKey:@"city"], [event objectForKey:@"country"]];
 	}
-	eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
-	eventCell.location.numberOfLines = 0;
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
 	[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
