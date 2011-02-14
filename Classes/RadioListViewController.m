@@ -268,7 +268,13 @@
 			for(int x=0; x<[_recent count]; x++) {
 				NSMutableString* stationTitle = [NSMutableString stringWithString:[[_recent objectAtIndex:x] objectForKey:@"name"]];
 				[stationTitle replaceOccurrencesOfString:[NSString stringWithFormat:@"%@’s", _username] withString:@"My" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [stationTitle length])];
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:stationTitle, [[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+				NSRange range = [[[_recent objectAtIndex:x] objectForKey:@"url"] rangeOfString:@"/tag/"];
+				if(range.location != NSNotFound) {
+					NSString *tag = [[[[_recent objectAtIndex:x] objectForKey:@"url"] substringFromIndex:range.location + 5] unURLEscape];
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:stationTitle, [NSString stringWithFormat:@"Playing just '%@'", tag], [[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"description", @"url",nil]]];
+				} else {
+					[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:stationTitle, [[_recent objectAtIndex:x] objectForKey:@"url"],nil] forKeys:[NSArray arrayWithObjects:@"title", @"url",nil]]];
+				}
 			}
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:NSLocalizedString(@"Recent Stations", @"Recent Stations heading"), stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			[stations release];
