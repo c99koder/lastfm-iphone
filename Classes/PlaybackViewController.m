@@ -347,6 +347,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		[item release];
 	}
 
+	[UIView beginAnimations:nil context:nil];
+	
 	[[self.navigationItem.titleView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	
 	NSString *stationURL = [[LastFMRadio sharedInstance] stationURL];
@@ -416,6 +418,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			_titleLabel.text = [NSString stringWithFormat:@"%@’s Neighbourhood Radio", user];
 	}
 	
+	[UIView commitAnimations];
 	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:trackInfo];
