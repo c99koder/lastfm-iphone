@@ -235,6 +235,7 @@
 				}
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Music Recommendations", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 				[stations release];
+				self.navigationItem.rightBarButtonItem.enabled = YES;
 			} else {
 				self.navigationItem.rightBarButtonItem.enabled = NO;
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"New Music Recommendations", @"hint", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
