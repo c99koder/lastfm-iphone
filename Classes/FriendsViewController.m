@@ -27,6 +27,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "HomeViewController.h"
+#import "UIColor+LastFMColors.h"
 #include "version.h"
 
 int usernameSort(id friend1, id friend2, void *reverse) {
@@ -64,6 +65,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	bar.placeholder = @"Search Friends";
 	self.tableView.tableHeaderView = bar;
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 
 	UISearchDisplayController *searchController = [[UISearchDisplayController alloc] initWithSearchBar:bar contentsController:self];
 	searchController.delegate = self;
