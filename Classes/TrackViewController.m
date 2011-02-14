@@ -198,7 +198,7 @@
 	   [[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString:@"buttons"]) 
 		return;
 	
-	if( [[_data objectAtIndex:[newIndexPath section]] isEqualToString: @"buy"] ) {
+	if( [[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString: @"buy"] ) {
 		[self buy:nil];
 		return;
 	}
