@@ -418,6 +418,8 @@ int tagSort(id tag1, id tag2, void *context) {
 			_titleLabel.text = [NSString stringWithFormat:@"%@’s Neighbourhood Radio", user];
 	}
 	
+	_titleLabel.text = [_titleLabel.text capitalizedString];
+	
 	[UIView commitAnimations];
 	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];

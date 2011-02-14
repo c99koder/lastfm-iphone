@@ -346,7 +346,7 @@
 	
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
-		cell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
+		cell.textLabel.text = [[[stations objectAtIndex:[indexPath row]] objectForKey:@"title"] capitalizedString];
 		cell.detailTextLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"description"];
 		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"url"] isEqualToString:@"tags"])
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
