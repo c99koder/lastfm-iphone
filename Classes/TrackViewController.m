@@ -78,6 +78,12 @@
 }
 - (void)rebuildMenu {
 	NSString *bio = [[_metadata objectForKey:@"wiki"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+	//Fix Relative URL with a search replace hack:
+	bio = [bio stringByReplacingOccurrencesOfString:@"href=\"/" withString:@"href=\"http://www.last.fm/"];
+	
+	//Handle some HTML entities, as Three20 can't parse them
+	bio = [bio stringByReplacingOccurrencesOfString:@"&ndash;" withString:@"–"];
+	bio = [bio stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
 	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/music/%@/_/%@/+wiki\">Read More »</a>", bio, [_artist URLEscaped], [_track URLEscaped]];
 	_bioView.html = html;
 	
