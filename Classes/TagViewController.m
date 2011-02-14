@@ -169,8 +169,8 @@
 	} else if([_tracks count]) {
 		stations = [[NSMutableArray alloc] init];
 		for(int x=0; x<[_tracks count] && x < 5; x++) {
-			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tracks objectAtIndex:x] objectForKey:@"name"], [[_tracks objectAtIndex:x] objectForKey:@"artist"], [[_tracks objectAtIndex:x] objectForKey:@"image"],
-																															 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_tracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_tracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"url",nil]]];
+			[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_tracks objectAtIndex:x] objectForKey:@"name"], [[_tracks objectAtIndex:x] objectForKey:@"artist"],
+																															 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_tracks objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_tracks objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"url",nil]]];
 		}
 		[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Top Tracks", stations, nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		[stations release];
@@ -316,11 +316,6 @@
 			cell.subtitle.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"artist"];
 		}
 		cell.shouldCacheArtwork = YES;
-		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] != nil) {
-			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
-		} else {
-			cell.noArtwork = YES;
-		}
 		cell.shouldFillHeight = YES;
 		if([indexPath row] == 0)
 			cell.shouldRoundTop = YES;
@@ -330,6 +325,11 @@
 			cell.shouldRoundBottom = YES;
 		else
 			cell.shouldRoundBottom = NO;
+		if([[stations objectAtIndex:[indexPath row]] objectForKey:@"image"] != nil) {
+			cell.imageURL = [[stations objectAtIndex:[indexPath row]] objectForKey:@"image"];
+		} else {
+			cell.noArtwork = YES;
+		}
 	}		
 	if(cell.accessoryType == UITableViewCellAccessoryNone) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
