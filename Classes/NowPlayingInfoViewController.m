@@ -97,6 +97,12 @@ int tagSort(id tag1, id tag2, void *context);
 	_trackTagsView.html = taghtml;
 	
 	NSString *bio = [[artistData objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+	//Fix Relative URL with a search replace hack:
+	bio = [bio stringByReplacingOccurrencesOfString:@"href=\"/" withString:@"href=\"http://www.last.fm/"];
+	
+	//Handle some HTML entities, as Three20 can't parse them
+	bio = [bio stringByReplacingOccurrencesOfString:@"&ndash;" withString:@"–"];
+	bio = [bio stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
 	_artistBioView.html=[NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/music/%@/+wiki\">Read More »</a>", bio, [[artistData objectForKey:@"name"] URLEscaped]];
 	_loaded = YES;
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
