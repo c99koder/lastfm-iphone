@@ -812,6 +812,30 @@
 					</object>
 					<int key="connectionID">56</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="89691843"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">57</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="89691843"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">58</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">dismissFilterView:</string>
+						<reference key="source" ref="221152477"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">59</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1125,7 +1149,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<object class="NSAffineTransform"/>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{0, 579}, {320, 416}}</string>
+					<string>{{0, 340}, {320, 416}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<object class="NSAffineTransform">
 						<bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAw98AAA</bytes>
@@ -1164,7 +1188,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">56</int>
+			<int key="maxID">59</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1276,7 +1300,6 @@
 							<string>_progress</string>
 							<string>_reflectedArtworkView</string>
 							<string>_remaining</string>
-							<string>_titleLabel</string>
 							<string>banBtn</string>
 							<string>infoBtn</string>
 							<string>loveBtn</string>
@@ -1297,7 +1320,6 @@
 							<string>UIView</string>
 							<string>UIProgressView</string>
 							<string>UIImageView</string>
-							<string>UILabel</string>
 							<string>UILabel</string>
 							<string>UIButton</string>
 							<string>UIButton</string>
@@ -1323,7 +1345,6 @@
 							<string>_progress</string>
 							<string>_reflectedArtworkView</string>
 							<string>_remaining</string>
-							<string>_titleLabel</string>
 							<string>banBtn</string>
 							<string>infoBtn</string>
 							<string>loveBtn</string>
@@ -1379,10 +1400,6 @@
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_remaining</string>
-								<string key="candidateClassName">UILabel</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">_titleLabel</string>
 								<string key="candidateClassName">UILabel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
