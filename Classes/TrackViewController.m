@@ -376,10 +376,9 @@
 		return buttonscell;	
 	}
 
-	if([indexPath section] == 3 && [indexPath row] == 1 && _loved)
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	if([indexPath section] == 3 && [indexPath row] == 2 && _addedToLibrary)
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+	if(cell.accessoryType == UITableViewCellAccessoryNone) {
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	}
 	return cell;
 }
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
