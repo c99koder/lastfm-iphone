@@ -221,8 +221,8 @@
 		22A593B712FDD13D000A347C /* reflectionmask-blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593B612FDD13D000A347C /* reflectionmask-blue.png */; };
 		22A593EB12FDD43A000A347C /* rounded_table_cell_bottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593E712FDD43A000A347C /* rounded_table_cell_bottom@2x.png */; };
 		22A593EC12FDD43A000A347C /* rounded_table_cell_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593E812FDD43A000A347C /* rounded_table_cell_top@2x.png */; };
-		22A593ED12FDD43A000A347C /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593E912FDD43A000A347C /* default.png */; };
-		22A593EE12FDD43A000A347C /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593EA12FDD43A000A347C /* default@2x.png */; };
+		22A593ED12FDD43A000A347C /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593E912FDD43A000A347C /* Default.png */; };
+		22A593EE12FDD43A000A347C /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22A593EA12FDD43A000A347C /* Default@2x.png */; };
 		22AA37A512DCF2D70000F121 /* SearchTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AA37A412DCF2D70000F121 /* SearchTabViewController.m */; };
 		22ABB55B0DB1585000D2871E /* UIViewController+NowPlayingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ABB55A0DB1585000D2871E /* UIViewController+NowPlayingButton.m */; };
 		22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22B444410E9FB1300079C52E /* CoreLocation.framework */; };
@@ -957,8 +957,8 @@
 		22A593B612FDD13D000A347C /* reflectionmask-blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reflectionmask-blue.png"; sourceTree = "<group>"; };
 		22A593E712FDD43A000A347C /* rounded_table_cell_bottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded_table_cell_bottom@2x.png"; sourceTree = "<group>"; };
 		22A593E812FDD43A000A347C /* rounded_table_cell_top@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rounded_table_cell_top@2x.png"; sourceTree = "<group>"; };
-		22A593E912FDD43A000A347C /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
-		22A593EA12FDD43A000A347C /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
+		22A593E912FDD43A000A347C /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		22A593EA12FDD43A000A347C /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		22AA37A312DCF2D70000F121 /* SearchTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTabViewController.h; sourceTree = "<group>"; };
 		22AA37A412DCF2D70000F121 /* SearchTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTabViewController.m; sourceTree = "<group>"; };
 		22ABB5590DB1585000D2871E /* UIViewController+NowPlayingButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NowPlayingButton.h"; sourceTree = "<group>"; };
@@ -1353,8 +1353,8 @@
 				22669AB612FF49CD0028CC40 /* back_profile@2x.png */,
 				22A593E712FDD43A000A347C /* rounded_table_cell_bottom@2x.png */,
 				22A593E812FDD43A000A347C /* rounded_table_cell_top@2x.png */,
-				22A593E912FDD43A000A347C /* default.png */,
-				22A593EA12FDD43A000A347C /* default@2x.png */,
+				22A593E912FDD43A000A347C /* Default.png */,
+				22A593EA12FDD43A000A347C /* Default@2x.png */,
 				FB22265512FC64980060271D /* date-detail_view@2x.png */,
 				FB22265612FC64980060271D /* date@2x.png */,
 				FB2226BF12FC67660060271D /* logo_login.png */,
@@ -2378,8 +2378,8 @@
 				22A593B712FDD13D000A347C /* reflectionmask-blue.png in Resources */,
 				22A593EB12FDD43A000A347C /* rounded_table_cell_bottom@2x.png in Resources */,
 				22A593EC12FDD43A000A347C /* rounded_table_cell_top@2x.png in Resources */,
-				22A593ED12FDD43A000A347C /* default.png in Resources */,
-				22A593EE12FDD43A000A347C /* default@2x.png in Resources */,
+				22A593ED12FDD43A000A347C /* Default.png in Resources */,
+				22A593EE12FDD43A000A347C /* Default@2x.png in Resources */,
 				22669AB212FF30FD0028CC40 /* noartplaceholder@2x.png in Resources */,
 				22669AB712FF49CD0028CC40 /* back_friends.png in Resources */,
 				22669AB812FF49CD0028CC40 /* back_profile.png in Resources */,
