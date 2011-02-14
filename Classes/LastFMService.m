@@ -714,7 +714,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	}
 }
 - (NSArray *)suggestedTagsForStation:(NSString *)stationURL {
-	NSArray *nodes = [self doMethod:@"radio.getTagSuggestions" maxCacheAge:7*DAYS XPath:@"./suggestions/suggestion" withParameters:[NSString stringWithFormat:@"station=%@", [stationURL URLEscaped]], nil];
+	NSArray *nodes = [self doMethod:@"radio.getTagSuggestions" maxCacheAge:1*HOURS XPath:@"./suggestions/suggestion" withParameters:[NSString stringWithFormat:@"station=%@", [stationURL URLEscaped]], nil];
 	return [self _convertNodes:nodes
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./tag/name", @"./station/url", nil]
 										 forKeys:[NSArray arrayWithObjects:@"name", @"url", nil]];
