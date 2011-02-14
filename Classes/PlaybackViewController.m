@@ -228,6 +228,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		infoBtn.alpha = 0.5;
 		stopBtn.alpha = 0.5;
 		skipBtn.alpha = 0.5;
+		if(self.navigationItem.rightBarButtonItem != nil)
+			self.navigationItem.rightBarButtonItem.enabled = NO;
 #if !(TARGET_IPHONE_SIMULATOR)
 		[FlurryAPI logEvent:@"buffering" timed:YES];
 #endif
@@ -248,6 +250,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		infoBtn.alpha = 1;
 		stopBtn.alpha = 1;
 		skipBtn.alpha = 1;
+		if(self.navigationItem.rightBarButtonItem != nil)
+			self.navigationItem.rightBarButtonItem.enabled = YES;
 		[UIView commitAnimations];
 #if !(TARGET_IPHONE_SIMULATOR)
 		[FlurryAPI endTimedEvent:@"buffering" withParameters:nil];
@@ -343,6 +347,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		self.navigationItem.rightBarButtonItem = nil;
 	} else {
 		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(filterButtonPressed:)];
+		item.enabled = NO;
 		self.navigationItem.rightBarButtonItem = item;
 		[item release];
 	}
