@@ -82,21 +82,13 @@ NSURL *__redirectURL;
 	}
 	
 	if([[url scheme] isEqualToString:@"lastfm-user"]) {
-		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[url host] unURLEscape]];
-		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[ProfileViewController class]]) {
-			[home setBackButton:[UIImage imageNamed:@"back_profile.png"]];
-		} else if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[FriendsViewController class]]) {
-			[home setBackButton:[UIImage imageNamed:@"back_friends.png"]];
-		} else {
-			[home setBackButton:[UIImage imageNamed:@"blueBackBtn.png"]];
-		}
+		ProfileViewController *profile = [[ProfileViewController alloc] initWithUsername:[[url host] unURLEscape]];
 		if([[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] topViewController] isKindOfClass:[PlaybackViewController class]]) {
 			[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] popViewControllerAnimated:NO];
 			[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-			//[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController].navigationBar setBarStyle:UIBarStyleDefault];
 		}
-		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:home animated:YES];
-		[home release];
+		[[self findCurrentNavController:((MobileLastFMApplicationDelegate*)[UIApplication sharedApplication].delegate).rootViewController] pushViewController:profile animated:YES];
+		[profile release];
 		return;
 	}
 	

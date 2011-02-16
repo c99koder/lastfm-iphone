@@ -31,6 +31,7 @@
 #import "ArtistViewController.h"
 #import "UIApplication+openURLWithWarning.h"
 #import "UIColor+LastFMColors.h"
+#import "EventDetailsViewController.h"
 
 @implementation ProfileViewController
 - (void)_refresh {
@@ -48,6 +49,9 @@
 	NSArray *friendsListeningNow = nil;
 	if(friendsCount > 0)
 		friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];
+	NSArray *events = nil;
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+		events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
 	_loading = NO;
 	if(![[NSThread currentThread] isCancelled]) {
 		@synchronized(self) {
@@ -61,6 +65,8 @@
 			_weeklyArtistImages = images;
 			[_friendsListeningNow release];
 			_friendsListeningNow = friendsListeningNow;
+			[_events release];
+			_events = events;
 			[_refreshThread release];
 			_refreshThread = nil;
 		}
@@ -71,6 +77,7 @@
 		[artists release];
 		[images release];
 		[friendsListeningNow release];
+		[events release];
 	}
 	[pool release];
 }
@@ -133,6 +140,8 @@
 	_friendsListeningNow = nil;
 	if(friendsCount > 0)
 		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];	
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username])
+		_events = [[[LastFMService sharedInstance] eventsForUser:_username] retain];
 	[LastFMService sharedInstance].cacheOnly = NO;
 	_loading = YES;
 	[self rebuildMenu];
@@ -145,6 +154,12 @@
 		NSMutableArray *sections = [[NSMutableArray alloc] init];
 		
 		[sections addObject:@"profile"];
+		
+		if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username] && ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"]))
+			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"",
+																															 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"Play %@'s Library", _username], [NSString stringWithFormat:@"lastfm://user/%@/personal", [_username URLEscaped]], nil]
+																																																										 forKeys:[NSArray arrayWithObjects:@"title", @"url", nil]], nil]
+																															 , nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 		
 		if([[_profile objectForKey:@"playcount"] isEqualToString:@"0"]) {
 			[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Welcome To Last.fm", @"Welcome", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
@@ -191,6 +206,10 @@
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"Recently Listened Tracks", @"Loading", nil] forKeys:[NSArray arrayWithObjects:@"title",@"stations",nil]]];
 			}
 			
+			if([_events count]) {
+				[sections addObject:@"events"];
+			}
+			
 			if([_friendsListeningNow count] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username]) {
 				stations = [[NSMutableArray alloc] init];
 				for(int x=0; x<[_friendsListeningNow count] && x < 3; x++) {
@@ -219,6 +238,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:section] objectForKey:@"stations"] isKindOfClass:[NSArray class]])
 		return [[[_data objectAtIndex:section] objectForKey:@"stations"] count];
+	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"events"])
+		return ([_events count] > 3)?4:[_events count];
 	else
 		return 1;
 }
@@ -231,6 +252,8 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if([[_data objectAtIndex:section] isKindOfClass:[NSDictionary class]])
 		return [((NSDictionary *)[_data objectAtIndex:section]) objectForKey:@"title"];
+	else if([[_data objectAtIndex:section] isKindOfClass:[NSString class]] && [[_data objectAtIndex:section] isEqualToString:@"events"])
+		return @"Upcoming Events";
 	else
 		return nil;
 }
@@ -240,13 +263,29 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if([[_profile objectForKey:@"playcount"] isEqualToString:@"0"] && [indexPath section] == 1)
 		return 180;
-	return 52;
+	else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"events"] && [indexPath row] < 3)
+		return 64;
+	else
+		return 52;
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
 		NSString *station = [[[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] objectAtIndex:[indexPath row]] objectForKey:@"url"];
 		NSLog(@"Station: %@", station);
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:station]];
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"events"]) {
+		if([_events count]) {
+			if([indexPath row]==3) {
+				UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_events];
+				controller.title = [NSString stringWithFormat:@"%@'s Events", [_username capitalizedString]];
+				[self.navigationController pushViewController:controller animated:YES];
+				[controller release];
+			} else {
+				EventDetailsViewController *details = [[EventDetailsViewController alloc] initWithEvent:[_events objectAtIndex:[indexPath row]]];
+				[self.navigationController pushViewController:details animated:YES];
+				[details release];
+			}
+		}
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"myfriends"]) {
 		[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"lastfm-friends://%@", [_username URLEscaped]]]];
 	}
@@ -274,6 +313,16 @@
 	
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
+	
+	if([indexPath section] == 1 && ![[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] isEqualToString:_username] &&
+		 ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])) {
+		UITableViewCell *moreCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"StationCell"] autorelease];
+		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
+		moreCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];
+		moreCell.imageView.image = [UIImage imageNamed:@"radiostarter.png"];
+		return moreCell;
+	}
+	
 	
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
 		if([[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {
@@ -381,6 +430,46 @@ Or, use this app to listen to radio and see how Last.fm tracks your music taste.
 		profilecell.subtitle.text = [NSString stringWithFormat:@"%@ %@ %@",[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[_profile objectForKey:@"playcount"] intValue]]], NSLocalizedString(@"plays since", @"x plays since join date"), [[_profile objectForKey:@"registered"] shortDateStringFromUTS]];
 		[numberFormatter release];
 		return profilecell;
+	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"events"]) {
+		if([indexPath row] < 3) {
+			MiniEventCell *eventCell = (MiniEventCell *)[tableView dequeueReusableCellWithIdentifier:@"minieventcell"];
+			if (eventCell == nil) {
+				eventCell = [[[MiniEventCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"minieventcell"] autorelease];
+			}
+			
+			NSDictionary *event = [_events objectAtIndex:[indexPath row]];
+			
+			NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+			[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+			[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
+			NSDate *date = [formatter dateFromString:[event objectForKey:@"startDate"]];
+			[formatter setLocale:[NSLocale currentLocale]];
+			
+			[formatter setDateFormat:@"MMM"];
+			eventCell.month.text = [[formatter stringFromDate:date] uppercaseString];
+			
+			[formatter setDateFormat:@"d"];
+			eventCell.day.text = [formatter stringFromDate:date];
+			
+			eventCell.title.text = [event objectForKey:@"title"];
+			[formatter setDateStyle:NSDateFormatterNoStyle];
+			[formatter setTimeStyle:NSDateFormatterShortStyle];
+			eventCell.location.text = [NSString stringWithFormat:@"%@, %@\n%@", [formatter stringFromDate:date], [event objectForKey:@"venue"], [event objectForKey:@"city"]];
+			eventCell.location.lineBreakMode = UILineBreakModeWordWrap;
+			eventCell.location.numberOfLines = 0;
+			
+			[formatter release];
+			eventCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			
+			[eventCell showProgress:NO];
+			
+			return eventCell;
+		} else {
+			UITableViewCell *moreCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MoreCell"] autorelease];
+			moreCell.textLabel.text = @"More";
+			moreCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			return moreCell;
+		}
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"logout"]) {
 		UITableViewCell *logoutcell = [tableView dequeueReusableCellWithIdentifier: @"logoutbutton"];
 		if( logoutcell )

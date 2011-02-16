@@ -178,10 +178,9 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	if(delegate) {
 		[delegate friendsViewController:self didSelectFriend:[[source objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
 	} else {
-		HomeViewController *home = [[HomeViewController alloc] initWithUsername:[[source objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
-		[home setBackButton:[UIImage imageNamed:@"back_friends.png"]];
-		[self.navigationController pushViewController:home animated:YES];
-		[home release];
+		ProfileViewController *profile = [[ProfileViewController alloc] initWithUsername:[[source objectAtIndex:[newIndexPath row]] objectForKey:@"username"]];
+		[self.navigationController pushViewController:profile animated:YES];
+		[profile release];
 		[[self.tableView cellForRowAtIndexPath:newIndexPath] showProgress:NO];
 	}
 }	
