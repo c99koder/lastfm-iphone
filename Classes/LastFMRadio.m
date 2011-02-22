@@ -591,18 +591,20 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 }
 -(void)_trackDidFail:(NSNotification *)notification {
 	NSLog(@"Track did fail");
-	if(notification.object == [_tracks objectAtIndex:0]) {
-		if(_errorSkipCounter++ > 3) {
-			 [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
-			 [self stop];
-		 } else {
-			 [_playlist release];
-			 _playlist = nil;
-			 [NSThread sleepForTimeInterval:2];
-			 [self skip];
-		 }
+	if([_tracks count]) {
+		if(notification.object == [_tracks objectAtIndex:0]) {
+			if(_errorSkipCounter++ > 3) {
+				 [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
+				 [self stop];
+			 } else {
+				 [_playlist release];
+				 _playlist = nil;
+				 [NSThread sleepForTimeInterval:2];
+				 [self skip];
+			 }
+		}
+		[_tracks removeObject:notification.object];
 	}
-	[_tracks removeObject:notification.object];
 }
 -(void)purgeRecentURLs {
 	[_db executeUpdate:@"delete from recent_radio", nil];
