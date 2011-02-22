@@ -32,34 +32,32 @@
 	if(_data)
 		[_data release];
 	
-	[_results release];
-	_results = [[[LastFMService sharedInstance] search:query] retain];
-	
+	NSArray *results = [[LastFMService sharedInstance] search:query];
 	NSMutableArray *stations = [[NSMutableArray alloc] init];
 	float scale = 1.0f;
 	if([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
 		scale = [[UIScreen mainScreen] scale];
 	
-	if([_results count]) {
-		for(int x=0; x<[_results count]; x++) {
-			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],(scale==1.0f)?[[NSBundle mainBundle] pathForResource:@"searchresults_tag" ofType:@"png"]:[[NSBundle mainBundle] pathForResource:@"searchresults_tag@2x" ofType:@"png"],@"searchresults_tag.png",
-																																 [NSString stringWithFormat:@"lastfm-tag://%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
+	if([results count]) {
+		for(int x=0; x<[results count]; x++) {
+			if([[[results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[results objectAtIndex:x] objectForKey:@"name"],(scale==1.0f)?[[NSBundle mainBundle] pathForResource:@"searchresults_tag" ofType:@"png"]:[[NSBundle mainBundle] pathForResource:@"searchresults_tag@2x" ofType:@"png"],@"searchresults_tag.png",
+																																 [NSString stringWithFormat:@"lastfm-tag://%@", [[[results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder", @"url", nil]]];
 			}
-			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"artist"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"image"],@"noimage_artist.png",
-																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
+			if([[[results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"artist"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[results objectAtIndex:x] objectForKey:@"name"],[[results objectAtIndex:x] objectForKey:@"image"],@"noimage_artist.png",
+																																 [NSString stringWithFormat:@"lastfm-artist://%@", [[[results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"placeholder",@"url", nil]]];
 			}
-			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"album"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[NSString stringWithFormat:@"By %@", [[_results objectAtIndex:x] objectForKey:@"artist"]],[[_results objectAtIndex:x] objectForKey:@"image"],@"noimage_album.png",
-																																 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
+			if([[[results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"album"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[results objectAtIndex:x] objectForKey:@"name"],[NSString stringWithFormat:@"By %@", [[results objectAtIndex:x] objectForKey:@"artist"]],[[results objectAtIndex:x] objectForKey:@"image"],@"noimage_album.png",
+																																 [NSString stringWithFormat:@"lastfm-album://%@/%@", [[[results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder",@"url", nil]]];
 			}
-			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"track"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[_results objectAtIndex:x] objectForKey:@"name"],[[_results objectAtIndex:x] objectForKey:@"artist"],(scale==1.0f)?[[NSBundle mainBundle] pathForResource:@"searchresults_track" ofType:@"png"]:[[NSBundle mainBundle] pathForResource:@"searchresults_track@2x" ofType:@"png"],@"searchresults_track.png",
-																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[_results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], [[_results objectAtIndex:x] objectForKey:@"duration"], nil] 
+			if([[[results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"track"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[[results objectAtIndex:x] objectForKey:@"name"],[[results objectAtIndex:x] objectForKey:@"artist"],(scale==1.0f)?[[NSBundle mainBundle] pathForResource:@"searchresults_track" ofType:@"png"]:[[NSBundle mainBundle] pathForResource:@"searchresults_track@2x" ofType:@"png"],@"searchresults_track.png",
+																																 [NSString stringWithFormat:@"lastfm-track://%@/%@", [[[results objectAtIndex:x] objectForKey:@"artist"] URLEscaped], [[[results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], [[results objectAtIndex:x] objectForKey:@"duration"], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"artist", @"image", @"placeholder",@"url", @"duration", nil]]];
 			}
 		}
@@ -77,7 +75,7 @@
 }
 - (void)clear {
 	[_data release];
-	_data = [[NSMutableArray alloc] init];
+	_data = nil;
 	
 }
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -126,7 +124,6 @@
 - (void)dealloc {
 	[super dealloc];
 	[_data release];
-	[_results release];
 }
 @end
 
@@ -135,21 +132,20 @@
 	if(_data)
 		[_data release];
 	
-	[_results release];
-	_results = [[[LastFMService sharedInstance] search:query] retain];
+	NSArray *results = [[[LastFMService sharedInstance] search:query] retain];
 	
 	NSMutableArray *stations = [[NSMutableArray alloc] init];
 	
-	if([_results count]) {
-		for(int x=0; x<[_results count]; x++) {
-			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Tag Radio", [[_results objectAtIndex:x] objectForKey:@"name"]],@"-",
-																																 [NSString stringWithFormat:@"lastfm://globaltags/%@", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
+	if([results count]) {
+		for(int x=0; x<[results count]; x++) {
+			if([[[results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"tag"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Tag Radio", [[results objectAtIndex:x] objectForKey:@"name"]],@"-",
+																																 [NSString stringWithFormat:@"lastfm://globaltags/%@", [[[results objectAtIndex:x] objectForKey:@"name"] URLEscaped]],nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
 			}
-			if([[[_results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"artist"]) {
-				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Radio", [[_results objectAtIndex:x] objectForKey:@"name"]],[[_results objectAtIndex:x] objectForKey:@"image"],
-																																 [NSString stringWithFormat:@"lastfm://artist/%@/similar", [[[_results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
+			if([[[results objectAtIndex:x] objectForKey:@"kind"] isEqualToString:@"artist"]) {
+				[stations addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSString stringWithFormat:@"%@ Radio", [[results objectAtIndex:x] objectForKey:@"name"]],[[results objectAtIndex:x] objectForKey:@"image"],
+																																 [NSString stringWithFormat:@"lastfm://artist/%@/similar", [[[results objectAtIndex:x] objectForKey:@"name"] URLEscaped]], nil] 
 																												forKeys:[NSArray arrayWithObjects:@"title", @"image", @"url", nil]]];
 			}
 		}
@@ -218,6 +214,5 @@
 - (void)dealloc {
 	[super dealloc];
 	[_data release];
-	[_results release];
 }
 @end

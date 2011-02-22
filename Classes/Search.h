@@ -23,7 +23,6 @@
 
 
 @interface GlobalSearchDataSource : NSObject<UITableViewDataSource, UITableViewDelegate> {
-	NSArray *_results;
 	NSArray *_data;
 }
 -(void)search:(NSString *)query;
@@ -32,7 +31,6 @@
 @end
 
 @interface RadioSearchDataSource : NSObject<UITableViewDataSource, UITableViewDelegate> {
-	NSArray *_results;
 	NSArray *_data;
 }
 -(void)search:(NSString *)query;
