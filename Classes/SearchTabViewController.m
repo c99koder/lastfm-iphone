@@ -42,6 +42,10 @@
 	_searchData = nil;
 	[_emptyView release];
 	_emptyView = nil;
+	[_searchBar release];
+	_searchBar = nil;
+	[_emptyButton release];
+	_emptyButton = nil;
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -49,13 +53,13 @@
 }
 - (id)initWithStyle:(UITableViewStyle)style {
 	if (self = [super initWithStyle:style]) {
-		_searchData = [[GlobalSearchDataSource alloc] init];
 		self.title = @"Search";
 		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_search.png"];
 	}
 	return self;
 }
 - (void)viewDidLoad {
+	_searchData = [[GlobalSearchDataSource alloc] init];
 	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
 	_searchBar.placeholder = @"Music Search";
 	_searchBar.delegate = self;
@@ -98,12 +102,14 @@
 - (void)_search:(NSTimer *)timer {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *query = [timer userInfo];
-	[_searchData search:query];
-	[_emptyButton removeFromSuperview];
-	self.tableView.scrollEnabled = YES;
-	self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	[self.tableView reloadData];
-	[self loadContentForCells:[self.tableView visibleCells]];
+	if(_searchData != nil) {
+		[_searchData search:query];
+		[_emptyButton removeFromSuperview];
+		self.tableView.scrollEnabled = YES;
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+		[self.tableView reloadData];
+		[self loadContentForCells:[self.tableView visibleCells]];
+	}
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[pool release];
 }
@@ -179,8 +185,12 @@
 - (void)dealloc {
 	[super dealloc];
 	[_searchData release];
+	_searchData = nil;
 	[_searchBar release];
+	_searchBar = nil;
 	[_emptyView release];
+	_emptyView = nil;
 	[_emptyButton release];
+	_emptyButton = nil;
 }
 @end
