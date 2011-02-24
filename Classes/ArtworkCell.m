@@ -273,6 +273,8 @@
 	float detailWidth = 0;
 	if([self.detailTextLabel.text length] && _style == UITableViewCellStyleValue1) {
 		detailWidth = [self.detailTextLabel.text sizeWithFont:self.detailTextLabel.font].width;
+		if(detailWidth > (frame.size.width - _artwork.frame.size.width) * 0.5f)
+			detailWidth = (frame.size.width - _artwork.frame.size.width) * 0.5f;
 	}
 	
 	if( noArtwork ) {
