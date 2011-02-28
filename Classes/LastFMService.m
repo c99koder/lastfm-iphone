@@ -92,7 +92,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
   }
 	return nil;
 }
-- (NSArray *)_doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath withParams:(NSArray *)params {
+- (NSArray *)_doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath withParams:(NSArray *)params authenticated:(BOOL)authenticated {
 	NSData *theResponseData;
 	NSURLResponse *theResponse = NULL;
 	NSError *theError = NULL;
@@ -100,7 +100,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	[error release];
 	error = nil;
 	
-	NSArray *sortedParams = [[params arrayByAddingObjectsFromArray:[NSArray arrayWithObjects:[NSString stringWithFormat:@"method=%@",method],session?[NSString stringWithFormat:@"sk=%@",session]:nil,nil]] sortedArrayUsingSelector:@selector(compare:)];
+	NSArray *sortedParams = [[params arrayByAddingObjectsFromArray:[NSArray arrayWithObjects:[NSString stringWithFormat:@"method=%@",method],(session && authenticated)?[NSString stringWithFormat:@"sk=%@",session]:nil,nil]] sortedArrayUsingSelector:@selector(compare:)];
 	NSMutableString *signature = [[NSMutableString alloc] init];
 	for(NSString *param in sortedParams) {
 		[signature appendString:[[param stringByReplacingOccurrencesOfString:@"=" withString:@""] unURLEscape]];
@@ -166,7 +166,28 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	
 	[params addObject:[NSString stringWithFormat:@"api_key=%s", API_KEY]];
 	
-	output = [self _doMethod:method maxCacheAge:seconds XPath:XPath withParams:params];
+	output = [self _doMethod:method maxCacheAge:seconds XPath:XPath withParams:params authenticated:YES];
+	[params release];
+	return output;
+}
+- (NSArray *)doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath authenticated:(BOOL)authenticated withParameters:(NSString *)firstParam, ... {
+	NSMutableArray *params = [[NSMutableArray alloc] init];
+	NSArray *output = nil;
+	id eachParam;
+	va_list argumentList;
+	
+	if(firstParam) {
+		[params addObject: firstParam];
+		va_start(argumentList, firstParam);
+		while (eachParam = va_arg(argumentList, id)) {
+			[params addObject: eachParam];
+		}
+		va_end(argumentList);
+  }
+	
+	[params addObject:[NSString stringWithFormat:@"api_key=%s", API_KEY]];
+	
+	output = [self _doMethod:method maxCacheAge:seconds XPath:XPath withParams:params authenticated:authenticated];
 	[params release];
 	return output;
 }
@@ -554,7 +575,10 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 									 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
 }
 - (NSDictionary *)profileForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getInfo" maxCacheAge:0 XPath:@"./user" withParameters:[NSString stringWithFormat:@"user=%@", [[username lowercaseString] URLEscaped]], nil];
+	return [self profileForUser:username authenticated:YES];
+}
+- (NSDictionary *)profileForUser:(NSString *)username authenticated:(BOOL)authenticated {
+	NSArray *nodes = [self doMethod:@"user.getInfo" maxCacheAge:0 XPath:@"./user" authenticated:authenticated withParameters:[NSString stringWithFormat:@"user=%@", [[username lowercaseString] URLEscaped]], nil];
 	if([nodes count])
 		return [self _convertNode:[nodes objectAtIndex:0]
 			 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./realname", @"./registered/@unixtime", @"./age", @"./gender", @"./country", @"./playcount", @"./image[@size=\"extralarge\"]", nil]

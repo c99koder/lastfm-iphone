@@ -93,7 +93,7 @@
 	self.tableView.sectionFooterHeight = 0;*/
 	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
 	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	bar.placeholder = @"Type an artist or genre";
+	bar.placeholder = @"Type an artist, genre, or username";
 	bar.delegate = self;
 	self.tableView.tableHeaderView = bar;
 	
@@ -143,8 +143,15 @@
 		NSLog(@"Station: %@", station);
 		[self playRadioStation:station];
 	} else {
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Not Found" message:@"Unable to find a station matching this search.  Please enter a different artist or genre." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
-		[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+		NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:query authenticated:NO];
+		if(profile) {
+			station = [NSString stringWithFormat:@"lastfm://user/%@/personal", query];
+			NSLog(@"Station: %@", station);
+			[self playRadioStation:station];
+		} else {
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Not Found" message:@"Unable to find a station matching this search.  Please enter a different artist or genre." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
+			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+		}
 	}
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	[pool release];

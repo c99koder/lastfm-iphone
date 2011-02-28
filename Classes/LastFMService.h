@@ -132,6 +132,7 @@ enum eventStatus {
 - (NSArray *)releasesForUser:(NSString *)username;
 - (NSString *)releaseDataSourceForUser:(NSString *)username;
 - (NSDictionary *)profileForUser:(NSString *)username;
+- (NSDictionary *)profileForUser:(NSString *)username authenticated:(BOOL)authenticated;
 - (NSDictionary *)compareArtistsOfUser:(NSString *)username withUser:(NSString *)username2;
 - (NSArray *)recentStationsForUser:(NSString *)username;
 
