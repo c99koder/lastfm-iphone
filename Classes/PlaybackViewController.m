@@ -357,7 +357,7 @@ int tagSort(id tag1, id tag2, void *context) {
 				context = [context stringByAppendingString:@"' "];
 			else
 				context = [context stringByAppendingString:@"'s "];
-			if([contextitems count] > 1)
+			if([contextitems count] > 2)
 				context = [context stringByAppendingString:@"libraries"];
 			else
 				context = [context stringByAppendingString:@"library"];
