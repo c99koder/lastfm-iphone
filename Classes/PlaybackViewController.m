@@ -338,6 +338,35 @@ int tagSort(id tag1, id tag2, void *context) {
 	[artwork release];
 	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
 	[UIView beginAnimations:nil context:nil];
+	if([[[trackInfo objectForKey:@"context"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+		_fullscreenMetadataView.frame = CGRectMake(0,0,320,67);
+		_context.alpha = 1;
+		NSString *context = @"";
+		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/recommended"])
+			 context = @"Similar to ";
+		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"])
+			 context = @"From ";
+		NSArray *contextitems = [[trackInfo objectForKey:@"context"] componentsSeparatedByString:@"\n"];
+		for(int i = 1; i < [contextitems count] && i < 3; i++) {
+			if(i > 1)
+				context = [context stringByAppendingString:@" and "];
+			context = [context stringByAppendingString:[[contextitems objectAtIndex:i] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+		}
+		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"]) {
+			if([context hasSuffix:@"s"])
+				context = [context stringByAppendingString:@"' "];
+			else
+				context = [context stringByAppendingString:@"'s "];
+			if([contextitems count] > 1)
+				context = [context stringByAppendingString:@"libraries"];
+			else
+				context = [context stringByAppendingString:@"library"];
+		}
+		_context.text = context;
+	} else {
+		_fullscreenMetadataView.frame = CGRectMake(0,0,320,52);
+		_context.alpha = 0;
+	}
 	_noArtworkView.alpha = 1;
 	_reflectedArtworkView.image = artwork;
 	_badge.alpha = 0;

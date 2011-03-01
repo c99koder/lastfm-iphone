@@ -656,7 +656,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 
 - (NSDictionary *)tuneRadioStation:(NSString *)stationURL {
 	NSDictionary *station = nil;
-	NSArray *nodes = [self doMethod:@"radio.tune" maxCacheAge:0 XPath:@"./station" withParameters:[NSString stringWithFormat:@"station=%@", [stationURL URLEscaped]], [NSString stringWithFormat:@"rtp=%i", [[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]], nil];
+	NSArray *nodes = [self doMethod:@"radio.tune" maxCacheAge:0 XPath:@"./station" withParameters:[NSString stringWithFormat:@"station=%@", [stationURL URLEscaped]], [NSString stringWithFormat:@"rtp=%i", [[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]], @"additional_info=1", nil];
 	if([nodes count]) {
 		CXMLNode *node = [nodes objectAtIndex:0];
 		station = [self _convertNode:node
@@ -685,6 +685,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 												[NSString stringWithFormat:@"mobile_net=%@",network],
 												[NSString stringWithFormat:@"bitrate=%@", bitrate],
 												[NSString stringWithFormat:@"speed_multiplier=%@", speed],
+												@"additional_info=1",
 												nil] objectAtIndex:0] children] objectAtIndex:1] children];
 	NSString *title = nil;
 	

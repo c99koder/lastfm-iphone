@@ -40,6 +40,7 @@ int tagSort(id tag1, id tag2, void *context);
 	IBOutlet UILabel *_artistAndTrackTitle;
 	IBOutlet UILabel *_elapsed;
 	IBOutlet UILabel *_remaining;
+	IBOutlet UILabel *_context;
 	IBOutlet UIProgressView *_progress;
 	IBOutlet UILabel *_bufferPercentage;
 	IBOutlet UIImageView *_fullscreenMetadataView;

@@ -140,6 +140,33 @@
 								<float key="IBUIMinimumFontSize">10</float>
 								<int key="IBUITextAlignment">1</int>
 							</object>
+							<object class="IBUILabel" id="699570685">
+								<reference key="NSNextResponder" ref="244062320"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{0, 46}, {320, 18}}</string>
+								<reference key="NSSuperview" ref="244062320"/>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIClipsSubviews">YES</bool>
+								<float key="IBUIAlpha">0.0</float>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<float key="IBUIScaleFactor">1</float>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<string key="IBUIText"/>
+								<reference key="IBUIFont" ref="959585133"/>
+								<object class="NSColor" key="IBUITextColor">
+									<int key="NSColorSpace">3</int>
+									<bytes key="NSWhite">MC43NQA</bytes>
+								</object>
+								<nil key="IBUIHighlightedColor"/>
+								<object class="NSColor" key="IBUIShadowColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MCAwIDAgMC44MDAwMDAwMQA</bytes>
+								</object>
+								<string key="IBUIShadowOffset">{0, 1}</string>
+								<int key="IBUIBaselineAdjustment">1</int>
+								<float key="IBUIMinimumFontSize">10</float>
+								<int key="IBUITextAlignment">1</int>
+							</object>
 							<object class="IBUIProgressView" id="394136006">
 								<reference key="NSNextResponder" ref="244062320"/>
 								<int key="NSvFlags">292</int>
@@ -200,7 +227,7 @@
 						<reference key="NSSuperview" ref="337537672"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MCAwIDAgMC41AA</bytes>
+							<bytes key="NSRGB">MCAwIDAgMC42AA</bytes>
 						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -836,6 +863,14 @@
 					</object>
 					<int key="connectionID">59</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">_context</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="699570685"/>
+					</object>
+					<int key="connectionID">61</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -900,6 +935,7 @@
 							<reference ref="421754567"/>
 							<reference ref="394136006"/>
 							<reference ref="991578388"/>
+							<reference ref="699570685"/>
 						</object>
 						<reference key="parent" ref="337537672"/>
 					</object>
@@ -1045,6 +1081,11 @@
 						<reference key="object" ref="989181960"/>
 						<reference key="parent" ref="804225969"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">60</int>
+						<reference key="object" ref="699570685"/>
+						<reference key="parent" ref="244062320"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1076,6 +1117,7 @@
 					<string>23.IBPluginDependency</string>
 					<string>24.IBPluginDependency</string>
 					<string>25.IBPluginDependency</string>
+					<string>25.IBViewBoundsToFrameTransform</string>
 					<string>26.IBPluginDependency</string>
 					<string>26.IBViewBoundsToFrameTransform</string>
 					<string>27.IBPluginDependency</string>
@@ -1092,6 +1134,8 @@
 					<string>5.IBViewBoundsToFrameTransform</string>
 					<string>6.IBPluginDependency</string>
 					<string>6.IBViewBoundsToFrameTransform</string>
+					<string>60.IBPluginDependency</string>
+					<string>60.IBViewBoundsToFrameTransform</string>
 					<string>7.IBViewBoundsToFrameTransform</string>
 					<string>8.IBPluginDependency</string>
 					<string>9.IBViewBoundsToFrameTransform</string>
@@ -1141,6 +1185,9 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<object class="NSAffineTransform">
+						<bytes key="NSTransformStruct">AQAAAABB6AAAA</bytes>
+					</object>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<object class="NSAffineTransform">
 						<bytes key="NSTransformStruct">AUCgAABBQAAAA</bytes>
@@ -1165,6 +1212,10 @@
 					<object class="NSAffineTransform">
 						<bytes key="NSTransformStruct">AUNqAAAAAAAAA</bytes>
 					</object>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<object class="NSAffineTransform">
+						<bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAwjQAAA</bytes>
+					</object>
 					<object class="NSAffineTransform">
 						<bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAw8UAAA</bytes>
 					</object>
@@ -1188,7 +1239,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">59</int>
+			<int key="maxID">61</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1292,6 +1343,7 @@
 							<string>_artworkView</string>
 							<string>_badge</string>
 							<string>_bufferPercentage</string>
+							<string>_context</string>
 							<string>_elapsed</string>
 							<string>_filter</string>
 							<string>_filterView</string>
@@ -1312,6 +1364,7 @@
 							<string>UILabel</string>
 							<string>UIImageView</string>
 							<string>UIButton</string>
+							<string>UILabel</string>
 							<string>UILabel</string>
 							<string>UILabel</string>
 							<string>UIPickerView</string>
@@ -1337,6 +1390,7 @@
 							<string>_artworkView</string>
 							<string>_badge</string>
 							<string>_bufferPercentage</string>
+							<string>_context</string>
 							<string>_elapsed</string>
 							<string>_filter</string>
 							<string>_filterView</string>
@@ -1368,6 +1422,10 @@
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">_bufferPercentage</string>
+								<string key="candidateClassName">UILabel</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">_context</string>
 								<string key="candidateClassName">UILabel</string>
 							</object>
 							<object class="IBToOneOutletInfo">
