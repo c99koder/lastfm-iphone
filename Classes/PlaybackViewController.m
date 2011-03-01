@@ -342,17 +342,17 @@ int tagSort(id tag1, id tag2, void *context) {
 		_fullscreenMetadataView.frame = CGRectMake(0,0,320,67);
 		_context.alpha = 1;
 		NSString *context = @"";
-		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/recommended"])
-			 context = @"Similar to ";
-		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"])
-			 context = @"From ";
+		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"] || [[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/neighbours"])
+			context = @"From ";
+		else
+			context = @"Similar to ";
 		NSArray *contextitems = [[trackInfo objectForKey:@"context"] componentsSeparatedByString:@"\n"];
 		for(int i = 1; i < [contextitems count] && i < 3; i++) {
 			if(i > 1)
 				context = [context stringByAppendingString:@" and "];
 			context = [context stringByAppendingString:[[contextitems objectAtIndex:i] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]]];
 		}
-		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"]) {
+		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"] || [[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/neighbours"])
 			if([context hasSuffix:@"s"])
 				context = [context stringByAppendingString:@"' "];
 			else
