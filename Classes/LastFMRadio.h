@@ -36,6 +36,8 @@ NSString *kTrackDidFinishLoading;
 NSString *kTrackDidFinishPlaying;
 NSString *kTrackDidChange;
 NSString *kTrackDidFailToStream;
+NSString *kTrackDidPause;
+NSString *kTrackDidResume;
 
 @interface LastFMTrack : NSObject {
 	NSDictionary *_trackInfo;
@@ -62,6 +64,7 @@ NSString *kTrackDidFailToStream;
 -(id)initWithTrackInfo:(NSDictionary *)trackInfo;
 -(BOOL)play;
 -(void)pause;
+-(void)resume;
 -(void)stop;
 -(BOOL)isPlaying;
 -(int)trackPosition;
@@ -102,6 +105,7 @@ NSString *kTrackDidFailToStream;
 -(BOOL)selectStation:(NSString *)station;
 -(BOOL)play;
 -(void)stop;
+-(void)pause;
 -(void)skip;
 -(NSDictionary *)trackInfo;
 -(int)trackPosition;

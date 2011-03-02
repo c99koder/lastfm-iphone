@@ -386,6 +386,9 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (void)nowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration {
 	[self doMethod:@"track.updateNowPlaying" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], [NSString stringWithFormat:@"album=%@", [album URLEscaped]], [NSString stringWithFormat:@"duration=%i", duration], nil];
 }
+- (void)removeNowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album {
+	[self doMethod:@"track.removeNowPlaying" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], [NSString stringWithFormat:@"album=%@", [album URLEscaped]], nil];
+}
 - (void)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration timestamp:(int)timestamp {
 	[self doMethod:@"track.scrobble" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], 
 	 [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], 

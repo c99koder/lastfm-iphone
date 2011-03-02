@@ -42,12 +42,22 @@ NSString *kUserAgent;
 	if (theEvent.type == UIEventTypeRemoteControl) {
 		switch(theEvent.subtype) {
 			case UIEventSubtypeRemoteControlPlay:
-				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
+				if([LastFMRadio sharedInstance].state == TRACK_PAUSED) {
+					[[LastFMRadio sharedInstance] play];
+				} else {
+					[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
+				}
 				break;
 			case UIEventSubtypeRemoteControlPause:
-				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
+				[[LastFMRadio sharedInstance] pause];
 				break;
 			case UIEventSubtypeRemoteControlTogglePlayPause:
+				if([LastFMRadio sharedInstance].state == TRACK_PAUSED) {
+					[[LastFMRadio sharedInstance] play];
+				} else {
+					[[LastFMRadio sharedInstance] pause];
+				}
+				break;
 			case UIEventSubtypeRemoteControlStop:
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
 				break;

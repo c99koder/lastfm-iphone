@@ -109,6 +109,7 @@ enum eventStatus {
 - (NSArray *)shoutsForTrack:(NSString *)track byArtist:(NSString *)artist;
 - (void)addTrackToLibrary:(NSString *)title byArtist:(NSString *)artist;
 - (void)nowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration;
+- (void)removeNowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album;
 - (void)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration timestamp:(int)timestamp;
 
 #pragma mark User methods

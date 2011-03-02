@@ -114,6 +114,8 @@ NSString *kTrackDidFinishLoading = @"LastFMRadio_TrackDidFinishLoading";
 NSString *kTrackDidFinishPlaying = @"LastFMRadio_TrackDidFinishPlaying";
 NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
 NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
+NSString *kTrackDidPause = @"LastFMRadio_TrackDidPause";
+NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 
 @implementation LastFMTrack
 
@@ -253,6 +255,12 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 -(void)_notifyTrackFailed {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
 }
+-(void)_notifyTrackPaused {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidPause object:self userInfo:nil];
+}
+-(void)_notifyTrackResumed {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidResume object:self userInfo:nil];
+}
 -(BOOL)play {
 	if(queue) {
 		_startTime = [[NSDate date] timeIntervalSince1970];
@@ -370,6 +378,15 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		AudioQueuePause(queue);
 	}
 	_state = TRACK_PAUSED;
+	[self performSelectorOnMainThread:@selector(_notifyTrackPaused) withObject:nil waitUntilDone:NO];
+}
+-(void)resume {
+	if(_state == TRACK_PAUSED) {
+		NSLog(@"Resuming queue");
+		AudioQueueStart(queue, NULL);
+		_state = TRACK_PLAYING;
+	}
+	[self performSelectorOnMainThread:@selector(_notifyTrackResumed) withObject:nil waitUntilDone:NO];
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFailToStream object:self userInfo:nil];
@@ -733,6 +750,12 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 		[_softSkipTimer invalidate];
 	_softSkipTimer = nil;
 	
+	if([_tracks count] && [[_tracks objectAtIndex:0] state] == TRACK_PAUSED) {
+		[[_tracks objectAtIndex:0] resume];
+		NSLog(@"Playback resumed");
+		return;
+	}
+	
 	if(!_playlist || [_playlist count] < 1 || _station == nil) {
 		NSLog(@"Fetching playlist");
 		for(x=0; x<2; x++) {
@@ -797,6 +820,14 @@ NSString *kTrackDidFailToStream = @"LastFMRadio_TrackDidFailToStream";
 	[_playlist release];
 	[_busyLock release];
 	[super dealloc];
+}
+-(void)pause {
+	[_busyLock lock];
+	if([_tracks count]) {
+		[[_tracks objectAtIndex: 0] pause];
+	}
+	NSLog(@"Playback paused");
+	[_busyLock unlock];
 }
 -(void)stop {
 	[_busyLock lock];

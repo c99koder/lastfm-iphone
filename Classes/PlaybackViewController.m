@@ -352,7 +352,7 @@ int tagSort(id tag1, id tag2, void *context) {
 				context = [context stringByAppendingString:@" and "];
 			context = [context stringByAppendingString:[[contextitems objectAtIndex:i] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]]];
 		}
-		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"] || [[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/neighbours"])
+		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"] || [[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/neighbours"]) {
 			if([context hasSuffix:@"s"])
 				context = [context stringByAppendingString:@"’ "];
 			else

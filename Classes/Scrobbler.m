@@ -42,6 +42,18 @@
 	if(_queueTimer == nil)
 		[self doQueueTimer];
 }
+- (void)_trackDidPause {
+	if(_sentNowPlaying && [LastFMRadio sharedInstance].state == TRACK_PAUSED) {
+		NSDictionary *track = [(APP_CLASS *)[UIApplication sharedApplication].delegate trackInfo];
+		NSLog(@"Clearing now playing");
+		[[LastFMService sharedInstance] removeNowPlayingTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"creator"] onAlbum:[track objectForKey:@"album"]];
+		_sentNowPlaying = FALSE;
+	}
+}
+- (void)_trackDidResume {
+	if(_queueTimer == nil)
+		[self doQueueTimer];
+}
 - (id)init {
 	self = [super init];
 	_queue = [[NSMutableArray alloc] initWithCapacity:250];
@@ -58,6 +70,8 @@
 																					userInfo:NULL
 																					 repeats:NO];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange) name:kTrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidPause) name:kTrackDidPause object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidResume) name:kTrackDidResume object:nil];
 	return self;
 }
 - (void)loadQueue {
@@ -107,6 +121,7 @@
 				}
 				if([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] > 10) {
 					if(!_sentNowPlaying && [(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
+						NSLog(@"Sending now playing");
 						[self nowPlayingTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"creator"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]];
 						_sentNowPlaying = TRUE;
 					}
