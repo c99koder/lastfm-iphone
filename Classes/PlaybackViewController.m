@@ -109,6 +109,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	_titleLabel = nil;
 	[_lock release];
 	_lock = nil;
+	[_artworkURL release];
+	_artworkURL = nil;
 }
 - (void)_systemVolumeChanged:(NSNotification *)notification {
 	float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
@@ -172,6 +174,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[super dealloc];
 	[_lock release];
 	[_titleLabel release];
+	[_artworkURL release];
 }
 - (void)becomeActive {
 	if(!(_timer && [_timer isValid])) {
@@ -282,26 +285,36 @@ int tagSort(id tag1, id tag2, void *context) {
 		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@"MZZZ" withString:@"LZZZ"];
 	}
 	
-	NSLog(@"Loading artwork: %@\n", artworkURL);
-	if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
-		NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString: artworkURL]];
-		artworkImage = [[UIImage alloc] initWithData:imageData];
-		[imageData release];
-	} else {
-		artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
-	}
-	
-	if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
-		 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
-		_artworkView.image = artworkImage;
-		_reflectedArtworkView.image = artworkImage;
-		[artwork release];
-		artwork = artworkImage;
+	if(![artworkURL isEqualToString:_artworkURL]) {
+		NSLog(@"Loading artwork: %@\n", artworkURL);
 		[UIView beginAnimations:nil context:nil];
-		_noArtworkView.alpha = 0;
+		[artwork release];
+		artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
+		_noArtworkView.alpha = 1;
+		_reflectedArtworkView.image = artwork;
 		[UIView commitAnimations];
-	} else {
-		[artworkImage release];
+		if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
+			NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString: artworkURL]];
+			artworkImage = [[UIImage alloc] initWithData:imageData];
+			[imageData release];
+		} else {
+			artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
+		}
+		
+		if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
+			 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
+			_artworkView.image = artworkImage;
+			_reflectedArtworkView.image = artworkImage;
+			[artwork release];
+			artwork = artworkImage;
+			[_artworkURL release];
+			_artworkURL = [artworkURL retain];
+			[UIView beginAnimations:nil context:nil];
+			_noArtworkView.alpha = 0;
+			[UIView commitAnimations];
+		} else {
+			[artworkImage release];
+		}
 	}
 	[_lock unlock];
 	[trackInfo release];
@@ -335,8 +348,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	_elapsed.text = @"0:00";
 	_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:([[trackInfo objectForKey:@"duration"] floatValue] / 1000.0f)]];
 	_progress.progress = 0;
-	[artwork release];
-	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
 	[UIView beginAnimations:nil context:nil];
 	if([[[trackInfo objectForKey:@"context"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
 		_fullscreenMetadataView.frame = CGRectMake(0,0,320,67);
@@ -367,9 +378,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		_fullscreenMetadataView.frame = CGRectMake(0,0,320,52);
 		_context.alpha = 0;
 	}
-	_noArtworkView.alpha = 1;
-	_reflectedArtworkView.image = artwork;
-	_badge.alpha = 0;
 	[UIView commitAnimations];
 	[self _updateProgress:nil];
 	if([[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://artist/"] || [[[LastFMRadio sharedInstance] stationURL] hasPrefix:@"lastfm://globaltags/"]) {
@@ -530,6 +538,13 @@ int tagSort(id tag1, id tag2, void *context) {
 		loveBtn.selected = YES;
 	else
 		loveBtn.selected = NO;
+	[UIView beginAnimations:nil context:nil];
+	[artwork release];
+	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
+	_noArtworkView.alpha = 1;
+	_reflectedArtworkView.image = artwork;
+	_badge.alpha = 0;
+	[UIView commitAnimations];
 	NSDictionary *trackInfo = [notification userInfo];
 	[self _displayTrackInfo:trackInfo];
 	NSLog(@"Free trial tracks remaining: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]);

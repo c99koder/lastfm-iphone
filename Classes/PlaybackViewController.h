@@ -53,6 +53,7 @@ int tagSort(id tag1, id tag2, void *context);
 	UIImageView *_noArtworkView;
 	NSLock *_lock;
 	NSTimer *_timer;
+	NSString *_artworkURL;
 }
 @property (readonly) UIButton *loveBtn;
 -(void)backButtonPressed:(id)sender;
