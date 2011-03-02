@@ -384,7 +384,8 @@ int tagSort(id tag1, id tag2, void *context) {
 		self.navigationItem.rightBarButtonItem = nil;
 	} else {
 		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(filterButtonPressed:)];
-		item.enabled = NO;
+		if([LastFMRadio sharedInstance].state == TRACK_BUFFERING || [LastFMRadio sharedInstance].state == RADIO_TUNING)
+			item.enabled = NO;
 		self.navigationItem.rightBarButtonItem = item;
 		[item release];
 	}
