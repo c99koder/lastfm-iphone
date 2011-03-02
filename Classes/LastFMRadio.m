@@ -421,7 +421,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	AudioTimeStamp t;
 	Boolean b;
 	
-	if(!(_state == TRACK_PLAYING || _state == TRACK_BUFFERING) || AudioQueueGetCurrentTime(queue, NULL, &t, &b) < 0)
+	if(!(_state == TRACK_PLAYING || _state == TRACK_BUFFERING || _state == TRACK_PAUSED) || AudioQueueGetCurrentTime(queue, NULL, &t, &b) < 0)
 		return 0;
 	else
 		return t.mSampleTime / dataFormat.mSampleRate;
