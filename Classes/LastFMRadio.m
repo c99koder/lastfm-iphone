@@ -571,8 +571,11 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	softskipping = NO;
 }
 -(BOOL)cancelPrebuffering {
+	[_softSkipTimer invalidate];
+	_softSkipTimer = nil;
 	if(prebuffering) {
 		[[_tracks objectAtIndex: 1] stop];
+		prebuffering = NO;
 		return YES;
 	} else {
 		return NO;
@@ -826,6 +829,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	if([_tracks count]) {
 		[[_tracks objectAtIndex: 0] pause];
 	}
+	[self cancelPrebuffering];
 	NSLog(@"Playback paused");
 	[_busyLock unlock];
 }
