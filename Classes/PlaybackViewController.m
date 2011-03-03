@@ -218,6 +218,10 @@ int tagSort(id tag1, id tag2, void *context) {
 		_elapsed.text = [self formatTime:elapsed];
 		_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:duration-elapsed]];
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
+		if([LastFMRadio sharedInstance].state == TRACK_PAUSED)
+			[stopBtn setImage:[UIImage imageNamed:@"controlbar_play.png"] forState:UIControlStateNormal];
+		else
+			[stopBtn setImage:[UIImage imageNamed:@"controlbar_pause.png"] forState:UIControlStateNormal];
 	} else {
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hidePlaybackView];
 		[_timer invalidate];
