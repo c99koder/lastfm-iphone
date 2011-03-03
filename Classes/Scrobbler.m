@@ -103,7 +103,7 @@
 		
 		_oldNetworkType = networkType;
 		
-		if(_scrobblerState != SCROBBLER_SCROBBLING && _scrobblerState != SCROBBLER_NOWPLAYING && [(APP_CLASS *)[UIApplication sharedApplication].delegate isPlaying]) {
+		if(_scrobblerState != SCROBBLER_SCROBBLING && _scrobblerState != SCROBBLER_NOWPLAYING && [(APP_CLASS *)[UIApplication sharedApplication].delegate isPlaying] && ![(APP_CLASS *)[UIApplication sharedApplication].delegate isPaused]) {
 			NSDictionary *track = [(APP_CLASS *)[UIApplication sharedApplication].delegate trackInfo];
 			if(track != nil) {
 				if([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] > 240 || (([(APP_CLASS *)[UIApplication sharedApplication].delegate trackPosition] * 1000.0f) / [[track objectForKey:@"duration"] floatValue]) > 0.5) {

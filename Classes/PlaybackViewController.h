@@ -59,7 +59,7 @@ int tagSort(id tag1, id tag2, void *context);
 -(void)backButtonPressed:(id)sender;
 -(void)loveButtonPressed:(id)sender;
 -(void)banButtonPressed:(id)sender;
--(void)stopButtonPressed:(id)sender;
+-(void)pauseButtonPressed:(id)sender;
 -(void)skipButtonPressed:(id)sender;
 -(void)onTourButtonPressed:(id)sender;
 -(void)infoButtonPressed:(id)sender;

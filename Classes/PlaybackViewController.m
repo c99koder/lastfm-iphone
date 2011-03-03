@@ -156,8 +156,8 @@ int tagSort(id tag1, id tag2, void *context) {
 -(void)banButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) banButtonPressed:sender];	
 }
--(void)stopButtonPressed:(id)sender {
-	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) stopButtonPressed:sender];	
+-(void)pauseButtonPressed:(id)sender {
+	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) pauseButtonPressed:sender];	
 }
 -(void)skipButtonPressed:(id)sender {
 	[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) skipButtonPressed:sender];	
@@ -219,7 +219,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:duration-elapsed]];
 		_bufferPercentage.text = [NSString stringWithFormat:@"%i%%", (int)([[LastFMRadio sharedInstance] bufferProgress] * 100.0f)];
 	} else {
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) stopButtonPressed:nil];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hidePlaybackView];
 		[_timer invalidate];
 		_timer = nil;
 		return;
@@ -348,6 +348,11 @@ int tagSort(id tag1, id tag2, void *context) {
 	_elapsed.text = @"0:00";
 	_remaining.text = [NSString stringWithFormat:@"-%@",[self formatTime:([[trackInfo objectForKey:@"duration"] floatValue] / 1000.0f)]];
 	_progress.progress = 0;
+	if([LastFMRadio sharedInstance].state == TRACK_PAUSED)
+		[stopBtn setImage:[UIImage imageNamed:@"controlbar_play.png"] forState:UIControlStateNormal];
+	else
+		[stopBtn setImage:[UIImage imageNamed:@"controlbar_pause.png"] forState:UIControlStateNormal];
+
 	[UIView beginAnimations:nil context:nil];
 	if([[[trackInfo objectForKey:@"context"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
 		_fullscreenMetadataView.frame = CGRectMake(0,0,320,67);

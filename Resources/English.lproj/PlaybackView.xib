@@ -140,7 +140,7 @@
 								<float key="IBUIMinimumFontSize">10</float>
 								<int key="IBUITextAlignment">1</int>
 							</object>
-							<object class="IBUILabel" id="699570685">
+							<object class="IBUILabel" id="63558890">
 								<reference key="NSNextResponder" ref="244062320"/>
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{0, 46}, {320, 18}}</string>
@@ -391,7 +391,7 @@
 						<reference key="IBUINormalTitleShadowColor" ref="85784560"/>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">control_04_rest.png</string>
+							<string key="NSResourceName">controlbar_pause.png</string>
 						</object>
 					</object>
 					<object class="IBUIButton" id="883134573">
@@ -831,15 +831,6 @@
 					<int key="connectionID">55</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">stopButtonPressed:</string>
-						<reference key="source" ref="994194704"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">56</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="89691843"/>
@@ -867,9 +858,18 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">_context</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="699570685"/>
+						<reference key="destination" ref="63558890"/>
 					</object>
 					<int key="connectionID">61</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">pauseButtonPressed:</string>
+						<reference key="source" ref="994194704"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">62</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -935,7 +935,7 @@
 							<reference ref="421754567"/>
 							<reference ref="394136006"/>
 							<reference ref="991578388"/>
-							<reference ref="699570685"/>
+							<reference ref="63558890"/>
 						</object>
 						<reference key="parent" ref="337537672"/>
 					</object>
@@ -1083,7 +1083,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">60</int>
-						<reference key="object" ref="699570685"/>
+						<reference key="object" ref="63558890"/>
 						<reference key="parent" ref="244062320"/>
 					</object>
 				</object>
@@ -1239,7 +1239,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">61</int>
+			<int key="maxID">62</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1259,8 +1259,8 @@
 							<string>infoButtonPressed:</string>
 							<string>loveButtonPressed:</string>
 							<string>onTourButtonPressed:</string>
+							<string>pauseButtonPressed:</string>
 							<string>skipButtonPressed:</string>
-							<string>stopButtonPressed:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1288,8 +1288,8 @@
 							<string>infoButtonPressed:</string>
 							<string>loveButtonPressed:</string>
 							<string>onTourButtonPressed:</string>
+							<string>pauseButtonPressed:</string>
 							<string>skipButtonPressed:</string>
-							<string>stopButtonPressed:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1326,11 +1326,11 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">skipButtonPressed:</string>
+								<string key="name">pauseButtonPressed:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">stopButtonPressed:</string>
+								<string key="name">skipButtonPressed:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 						</object>
@@ -1821,9 +1821,9 @@
 				<string>control_01_rest.png</string>
 				<string>control_02_rest.png</string>
 				<string>control_03_rest.png</string>
-				<string>control_04_rest.png</string>
 				<string>control_05_rest.png</string>
 				<string>controlbar.png</string>
+				<string>controlbar_pause.png</string>
 				<string>noartplaceholder.png</string>
 				<string>ontour.png</string>
 				<string>reflectionmask.png</string>
@@ -1835,8 +1835,8 @@
 				<string>{64, 49}</string>
 				<string>{64, 49}</string>
 				<string>{64, 49}</string>
-				<string>{64, 49}</string>
 				<string>{320, 97}</string>
+				<string>{64, 49}</string>
 				<string>{320, 320}</string>
 				<string>{75, 75}</string>
 				<string>{150, 150}</string>

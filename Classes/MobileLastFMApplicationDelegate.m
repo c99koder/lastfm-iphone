@@ -42,11 +42,7 @@ NSString *kUserAgent;
 	if (theEvent.type == UIEventTypeRemoteControl) {
 		switch(theEvent.subtype) {
 			case UIEventSubtypeRemoteControlPlay:
-				if([LastFMRadio sharedInstance].state == TRACK_PAUSED) {
-					[[LastFMRadio sharedInstance] play];
-				} else {
-					[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
-				}
+				[[LastFMRadio sharedInstance] play];
 				break;
 			case UIEventSubtypeRemoteControlPause:
 				[[LastFMRadio sharedInstance] pause];
@@ -59,7 +55,8 @@ NSString *kUserAgent;
 				}
 				break;
 			case UIEventSubtypeRemoteControlStop:
-				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate stopButtonPressed:nil];
+				[[LastFMRadio sharedInstance] stop];
+				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate hidePlaybackView];
 				break;
 			case UIEventSubtypeRemoteControlNextTrack:
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate skipButtonPressed:nil];
@@ -423,12 +420,22 @@ NSString *kUserAgent;
 #endif
 	[[LastFMRadio sharedInstance] skip];
 }
--(IBAction)stopButtonPressed:(id)sender {
-	[[LastFMRadio sharedInstance] stop];
-	[self hidePlaybackView];
+-(IBAction)pauseButtonPressed:(id)sender {
+	if([LastFMRadio sharedInstance].state == TRACK_PAUSED) {
+		[[LastFMRadio sharedInstance] play];
+		if([sender isKindOfClass:[UIButton class]])
+			[(UIButton *)sender setImage:[UIImage imageNamed:@"controlbar_pause.png"] forState:UIControlStateNormal];
+	} else {
+		[[LastFMRadio sharedInstance] pause];
+		if([sender isKindOfClass:[UIButton class]])
+			[(UIButton *)sender setImage:[UIImage imageNamed:@"controlbar_play.png"] forState:UIControlStateNormal];
+	}
 }
 -(BOOL)isPlaying {
 	return [[LastFMRadio sharedInstance] state] != RADIO_IDLE;
+}
+-(BOOL)isPaused {
+	return [[LastFMRadio sharedInstance] state] == TRACK_PAUSED;
 }
 -(NSDictionary *)trackInfo {
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {

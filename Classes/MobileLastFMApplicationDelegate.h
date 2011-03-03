@@ -59,12 +59,13 @@
 -(BOOL)playRadioStation:(NSString *)station animated:(BOOL)animated;
 -(void)displayError:(NSString *)error withTitle:(NSString *)title;
 -(BOOL)isPlaying;
+-(BOOL)isPaused;
 -(NSDictionary *)trackInfo;
 -(int)trackPosition;
 -(IBAction)loveButtonPressed:(UIButton *)sender;
 -(IBAction)banButtonPressed:(UIButton *)sender;
 -(IBAction)skipButtonPressed:(id)sender;
--(IBAction)stopButtonPressed:(id)sender;
+-(IBAction)pauseButtonPressed:(id)sender;
 -(NSURLRequest *)requestWithURL:(NSURL *)url;
 -(void)showPlaybackView;
 -(void)hidePlaybackView;

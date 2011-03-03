@@ -128,7 +128,10 @@ int tagSort(id tag1, id tag2, void *context);
 		_artistBioView.backgroundColor = [UIColor blackColor];
 		_artistBioView.font = [UIFont systemFontOfSize:12];
 		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 61, 31)];
-		[btn setBackgroundImage:[UIImage imageNamed:@"nowplaying_back.png"] forState:UIControlStateNormal];
+		if([LastFMRadio sharedInstance].state == TRACK_PAUSED)
+			[btn setBackgroundImage:[UIImage imageNamed:@"nowpaused_back.png"] forState:UIControlStateNormal];
+		else
+			[btn setBackgroundImage:[UIImage imageNamed:@"nowplaying_back.png"] forState:UIControlStateNormal];
 		btn.adjustsImageWhenHighlighted = YES;
 		[btn addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
 		UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView: btn];
