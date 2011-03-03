@@ -358,20 +358,26 @@ int tagSort(id tag1, id tag2, void *context) {
 		else
 			context = @"Similar to ";
 		NSArray *contextitems = [[trackInfo objectForKey:@"context"] componentsSeparatedByString:@"\n"];
+		int contextitemscount = 0;
 		for(int i = 1; i < [contextitems count] && i < 3; i++) {
-			if(i > 1)
-				context = [context stringByAppendingString:@" and "];
-			context = [context stringByAppendingString:[[contextitems objectAtIndex:i] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+			if([[[contextitems objectAtIndex:i] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+				contextitemscount++;
+				if(i > 1)
+					context = [context stringByAppendingString:@" and "];
+				context = [context stringByAppendingString:[[contextitems objectAtIndex:i] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+				if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"] || [[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/neighbours"]) {
+					if([context hasSuffix:@"s"])
+						context = [context stringByAppendingString:@"’"];
+					else
+						context = [context stringByAppendingString:@"’s"];
+				}
+			}
 		}
 		if([[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/friends"] || [[[LastFMRadio sharedInstance] stationURL] hasSuffix:@"/neighbours"]) {
-			if([context hasSuffix:@"s"])
-				context = [context stringByAppendingString:@"’ "];
+			if(contextitemscount > 1)
+				context = [context stringByAppendingString:@" libraries"];
 			else
-				context = [context stringByAppendingString:@"’s "];
-			if([contextitems count] > 2)
-				context = [context stringByAppendingString:@"libraries"];
-			else
-				context = [context stringByAppendingString:@"library"];
+				context = [context stringByAppendingString:@" library"];
 		}
 		_context.text = context;
 	} else {
