@@ -616,7 +616,11 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 			if(_errorSkipCounter++ > 3) {
 				 [(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_PLAYBACK_FAILED", @"Playback failure error") withTitle:NSLocalizedString(@"ERROR_PLAYBACK_FAILED_TITLE", @"Playback failed error title")];
 				 [self stop];
+			 } else if([[_tracks objectAtIndex:0] state] == TRACK_PAUSED) {
+				 [self stop];
 			 } else {
+				 [_tracks release];
+				 _tracks = nil;
 				 [_playlist release];
 				 _playlist = nil;
 				 [NSThread sleepForTimeInterval:2];
