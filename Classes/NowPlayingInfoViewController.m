@@ -96,14 +96,14 @@ int tagSort(id tag1, id tag2, void *context);
 	
 	_trackTagsView.html = taghtml;
 	
-	NSString *bio = [[artistData objectForKey:@"summary"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
+	NSString *bio = [[artistData objectForKey:@"bio"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
 	//Fix Relative URL with a search replace hack:
 	bio = [bio stringByReplacingOccurrencesOfString:@"href=\"/" withString:@"href=\"http://www.last.fm/"];
 	
 	//Handle some HTML entities, as Three20 can't parse them
 	bio = [bio stringByReplacingOccurrencesOfString:@"&ndash;" withString:@"–"];
 	bio = [bio stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
-	_artistBioView.html=[NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/music/%@/+wiki\">Read More »</a>", bio, [[artistData objectForKey:@"name"] URLEscaped]];
+	_artistBioView.html=bio;
 	_loaded = YES;
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[self.tableView visibleCells] waitUntilDone:YES];
@@ -117,16 +117,16 @@ int tagSort(id tag1, id tag2, void *context);
 		self.title = @"Now Playing Info";
 		_trackStatsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_trackStatsView.backgroundColor = [UIColor blackColor];
-		_trackStatsView.font = [UIFont systemFontOfSize:12];
+		_trackStatsView.font = [UIFont systemFontOfSize:14];
 		_artistStatsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_artistStatsView.backgroundColor = [UIColor blackColor];
-		_artistStatsView.font = [UIFont systemFontOfSize:12];
+		_artistStatsView.font = [UIFont systemFontOfSize:14];
 		_trackTagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_trackTagsView.backgroundColor = [UIColor blackColor];
-		_trackTagsView.font = [UIFont systemFontOfSize:12];
+		_trackTagsView.font = [UIFont systemFontOfSize:14];
 		_artistBioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_artistBioView.backgroundColor = [UIColor blackColor];
-		_artistBioView.font = [UIFont systemFontOfSize:12];
+		_artistBioView.font = [UIFont systemFontOfSize:14];
 		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 61, 31)];
 		if([LastFMRadio sharedInstance].state == TRACK_PAUSED)
 			[btn setBackgroundImage:[UIImage imageNamed:@"nowpaused_back.png"] forState:UIControlStateNormal];
@@ -170,6 +170,7 @@ int tagSort(id tag1, id tag2, void *context);
 	self.navigationController.toolbar.barStyle = UIBarStyleBlackOpaque;
 	self.tableView.backgroundColor = [UIColor blackColor];
 	[self.tableView reloadData];
+	self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
 	[TTStyleSheet setGlobalStyleSheet:[[[NowPlayingInfoStyleSheet alloc] init] autorelease]];
@@ -251,7 +252,7 @@ int tagSort(id tag1, id tag2, void *context);
 	if(_loaded) {
 		cell.backgroundView = [[[UIView alloc] init] autorelease];
 		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0,0,self.view.frame.size.width - 220 - 20,14)] autorelease];
-		titleLabel.font = [UIFont boldSystemFontOfSize: 12];
+		titleLabel.font = [UIFont boldSystemFontOfSize: 14];
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor blackColor];
 		titleLabel.textAlignment = UITextAlignmentRight;
