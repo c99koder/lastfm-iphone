@@ -42,17 +42,26 @@
 	if(_queueTimer == nil)
 		[self doQueueTimer];
 }
+- (void)_removeNowPlayingTrack {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSDictionary *track = [(APP_CLASS *)[UIApplication sharedApplication].delegate trackInfo];
+	NSLog(@"Clearing now playing");
+	[[LastFMService sharedInstance] removeNowPlayingTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"creator"] onAlbum:[track objectForKey:@"album"]];
+	_sentNowPlaying = FALSE;
+	[pool release];
+}
 - (void)_trackDidPause {
 	if(_sentNowPlaying && [LastFMRadio sharedInstance].state == TRACK_PAUSED) {
-		NSDictionary *track = [(APP_CLASS *)[UIApplication sharedApplication].delegate trackInfo];
-		NSLog(@"Clearing now playing");
-		[[LastFMService sharedInstance] removeNowPlayingTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"creator"] onAlbum:[track objectForKey:@"album"]];
-		_sentNowPlaying = FALSE;
+		[self performSelectorInBackground:@selector(_removeNowPlayingTrack) withObject:nil];
 	}
 }
 - (void)_trackDidResume {
-	if(_queueTimer == nil)
-		[self doQueueTimer];
+	[_timer invalidate];
+	_timer = [NSTimer scheduledTimerWithTimeInterval:1
+																						target:self
+																					selector:@selector(update:)
+																					userInfo:NULL
+																					 repeats:NO];
 }
 - (id)init {
 	self = [super init];
