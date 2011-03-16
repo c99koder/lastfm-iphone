@@ -83,6 +83,7 @@ NSString *kTrackDidResume;
 	NSString *_radioType;
 	NSMutableArray *_playlist;
 	NSMutableArray *_tracks;
+	NSDate *_playlistExpiration;
 	PLSqliteDatabase *_db;
 	NSLock *_busyLock;
 	BOOL playbackWasInterrupted;

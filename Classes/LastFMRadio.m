@@ -563,7 +563,8 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	NSLog(@"Soft skipping to prebuffer next track");
 	softskipping = YES;
 	_softSkipTimer = nil;
-	[_playlist removeObjectAtIndex:0];
+	if([_playlist count])
+		[_playlist removeObjectAtIndex:0];
 	if([self play]) {
 		[[_tracks lastObject] pause];
 		prebuffering = YES;
@@ -763,11 +764,22 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		return;
 	}
 	
+	if([_playlistExpiration compare:[NSDate date]] == NSOrderedAscending) {
+		NSLog(@"Playlist has expired!");
+		tuning = YES;
+		[_playlist release];
+		_playlist = nil;
+		[_tracks removeAllObjects];
+	}
+	
 	if(!_playlist || [_playlist count] < 1 || _station == nil) {
 		NSLog(@"Fetching playlist");
 		for(x=0; x<2; x++) {
 			NSDictionary *playlist = [[LastFMService sharedInstance] getPlaylist];
 			if([[playlist objectForKey:@"playlist"] count]) {
+				NSLog(@"Playlist expires in %@ seconds", [playlist objectForKey:@"expiry"]);
+				[_playlistExpiration release];
+				_playlistExpiration = [[NSDate dateWithTimeIntervalSinceNow:[[playlist objectForKey:@"expiry"] intValue]] retain];
 				if(!_playlist) {
 					_playlist = [[NSMutableArray alloc] initWithArray:[playlist objectForKey:@"playlist"]];
 				} else {
@@ -823,6 +835,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	if([_tracks count]) {
 		[self stop];
 	}
+	[_playlistExpiration release];
 	[_tracks release];
 	[_playlist release];
 	[_busyLock release];
@@ -862,7 +875,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		[[_tracks objectAtIndex: 0] stop];
 		[_tracks removeObjectAtIndex: 0];
 	}
-	if([_tracks count]) {
+	if([_tracks count] && [_playlistExpiration compare:[NSDate date]] == NSOrderedDescending) {
 		[[_tracks objectAtIndex:0] play];
 		[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidChange object:self userInfo:[self trackInfo]];
 	} else {

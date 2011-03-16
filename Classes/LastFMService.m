@@ -691,6 +691,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 												@"additional_info=1",
 												nil] objectAtIndex:0] children] objectAtIndex:1] children];
 	NSString *title = nil;
+	NSString *expiry = nil;
 	
 	if([nodes count]) {
 		for(CXMLNode *node in nodes) {
@@ -718,6 +719,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 						[track release];
 					}
 				}
+			} else if([[node name] isEqualToString:@"link"] && [node stringValue]) {
+				expiry = [NSMutableString stringWithString:[node stringValue]];
 			} else if([[node name] isEqualToString:@"title"] && [node stringValue]) {
 				NSMutableString *station = [NSMutableString stringWithString:[node stringValue]];
 				[station replaceOccurrencesOfString:@"+" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, [station length])];
@@ -736,7 +739,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 				}
 			}
 		}
-		return [NSDictionary dictionaryWithObjectsAndKeys:playlist,@"playlist",title,@"title",nil]; 
+		return [NSDictionary dictionaryWithObjectsAndKeys:playlist,@"playlist",title,@"title",expiry,@"expiry",nil]; 
 	} else {
 		return nil;
 	}
