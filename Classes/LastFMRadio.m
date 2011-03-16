@@ -620,8 +620,8 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 			 } else if([[_tracks objectAtIndex:0] state] == TRACK_PAUSED) {
 				 [self stop];
 			 } else {
-				 [_tracks release];
-				 _tracks = nil;
+				 tuning = YES;
+				 [_tracks removeAllObjects];
 				 [_playlist release];
 				 _playlist = nil;
 				 [NSThread sleepForTimeInterval:2];
