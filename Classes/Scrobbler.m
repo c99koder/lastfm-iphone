@@ -218,50 +218,54 @@
 	[[LastFMService sharedInstance] nowPlayingTrack:title byArtist:artist onAlbum:album withDuration:duration/1000];
 	_scrobblerState = SCROBBLER_READY;
 }
+- (void)_flushQueue {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	@synchronized(_queue) {
+		NSEnumerator *enumerator = [[[_queue copy] autorelease] objectEnumerator];
+		id track;
+		
+		while((track = [enumerator nextObject])) {
+			if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
+				[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+			}
+			if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
+				[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
+			}
+			[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
+			if([LastFMService sharedInstance].error == nil) {
+#if !(TARGET_IPHONE_SIMULATOR)
+				[FlurryAPI logEvent:@"scrobble"];
+#endif
+				[_queue removeObject:track];
+				[self saveQueue];
+			} else {
+				break;
+			}
+		}
+		_queueTimerInterval = 2;
+		_scrobblerState = SCROBBLER_READY;
+	}
+	[pool release];
+}
 - (void)flushQueue:(NSTimer *)theTimer {
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]) {
-		@synchronized(_queue) {
-			NSEnumerator *enumerator = [[[_queue copy] autorelease] objectEnumerator];
-			id track;
-			
-			if(_queueTimer != nil) {
-				[_queueTimer invalidate];
-				_queueTimer = nil;
-			}
-			
-			if([_queue count] < 1) {
-				_queueTimerInterval = 2;
-				return;
-			}
-			
-			if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
-				_scrobblerState = SCROBBLER_OFFLINE;
-				return;
-			}
-			
-			_scrobblerState = SCROBBLER_SCROBBLING;
-			
-			while((track = [enumerator nextObject])) {
-				if([[track objectForKey:@"rating"] isEqualToString:@"L"]) {
-					[[LastFMService sharedInstance] loveTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-				}
-				if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
-					[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-				}
-				[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
-				if([LastFMService sharedInstance].error == nil) {
-#if !(TARGET_IPHONE_SIMULATOR)
-					[FlurryAPI logEvent:@"scrobble"];
-#endif
-					[_queue removeObject:track];
-					[self saveQueue];
-				} else {
-					break;
-				}
-			}
-			_queueTimerInterval = 2;
-			_scrobblerState = SCROBBLER_READY;
+		if(_queueTimer != nil) {
+			[_queueTimer invalidate];
+			_queueTimer = nil;
 		}
+		
+		if([_queue count] < 1) {
+			_queueTimerInterval = 2;
+			return;
+		}
+		
+		if(![(APP_CLASS *)[UIApplication sharedApplication].delegate hasNetworkConnection]) {
+			_scrobblerState = SCROBBLER_OFFLINE;
+			return;
+		}
+		
+		_scrobblerState = SCROBBLER_SCROBBLING;
+		[self performSelectorInBackground:@selector(_flushQueue) withObject:nil];
 	}
 }
 - (void)cancelTimer {
