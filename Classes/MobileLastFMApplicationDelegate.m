@@ -572,7 +572,6 @@ NSString *kUserAgent;
 }
 -(void)hidePlaybackView {
 	[(UINavigationController *)(rootViewController.selectedViewController) popViewControllerAnimated:YES];
-	[_scrobbler flushQueue:nil];
 	[playbackViewController release];
 	playbackViewController = nil;
 }
