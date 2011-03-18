@@ -90,6 +90,7 @@
 		self.navigationItem.leftBarButtonItem = item;
 		[btn release];
 		[item release];
+		self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
 	} else {
 		[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	}
