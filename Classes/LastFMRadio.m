@@ -383,6 +383,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(void)resume {
 	if(_state == TRACK_PAUSED) {
 		NSLog(@"Resuming queue");
+		if(_receivedData == nil) {
+			_receivedData = [[NSMutableData alloc] initWithContentsOfFile:CACHE_FILE(@"trackdata")];
+		}
 		AudioQueueStart(queue, NULL);
 		_state = TRACK_PLAYING;
 	}
@@ -431,6 +434,16 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 }
 -(int)httpBufferSize {
 	return [_receivedData length];
+}
+-(BOOL)lowOnMemory {
+	if(_fileDidFinishLoading) {
+		[_receivedData writeToFile:CACHE_FILE(@"trackdata") atomically:YES];
+		[_receivedData release];
+		_receivedData = nil;
+		return YES;
+	} else {
+		return NO;
+	}
 }
 @end
 
@@ -888,5 +901,19 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	[_softSkipTimer invalidate];
 	_softSkipTimer = nil;
 	[_busyLock unlock];
+}
+-(void)lowOnMemory {
+	if([self cancelPrebuffering])
+		NSLog(@"Cancelled prebuffering due to low memory");
+	if([self state] == TRACK_PAUSED) {
+		if([_tracks count]) {
+			if([[_tracks objectAtIndex: 0] lowOnMemory]) {
+				NSLog(@"Caching paused track data");
+			} else {
+				NSLog(@"Unable to cache paused data, stopping...");
+				[self stop];
+			}
+		}
+	}
 }
 @end

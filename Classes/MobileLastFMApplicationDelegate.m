@@ -181,12 +181,7 @@ NSString *kUserAgent;
 		[playbackViewController becomeActive];
 }
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
-	if([[LastFMRadio sharedInstance] cancelPrebuffering])
-		NSLog(@"Cancelled prebuffering due to low memory");
-	if([[LastFMRadio sharedInstance] state] == TRACK_PAUSED) {
-		NSLog(@"Stopping paused station due to low memory");
-		[[LastFMRadio sharedInstance] stop];
-	}
+	[[LastFMRadio sharedInstance] lowOnMemory];
 }
 - (void)sendCrashReport {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];

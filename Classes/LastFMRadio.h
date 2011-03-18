@@ -75,6 +75,7 @@ NSString *kTrackDidResume;
 -(NSDictionary *)trackInfo;
 -(int)audioBufferCount;
 -(int)httpBufferSize;
+-(BOOL)lowOnMemory;
 @end
 
 @interface LastFMRadio : NSObject {
@@ -118,4 +119,5 @@ NSString *kTrackDidResume;
 -(LastFMTrack *)currentTrack;
 -(BOOL)cancelPrebuffering;
 -(NSArray *)suggestions;
+-(void)lowOnMemory;
 @end
