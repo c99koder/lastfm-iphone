@@ -495,7 +495,12 @@ NSString *kUserAgent;
 		[self displayError:NSLocalizedString(@"ERROR_NONETWORK", @"Network error") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE", @"Network error title")];
 		return;
 	} else if([error.domain isEqualToString:LastFMServiceErrorDomain]) {
-		switch(error.code) {
+		int code = error.code;
+		
+		if(error.code == errorCodeAuthenticationFailed && [[[error userInfo] objectForKey:@"method"] hasPrefix:@"radio"])
+			code = errorCodeGeoRestricted;
+		
+		switch(code) {
 			case errorCodeInvalidAPIKey:
 				[self displayError:NSLocalizedString(@"ERROR_UPGRADE", @"Upgrade required error") withTitle:NSLocalizedString(@"ERROR_UPGRADE_TITLE", @"Upgrade required error title")];
 				return;
@@ -510,6 +515,9 @@ NSString *kUserAgent;
 			case errorCodeDeprecated:
 				[self displayError:@"This station is no longer available for streaming." withTitle:@"Station No Longer Available"];
 				return;
+			case errorCodeGeoRestricted:
+				[self displayError:@"Last.fm Radio is currently unavailable on mobile devices in this country." withTitle:@"Radio Not Available"];
+				return;
 			case errorCodeTrialExpired:
 				_pendingAlert = [[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
 															 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"£3/€3/$3"]
@@ -521,7 +529,7 @@ NSString *kUserAgent;
 				return;
 		}
 	}
-	[self displayError:NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE", @"Servers are temporarily unavailable") withTitle:NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE_TITLE", @"Servers are temporarily unavailable title")];
+	[self displayError:[NSString stringWithFormat:@"%@\n\n%@", NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE", @"Servers are temporarily unavailable"), [error.userInfo objectForKey:NSLocalizedDescriptionKey]] withTitle:NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE_TITLE", @"Servers are temporarily unavailable title")];
 }
 - (BOOL)_playRadioStation:(NSString *)station {
 	if(![[LastFMRadio sharedInstance] play]) {

@@ -143,7 +143,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	if(![[[d rootElement] objectAtXPath:@"./@status"] isEqualToString:@"ok"]) {
 		error = [[NSError alloc] initWithDomain:LastFMServiceErrorDomain
 																			 code:[[[d rootElement] objectAtXPath:@"./error/@code"] intValue]
-																	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[d rootElement] objectAtXPath:@"./error"],NSLocalizedDescriptionKey,nil]];
+																	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[d rootElement] objectAtXPath:@"./error"],NSLocalizedDescriptionKey,method,@"method",nil]];
 		NSLog(@"%@", error);
 		return nil;
 	}
