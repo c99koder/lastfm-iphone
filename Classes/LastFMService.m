@@ -711,7 +711,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 									if([[extNode name] isEqualToString:@"context"]) {
 										NSMutableArray *context = [[NSMutableArray alloc] init];
 										for(CXMLNode *ctxNode in [extNode children]) {
-											if(![[ctxNode name] isEqualToString:@"user"])
+											if(![[ctxNode name] isEqualToString:@"user"] && [[[ctxNode stringValue] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0)
 												[context addObject:[ctxNode stringValue]];
 										}
 										[track setObject:context forKey:@"context"];
