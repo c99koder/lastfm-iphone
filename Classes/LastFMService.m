@@ -708,7 +708,15 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 						while ((trackNode = [trackMembers nextObject])) {
 							if([[trackNode name] isEqualToString:@"extension"]) {
 								for(CXMLNode *extNode in [trackNode children]) {
-									if([extNode stringValue])
+									if([[extNode name] isEqualToString:@"context"]) {
+										NSMutableArray *context = [[NSMutableArray alloc] init];
+										for(CXMLNode *ctxNode in [extNode children]) {
+											if(![[ctxNode name] isEqualToString:@"user"])
+												[context addObject:[ctxNode stringValue]];
+										}
+										[track setObject:context forKey:@"context"];
+										[context release];
+									} else if([extNode stringValue])
 										[track setObject:[extNode stringValue] forKey:[extNode name]];
 								}
 							} else if([trackNode stringValue])

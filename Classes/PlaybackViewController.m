@@ -358,7 +358,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		[stopBtn setImage:[UIImage imageNamed:@"controlbar_pause.png"] forState:UIControlStateNormal];
 
 	[UIView beginAnimations:nil context:nil];
-	if([[[trackInfo objectForKey:@"context"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
+	if([[trackInfo objectForKey:@"context"] count] > 0) {
 		_fullscreenMetadataView.frame = CGRectMake(0,0,320,67);
 		_context.alpha = 1;
 		NSString *context = @"";
@@ -366,7 +366,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			context = @"From ";
 		else
 			context = @"Similar to ";
-		NSArray *contextitems = [[trackInfo objectForKey:@"context"] componentsSeparatedByString:@"\n"];
+		NSArray *contextitems = [trackInfo objectForKey:@"context"];
 		int contextitemscount = 0;
 		for(int i = 1; i < [contextitems count] && i < 3; i++) {
 			if([[[contextitems objectAtIndex:i] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0) {
