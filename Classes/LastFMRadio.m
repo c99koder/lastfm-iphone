@@ -54,10 +54,10 @@ void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 		NSLog(@"interruption detected! stopping playback/recording\n");
 		//the queue will stop itself on an interruption, we just need to update the AI
 		[LastFMRadio sharedInstance].playbackWasInterrupted = YES;
-		[[LastFMRadio sharedInstance] stop];
+		[[LastFMRadio sharedInstance] pause];
 	}	else if ((inInterruptionState == kAudioSessionEndInterruption) && [LastFMRadio sharedInstance].playbackWasInterrupted) {
 		// we were playing back when we were interrupted, so reset and resume now
-		[[LastFMRadio sharedInstance] skip];
+		[[LastFMRadio sharedInstance] play];
 	}
 }
 
@@ -774,7 +774,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	if([_tracks count] && [[_tracks objectAtIndex:0] state] == TRACK_PAUSED) {
 		[[_tracks objectAtIndex:0] resume];
 		NSLog(@"Playback resumed");
-		return;
+		return YES;
 	}
 	
 	if([_playlistExpiration compare:[NSDate date]] == NSOrderedAscending) {
@@ -907,7 +907,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		NSLog(@"Cancelled prebuffering due to low memory");
 	if([self state] == TRACK_PAUSED) {
 		if([_tracks count]) {
-			if([[_tracks objectAtIndex: 0] lowOnMemory]) {
+			if([(LastFMTrack *)[_tracks objectAtIndex: 0] lowOnMemory]) {
 				NSLog(@"Caching paused track data");
 			} else {
 				NSLog(@"Unable to cache paused data, stopping...");
