@@ -173,12 +173,10 @@ NSString *kUserAgent;
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 	[window makeKeyAndVisible];
-	[((UINavigationController *)rootViewController.selectedViewController) viewWillAppear:NO];
+	[((UINavigationController *)rootViewController.selectedViewController) performSelector:@selector(viewWillAppear:) withObject:nil afterDelay:0.1];
 	_locked = NO;
 	if(_pendingAlert)
 		[_pendingAlert show];
-	if(playbackViewController != nil)
-		[playbackViewController becomeActive];
 }
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 	[[LastFMRadio sharedInstance] lowOnMemory];

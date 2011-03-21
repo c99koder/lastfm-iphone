@@ -70,7 +70,7 @@ int tagSort(id tag1, id tag2, void *context);
 	
 	self.tags = [NSMutableArray array];
 	
-	[_delegates perform:@selector(modelDidStartLoad:) withObject:self];
+	[_delegates makeObjectsPerformSelector:@selector(modelDidStartLoad:) withObject:self];
 	
 	if (text.length) {
 		text = [text lowercaseString];
@@ -81,7 +81,7 @@ int tagSort(id tag1, id tag2, void *context);
 		}    
 	}
 	
-	[_delegates perform:@selector(modelDidFinishLoad:) withObject:self];
+	[_delegates makeObjectsPerformSelector:@selector(modelDidFinishLoad:) withObject:self];
 }
 
 #pragma mark -
