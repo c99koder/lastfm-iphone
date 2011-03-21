@@ -40,7 +40,8 @@
 		_images = [[NSMutableDictionary alloc] init];
 		for(int x = 0; x < [_data count]; x++) {
 			NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_data objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
-			[_images setObject:[info objectForKey:@"image"] forKey:[[_data objectAtIndex:x] objectForKey:@"name"]];
+			if([info objectForKey:@"image"])
+				[_images setObject:[info objectForKey:@"image"] forKey:[[_data objectAtIndex:x] objectForKey:@"name"]];
 		}
 		self.title = @"Top Weekly Artists";
 	}

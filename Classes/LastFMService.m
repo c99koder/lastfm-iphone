@@ -144,7 +144,10 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		error = [[NSError alloc] initWithDomain:LastFMServiceErrorDomain
 																			 code:[[[d rootElement] objectAtXPath:@"./error/@code"] intValue]
 																	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[d rootElement] objectAtXPath:@"./error"],NSLocalizedDescriptionKey,method,@"method",nil]];
-		NSLog(@"%@", error);
+#ifndef DISTRIBUTION
+		if([error.userInfo objectForKey:NSLocalizedDescriptionKey])
+			NSLog(@"%@", error);
+#endif
 		return nil;
 	}
 	return output;

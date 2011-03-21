@@ -482,9 +482,13 @@ NSString *kUserAgent;
 	return req; 
 } 
 - (void)reportError:(NSError *)error {
-	NSLog(@"Error encountered: %@\n", error);
+#ifndef DISTRIBUTION
+	if([error.userInfo objectForKey:NSLocalizedDescriptionKey])
+		NSLog(@"Error encountered: %@\n", error);
+#endif
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logError:error.domain message:[NSString stringWithFormat:@"Error code %i: %@",error.code,[error.userInfo objectForKey:NSLocalizedDescriptionKey]] error:error];
+	if([error.userInfo objectForKey:NSLocalizedDescriptionKey])
+		[FlurryAPI logError:error.domain message:[NSString stringWithFormat:@"Error code %i: %@",error.code,[error.userInfo objectForKey:NSLocalizedDescriptionKey]] error:error];
 #endif
 	if([error.domain isEqualToString:NSURLErrorDomain]) {
 		[self displayError:NSLocalizedString(@"ERROR_NONETWORK", @"Network error") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE", @"Network error title")];
@@ -524,7 +528,10 @@ NSString *kUserAgent;
 				return;
 		}
 	}
-	[self displayError:[NSString stringWithFormat:@"%@\n\n%@", NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE", @"Servers are temporarily unavailable"), [error.userInfo objectForKey:NSLocalizedDescriptionKey]] withTitle:NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE_TITLE", @"Servers are temporarily unavailable title")];
+	if([error.userInfo objectForKey:NSLocalizedDescriptionKey])
+		[self displayError:[NSString stringWithFormat:@"%@\n\n%@", NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE", @"Servers are temporarily unavailable"), [error.userInfo objectForKey:NSLocalizedDescriptionKey]] withTitle:NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE_TITLE", @"Servers are temporarily unavailable title")];
+	else
+		[self displayError:NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE", @"Servers are temporarily unavailable") withTitle:NSLocalizedString(@"ERROR_SERVER_UNAVAILABLE_TITLE", @"Servers are temporarily unavailable title")];
 }
 - (BOOL)_playRadioStation:(NSString *)station {
 	if(![[LastFMRadio sharedInstance] play]) {
@@ -571,7 +578,8 @@ NSString *kUserAgent;
 		}
 	}
 
-	[(UINavigationController *)(rootViewController.selectedViewController) pushViewController:playbackViewController animated:YES];
+	if(playbackViewController)
+		[(UINavigationController *)(rootViewController.selectedViewController) pushViewController:playbackViewController animated:YES];
 }
 -(void)hidePlaybackView {
 	[(UINavigationController *)(rootViewController.selectedViewController) popViewControllerAnimated:YES];

@@ -133,7 +133,7 @@
 	_weeklyArtistImages = [[NSMutableDictionary alloc] init];
 	for(int x = 0; x < [_weeklyArtists count] && x < 3; x++) {
 		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
-		if(info != nil)
+		if([info objectForKey:@"image"])
 			[_weeklyArtistImages setObject:[info objectForKey:@"image"] forKey:[[_weeklyArtists objectAtIndex:x] objectForKey:@"name"]];
 	}
 	friendsCount = [[[LastFMService sharedInstance] friendsOfUser:_username] count];
