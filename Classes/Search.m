@@ -151,6 +151,7 @@
 		}
 	}
 	_data = stations;
+	[results release];
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if([[_data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]]) {

@@ -566,9 +566,6 @@
 			[addTags addTarget:self action:@selector(addTags:) forControlEvents:UIControlEventTouchUpInside];
 			
 			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:addToLibrary, share, addTags, nil];
-			[addToLibrary release];
-			[share release];
-			[addTags release];
 		}
 		return buttonscell;
 	}

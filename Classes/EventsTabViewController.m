@@ -374,7 +374,7 @@ UIImage *eventDateBGImage = nil;
 		case 0:
 		{
 			if([_events count] == 0) {
-				UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+				UITableViewCell *hintCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"] autorelease];
 				hintCell.backgroundView = [[[UIView alloc] init] autorelease];
 				hintCell.backgroundColor = [UIColor clearColor];
 				hintCell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -427,7 +427,7 @@ UIImage *eventDateBGImage = nil;
 		case 1:
 		{
 			if([_recs count] == 0) {
-				UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+				UITableViewCell *hintCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"] autorelease];
 				hintCell.backgroundView = [[[UIView alloc] init] autorelease];
 				hintCell.backgroundColor = [UIColor clearColor];
 				hintCell.selectionStyle = UITableViewCellSelectionStyleNone;

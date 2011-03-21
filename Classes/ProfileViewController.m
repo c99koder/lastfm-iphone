@@ -389,7 +389,7 @@
 			}
 			cell.shouldFillHeight = YES;
 		} else if([[_profile objectForKey:@"playcount"] isEqualToString:@"0"]) {
-			UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+			UITableViewCell *hintCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"] autorelease];
 			hintCell.backgroundView = [[[UIView alloc] init] autorelease];
 			hintCell.backgroundColor = [UIColor clearColor];
 			hintCell.selectionStyle = UITableViewCellSelectionStyleNone;

@@ -376,10 +376,6 @@
 			[share addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
 			
 			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:love, addToLibrary, addTags, share, nil];
-			[love release];
-			[addToLibrary release];
-			[addTags release];
-			[share release];
 		}
 		return buttonscell;	
 	}

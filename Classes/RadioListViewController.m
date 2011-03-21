@@ -360,7 +360,7 @@
 		if([[[stations objectAtIndex:[indexPath row]] objectForKey:@"url"] isEqualToString:@"tags"])
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]]) {
-		UITableViewCell *hintCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"];
+		UITableViewCell *hintCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"hintCell"] autorelease];
 		hintCell.backgroundView = [[[UIView alloc] init] autorelease];
 		hintCell.backgroundColor = [UIColor clearColor];
 		hintCell.selectionStyle = UITableViewCellSelectionStyleNone;

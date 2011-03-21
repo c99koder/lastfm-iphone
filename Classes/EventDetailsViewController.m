@@ -398,7 +398,7 @@
 			break;
 		}
 		case 3:
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil];
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
 			cell.textLabel.text = NSLocalizedString( @"Are you attending?", @"Are you attending?" );
 			int eventAttendance = [self isAttendingEvent:[_event objectForKey:@"id"]];
 			switch (eventAttendance) {
