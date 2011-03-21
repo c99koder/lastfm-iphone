@@ -108,7 +108,6 @@ int tagSort(id tag1, id tag2, void *context);
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[self.tableView visibleCells] waitUntilDone:YES];
 	[numberFormatter release];
-	self.title = @"Now Playing Info";
 	[pool release];
 }
 - (id)initWithTrackInfo:(NSDictionary *)trackInfo {
@@ -144,7 +143,7 @@ int tagSort(id tag1, id tag2, void *context);
 												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_share.png"] style:UIBarButtonItemStylePlain target:self action:@selector(shareButtonPressed)] autorelease],
 												 [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease],
 												 [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"toolbar_tag.png"] style:UIBarButtonItemStylePlain target:self action:@selector(tagButtonPressed)] autorelease],nil];
-		((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = NO;
+		((UIBarButtonItem *)[self.toolbarItems objectAtIndex:0]).enabled = NO;
 		[item release];
 		[btn release];
 		_loaded = NO;
@@ -153,7 +152,7 @@ int tagSort(id tag1, id tag2, void *context);
 }
 - (void)_trackDidChange:(NSNotification *)notification {
 	self.title = @"Recently Played Info";
-	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = YES;
+	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:0]).enabled = YES;
 }
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillAppear:animated];
@@ -174,6 +173,11 @@ int tagSort(id tag1, id tag2, void *context);
 	[self loadContentForCells:[self.tableView visibleCells]];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
 	[TTStyleSheet setGlobalStyleSheet:[[[NowPlayingInfoStyleSheet alloc] init] autorelease]];
+	NSDictionary *trackInfo = [[LastFMRadio sharedInstance] trackInfo];
+	if(![[_trackInfo objectForKey:@"location"] isEqualToString:[trackInfo objectForKey:@"location"]]) {
+		self.title = @"Recently Played Info";
+		((UIBarButtonItem *)[self.toolbarItems objectAtIndex:0]).enabled = YES;
+	}
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -366,10 +370,11 @@ int tagSort(id tag1, id tag2, void *context);
 	[FlurryAPI logEvent:@"nowplayinginfo-refresh"];
 #endif
 	_loaded = NO;
+	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:0]).enabled = NO;
+	self.title = @"Now Playing Info";
 	[_trackInfo release];
 	_trackInfo = [[[LastFMRadio sharedInstance] trackInfo] retain];
 	[NSThread detachNewThreadSelector:@selector(_loadInfo) toTarget:self withObject:nil];
-	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:1]).enabled = NO;
 	[self.tableView reloadData];
 }
 - (void)didReceiveMemoryWarning {
