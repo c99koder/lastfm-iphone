@@ -587,7 +587,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(BOOL)cancelPrebuffering {
 	[_softSkipTimer invalidate];
 	_softSkipTimer = nil;
-	if(prebuffering) {
+	if(prebuffering && [_tracks count] > 1) {
 		[[_tracks objectAtIndex: 1] stop];
 		prebuffering = NO;
 		return YES;
