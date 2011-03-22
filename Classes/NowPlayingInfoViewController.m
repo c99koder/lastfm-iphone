@@ -192,7 +192,7 @@ int tagSort(id tag1, id tag2, void *context);
 			return 90;
 		case 1:
 			if(_loaded) {
-				_artistStatsView.text.width = 210;
+				_trackStatsView.text.width = 210;
 				return _trackStatsView.text.height;
 			} else {
 				return 90;
