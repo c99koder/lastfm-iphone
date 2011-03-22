@@ -93,7 +93,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	[volumeView release];
 	volumeView = v;
 	[volumeView sizeToFit];
-	[v release];
 #endif
 	_lock = [[NSLock alloc] init];
 	_reflectedArtworkView.transform = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
