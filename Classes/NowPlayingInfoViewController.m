@@ -58,15 +58,17 @@ int tagSort(id tag1, id tag2, void *context);
 
 	_artistImageURL = [[artistData objectForKey:@"image"] retain];
 	
-	_trackStatsView.html = [NSString stringWithFormat:@"%@ Scrobbles<br>(%@ Listeners)<br><b>%@ plays in your library</b>",
-													[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[trackData objectForKey:@"playcount"] intValue]]],
-													[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[trackData objectForKey:@"listeners"] intValue]]],
-													[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[trackData objectForKey:@"userplaycount"] intValue]]]];
+	NSString *trackStatsHtml = [NSString stringWithFormat:@"%@ Scrobbles<br>(%@ Listeners)<br><b>%@ plays in your library</b>",
+															[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[trackData objectForKey:@"playcount"] intValue]]],
+															[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[trackData objectForKey:@"listeners"] intValue]]],
+															[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[trackData objectForKey:@"userplaycount"] intValue]]]];
+	[_trackStatsView performSelectorOnMainThread:@selector(setHtml:) withObject:trackStatsHtml waitUntilDone:YES];
 	
-	_artistStatsView.html = [NSString stringWithFormat:@"%@ Scrobbles<br>(%@ Listeners)<br><b>%@ plays in your library</b>",
-													[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[artistData objectForKey:@"playcount"] intValue]]],
-													[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[artistData objectForKey:@"listeners"] intValue]]],
-													[numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[artistData objectForKey:@"userplaycount"] intValue]]]];
+	NSString *artistStatsHtml = [NSString stringWithFormat:@"%@ Scrobbles<br>(%@ Listeners)<br><b>%@ plays in your library</b>",
+															 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[artistData objectForKey:@"playcount"] intValue]]],
+															 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[artistData objectForKey:@"listeners"] intValue]]],
+															 [numberFormatter stringFromNumber:[NSNumber numberWithInteger:[[artistData objectForKey:@"userplaycount"] intValue]]]];
+	[_artistStatsView performSelectorOnMainThread:@selector(setHtml:) withObject:artistStatsHtml waitUntilDone:YES];
 	
 	NSString *taghtml = @"";
 
@@ -94,7 +96,7 @@ int tagSort(id tag1, id tag2, void *context);
 		taghtml = [taghtml stringByAppendingString:@"</b>"];
 	}
 	
-	_trackTagsView.html = taghtml;
+	[_trackTagsView performSelectorOnMainThread:@selector(setHtml:) withObject:taghtml waitUntilDone:YES];
 	
 	NSString *bio = [[artistData objectForKey:@"bio"] stringByReplacingOccurrencesOfString:@"\n" withString:@"<br/>"];
 	//Fix Relative URL with a search replace hack:
@@ -103,7 +105,7 @@ int tagSort(id tag1, id tag2, void *context);
 	//Handle some HTML entities, as Three20 can't parse them
 	bio = [bio stringByReplacingOccurrencesOfString:@"&ndash;" withString:@"–"];
 	bio = [bio stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
-	_artistBioView.html=bio;
+	[_artistBioView performSelectorOnMainThread:@selector(setHtml:) withObject:bio waitUntilDone:YES];
 	_loaded = YES;
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 	[self performSelectorOnMainThread:@selector(loadContentForCells:) withObject:[self.tableView visibleCells] waitUntilDone:YES];
@@ -117,15 +119,19 @@ int tagSort(id tag1, id tag2, void *context);
 		_trackStatsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_trackStatsView.backgroundColor = [UIColor blackColor];
 		_trackStatsView.font = [UIFont systemFontOfSize:14];
+		_trackStatsView.text.width = 210;
 		_artistStatsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_artistStatsView.backgroundColor = [UIColor blackColor];
 		_artistStatsView.font = [UIFont systemFontOfSize:14];
+		_artistStatsView.text.width = 210;
 		_trackTagsView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_trackTagsView.backgroundColor = [UIColor blackColor];
 		_trackTagsView.font = [UIFont systemFontOfSize:14];
+		_trackTagsView.text.width = 210;
 		_artistBioView = [[TTStyledTextLabel alloc] initWithFrame:CGRectZero];
 		_artistBioView.backgroundColor = [UIColor blackColor];
 		_artistBioView.font = [UIFont systemFontOfSize:14];
+		_artistBioView.text.width = 210;
 		UIButton *btn = [[UIButton alloc] initWithFrame: CGRectMake(0, 0, 61, 31)];
 		if([LastFMRadio sharedInstance].state == TRACK_PAUSED)
 			[btn setBackgroundImage:[UIImage imageNamed:@"nowpaused_back.png"] forState:UIControlStateNormal];
@@ -186,7 +192,7 @@ int tagSort(id tag1, id tag2, void *context);
 			return 90;
 		case 1:
 			if(_loaded) {
-				_trackStatsView.text.width = 210;
+				_artistStatsView.text.width = 210;
 				return _trackStatsView.text.height;
 			} else {
 				return 90;
@@ -267,21 +273,25 @@ int tagSort(id tag1, id tag2, void *context);
 		switch([indexPath section]) {
 			case 1:
 				titleLabel.text = @"Track Stats";
+				_trackStatsView.text.width = 210;
 				_trackStatsView.frame = CGRectMake(self.view.frame.size.width - 210 - 20,0,_trackStatsView.text.width,_trackStatsView.text.height);
 				[cell.contentView addSubview: _trackStatsView];
 				break;
 			case 2:
 				titleLabel.text = @"Artist Stats";
+				_artistStatsView.text.width = 210;
 				_artistStatsView.frame = CGRectMake(self.view.frame.size.width - 210 - 20,0,_artistStatsView.text.width,_artistStatsView.text.height);
 				[cell.contentView addSubview: _artistStatsView];
 				break;
 			case 3:
 				titleLabel.text = @"Track Tags";
+				_trackTagsView.text.width = 210;
 				_trackTagsView.frame = CGRectMake(self.view.frame.size.width - 210 - 20,0,_trackTagsView.text.width,_trackTagsView.text.height);
 				[cell.contentView addSubview: _trackTagsView];
 				break;
 			case 4:
 				titleLabel.text = @"Artist Bio";
+				_artistBioView.text.width = 210;
 				_artistBioView.frame = CGRectMake(self.view.frame.size.width - 210 - 20,0,_artistBioView.text.width,_artistBioView.text.height);
 				[cell.contentView addSubview: _artistBioView];
 				break;
