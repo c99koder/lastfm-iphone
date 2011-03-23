@@ -110,6 +110,48 @@ int tagSort(id tag1, id tag2, void *context) {
 	_lock = nil;
 	[_artworkURL release];
 	_artworkURL = nil;
+	[_noArtworkView release];
+	_noArtworkView = nil;
+	[artwork release];
+	artwork = nil;
+	[volumeView release];
+	volumeView = nil;
+	[loveBtn release];
+	loveBtn = nil;
+	[banBtn release];
+	banBtn = nil;
+	[infoBtn release];
+	infoBtn = nil;
+	[stopBtn release];
+	stopBtn = nil;
+	[skipBtn release];
+	skipBtn = nil;
+	[_artworkView release];
+	_artworkView = nil;
+	[_reflectedArtworkView release];
+	_reflectedArtworkView = nil;
+	[_artistAndTrackTitle release];
+	_artistAndTrackTitle = nil;
+	[_elapsed release];
+	_elapsed = nil;
+	[_remaining release];
+	_remaining = nil;
+	[_context release];
+	_context = nil;
+	[_progress release];
+	_progress = nil;
+	[_bufferPercentage release];
+	_bufferPercentage = nil;
+	[_fullscreenMetadataView release];
+	_fullscreenMetadataView = nil;
+	[_badge release];
+	_badge = nil;
+	[_filterView release];
+	_filterView = nil;
+	[_filter release];
+	_filter = nil;
+	[_loadingView release];
+	_loadingView = nil;
 }
 - (void)_systemVolumeChanged:(NSNotification *)notification {
 	float volume = [[[notification userInfo] objectForKey:@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
@@ -174,6 +216,27 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_lock release];
 	[_titleLabel release];
 	[_artworkURL release];
+	[_noArtworkView release];
+	[artwork release];
+	[volumeView release];
+	[loveBtn release];
+	[banBtn release];
+	[infoBtn release];
+	[stopBtn release];
+	[skipBtn release];
+	[_artworkView release];
+	[_reflectedArtworkView release];
+	[_artistAndTrackTitle release];
+	[_elapsed release];
+	[_remaining release];
+	[_context release];
+	[_progress release];
+	[_bufferPercentage release];
+	[_fullscreenMetadataView release];
+	[_badge release];
+	[_filterView release];
+	[_filter release];
+	[_loadingView release];
 }
 - (void)becomeActive {
 	if(!(_timer && [_timer isValid])) {
