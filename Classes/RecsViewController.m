@@ -104,6 +104,9 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
 	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 	
+	if(toggle.selectedSegmentIndex == 1)
+		return NO;
+	
 	if(toggle.selectedSegmentIndex == 0 && [indexPath section] == 0 ) 
 		if( [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"])
 			return NO;
