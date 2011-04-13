@@ -121,56 +121,6 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 
 @synthesize parser, queue, dataFormat, audioBufferDataSize;
 
-- (void)_prefetchSimilarArtists {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[[LastFMService sharedInstance] artistsSimilarTo:[_trackInfo objectForKey:@"creator"]];
-	[pool release];
-}	
-- (void)_prefetchTags {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[[LastFMService sharedInstance] topTagsForTrack:[_trackInfo objectForKey:@"title"] byArtist:[_trackInfo objectForKey:@"creator"]];
-	[pool release];
-}	
-- (void)_prefetchEvents {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
-	[[LastFMService sharedInstance] eventsForArtist:[_trackInfo objectForKey:@"creator"]];
-	[pool release];
-}
-- (void)_prefetchArtistBio {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[[LastFMService sharedInstance] metadataForArtist:[_trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-	[pool release];
-}	
-- (void)_prefetchArtwork {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[_trackInfo retain];
-	NSDictionary *albumData = [[LastFMService sharedInstance] metadataForAlbum:[_trackInfo objectForKey:@"album"] byArtist:[_trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-	NSString *artworkURL = nil;
-	
-	if([[albumData objectForKey:@"image"] length]) {
-		artworkURL = [NSString stringWithString:[albumData objectForKey:@"image"]];
-	} else if([[_trackInfo objectForKey:@"image"] length]) {
-		artworkURL = [NSString stringWithString:[_trackInfo objectForKey:@"image"]];
-	}
-	
-	if(!artworkURL || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
-		NSDictionary *artistData = [[LastFMService sharedInstance] metadataForArtist:[_trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-		if([artistData objectForKey:@"image"])
-			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
-	}
-
-	if(artworkURL && [artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
-		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@"MZZZ" withString:@"LZZZ"];
-	}
-	
-	if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
-		[NSData dataWithContentsOfURL:[NSURL URLWithString: artworkURL]];
-	}
-	[_trackInfo release];
-	[pool release];
-}	
-
 -(id)initWithTrackInfo:(NSDictionary *)trackInfo {
 	if(self = [super init]) {
 		_trackInfo = [trackInfo retain];
@@ -188,11 +138,6 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 			_state = TRACK_BUFFERING;
 			queue = nil;
 			AudioFileStreamOpen(self, propCallback, packetCallback, kAudioFileMP3Type, &parser);
-			[NSThread detachNewThreadSelector:@selector(_prefetchArtwork) toTarget:self withObject:nil];
-			[NSThread detachNewThreadSelector:@selector(_prefetchArtistBio) toTarget:self withObject:nil];
-			[NSThread detachNewThreadSelector:@selector(_prefetchSimilarArtists) toTarget:self withObject:nil];
-			[NSThread detachNewThreadSelector:@selector(_prefetchTags) toTarget:self withObject:nil];
-			[NSThread detachNewThreadSelector:@selector(_prefetchEvents) toTarget:self withObject:nil];
 		} else {
 			[self release];
 			return nil;
