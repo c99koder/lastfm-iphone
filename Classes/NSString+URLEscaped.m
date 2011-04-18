@@ -23,7 +23,7 @@
 
 @implementation NSString (URLEscaped)
 - (NSString *)URLEscaped {
-	CFStringRef escaped = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"&+/?", kCFStringEncodingUTF8);
+	CFStringRef escaped = CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)self, NULL, (CFStringRef)@"&+/?=", kCFStringEncodingUTF8);
 	NSString *out = [NSString stringWithString:(NSString *)escaped];
 	CFRelease(escaped);
 	return [[out copy] autorelease];
