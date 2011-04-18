@@ -232,7 +232,7 @@
 				[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
 			}
 			[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue]];
-			if([LastFMService sharedInstance].error == nil) {
+			if([LastFMService sharedInstance].error == nil || [[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain]) {
 #if !(TARGET_IPHONE_SIMULATOR)
 				[FlurryAPI logEvent:@"scrobble"];
 #endif
