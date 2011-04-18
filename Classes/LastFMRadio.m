@@ -53,8 +53,10 @@ void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 	if(inInterruptionState == kAudioSessionBeginInterruption) {
 		NSLog(@"interruption detected! stopping playback/recording\n");
 		//the queue will stop itself on an interruption, we just need to update the AI
-		[LastFMRadio sharedInstance].playbackWasInterrupted = YES;
-		[[LastFMRadio sharedInstance] pause];
+		if([[LastFMRadio sharedInstance] state] != TRACK_PAUSED) {
+			[LastFMRadio sharedInstance].playbackWasInterrupted = YES;
+			[[LastFMRadio sharedInstance] pause];
+		}
 	}	else if ((inInterruptionState == kAudioSessionEndInterruption) && [LastFMRadio sharedInstance].playbackWasInterrupted) {
 		// we were playing back when we were interrupted, so reset and resume now
 		[[LastFMRadio sharedInstance] play];
