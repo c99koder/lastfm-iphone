@@ -472,7 +472,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (NSDictionary *)weeklyArtistsForUser:(NSString *)username {
 	CXMLNode *node = [[self doMethod:@"user.getWeeklyArtistChart" maxCacheAge:5*MINUTES XPath:@"./weeklyartistchart" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil] objectAtIndex:0];
 	if( !node ) return nil;
-	
+
+	NSDictionary *result = nil;
 	NSString* from = [node objectAtXPath: @"@from"];
 	NSString* to = [node objectAtXPath: @"@to"];
 	NSError* nodeError;
@@ -480,7 +481,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	NSArray* artists = [self _convertNodes:nodes
 						toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./playcount", @"./streamable", @"./image[@size=\"large\"]", nil]
 						forKeys:[NSArray arrayWithObjects:@"name", @"playcount", @"streamable", @"image", nil]];
-	NSDictionary* result = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects: from, to, artists, nil ] 
+	if(from != nil && to != nil && artists != nil)
+		result = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects: from, to, artists, nil ] 
 													   forKeys: [NSArray arrayWithObjects: @"from", @"to", @"artists", nil ]];
 	return result;
 }
