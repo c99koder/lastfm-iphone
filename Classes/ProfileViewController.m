@@ -43,7 +43,8 @@
 	NSMutableDictionary *images = [[NSMutableDictionary alloc] init];
 	for(int x = 0; x < [artists count] && x < 3; x++) {
 		NSDictionary *info = [[LastFMService sharedInstance] metadataForArtist:[[artists objectAtIndex:x] objectForKey:@"name"] inLanguage:@"en"];
-		[images setObject:[info objectForKey:@"image"] forKey:[[artists objectAtIndex:x] objectForKey:@"name"]];
+		if(info != nil && [info objectForKey:@"image"] != nil && [artists objectAtIndex:x] != nil && [[artists objectAtIndex:x] objectForKey:@"name"] != nil)
+			[images setObject:[info objectForKey:@"image"] forKey:[[artists objectAtIndex:x] objectForKey:@"name"]];
 	}
 	friendsCount = [[[LastFMService sharedInstance] friendsOfUser:_username] count];
 	NSArray *friendsListeningNow = nil;
