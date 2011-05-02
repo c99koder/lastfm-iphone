@@ -175,12 +175,6 @@ UIImage *eventDateBGImage = nil;
 	}
 	return self;
 }
-/*- (void)viewDidLoad {
-	UISearchBar *bar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 45)];
-	bar.placeholder = @"Search Events";
-	self.tableView.tableHeaderView = bar;
-	[bar release];
-}*/
 - (void)viewDidUnload {
 	[super viewDidUnload];
 	NSLog(@"Releasing events data");
@@ -201,7 +195,6 @@ UIImage *eventDateBGImage = nil;
 	[super viewWillAppear:animated];
 	
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 
 	if(_refreshThread) {
 		[_refreshThread cancel];
