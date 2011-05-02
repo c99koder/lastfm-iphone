@@ -101,6 +101,9 @@
 - (void)update:(NSTimer *)timer {
 	int networkType;
 	
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
+		[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
+	
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]) {
 		if([(APP_CLASS *)[UIApplication sharedApplication].delegate hasWiFiConnection]) {
 			networkType = 2;
@@ -199,6 +202,9 @@
 	}
 }
 - (void)doQueueTimer {
+	if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isKindOfClass:[NSString class]])
+		[[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"scrobbling"];
+	
 	if(_queueTimer == nil && _scrobblerState != SCROBBLER_OFFLINE && [[[NSUserDefaults standardUserDefaults] objectForKey:@"scrobbling"] isEqualToString:@"YES"]) {
 		_queueTimer = [NSTimer scheduledTimerWithTimeInterval:_queueTimerInterval
 																								target:self
