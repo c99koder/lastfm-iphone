@@ -101,7 +101,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	error = nil;
 	
 	NSArray *sortedParams = [[params arrayByAddingObjectsFromArray:[NSArray arrayWithObjects:[NSString stringWithFormat:@"method=%@",method],(session && authenticated)?[NSString stringWithFormat:@"sk=%@",session]:nil,nil]] sortedArrayUsingSelector:@selector(compare:)];
-	NSMutableString *signature = [[NSMutableString alloc] init];
+	NSMutableString *signature = [[[NSMutableString alloc] init] autorelease];
 	for(NSString *param in sortedParams) {
 		[signature appendString:[[param stringByReplacingOccurrencesOfString:@"=" withString:@""] unURLEscape]];
 	}
@@ -120,10 +120,8 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	} else {
 		error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:0 userInfo:nil];
-		[signature release];
 		return nil;
 	}
-	[signature release];
 	
 	if(theError) {
 		error = [theError retain];

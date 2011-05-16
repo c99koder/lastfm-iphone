@@ -152,6 +152,15 @@ NSString *kUserAgent;
 	[_scrobbler cancelTimer];
 	[_scrobbler release];
 	_scrobbler = nil;
+	NSDirectoryEnumerator *e = [[NSFileManager defaultManager] enumeratorAtPath:NSTemporaryDirectory()];
+	NSString *file;
+	
+	NSLog(@"Emptying cache...\n");
+	while((file = [e nextObject])) {
+		NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:file];
+		[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+	}
+	NSLog(@"Finished emptying cache\n");
 	[self showFirstRunView:YES];
 }
 - (void)logoutButtonPressed:(id)sender {
