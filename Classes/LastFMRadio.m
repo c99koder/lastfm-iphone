@@ -268,7 +268,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	[_audioBufferCountLock lock];
 	_audioBufferCount--;
 	[_audioBufferCountLock unlock];	
-	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 32) {
+	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 8) {
 		[self _pushDataChunk];
 	}
 	if(_state == TRACK_PLAYING && _peakBufferCount > 4) {
@@ -315,8 +315,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		[_bufferLock unlock];
 	}
 	if(_state != TRACK_PAUSED && ([_receivedData length] > 98304 && _state == TRACK_BUFFERING) || _state == TRACK_PLAYING) {
-		while(_audioBufferCount < 6 && [_receivedData length] >= 8192)
+		while(_audioBufferCount < 6) {
 			[self _pushDataChunk];
+		}
 	}
 }
 -(void)pause {

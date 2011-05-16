@@ -685,11 +685,11 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	if([((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]) {
 		network = @"wifi";
 		bitrate = @"128";
-		speed = @"2";
+		speed = @"8";
 	} else {
 		network = @"wwan";
 		bitrate = [[NSUserDefaults standardUserDefaults] objectForKey:@"bitrate"];
-		speed = @"2";
+		speed = @"8";
 	}
 	
 	NSArray *nodes = [[[[[self doMethod:@"radio.getPlaylist" maxCacheAge:0 XPath:@"." withParameters:
