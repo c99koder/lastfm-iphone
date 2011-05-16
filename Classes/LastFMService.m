@@ -117,7 +117,6 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		//NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
 		
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
-		[theResponseData writeToFile:CACHE_FILE([signature md5sum]) atomically:YES];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 	} else {
 		error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:0 userInfo:nil];
@@ -138,7 +137,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		error = [theError retain];
 		return nil;
 	}
-	
+
 	NSArray *output = [[d rootElement] nodesForXPath:XPath error:&theError];
 	if(![[[d rootElement] objectAtXPath:@"./@status"] isEqualToString:@"ok"]) {
 		error = [[NSError alloc] initWithDomain:LastFMServiceErrorDomain
@@ -150,6 +149,9 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 #endif
 		return nil;
 	}
+	//Cache the response
+	[theResponseData writeToFile:CACHE_FILE([signature md5sum]) atomically:YES];
+
 	return output;
 }
 - (NSArray *)doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath withParameters:(NSString *)firstParam, ... {
