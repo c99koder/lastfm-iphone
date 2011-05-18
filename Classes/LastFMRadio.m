@@ -57,9 +57,6 @@ void interruptionListener(void *inClientData,	UInt32 inInterruptionState) {
 			[LastFMRadio sharedInstance].playbackWasInterrupted = YES;
 			[[LastFMRadio sharedInstance] pause];
 		}
-	}	else if ((inInterruptionState == kAudioSessionEndInterruption) && [LastFMRadio sharedInstance].playbackWasInterrupted) {
-		// we were playing back when we were interrupted, so reset and resume now
-		[[LastFMRadio sharedInstance] play];
 	}
 }
 
