@@ -114,7 +114,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 		[theRequest setHTTPMethod:@"POST"];
 		[theRequest setHTTPBody:[[NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]] dataUsingEncoding:NSUTF8StringEncoding]];
-		//NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
+		NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
 		
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -395,10 +395,11 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 - (void)removeNowPlayingTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album {
 	[self doMethod:@"track.removeNowPlaying" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], [NSString stringWithFormat:@"album=%@", [album URLEscaped]], nil];
 }
-- (void)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration timestamp:(int)timestamp {
+- (void)scrobbleTrack:(NSString *)title byArtist:(NSString *)artist onAlbum:(NSString *)album withDuration:(int)duration timestamp:(int)timestamp streamId:(NSString *)streamId {
 	[self doMethod:@"track.scrobble" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"track=%@", [title URLEscaped]], 
 	 [NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], 
 	 [NSString stringWithFormat:@"album=%@", [album URLEscaped]], 
+	 [NSString stringWithFormat:@"streamId=%@", streamId], 
 	 [NSString stringWithFormat:@"timestamp=%i", timestamp], 
 	 [NSString stringWithFormat:@"duration=%i", duration], nil];
 }

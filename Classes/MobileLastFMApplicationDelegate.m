@@ -446,7 +446,7 @@ NSString *kUserAgent;
 -(NSDictionary *)trackInfo {
 	if([[LastFMRadio sharedInstance] state] != RADIO_IDLE) {
 		NSMutableDictionary *info = [NSMutableDictionary dictionaryWithDictionary:[[LastFMRadio sharedInstance] trackInfo]];
-		[info setObject:[NSString stringWithFormat:@"L%@", [info objectForKey:@"trackauth"]] forKey:@"source"];
+		[info setObject:[info objectForKey:@"trackauth"] forKey:@"source"];
 		[info setObject:[[LastFMRadio sharedInstance] station] forKey:@"station"];
 		[info setObject:[NSNumber numberWithDouble:[[LastFMRadio sharedInstance] startTime]] forKey:@"startTime"];
 		return info;
