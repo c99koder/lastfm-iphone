@@ -323,6 +323,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		AudioQueuePause(queue);
 	}
 	_state = TRACK_PAUSED;
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"pause"];
+#endif
 	[self performSelectorOnMainThread:@selector(_notifyTrackPaused) withObject:nil waitUntilDone:NO];
 }
 -(void)resume {
@@ -333,6 +336,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		}
 		AudioQueueStart(queue, NULL);
 		_state = TRACK_PLAYING;
+#if !(TARGET_IPHONE_SIMULATOR)
+		[FlurryAPI logEvent:@"resume"];
+#endif
 	}
 	[self performSelectorOnMainThread:@selector(_notifyTrackResumed) withObject:nil waitUntilDone:NO];
 }
