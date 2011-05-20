@@ -161,7 +161,7 @@
 	_tandcview = [[TTStyledTextLabel alloc] initWithFrame:CGRectMake(9,198,302,100)];
 	_tandcview.backgroundColor = [UIColor clearColor];
 	_tandcview.font = [UIFont systemFontOfSize:12];
-	_tandcview.html = @"By creating an account, you are agreeing to the <a href='http://m.last.fm/terms'>Terms and conditions</a> and confirm that you are 13 years of age or over.";
+	_tandcview.html = @"By creating an account, you agree to the <a href='http://m.last.fm/terms'>Terms and Conditions, Privacy Policy,</a> and confirm that you are 13 years of age or over.";
 	[_registrationView addSubview: _tandcview];
 }
 -(void)viewDidUnload {
