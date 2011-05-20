@@ -161,7 +161,7 @@ int tagSort(id tag1, id tag2, void *context);
 	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:0]).enabled = YES;
 }
 - (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillAppear:animated];
+	[super viewWillDisappear:animated];
 	[self.navigationController setToolbarHidden:YES];
 	self.navigationController.toolbar.barStyle = UIBarStyleDefault;
 	[TTStyleSheet setGlobalStyleSheet:[[[TTDefaultStyleSheet alloc] init] autorelease]];

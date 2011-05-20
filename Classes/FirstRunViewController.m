@@ -28,6 +28,19 @@
 #import "FlurryAPI.h"
 #endif
 
+@interface FirstRunViewStyleSheet : TTDefaultStyleSheet {
+};
+@end
+
+@implementation FirstRunViewStyleSheet
+-(UIColor *)textColor {
+	return [UIColor whiteColor];
+}
+-(UIColor *)linkTextColor {
+	return [UIColor whiteColor];
+}
+@end
+
 @implementation FirstRunViewController
 -(void)_authenticateUser {
 	NSDictionary *session = [[LastFMService sharedInstance] getMobileSessionForUser:_username.text password:_password.text];
@@ -53,7 +66,13 @@
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 -(void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
 	_username.text = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_user"];
+	[TTStyleSheet setGlobalStyleSheet:[[[FirstRunViewStyleSheet alloc] init] autorelease]];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	[TTStyleSheet setGlobalStyleSheet:[[[TTDefaultStyleSheet alloc] init] autorelease]];
 }
 -(IBAction)registerButtonPressed:(id)sender {
 	_regusername.text = @"";
@@ -137,6 +156,22 @@
 -(void)dismissKeyboard {
 	[_username resignFirstResponder];
 	[_password resignFirstResponder];
+}
+-(void)viewDidLoad {
+	_tandcview = [[TTStyledTextLabel alloc] initWithFrame:CGRectMake(9,198,302,100)];
+	_tandcview.backgroundColor = [UIColor clearColor];
+	_tandcview.font = [UIFont systemFontOfSize:12];
+	_tandcview.html = @"By creating an account, you are agreeing to the <a href='http://m.last.fm/terms'>Terms and conditions</a> and confirm that you are 13 years of age or over.";
+	[_registrationView addSubview: _tandcview];
+}
+-(void)viewDidUnload {
+	[_tandcview removeFromSuperview];
+	[_tandcview release];
+	_tandcview = nil;
+}
+- (void)dealloc {
+	[_tandcview release];
+	[super dealloc];
 }
 @end
 

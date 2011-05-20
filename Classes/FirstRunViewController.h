@@ -21,6 +21,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import "Three20/Three20.h"
 
 @interface FirstRunViewController : UIViewController<UITextFieldDelegate> {
 	IBOutlet UITextField *_username;
@@ -29,6 +30,7 @@
 	IBOutlet UITextField *_regpassword;
 	IBOutlet UITextField *_regemail;
 	IBOutlet UIView *_registrationView;
+	TTStyledTextLabel *_tandcview;
 }
 -(IBAction)loginButtonPressed:(id)sender;
 -(IBAction)registerButtonPressed:(id)sender;
