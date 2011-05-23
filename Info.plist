@@ -15,7 +15,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>icon</string>
+	<string>Icon</string>
 	<key>CFBundleIdentifier</key>
 	<string>fm.last.MobileLastFM</string>
 	<key>CFBundleInfoDictionaryVersion</key>
