@@ -259,6 +259,8 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		NSLog(@"Starting queue");
 		AudioQueueStart(queue, NULL);
 		_state = TRACK_PLAYING;
+		if(_fileDidFinishLoading)
+			[self performSelectorOnMainThread:@selector(_notifyTrackFinishedLoading) withObject:self waitUntilDone:NO];
 	}
 }
 -(void)bufferDequeued {
@@ -540,6 +542,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	_softSkipTimer = nil;
 	if(prebuffering && [_tracks count] > 1) {
 		[[_tracks objectAtIndex: 1] stop];
+		[_tracks removeObjectAtIndex:1];
 		prebuffering = NO;
 		return YES;
 	} else {
@@ -588,7 +591,6 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 				 [_tracks removeAllObjects];
 				 [_playlist release];
 				 _playlist = nil;
-				 [NSThread sleepForTimeInterval:2];
 				 [self skip];
 			 }
 		}
