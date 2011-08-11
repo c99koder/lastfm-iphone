@@ -388,6 +388,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(int)httpBufferSize {
 	return [_receivedData length];
 }
+-(BOOL)didFinishLoading {
+	return _fileDidFinishLoading;
+}
 -(BOOL)lowOnMemory {
 	if(_fileDidFinishLoading) {
 		[_receivedData writeToFile:CACHE_FILE(@"trackdata") atomically:YES];
@@ -480,6 +483,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidBecomeAvailable:) name:kTrackDidBecomeAvailable object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishPlaying:) name:kTrackDidFinishPlaying object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishLoading:) name:kTrackDidFinishLoading object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidResume:) name:kTrackDidResume object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFail:) name:kTrackDidFailToStream object:nil];
 	return self;
 }
@@ -549,6 +553,10 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		return NO;
 	}
 }
+-(void)_trackDidResume:(NSNotification *)notification {
+	if(notification.object == [_tracks objectAtIndex:0] && [[_tracks objectAtIndex:0] didFinishLoading])
+		[self _trackDidFinishLoading:notification];
+}
 -(void)_trackDidFinishLoading:(NSNotification *)notification {
 	NSLog(@"Track did finish loading");
 	[_busyLock lock];
@@ -567,7 +575,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 																											 repeats:NO];
 		}
 	}
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"]) {
+	if([notification.name isEqualToString:kTrackDidFinishLoading] && [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"]) {
 		int playsleft = [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"] intValue];
 		if(playsleft > 0) {
 			playsleft--;

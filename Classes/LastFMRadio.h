@@ -76,6 +76,7 @@ NSString *kTrackDidResume;
 -(int)audioBufferCount;
 -(int)httpBufferSize;
 -(BOOL)lowOnMemory;
+-(BOOL)didFinishLoading;
 @end
 
 @interface LastFMRadio : NSObject {
