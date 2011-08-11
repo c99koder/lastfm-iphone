@@ -65,7 +65,10 @@
 	cell.detailAtBottom = YES;
 	cell.detailTextLabel.textColor = [UIColor colorWithRed:36.0f/255 green:112.0f/255 blue:216.0f/255 alpha:1.0];
 	cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-	cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[[_data objectAtIndex:[indexPath row]] objectForKey:@"uts"] StringFromUTS]];
+	if([[[_data objectAtIndex:[indexPath row]] objectForKey:@"nowplaying"] isEqualToString:@"true"])
+		cell.detailTextLabel.text = @"Now Playing ";
+	else
+		cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ ", [[[_data objectAtIndex:[indexPath row]] objectForKey:@"uts"] StringFromUTS]];
 	cell.detailTextLabel.textAlignment = UITextAlignmentRight;
 	cell.noArtwork = YES;
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
