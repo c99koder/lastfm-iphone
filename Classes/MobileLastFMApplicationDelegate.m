@@ -525,13 +525,15 @@ NSString *kUserAgent;
 				[self displayError:@"Last.fm Radio is currently unavailable on mobile devices in this country." withTitle:@"Radio Not Available"];
 				return;
 			case errorCodeTrialExpired:
-				_pendingAlert = [[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
-															 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"£3/€3/$3"]
-																												delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Subscribe", nil];
-				if(!_locked)
-					[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-				[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
-				[[NSUserDefaults standardUserDefaults] synchronize];
+				if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"] && [[[error userInfo] objectForKey:@"method"] hasPrefix:@"radio"]) {
+					_pendingAlert = [[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
+																 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"£3/€3/$3"]
+																													delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Subscribe", nil];
+					if(!_locked)
+						[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+					[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
+					[[NSUserDefaults standardUserDefaults] synchronize];
+				}
 				return;
 		}
 	}
