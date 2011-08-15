@@ -479,6 +479,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	_busyLock = [[NSLock alloc] init];
 	_tracks = [[NSMutableArray alloc] init];
 	softskipping = NO;
+	bgTask = UIBackgroundTaskInvalid;
 	AudioSessionInitialize(NULL, NULL, interruptionListener, self);
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidBecomeAvailable:) name:kTrackDidBecomeAvailable object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishPlaying:) name:kTrackDidFinishPlaying object:nil];
@@ -490,6 +491,14 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(void)_trackDidBecomeAvailable:(NSNotification *)notification {
 	NSLog(@"Track did become available");
 	if(notification.object == [_tracks objectAtIndex:0]) {
+		UIDevice* device = [UIDevice currentDevice];
+		BOOL backgroundSupported = NO;
+		if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+			backgroundSupported = device.multitaskingSupported;
+		if(backgroundSupported && bgTask != UIBackgroundTaskInvalid) {
+			[[UIApplication sharedApplication] endBackgroundTask:bgTask];
+			bgTask = UIBackgroundTaskInvalid;
+		}
 		[notification.object play];
 		_errorSkipCounter = 0;
 		if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"]) {
@@ -843,6 +852,17 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	[_busyLock unlock];
 }
 -(void)skip {
+	UIDevice* device = [UIDevice currentDevice];
+	BOOL backgroundSupported = NO;
+	if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+		backgroundSupported = device.multitaskingSupported;
+	
+	if(backgroundSupported && bgTask == UIBackgroundTaskInvalid) {
+		bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+			[[UIApplication sharedApplication] endBackgroundTask:bgTask];
+			bgTask = UIBackgroundTaskInvalid;
+		}];
+	}
 	[_busyLock lock];
 	NSLog(@"Skipping to next track\n");
 	if([_tracks count]) {

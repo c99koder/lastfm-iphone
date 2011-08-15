@@ -96,6 +96,7 @@ NSString *kTrackDidResume;
 	BOOL softskipping;
 	BOOL tuning;
 	NSArray *_suggestions;
+	UIBackgroundTaskIdentifier bgTask;
 }
 
 @property BOOL playbackWasInterrupted;
