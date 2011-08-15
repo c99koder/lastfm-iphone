@@ -752,7 +752,8 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		tuning = YES;
 		[_playlist release];
 		_playlist = nil;
-		[_tracks removeAllObjects];
+		if([_tracks count] > 1)
+			[_tracks removeObjectAtIndex:1];
 	}
 	
 	if(!_playlist || [_playlist count] < 1 || _station == nil) {
