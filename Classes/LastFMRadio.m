@@ -519,7 +519,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 			[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
-														 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"[price]"]
+														 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"£3/€3/$3"]
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Subscribe", nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 			[self stop];
