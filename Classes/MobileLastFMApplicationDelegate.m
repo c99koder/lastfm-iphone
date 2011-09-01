@@ -28,6 +28,7 @@
 #import "EventsTabViewController.h"
 #include "version.h"
 #include <SystemConfiguration/SCNetworkReachability.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import "NSString+URLEscaped.h"
 #import "NSData+Compress.h"
 #import "HomeViewController.h"
@@ -346,6 +347,15 @@ NSString *kUserAgent;
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"kEnablePinchMediaStatsCollection"] isEqualToString:@"YES"]) {
 		NSLog(@"Flurry is enabled");
 		[FlurryAPI startSession:PINCHMEDIA_ID];
+	}
+	MPMediaQuery *everything = [[MPMediaQuery alloc] init];
+	
+	NSLog(@"Logging items from a generic query...");
+	NSArray *itemsFromGenericQuery = [everything items];
+	for (MPMediaItem *song in itemsFromGenericQuery) {
+    NSString *songTitle = [song valueForProperty: MPMediaItemPropertyTitle];
+    NSLog (@"Title: %@", songTitle);
+		NSLog (@"Playcount: %@", [song valueForProperty: MPMediaItemPropertyPlayCount]);
 	}
 #endif
 	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];

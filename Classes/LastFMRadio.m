@@ -160,6 +160,17 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(void)_waitForPlaybackToFinish {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 #if !(TARGET_IPHONE_SIMULATOR)
+	UIBackgroundTaskIdentifier bgTask;
+	UIDevice* device = [UIDevice currentDevice];
+	BOOL backgroundSupported = NO;
+	if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+		backgroundSupported = device.multitaskingSupported;
+	
+	if(backgroundSupported && bgTask == UIBackgroundTaskInvalid) {
+		bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+			[[UIApplication sharedApplication] endBackgroundTask:bgTask];
+		}];
+	}
 	UInt32 isRunning = 0;
 	UInt32 size = sizeof(isRunning);
 	
@@ -179,6 +190,10 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		}
 		if([LastFMRadio sharedInstance].state == TRACK_PLAYING)
 			[self performSelectorOnMainThread:@selector(_notifyTrackFinishedPlaying) withObject:nil waitUntilDone:NO];
+		if(backgroundSupported && bgTask == UIBackgroundTaskInvalid) {
+			[[UIApplication sharedApplication] endBackgroundTask:bgTask];
+			bgTask = UIBackgroundTaskInvalid;
+		}
 	}
 #else
 	if(queue) {
@@ -508,6 +523,10 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 				UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Free Trial Almost Over" message:[NSString stringWithFormat:@"You have just %@ tracks left of your free trial.", [[NSUserDefaults standardUserDefaults] objectForKey:@"trial_playsleft"]] delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:@"Subscribe", nil] autorelease];
 				[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 			}
+		}
+		if(backgroundSupported && bgTask == UIBackgroundTaskInvalid) {
+			[[UIApplication sharedApplication] endBackgroundTask:bgTask];
+			bgTask = UIBackgroundTaskInvalid;
 		}
 	}
 }
@@ -883,6 +902,10 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	[_softSkipTimer invalidate];
 	_softSkipTimer = nil;
 	[_busyLock unlock];
+	if(backgroundSupported && bgTask == UIBackgroundTaskInvalid) {
+		[[UIApplication sharedApplication] endBackgroundTask:bgTask];
+		bgTask = UIBackgroundTaskInvalid;
+	}
 }
 -(void)lowOnMemory {
 	if([self cancelPrebuffering])
