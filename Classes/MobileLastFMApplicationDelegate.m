@@ -230,8 +230,6 @@ NSString *kUserAgent;
 	[pool release];
 }
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Subscribe"])
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/subscribe"]];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Logout", @"Logout")])
 		[self performSelectorOnMainThread:@selector(_logout) withObject:nil waitUntilDone:YES];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Cancel", @"Cancel")])
@@ -537,8 +535,8 @@ NSString *kUserAgent;
 			case errorCodeTrialExpired:
 				if([[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_enabled"] isEqualToString:@"1"] && [[[error userInfo] objectForKey:@"method"] hasPrefix:@"radio"]) {
 					_pendingAlert = [[UIAlertView alloc] initWithTitle:@"Your Free Trial Is Over" message:
-																 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ for just %@ per month.", [UIDevice currentDevice].model, @"£3/€3/$3"]
-																													delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Later" otherButtonTitles:@"Subscribe", nil];
+																 [NSString stringWithFormat:@"Your free trial of Last.fm radio is over.  Subscribe now to get personalized radio on your %@ at http://last.fm/subscribe", [UIDevice currentDevice].model]
+																													delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 					if(!_locked)
 						[_pendingAlert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 					[[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:@"trial_expired"];
