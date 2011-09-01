@@ -346,15 +346,6 @@ NSString *kUserAgent;
 		NSLog(@"Flurry is enabled");
 		[FlurryAPI startSession:PINCHMEDIA_ID];
 	}
-	MPMediaQuery *everything = [[MPMediaQuery alloc] init];
-	
-	NSLog(@"Logging items from a generic query...");
-	NSArray *itemsFromGenericQuery = [everything items];
-	for (MPMediaItem *song in itemsFromGenericQuery) {
-    NSString *songTitle = [song valueForProperty: MPMediaItemPropertyTitle];
-    NSLog (@"Title: %@", songTitle);
-		NSLog (@"Playcount: %@", [song valueForProperty: MPMediaItemPropertyPlayCount]);
-	}
 #endif
 	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];
 	

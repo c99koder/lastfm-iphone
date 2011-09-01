@@ -634,7 +634,18 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	}
 }
 -(void)purgeRecentURLs {
-	[_db executeUpdate:@"delete from recent_radio", nil];
+	[_db close];
+	[_db release];
+	_db = nil;
+	
+	[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"recent.db") error:nil];
+	
+	_db = [[PLSqliteDatabase databaseWithPath:CACHE_FILE(@"recent.db")] retain];
+	if (![_db open]) {
+		NSLog(@"Could not open recent db.");
+	}
+	
+	[_db executeUpdate:@"create table if not exists recent_radio (timestamp integer, url text, name text)", nil];
 }
 -(void)removeRecentURL:(NSString *)url {
 	[_db executeUpdate:@"delete from recent_radio where url = ?", url, nil];
