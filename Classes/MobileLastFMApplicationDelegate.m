@@ -308,6 +308,8 @@ NSString *kUserAgent;
 		_launchURL = nil;
 	}
 
+	_launched = YES;
+
 	/*if([[NSUserDefaults standardUserDefaults] objectForKey:@"crashed"]) {
 		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CRASH_REPORT_TITLE", @"Crash reporter title")
 																										 message:NSLocalizedString(@"CRASH_REPORT_BODY",@"Crash reporter body")
@@ -347,6 +349,7 @@ NSString *kUserAgent;
 		[FlurryAPI startSession:PINCHMEDIA_ID];
 	}
 #endif
+	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];
 	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];
 	
 	_mainView = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -372,7 +375,6 @@ NSString *kUserAgent;
 	}
 	
 	[window makeKeyAndVisible];
-	_launched = YES;
 	return YES;
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {
