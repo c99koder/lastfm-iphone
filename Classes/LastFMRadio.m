@@ -494,7 +494,19 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	_busyLock = [[NSLock alloc] init];
 	_tracks = [[NSMutableArray alloc] init];
 	softskipping = NO;
-	bgTask = UIBackgroundTaskInvalid;
+	UIDevice* device = [UIDevice currentDevice];
+	BOOL backgroundSupported = NO;
+	if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+		backgroundSupported = device.multitaskingSupported;
+	
+	if(backgroundSupported && bgTask == UIBackgroundTaskInvalid) {
+		bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+			[[UIApplication sharedApplication] endBackgroundTask:bgTask];
+			bgTask = UIBackgroundTaskInvalid;
+		}];
+	}
+	if(backgroundSupported)
+		bgTask = UIBackgroundTaskInvalid;
 	AudioSessionInitialize(NULL, NULL, interruptionListener, self);
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidBecomeAvailable:) name:kTrackDidBecomeAvailable object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidFinishPlaying:) name:kTrackDidFinishPlaying object:nil];
