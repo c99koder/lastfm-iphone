@@ -242,7 +242,7 @@
 		2259349E0DA85CD30035A1AA /* LastFMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349A0DA85CD30035A1AA /* LastFMService.m */; };
 		2259349F0DA85CD30035A1AA /* LastFMRadio.m in Sources */ = {isa = PBXBuildFile; fileRef = 2259349C0DA85CD30035A1AA /* LastFMRadio.m */; };
 		225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225A901D0FFA8C4400DC5798 /* MessageUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225ECD430DFF882600323F42 /* MediaPlayer.framework */; };
+		225ECD440DFF882600323F42 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 225ECD430DFF882600323F42 /* MediaPlayer.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		22624B4E0E6F01FE00072BB4 /* calendar-view-gradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 22624B4D0E6F01FE00072BB4 /* calendar-view-gradient.png */; };
 		22631EFD0E81395F00DC2D09 /* DebugView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22631EFC0E81395F00DC2D09 /* DebugView.xib */; };
 		22631F170E813B5700DC2D09 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22631F160E813B5700DC2D09 /* DebugViewController.m */; };
