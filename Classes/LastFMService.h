@@ -23,6 +23,12 @@
 #import "CXMLDocument.h"
 #import "apikey.h"
 
+#define CACHE_FILE(file) [NSTemporaryDirectory() stringByAppendingPathComponent:file]
+
+#define MINUTES 60
+#define HOURS 3600
+#define DAYS 86400
+
 #define LastFMServiceErrorDomain @"LastFMServiceErrorDomain"
 
 enum serviceErrorCodes {
@@ -69,11 +75,11 @@ enum eventStatus {
 - (NSArray *)doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath withParameters:(NSString *)firstParam, ...;
 
 - (NSDictionary *)getSessionInfo;
+- (NSDictionary *)getGeo;
 
 #pragma mark Artist methods
 
 - (NSDictionary *)metadataForArtist:(NSString *)artist inLanguage:(NSString *)lang;
-- (NSArray *)eventsForArtist:(NSString *)artist;
 - (NSArray *)artistsSimilarTo:(NSString *)artist;
 - (NSArray *)topTagsForArtist:(NSString *)artist;
 - (void)addTags:(NSArray *)tags toArtist:(NSString *)artist;
@@ -126,9 +132,6 @@ enum eventStatus {
 - (NSArray *)tagsForUser:(NSString *)username;
 - (NSArray *)recentlyPlayedTracksForUser:(NSString *)username;
 - (NSArray *)playlistsForUser:(NSString *)username;
-- (NSArray *)eventsForUser:(NSString *)username;
-- (NSArray *)eventsForFriendsOfUser:(NSString *)username;
-- (NSArray *)recommendedEventsForUser:(NSString *)username;
 - (NSArray *)recommendedArtistsForUser:(NSString *)username;
 - (NSArray *)recommendedReleasesForUser:(NSString *)username;
 - (NSArray *)releasesForUser:(NSString *)username;
@@ -164,6 +167,23 @@ enum eventStatus {
 
 - (void)attendEvent:(int)event status:(int)status;
 - (NSArray *)eventsForLatitude:(float)latitude longitude:(float)longitude radius:(int)radius;
+- (NSArray *)festivalsForLatitude:(float)latitude longitude:(float)longitude radius:(int)radius;
+- (NSDictionary *)detailsForEvent:(int)eventID;
+- (NSArray *)recommendedLineupForEvent:(int)eventID;
+- (NSArray *)festivalsForCountry:(NSString *)country page:(int)page;
+- (NSArray *)eventsForArtist:(NSString *)artist;
+- (NSArray *)festivalsForArtist:(NSString *)artist;
+- (NSArray *)searchForEvent:(NSString *)event;
+- (NSArray *)searchForFestival:(NSString *)event;
+- (NSArray *)eventsForUser:(NSString *)username;
+- (NSArray *)eventsForFriendsOfUser:(NSString *)username;
+- (NSArray *)festivalsForUser:(NSString *)username;
+- (NSArray *)festivalsForFriendsOfUser:(NSString *)username;
+- (NSArray *)recommendedEventsForUser:(NSString *)username;
+- (void)recommendEvent:(int)event toEmailAddress:(NSString *)emailAddress;
+- (NSArray *)highlightedFestivals;
+- (NSDictionary *)adsForCountry:(NSString *)country;
+- (NSArray *)getMetros;
 
 #pragma mark Playlist methods
 

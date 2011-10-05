@@ -92,6 +92,47 @@ BOOL shouldUseCache(NSString *file, double seconds) {
   }
 	return nil;
 }
+- (NSArray *)doGet:(NSString *)url maxCacheAge:(double)seconds XPath:(NSString *)XPath {
+	NSData *theResponseData;
+	NSURLResponse *theResponse = NULL;
+	NSError *theError = NULL;
+	
+	[error release];
+	error = nil;
+	
+	if((seconds && shouldUseCache(CACHE_FILE([url md5sum]),seconds)) || cacheOnly) {
+		theResponseData = [NSData dataWithContentsOfFile:CACHE_FILE([url md5sum])];
+	} else if([((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasNetworkConnection] && !cacheOnly) {
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
+		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
+		
+		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	} else {
+		error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:0 userInfo:nil];
+		return nil;
+	}
+	
+	if(theError) {
+		error = [theError retain];
+		return nil;
+	}
+	
+	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
+	
+	if(theError) {
+		error = [theError retain];
+		return nil;
+	}
+	
+	NSArray *output = [[d rootElement] nodesForXPath:XPath error:&theError];
+
+	//Cache the response
+	[theResponseData writeToFile:CACHE_FILE([url md5sum]) atomically:YES];
+	
+	return output;
+}
 - (NSArray *)_doMethod:(NSString *)method maxCacheAge:(double)seconds XPath:(NSString *)XPath withParams:(NSArray *)params authenticated:(BOOL)authenticated {
 	NSData *theResponseData;
 	NSURLResponse *theResponse = NULL;
@@ -114,7 +155,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
 		[theRequest setHTTPMethod:@"POST"];
 		[theRequest setHTTPBody:[[NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]] dataUsingEncoding:NSUTF8StringEncoding]];
-		//NSLog(@"method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
+		//NSLog(@"+++ method: %@ : params: %@", method, [NSString stringWithFormat:@"%@&api_sig=%@", [sortedParams componentsJoinedByString:@"&"], [signature md5sum]]);
 		
 		theResponseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
@@ -128,9 +169,13 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 	}
 	
-	//NSLog(@"Response: %s\n", [theResponseData bytes]);
+	//terrible namespace hax
+	NSString *theXML = [[[[[NSString alloc] initWithBytes:[theResponseData bytes] length:[theResponseData length] encoding:NSUTF8StringEncoding] autorelease] stringByReplacingOccurrencesOfString:@"<geo:" withString:@"<"] stringByReplacingOccurrencesOfString:@"</geo:" withString:@"</"];
+
+	//NSLog(@"--- (%@) Response: %@\n", method, theXML);
 	
-	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:theResponseData options:0 error:&theError] autorelease];
+	CXMLDocument *d = [[[CXMLDocument alloc] initWithData:[theXML dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&theError] autorelease];
+	
 	if(theError) {
 		error = [theError retain];
 		return nil;
@@ -204,6 +249,17 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	}
 	
 	NSDictionary *output = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+	if([output objectForKey:@"startDate"]) {
+		NSMutableDictionary *o = [[NSMutableDictionary alloc] initWithDictionary:output];
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+		[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+		[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
+		
+		NSDate *date = [formatter dateFromString:[output objectForKey:@"startDate"]];
+		[o setObject:date forKey:@"startNSDate"];
+		output = [o autorelease];
+		[formatter release];
+	}
 	[objects release];
 	return output;
 }
@@ -236,6 +292,17 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 		return nil;
 }
 
+- (NSDictionary *)getGeo {
+	NSArray *nodes = [self doMethod:@"bespoke.getGeo" maxCacheAge:0 XPath:@"./geo" withParameters:nil];
+	if([nodes count])
+		return [self _convertNode:[nodes objectAtIndex:0]
+			 toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./countrycode",@"./countryname", 
+															 nil]
+											forKeys:[NSArray arrayWithObjects:@"countrycode", @"countryname", nil]];
+	else
+		return nil;
+}
+
 #pragma mark Artist methods
 
 - (NSDictionary *)metadataForArtist:(NSString *)artist inLanguage:(NSString *)lang {
@@ -249,12 +316,6 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 													forKeys:[NSArray arrayWithObjects:@"name", @"image", @"summary", @"bio", @"listeners", @"playcount", @"userplaycount", nil]];
 	}
 	return metadata;
-}
-- (NSArray *)eventsForArtist:(NSString *)artist {
-	NSArray *nodes = [self doMethod:@"artist.getEvents" maxCacheAge:1*DAYS XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
-	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
 }
 - (NSArray *)artistsSimilarTo:(NSString *)artist {
 	NSArray *nodes = [self doMethod:@"artist.getSimilar" maxCacheAge:7*DAYS XPath:@"./similarartists/artist" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
@@ -559,33 +620,6 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./realname", @"./scrobblesource/name", @"./recenttrack/artist/name", @"./recenttrack/name", @"./image[@size=\"extralarge\"]", nil]
 										 forKeys:[NSArray arrayWithObjects:@"username", @"realname", @"scrobblesource", @"artist", @"title", @"image", nil]];
 }
-- (NSArray *)eventsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
-	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
-}
-- (NSArray *)eventsForFriendsOfUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getFriendsEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
-	return [self _convertNodes:nodes
-			 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", 
-														 @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", 
-														 @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", 
-														 @"./image[@size=\"large\"]", @"./friendsattending/attendee", nil]
-					   forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", @"attendees", nil]];
-}
-- (NSArray *)recommendedEventsForUser:(NSString *)username {
-	NSArray *nodes = [self doMethod:@"user.getRecommendedEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
-	return [self _convertNodes:nodes
-					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
-										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
-}
-- (NSArray *)eventsForLatitude:(float)latitude longitude:(float)longitude radius:(int)radius {
-	NSArray *nodes = [self doMethod:@"geo.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"lat=%f", latitude], [NSString stringWithFormat:@"long=%f", longitude], [NSString stringWithFormat:@"distance=%i", radius], nil];
-	return [self _convertNodes:nodes
-				 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
-									 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
-}
 - (NSDictionary *)profileForUser:(NSString *)username {
 	return [self profileForUser:username authenticated:YES];
 }
@@ -847,8 +881,133 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 
 #pragma mark Event methods
 
+- (NSArray *)festivalsForArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"artist.getEvents" maxCacheAge:1*DAYS XPath:@"./events/event" withParameters:@"festivalsonly=1",[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)searchForFestival:(NSString *)event {
+	NSArray *nodes = [self doMethod:@"event.search" maxCacheAge:1*DAYS XPath:@"./results/eventmatches/event" withParameters:@"festivalsonly=1",[NSString stringWithFormat:@"event=%@", [event URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)searchForEvent:(NSString *)event {
+	NSArray *nodes = [self doMethod:@"event.search" maxCacheAge:1*DAYS XPath:@"./results/eventmatches/event" withParameters:[NSString stringWithFormat:@"event=%@", [event URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)eventsForArtist:(NSString *)artist {
+	NSArray *nodes = [self doMethod:@"artist.getEvents" maxCacheAge:1*DAYS XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"artist=%@", [artist URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)eventsForUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)eventsForFriendsOfUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getFriendsEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", 
+															@"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", 
+															@"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", 
+															@"./image[@size=\"large\"]", @"./friendsattending/attendee", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", @"attendees", nil]];
+}
+- (NSArray *)recommendedEventsForUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getRecommendedEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", @"./score", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", @"score", nil]];
+}
+- (NSArray *)festivalsForCountry:(NSString *)country page:(int)page {
+	NSArray *nodes = [self doMethod:@"geo.getEvents" maxCacheAge:1*DAYS XPath:@"./events/event" withParameters:@"festivalsonly=1",[NSString stringWithFormat:@"page=%i", page],
+															 [NSString stringWithFormat:@"location=%@", [country URLEscaped]], @"limit=100", nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/location/point/lat", @"./venue/location/point/long", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", @"./image[@size=\"mega\"]", @"./score", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"lat", @"long", @"website", @"phonenumber", @"startDate", @"image", @"megaimage", @"score", nil]];
+}
+- (NSArray *)festivalsForUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:@"festivalsonly=1",[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)festivalsForFriendsOfUser:(NSString *)username {
+	NSArray *nodes = [self doMethod:@"user.getFriendsEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:@"festivalsonly=1",[NSString stringWithFormat:@"user=%@", [username URLEscaped]], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", 
+															@"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", 
+															@"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", 
+															@"./image[@size=\"large\"]", @"./friendsattending/attendee", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", @"attendees", nil]];
+}
+- (NSArray *)eventsForLatitude:(float)latitude longitude:(float)longitude radius:(int)radius {
+	NSArray *nodes = [self doMethod:@"geo.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:[NSString stringWithFormat:@"lat=%f", latitude], [NSString stringWithFormat:@"long=%f", longitude], [NSString stringWithFormat:@"distance=%i", radius], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)festivalsForLatitude:(float)latitude longitude:(float)longitude radius:(int)radius {
+	NSArray *nodes = [self doMethod:@"geo.getEvents" maxCacheAge:0 XPath:@"./events/event" withParameters:@"festivalsonly=1", [NSString stringWithFormat:@"lat=%f", latitude], [NSString stringWithFormat:@"long=%f", longitude], [NSString stringWithFormat:@"distance=%i", radius], @"limit=100", nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"status", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", nil]];
+}
+- (NSArray *)recommendedLineupForEvent:(int)eventID {
+	NSArray *nodes = [self doMethod:@"event.getRecommendedLineup" maxCacheAge:0 XPath:@"./artists/artist" withParameters:[NSString stringWithFormat:@"event=%i", eventID], nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./streamable", @"./image[@size=\"large\"]", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"streamable", @"image", nil]];
+}
 - (void)attendEvent:(int)event status:(int)status {
 	[self doMethod:@"event.attend" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"event=%i", event], [NSString stringWithFormat:@"status=%i", status], nil];
+}
+- (NSDictionary *)detailsForEvent:(int)eventID {
+	NSDictionary *metadata = nil;
+	NSArray *nodes = [self doMethod:@"event.getInfo" maxCacheAge:1*DAYS XPath:@"./event" withParameters:[NSString stringWithFormat:@"event=%i", eventID], nil];
+	if([nodes count]) {
+		CXMLNode *node = [nodes objectAtIndex:0];
+		metadata = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./@status", @"./score", @"./id", @"./artists/headliner", @"./artists/artist", @"./title", @"./description", @"./venue/name", @"./venue/location/street", @"./venue/location/city", @"./venue/location/postalcode", @"./venue/location/country", @"./venue/website", @"./venue/phonenumber", @"./startDate", @"./image[@size=\"large\"]", @"./image[@size=\"extralarge\"]", @"./image[@size=\"mega\"]", nil]
+																											forKeys:[NSArray arrayWithObjects:@"status", @"score", @"id", @"headliner", @"artists", @"title", @"description", @"venue", @"street", @"city", @"postalcode", @"country", @"website", @"phonenumber", @"startDate", @"image", @"extralargeimage", @"megaimage", nil]];
+	}
+	return metadata;
+}
+- (void)recommendEvent:(int)event toEmailAddress:(NSString *)emailAddress {
+	[self doMethod:@"event.share" maxCacheAge:0 XPath:@"." withParameters:[NSString stringWithFormat:@"event=%i", event],
+	 [NSString stringWithFormat:@"recipient=%@", [emailAddress URLEscaped]],
+	 nil];
+}
+- (NSArray *)highlightedFestivals {
+	NSArray *nodes = [self doGet:[NSString stringWithFormat:@"http://cdn.last.fm/client/festivals/highlights-%@.xml", [[NSUserDefaults standardUserDefaults] objectForKey:@"countrycode"]] maxCacheAge:1*DAYS XPath:@"/highlights/festival"];
+	if(![nodes count])
+		 nodes = [self doGet:@"http://cdn.last.fm/client/festivals/highlights.xml" maxCacheAge:1*DAYS XPath:@"/highlights/festival"];
+
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./id", @"./img", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"id", @"image", nil]];
+}
+- (NSDictionary *)adsForCountry:(NSString *)country {
+	NSDictionary *ads = nil;
+	NSArray *nodes = [self doGet:[NSString stringWithFormat:@"http://cdn.last.fm/client/festivals/ads/iphone-%@.xml", country] maxCacheAge:1*DAYS XPath:@"/ads"];
+	if([nodes count]) {
+		CXMLNode *node = [nodes objectAtIndex:0];
+		ads = [self _convertNode:node toDictionaryWithXPaths:[NSArray arrayWithObjects:@"./splash", @"./titlebar", @"./titlebar_retina", @"./title", @"./popup", @"./link", nil]
+													forKeys:[NSArray arrayWithObjects:@"splash", @"titlebar", @"titlebar_retina", @"title", @"popup", @"link", nil]];
+	}
+	return ads;
+}
+- (NSArray *)getMetros {
+	NSArray *nodes = [self doMethod:@"geo.getMetros" maxCacheAge:7*DAYS XPath:@"./metros/metro" withParameters:nil];
+	return [self _convertNodes:nodes
+					 toArrayWithXPaths:[NSArray arrayWithObjects:@"./name", @"./country", nil]
+										 forKeys:[NSArray arrayWithObjects:@"name", @"country", nil]];
 }
 
 #pragma mark Playlist methods

@@ -25,7 +25,8 @@
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "FlurryAPI.h"
 #endif
-
+#import "SHKTwitter.h"
+#import "SHKFacebook.h"
 
 @implementation ShareActionSheet
 
@@ -37,13 +38,13 @@
 											delegate:self
 								   cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
 							  destructiveButtonTitle:nil
-								   otherButtonTitles:@"E-mail Address", NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
+								   otherButtonTitles:@"Twitter", @"Facebook", @"E-mail Address", NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
 	} else {
 		self = [super initWithTitle:title
 											delegate:self
 								   cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
 							  destructiveButtonTitle:nil
-								   otherButtonTitles:NSLocalizedString(@"Contacts", @"Share to Address Book"), NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
+								   otherButtonTitles:@"Twitter", @"Facebook", NSLocalizedString(@"Contacts", @"Share to Address Book"), NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend"), nil];
 	}
 	return self;
 }
@@ -53,6 +54,7 @@
 		_track = [track retain];
 		_artist = [artist retain];
 		_album = nil;
+		_event = nil;
 	}
 	return self;
 }
@@ -63,6 +65,7 @@
 		_track = nil;
 		_album = nil;
 		_artist = [artist retain];
+		_event = nil;
 	}
 	return self;
 }
@@ -73,6 +76,18 @@
 		_track = nil;
 		_album = [album retain];
 		_artist = [artist retain];
+		_event = nil;
+	}
+	return self;
+}
+
+- (id)initWithEvent:(NSDictionary*)event {
+	self = [self initSuperWithTitle:@"Who would you like to share this event with?"];
+	if ( self ) {
+		_track = nil;
+		_album = nil;
+		_artist = nil;
+		_event = [event retain];
 	}
 	return self;
 }
@@ -82,6 +97,20 @@
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Twitter"]) {
+#if !(TARGET_IPHONE_SIMULATOR)
+		[FlurryAPI logEvent:@"share-twitter"];
+#endif
+		[SHKTwitter shareItem:[self shareKitItem]];
+	}
+
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Facebook"]) {
+#if !(TARGET_IPHONE_SIMULATOR)
+		[FlurryAPI logEvent:@"share-facebook"];
+#endif
+		[SHKFacebook shareItem:[self shareKitItem]];
+	}
+
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
 	   [[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"E-mail Address"]) {
 		[self shareToAddressBook];
@@ -92,9 +121,38 @@
 	}
 }
 
+- (SHKItem *)shareKitItem {
+	NSURL *url;
+	NSString *title;
+	
+	if(_event != nil) {
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/festival/%@", [_event objectForKey:@"id"]]];
+		title = [_event objectForKey:@"title"];
+	} else {
+		NSString *link = @"http://www.last.fm/music";
+		link = [NSString stringWithFormat:@"%@/%@", link,[_artist URLEscaped]];
+		if(_album)
+			link = [NSString stringWithFormat:@"%@/%@", link,[_album URLEscaped]];
+		else if(_track)
+			link = [NSString stringWithFormat:@"%@/%@", link,@"_"];
+		
+		if(_track) {
+			link = [NSString stringWithFormat:@"%@/%@", link,[_track URLEscaped]];
+			title = [NSString stringWithFormat:@"%@ - %@", _artist, _track];
+		} else if(_album) {
+			title = [NSString stringWithFormat:@"%@ - %@", _artist, _album];
+		} else {
+			title = _artist;
+		}
+		url = [NSURL URLWithString:link];
+	}
+	
+	return [SHKItem URL:url title:title];
+}
+
 - (void)shareToAddressBook {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share-addressbook"];
+	[FlurryAPI logEvent:@"share-email"];
 #endif
 	if(NSClassFromString(@"MFMailComposeViewController") != nil && [MFMailComposeViewController canSendMail]) {
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -102,13 +160,17 @@
 		[mail setMailComposeDelegate:self];
 		
 		NSString* sharedItem;
-		if ( _track ) sharedItem = _track;
+		if ( _event ) sharedItem = [_event objectForKey:@"title"];
+		else if ( _track ) sharedItem = _track;
 		else if ( _album ) sharedItem = _album;
 		else sharedItem = _track;
 		
 		[mail setSubject:[NSString stringWithFormat:@"Last.fm: %@ shared %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"], sharedItem]];
 		NSString* sharedLink;
-		if( _track ) {
+		if( _event ) {
+			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/festival/%@'>%@</a>", 
+										[_event objectForKey:@"id"], [_event objectForKey:@"title"]];
+		} else if( _track ) {
 			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@/_/%@'>%@</a>", 
 													[_artist URLEscaped], [_track URLEscaped], _track];
 		} else if ( _album ) {
@@ -118,16 +180,29 @@
 			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@'>%@</a>", 
 						  [_artist URLEscaped], _artist];
 		}
-		[mail setMessageBody:[NSString stringWithFormat:@"<p>Hi there,</p>\
-							  <p>%@ has shared %@ with you on Last.fm!</p>\
-							  <p>Click the link for more information about this music.</p>\
-							  <p>Don't have a Last.fm account?<br/>\
-							  Last.fm helps you find new music, effortlessly keeping a record of what you listen to from almost any player.</p>\
-							  </p><a href='http://www.last.fm/join'>Join Last.fm for free</a> and create a music profile.</p>\
-							  <p>- The Last.fm Team</p>",
-							  [[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"],
-							  sharedLink
-							  ] isHTML:YES];
+		if(_event) {
+			[mail setMessageBody:[NSString stringWithFormat:@"<p>Hi there,</p>\
+														<p>%@ at Last.fm thinks you might be interested in going to %@!</p>\
+														<p>Click the link for more information about this event.</p>\
+														<p>Don't have a Last.fm account?<br/>\
+														Last.fm helps you find new music, effortlessly keeping a record of what you listen to from almost any player.</p>\
+														</p><a href='http://www.last.fm/join'>Join Last.fm for free</a> and create a music profile.</p>\
+														<p>- The Last.fm Team</p>",
+														[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"],
+														sharedLink
+														] isHTML:YES];
+		} else {
+			[mail setMessageBody:[NSString stringWithFormat:@"<p>Hi there,</p>\
+									<p>%@ has shared %@ with you on Last.fm!</p>\
+									<p>Click the link for more information about this music.</p>\
+									<p>Don't have a Last.fm account?<br/>\
+									Last.fm helps you find new music, effortlessly keeping a record of what you listen to from almost any player.</p>\
+									</p><a href='http://www.last.fm/join'>Join Last.fm for free</a> and create a music profile.</p>\
+									<p>- The Last.fm Team</p>",
+									[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"],
+									sharedLink
+									] isHTML:YES];
+		}
 		[self retain];
 		[viewController presentModalViewController:mail animated:YES];
 		[mail release];
@@ -172,14 +247,12 @@
 	return NO;
 }
 - (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	[viewController dismissModalViewControllerAnimated:YES];
 }
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
 	[self release];
 	[viewController becomeFirstResponder];
 	[viewController dismissModalViewControllerAnimated:YES];
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 - (void)shareToFriend {
 #if !(TARGET_IPHONE_SIMULATOR)
@@ -198,7 +271,10 @@
 }
 
 - (void)friendsViewController:(FriendsViewController *)friends didSelectFriend:(NSString *)username {
-	if( _track ) {
+	if( _event ) {
+		[[LastFMService sharedInstance] recommendEvent:[[_event objectForKey:@"id"] intValue]
+																		toEmailAddress:username];
+	} else if( _track ) {
 		[[LastFMService sharedInstance] recommendTrack:_track
 											  byArtist:_artist
 										toEmailAddress:username];

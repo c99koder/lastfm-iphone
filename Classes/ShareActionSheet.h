@@ -29,12 +29,14 @@
 	NSString* _artist;
 	NSString* _track;
 	NSString* _album;
+	NSDictionary *_event;
 	UIViewController* viewController;
 	UIStatusBarStyle barStyle;
 }
 
 - (id)initWithTrack:(NSString*)track byArtist:(NSString*)artist;
 - (id)initWithArtist:(NSString*)artist;
+- (id)initWithEvent:(NSDictionary*)event;
 
 @property (readwrite, assign) UIViewController* viewController;
 
