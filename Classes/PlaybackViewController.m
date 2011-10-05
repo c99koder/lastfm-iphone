@@ -215,7 +215,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[super dealloc];
 	[_lock release];
 	[_titleLabel release];
-	[_artworkURL release];
+	//[_artworkURL release];
 	[_noArtworkView release];
 	[artwork release];
 	[volumeView release];

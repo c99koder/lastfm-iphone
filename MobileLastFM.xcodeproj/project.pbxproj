@@ -1128,7 +1128,6 @@
 		228380D112FFC85B0078177D /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
 		228380D212FFC85B0078177D /* FlurryAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAPI.h; sourceTree = "<group>"; };
 		2283831B130309670078177D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/PlaybackView.xib; sourceTree = "<group>"; };
-		229124490E6D7CC700F9C17C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.entitlements"; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		229293D312AD217400C31269 /* Three20.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20.xcodeproj; path = three20/src/Three20/Three20.xcodeproj; sourceTree = "<group>"; };
 		2292941C12AD21A400C31269 /* Three20Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20Core.xcodeproj; path = three20/src/Three20Core/Three20Core.xcodeproj; sourceTree = "<group>"; };
@@ -2120,7 +2119,6 @@
 				2292942812AD21A400C31269 /* Three20UINavigator.xcodeproj */,
 				2292942B12AD21A400C31269 /* Three20UI.xcodeproj */,
 				229293D312AD217400C31269 /* Three20.xcodeproj */,
-				229124490E6D7CC700F9C17C /* Entitlements.plist */,
 				2244DAEA0E3A554500C4F40B /* Localizable.strings */,
 				2283831A130309670078177D /* PlaybackView.xib */,
 				22EB60390E65A8B20021751A /* MainWindow.xib */,
