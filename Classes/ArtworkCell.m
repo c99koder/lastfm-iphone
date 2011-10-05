@@ -227,7 +227,7 @@
 		title = [[UILabel alloc] init];
 		title.textColor = [UIColor blackColor];
 		title.highlightedTextColor = [UIColor whiteColor];
-		title.backgroundColor = [UIColor whiteColor];
+		title.backgroundColor = [UIColor clearColor];
 		title.font = [UIFont boldSystemFontOfSize:16];
 		title.lineBreakMode = UILineBreakModeTailTruncation;
 		[self.contentView addSubview:title];
@@ -235,7 +235,7 @@
 		subtitle = [[UILabel alloc] init];
 		subtitle.textColor = [UIColor grayColor];
 		subtitle.highlightedTextColor = [UIColor whiteColor];
-		subtitle.backgroundColor = [UIColor whiteColor];
+		subtitle.backgroundColor = [UIColor clearColor];
 		subtitle.font = [UIFont systemFontOfSize:14];
 		[self.contentView addSubview:subtitle];
 		

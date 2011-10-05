@@ -1,4 +1,6 @@
 *.pbxuser
 *.perspectivev3
+MobileLastFM.xcodeproj/project.xcworkspace
+MobileLastFM.xcodeproj/xcuserdata
 build/
 apikey.h
