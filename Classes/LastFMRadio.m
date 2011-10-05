@@ -20,6 +20,7 @@
  */
 
 #import <Foundation/NSCharacterSet.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import "LastFMRadio.h"
 #import "LastFMService.h"
 #import "NSString+MD5.h"
@@ -221,6 +222,13 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidResume object:self userInfo:nil];
 }
 -(BOOL)play {
+    if(NSClassFromString(@"MPNowPlayingInfoCenter")) {
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                 [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
+                                                                 [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
+                                                                 [NSNumber numberWithFloat:[[_trackInfo objectForKey:@"duration"] floatValue] / 1000.0f],MPMediaItemPropertyPlaybackDuration,
+                                                                 [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,nil];
+    }
 	if(queue) {
 		_startTime = [[NSDate date] timeIntervalSince1970];
 		[LastFMRadio sharedInstance].playbackWasInterrupted = NO;
@@ -891,6 +899,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	prebuffering = NO;
 	[_softSkipTimer invalidate];
 	_softSkipTimer = nil;
+    if(NSClassFromString(@"MPNowPlayingInfoCenter")) {
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nil;
+    }
 	NSLog(@"Playback stopped");
 	[_busyLock unlock];
 }
