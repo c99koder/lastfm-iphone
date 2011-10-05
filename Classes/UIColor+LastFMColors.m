@@ -27,4 +27,7 @@
 + (UIColor*)lfmTableBackgroundColor {
 	return [UIColor colorWithRed:196.0f/255.0f green:204.0f/255.0f blue:212.0f/255.0f alpha:1.0f];
 }
++ (UIColor*)dateColor {
+	return [UIColor colorWithRed:36.0f/255.0f green:112.0f/255.0f blue:216.0f/255.0f alpha:1.0];
+}
 @end

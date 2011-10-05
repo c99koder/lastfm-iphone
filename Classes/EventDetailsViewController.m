@@ -19,72 +19,90 @@
  * along with MobileLastFM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#import <QuartzCore/QuartzCore.h>
 #import "EventDetailsViewController.h"
-#import "ArtistViewController.h"
-#import "UIViewController+NowPlayingButton.h"
 #import "UITableViewCell+ProgressIndicator.h"
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #import "NSString+URLEscaped.h"
-#import "UIApplication+openURLWithWarning.h"
 #import "UIColor+LastFMColors.h"
-#import <QuartzCore/QuartzCore.h>
+#import "ButtonsCell.h"
+#import "ShareActionSheet.h"
+#import "ArtistViewController.h"
+#import "PosterViewController.h"
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "FlurryAPI.h"
 #endif
 
 @implementation EventDetailCell
 
-@synthesize title, address, location, month, day;
+@synthesize location, date, score, days;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)identifier {
 	if (self = [super initWithStyle:style reuseIdentifier:identifier]) {
-		UIView* backView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-		self.backgroundColor = [UIColor clearColor];
-		self.backgroundView = backView;
-		
-		if(!eventDateBGDetailImage)
-			eventDateBGDetailImage = [[UIImage imageNamed:@"date-detail_view.png"] retain];
-		
-		_datebg = [[UIImageView alloc] initWithImage:eventDateBGDetailImage];
-		_datebg.contentMode = UIViewContentModeScaleAspectFill;
-		_datebg.clipsToBounds = YES;
-		[_datebg.layer setBorderColor: [[UIColor clearColor] CGColor]];
-		[_datebg.layer setBorderWidth: 0.0];
-		[self.contentView addSubview:_datebg];
-		
-		month = [[UILabel alloc] init];
-		month.textColor = [UIColor whiteColor];
-		month.backgroundColor = [UIColor clearColor];
-		month.textAlignment = UITextAlignmentCenter;
-		month.font = [UIFont boldSystemFontOfSize:11];
-		[_datebg addSubview: month];
-		
-		day = [[UILabel alloc] init];
-		day.textColor = [UIColor blackColor];
-		day.backgroundColor = [UIColor clearColor];
-		day.textAlignment = UITextAlignmentCenter;
-		day.font = [UIFont boldSystemFontOfSize:28];
-		[_datebg addSubview: day];
-		
-		title = [[UILabel alloc] init];
 		title.textColor = [UIColor blackColor];
 		title.highlightedTextColor = [UIColor clearColor];
 		title.backgroundColor = [UIColor clearColor];
 		title.font = [UIFont boldSystemFontOfSize:16];
-		title.opaque = YES;
-		[self.contentView addSubview:title];
+		
+		date = [[UILabel alloc] init];
+		date.textColor = [UIColor blackColor];
+		date.highlightedTextColor = [UIColor clearColor];
+		date.backgroundColor = [UIColor clearColor];
+		date.font = [UIFont boldSystemFontOfSize:14];
+		date.clipsToBounds = YES;
+		[self.contentView addSubview:date];
+		
+		score = [[UILabel alloc] init];
+		score.textColor = [UIColor redColor];
+		score.highlightedTextColor = [UIColor clearColor];
+		score.backgroundColor = [UIColor clearColor];
+		score.textAlignment = UITextAlignmentCenter;
+		score.font = [UIFont boldSystemFontOfSize:26];
+		score.clipsToBounds = YES;
+		[self.contentView addSubview:score];
+		
+		scoreLabel = [[UILabel alloc] init];
+		scoreLabel.textColor = [UIColor redColor];
+		scoreLabel.highlightedTextColor = [UIColor clearColor];
+		scoreLabel.textAlignment = UITextAlignmentCenter;
+		scoreLabel.backgroundColor = [UIColor clearColor];
+		scoreLabel.font = [UIFont boldSystemFontOfSize:12];
+		scoreLabel.clipsToBounds = YES;
+		scoreLabel.text = @"Compatibility";
+		[self.contentView addSubview:scoreLabel];
+		
+		days = [[UILabel alloc] init];
+		days.textColor = [UIColor dateColor];
+		days.highlightedTextColor = [UIColor clearColor];
+		days.backgroundColor = [UIColor clearColor];
+		days.textAlignment = UITextAlignmentCenter;
+		days.font = [UIFont boldSystemFontOfSize:26];
+		days.clipsToBounds = YES;
+		[self.contentView addSubview:days];
+		
+		daysLabel = [[UILabel alloc] init];
+		daysLabel.textColor = [UIColor dateColor];
+		daysLabel.highlightedTextColor = [UIColor clearColor];
+		daysLabel.textAlignment = UITextAlignmentCenter;
+		daysLabel.backgroundColor = [UIColor clearColor];
+		daysLabel.font = [UIFont boldSystemFontOfSize:12];
+		daysLabel.clipsToBounds = YES;
+		daysLabel.text = @"Days To Go";
+		[self.contentView addSubview:daysLabel];
 		
 		location = [[UILabel alloc] init];
 		location.textColor = [UIColor blackColor];
 		location.highlightedTextColor = [UIColor clearColor];
 		location.backgroundColor = [UIColor clearColor];
-		location.font = [UIFont boldSystemFontOfSize:16];
+		location.font = [UIFont boldSystemFontOfSize:14];
 		location.clipsToBounds = YES;
-		location.opaque = YES;
+		location.numberOfLines = 0;
+		location.lineBreakMode = UILineBreakModeWordWrap;
 		[self.contentView addSubview:location];
 		
 		self.selectionStyle = UITableViewCellSelectionStyleNone;
+		self.backgroundView = [[[UIView alloc] init] autorelease];
 	}
 	return self;
 }
@@ -95,13 +113,26 @@
 	if(self.accessoryView != nil)
 		frame.size.width = frame.size.width - [self.accessoryView bounds].size.width;
 	
-	_datebg.frame = CGRectMake(frame.origin.x+8, frame.origin.y+8, 40, 48);
-	month.frame = CGRectMake(0,6,40,10);
-	day.frame = CGRectMake(0,13,40,38);
+	_artwork.frame = CGRectMake(frame.origin.x, frame.origin.y, 90, frame.size.height);
 	
-	title.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 10, _datebg.frame.origin.y, frame.size.width - _datebg.frame.size.width - 6, 22);
-	location.frame = CGRectMake(_datebg.frame.origin.x + _datebg.frame.size.width + 10, _datebg.frame.origin.y + 20, frame.size.width - _datebg.frame.size.width - 6, 
-															[location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _datebg.frame.size.width - 6, frame.size.height - 20) lineBreakMode:location.lineBreakMode].height);
+	title.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, _artwork.frame.origin.y, frame.size.width - _artwork.frame.size.width - 6, 18);
+	date.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, _artwork.frame.origin.y + 18, frame.size.width - _artwork.frame.size.width - 6, 16);
+	float locationHeight = [location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.origin.x - _artwork.frame.size.width - 10, 16*2) lineBreakMode:location.lineBreakMode].height;
+	location.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, _artwork.frame.origin.y + 34, frame.size.width - _artwork.frame.origin.x - _artwork.frame.size.width - 10, locationHeight);
+	
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_session"] length] == 0) {
+		score.hidden = YES;
+		scoreLabel.hidden = YES;
+		days.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14 - 28, 80, 28);
+		daysLabel.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14, 80, 14);
+	} else {
+		score.hidden = NO;
+		scoreLabel.hidden = NO;
+		score.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14 - 28, 80, 28);
+		scoreLabel.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14, 80, 14);
+		days.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 100, frame.size.height - 14 - 28, 80, 28);
+		daysLabel.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 100, frame.size.height - 14, 80, 14);
+	}
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
 	[super setSelected:selected animated:animated];
@@ -111,16 +142,62 @@
 	}
 }
 - (void)dealloc {
-	[title release];
 	[location release];
-	[day release];
-	[month release];
-	[_datebg release];
+	[score release];
+	[date release];
+	[scoreLabel release];
 	[super dealloc];
 }
 @end
 
 @implementation EventDetailsViewController
+- (void)share {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"event", @"type", nil, nil]];
+#endif
+	ShareActionSheet* action = [[ShareActionSheet alloc] initWithEvent:_event];
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
+		action.viewController = self.tabBarController;
+		[action showFromTabBar: self.tabBarController.tabBar];
+	} else {
+		action.viewController = self.navigationController;
+		[action showInView: self.view];
+	}
+	[action release];
+}
+- (void)addToCalendar {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"add-to-calendar"];
+#endif
+	EKEventStore *eventStore = [[EKEventStore alloc] init];
+	EKEvent *e = [EKEvent eventWithEventStore:eventStore];
+	e.title = [_event objectForKey:@"title"];
+	NSString *location = [_event objectForKey:@"venue"];
+	if([[_event objectForKey:@"city"] length])
+		location = [NSString stringWithFormat:@"%@, %@", location, [_event objectForKey:@"city"]];
+	
+	e.location = location;
+	
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setLocale:[[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"] autorelease]];
+	[formatter setDateFormat:@"EEE, dd MMM yyyy HH:mm:ss"]; //"Fri, 21 Jan 2011 21:00:00"
+	NSDate *date = [formatter dateFromString:[_event objectForKey:@"startDate"]];
+	e.startDate = date;
+	e.endDate = [date dateByAddingTimeInterval:60 * 60];
+	[formatter release];
+	
+	EKEventEditViewController *addController = [[EKEventEditViewController alloc] initWithNibName:nil bundle:nil];
+	
+	addController.editViewDelegate = self;
+	addController.eventStore = eventStore;
+	addController.event = e;
+
+	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController)
+		[self presentModalViewController:addController animated:YES];
+	else
+		[self.navigationController pushViewController:addController animated:YES];
+	[addController release];
+}
 - (int)isAttendingEvent:(NSString *)event_id {
 	for(NSDictionary *event in _attendingEvents) {
 		if([[event objectForKey:@"id"] isEqualToString:event_id]) {
@@ -129,12 +206,38 @@
 	}
 	return eventStatusNotAttending;
 }
+- (void)reload {
+	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
+}
+- (void)_loadEvent {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_session"] length] > 0 && [[_event objectForKey:@"score"] intValue] == 0 || [[_event objectForKey:@"startDate"] length] == 0) {
+		NSDictionary *event = _event;
+		_event = [[[LastFMService sharedInstance] detailsForEvent:[[event objectForKey:@"id"] intValue]] retain];
+		[event release];
+	}
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_session"] length]) {
+		_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
+		_recommendedLineup = [[[LastFMService sharedInstance] recommendedLineupForEvent:[[_event objectForKey:@"id"] intValue]] retain];
+	} else {
+		_attendingEvents = nil;
+		_recommendedLineup = nil;
+	}
+	_loaded = YES;
+	[self performSelectorOnMainThread:@selector(reload) withObject:nil waitUntilDone:YES];
+	[pool release];
+}
 - (id)initWithEvent:(NSDictionary *)event {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
+		_loaded = NO;
 		_event = [event retain];
-		_attendingEvents = [[[LastFMService sharedInstance] eventsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] retain];
-		
+		if([[event objectForKey:@"attendees"] isKindOfClass:[NSArray class]] || [[event objectForKey:@"attendees"] isKindOfClass:[NSString class]])
+			_attendees = [[event objectForKey:@"attendees"] retain];
+		else
+			_attendees = nil;
 		self.title = [_event objectForKey:@"title"];
+		self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
 	}
 	return self;
 }
@@ -171,7 +274,10 @@
 	}
 }
 - (NSString*)formatAddressFromEvent:(NSDictionary *)event {
-	return [NSString stringWithFormat: @"%@\n%@\n%@", [_event objectForKey: @"street"], [_event objectForKey: @"city"], [_event objectForKey: @"postalcode"]];
+	if([[_event objectForKey:@"street"] length])
+		 return [NSString stringWithFormat: @"%@\n%@\n%@ %@\n%@", [_event objectForKey:@"venue"], [_event objectForKey: @"street"], [_event objectForKey: @"city"], [_event objectForKey: @"postalcode"], [_event objectForKey: @"country"]];
+	 else
+		 return [NSString stringWithFormat: @"%@\n%@ %@\n%@", [_event objectForKey:@"venue"], [_event objectForKey: @"city"], [_event objectForKey: @"postalcode"], [_event objectForKey: @"country"]];
 }
 - (void)_updateEvent:(NSDictionary *)event {
 	[_event release];
@@ -181,24 +287,38 @@
 }
 - (void)viewDidLoad {
 	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
+	[NSThread detachNewThreadSelector:@selector(_loadEvent) toTarget:self withObject:nil];
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
-	[self.tableView reloadData];
-	[self loadContentForCells:[self.tableView visibleCells]];
+	[self reload];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 4;
+	if(_loaded)
+		return _attendees?6:5;
+	else
+		return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	NSInteger rows = 1;
 
-	if( section == 2 ) {
-		if( [[_event objectForKey: @"phonenumber"] length] )
+	if(!_loaded)
+		return 1;
+	
+	if(section == 2) {
+		rows = [_recommendedLineup count] + 1;
+		if(rows > 5)
+			rows = 5;
+	}
+	
+	if(section >= 3 && !_attendees)
+		section++;
+	
+	if(section == 4 ) {
+		if([[_event objectForKey: @"phonenumber"] length])
 			++rows;
 		
-		if( [[_event objectForKey: @"website"] length] )
+		if([[_event objectForKey: @"website"] length])
 			++rows;
 	}
 	
@@ -206,19 +326,13 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	int section = [indexPath section];
-	
+	if(section >= 3 && !_attendees)
+		section++;
+
 	if(section == 0)
-		return 58;
+		return 120;
 	
-	if( section == 1)
-	{
-		NSString* text = [self formatArtistsFromEvent: _event];
-		int height = [text sizeWithFont: [UIFont boldSystemFontOfSize:[UIFont systemFontSize]] constrainedToSize: CGSizeMake(190, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height;
-		return height + 30;
-	}
-	
-	if( section == 2 )
-	{
+	if(section == 4) {
 		if( [indexPath row] == 0 ) {
 			NSString* text = [self formatAddressFromEvent: _event];
 			int height = [text sizeWithFont: [UIFont boldSystemFontOfSize:[UIFont systemFontSize]] constrainedToSize: CGSizeMake(190, MAXFLOAT) lineBreakMode:UILineBreakModeWordWrap].height;
@@ -230,28 +344,57 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 	int section = [newIndexPath section];
+	if(section >= 3 && !_attendees)
+		section++;
 	
 	switch ( section ) {
 		case 0: //Header cell
-			break;
-			
-		case 1: //Artist list
 		{
-			if( [[_event objectForKey:@"artists"] isKindOfClass:[NSArray class]] ) {
+#if !(TARGET_IPHONE_SIMULATOR)
+			[FlurryAPI logEvent:@"view-poster"];
+#endif
+			PosterViewController *p = [[PosterViewController alloc] initWithEvent:_event];
+			[self.navigationController pushViewController:p animated:YES];
+			[p release];
+			break;
+		}
+			
+		case 1: //Attending
+		{
+#if !(TARGET_IPHONE_SIMULATOR)
+			[FlurryAPI logEvent:@"view-attendance"];
+#endif
+			EventAttendViewController *attend = [[EventAttendViewController alloc] initWithEvent:_event];
+			[self.navigationController pushViewController:attend animated:YES];
+			[attend release];
+			break;	
+		}
+
+		case 2: //Artist list
+		{
+			if([newIndexPath row] == [_recommendedLineup count] || [newIndexPath row] == 4) {
+#if !(TARGET_IPHONE_SIMULATOR)
+				[FlurryAPI logEvent:@"view-lineup"];
+#endif
 				NSArray* artists = [_event objectForKey:@"artists"];
-				EventArtistsViewController *artistsVC = [[EventArtistsViewController alloc] initWithArtists:artists];
+				EventArtistsViewController *artistsVC = [[EventArtistsViewController alloc] initWithArtists:artists recs:_recommendedLineup];
 				[self.navigationController pushViewController:artistsVC animated:YES];
 				[artistsVC release];
 			} else {
-				ArtistViewController* artistVC = [[ArtistViewController alloc] initWithArtist:[_event objectForKey:@"artists"]];
-				[self.navigationController pushViewController: artistVC animated: YES];
-				[artistVC release];
+				if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
+#if !(TARGET_IPHONE_SIMULATOR)
+					[FlurryAPI logEvent:@"view-artist"];
+#endif
+					ArtistViewController* artistVC = [[ArtistViewController alloc] initWithArtist:[[_recommendedLineup objectAtIndex:[newIndexPath row]] objectForKey:@"name"]];
+					[self.navigationController pushViewController: artistVC animated: YES];
+					[artistVC release];
+				}
 			}
 
 			break;
 		}
 			
-		case 2: //Venue details section
+		case 4: //Venue details section
 		{
 			int row = [newIndexPath row];
 			if( row >= 1 && ![[_event objectForKey:@"phonenumber"] length]) {
@@ -292,7 +435,7 @@
 #if !(TARGET_IPHONE_SIMULATOR)
 				[FlurryAPI logEvent:@"phone"];
 #endif
-				[[UIApplication sharedApplication] openURL:url];
+				[[UIApplication sharedApplication] openURLWithWarning:url];
 				break;
 			}
 			if( row == 2) {
@@ -307,26 +450,52 @@
 			}
 		}
 			
-		case 3: //Attending
-		{
-			EventAttendViewController *attend = [[EventAttendViewController alloc] initWithEvent:_event];
-			[self.navigationController pushViewController:attend animated:YES];
-			[attend release];
-			break;	
-		}
-			
 		default:
 			break;
 	}
 	
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 	[tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
+}
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	if(section >= 3 && !_attendees)
+		section++;
+
+	if(section == 2)
+		return @"Your Recommended Lineup";
+	else if(section == 3)
+		return @"Your Friends Attending";
+	else
+		return nil;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	UITableViewCell *cell = nil;
-
 	int section = [indexPath section];
+	if(section >= 3 && !_attendees)
+		section++;
 
+	if(!_loaded) {
+		UITableViewCell *loadingCell = [tableView dequeueReusableCellWithIdentifier:@"LoadingCell"];
+		if(!loadingCell) {
+			loadingCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"LoadingCell"] autorelease];
+			loadingCell.backgroundView = [[[UIView alloc] init] autorelease];
+			loadingCell.backgroundColor = [UIColor clearColor];
+			loadingCell.textLabel.text = @"\n\n\nLoading";
+			loadingCell.textLabel.numberOfLines = 0;
+			loadingCell.textLabel.textAlignment = UITextAlignmentCenter;
+			loadingCell.textLabel.textColor = [UIColor blackColor];
+			UIActivityIndicatorView *progress = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+			[progress startAnimating];
+			CGRect frame = progress.frame;
+			frame.origin.y = 20;
+			frame.origin.x = 130;
+			progress.frame = frame;
+			[loadingCell.contentView addSubview: progress];
+			[progress release];
+		}
+		return loadingCell;
+	}
 	
 	switch(section) {
 		case 0:
@@ -342,39 +511,76 @@
 			NSDate *date = [formatter dateFromString:[_event objectForKey:@"startDate"]];
 			[formatter setLocale:[NSLocale currentLocale]];
 			
-			[formatter setDateFormat:@"MMM"];
-			eventCell.month.text = [[formatter stringFromDate:date] uppercaseString];
-			
-			[formatter setDateFormat:@"d"];
-			eventCell.day.text = [formatter stringFromDate:date];
-			
-			[formatter setDateFormat: @"EEEE, dd MMM"];
-			NSString* formattedDate = [self formatDate:date];
-			if( [formattedDate length] > 0 ) {
-				eventCell.title.text = [NSString stringWithFormat: @"%@ (%@)", formattedDate, [formatter stringFromDate: date]];
-			} else {
-				eventCell.title.text = [NSString stringWithFormat: @"%@", [formatter stringFromDate: date]];
-			}
-
-			[formatter setDateStyle:NSDateFormatterNoStyle];
-			[formatter setTimeStyle:NSDateFormatterShortStyle];
-			eventCell.location.text = [NSString stringWithFormat: @"%@, %@", [_event objectForKey: @"venue"], [formatter stringFromDate: date]];
-			
+			[formatter setDateFormat:@"EEEE MMMM dd yyyy"];
+			eventCell.date.text = [formatter stringFromDate:date];
+			eventCell.title.text = [_event objectForKey:@"title"];
+			eventCell.location.text = [NSString stringWithFormat: @"%@, %@\n%@", [_event objectForKey: @"venue"], [_event objectForKey:@"city"], [_event objectForKey:@"country"]];
+			eventCell.score.text = [NSString stringWithFormat:@"%i%%", (int)([[_event objectForKey:@"score"] floatValue] * 100.0f)];
+			int days = [date timeIntervalSinceDate:[NSDate date]]/60/60/24;
+			eventCell.days.text = [NSString stringWithFormat:@"%i", days];
 			[formatter release];
+			
+			[eventCell addBorder];
+			eventCell.imageURL = [_event objectForKey:@"image"];
 			
 			eventCell.accessoryType = UITableViewCellAccessoryNone;
 			
 			return eventCell;
 		}
 		case 1:
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier: nil] autorelease];
-			cell.textLabel.text = @"Playing";
-			cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
-			cell.detailTextLabel.text = [self formatArtistsFromEvent: _event];
-			cell.detailTextLabel.numberOfLines = 0;
-			cell.detailTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
+			cell.textLabel.text = @"Are you going?";
+			int eventAttendance = [self isAttendingEvent:[_event objectForKey:@"id"]];
+			switch (eventAttendance) {
+				case eventStatusAttending:
+					cell.detailTextLabel.text = NSLocalizedString(@"Yes", @"Yes, attending event");
+					break;
+					
+				case eventStatusMaybeAttending:
+					cell.detailTextLabel.text = NSLocalizedString(@"I'm Interested", @"Maybe, possibly attending event");
+					break;
+					
+				case eventStatusNotAttending:
+					cell.detailTextLabel.text = NSLocalizedString(@"No", @"No, Not attending");
+					break;
+					
+			}
 			break;
 		case 2:
+			if([indexPath row] == [_recommendedLineup count] || [indexPath row] == 4) {
+				cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier: nil] autorelease];
+				cell.textLabel.text = @"See Full Lineup";
+			} else {
+				ArtworkCell *artistCell = (ArtworkCell *)[tableView dequeueReusableCellWithIdentifier:[[_recommendedLineup objectAtIndex:[indexPath row]] objectForKey:@"name"]];
+				if(artistCell == nil) {
+					artistCell = [[[ArtworkCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[_recommendedLineup objectAtIndex:[indexPath row]] objectForKey:@"name"]] autorelease];
+					artistCell.shouldCacheArtwork = YES;
+					artistCell.shouldFillHeight = YES;
+					if([indexPath row] == 0)
+						artistCell.shouldRoundTop = YES;
+					artistCell.title.text = [[_recommendedLineup objectAtIndex:[indexPath row]] objectForKey:@"name"];
+					artistCell.imageURL = [[_recommendedLineup objectAtIndex:[indexPath row]] objectForKey:@"image"];
+				}
+				if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
+					artistCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					artistCell.selectionStyle = UITableViewCellSelectionStyleBlue;
+				} else {
+					artistCell.accessoryType = UITableViewCellAccessoryNone;
+					artistCell.selectionStyle = UITableViewCellSelectionStyleNone;
+				}				return artistCell;
+			}
+			break;
+		case 3:
+		{
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier: nil] autorelease];
+			if([_attendees isKindOfClass:[NSArray class]])
+				cell.textLabel.text = [_attendees objectAtIndex:[indexPath row]];
+			else
+				cell.textLabel.text = _attendees;
+			return cell;
+		}
+			break;
+		case 4:
 		{
 			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier: nil] autorelease];
 			int row = [indexPath row];
@@ -397,25 +603,27 @@
 			}
 			break;
 		}
-		case 3:
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
-			cell.textLabel.text = NSLocalizedString( @"Are you attending?", @"Are you attending?" );
-			int eventAttendance = [self isAttendingEvent:[_event objectForKey:@"id"]];
-			switch (eventAttendance) {
-				case eventStatusAttending:
-					cell.detailTextLabel.text = NSLocalizedString(@"Yes", @"Yes, attending event");
-					break;
-					
-				case eventStatusMaybeAttending:
-					cell.detailTextLabel.text = NSLocalizedString(@"Maybe", @"Maybe, possibly attending event");
-					break;
-					
-				case eventStatusNotAttending:
-					cell.detailTextLabel.text = NSLocalizedString(@"No", @"No, Not attending");
-					break;
+		case 5:
+		{
+			ButtonsCell *buttonscell = (ButtonsCell *)[tableView dequeueReusableCellWithIdentifier:@"ButtonsCell"];
+			if(buttonscell == nil) {
+				UIButton* share = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+				share.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+				[share setTitle: @"Share" forState:UIControlStateNormal];
+				[share addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
 
+				if(NSClassFromString(@"EKEventEditViewController") && (self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController)) {
+					UIButton* cal = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+					cal.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
+					[cal setTitle: @"Add To Calendar" forState:UIControlStateNormal];
+					[cal addTarget:self action:@selector(addToCalendar) forControlEvents:UIControlEventTouchUpInside];
+					buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:cal, share, nil];
+				} else {
+					buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:share, nil];
+				}
 			}
-			break;
+			return buttonscell;
+		}
 	}
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -427,7 +635,18 @@
 - (void)dealloc {
 	[super dealloc];
 	[_event release];
+	[_attendingEvents release];
+	[_recommendedLineup release];
 }
+
+#pragma mark -
+#pragma mark EKEventEditViewDelegate
+
+- (void)eventEditViewController:(EKEventEditViewController *)controller 
+					didCompleteWithAction:(EKEventEditViewAction)action {
+	[controller dismissModalViewControllerAnimated:YES];
+}
+
 @end
 
 @implementation EventAttendViewController
@@ -443,8 +662,8 @@
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
 	[self.tableView reloadData];
+	[self loadContentForCells:[self.tableView visibleCells]];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
@@ -470,6 +689,26 @@
 	[[self tableView] reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+#if !(TARGET_IPHONE_SIMULATOR)
+	NSString *status;
+	switch([newIndexPath row]) {
+		case 0:
+			status = @"Yes";
+			break;
+		case 1:
+			status = @"I'm Interested";
+			break;
+		case 2:
+			status = @"No";
+			break;
+	}
+	[FlurryAPI logEvent:@"attend" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:
+																								[_event objectForKey:@"title"], 
+																								@"event",
+																								status, 
+																								@"status",
+																								 nil]];
+#endif
 	[[tableView cellForRowAtIndexPath: newIndexPath] showProgress:YES];
 	[tableView deselectRowAtIndexPath:newIndexPath animated:YES];
 	[self performSelector:@selector(_rowSelected:) withObject:newIndexPath afterDelay:0.5];
@@ -487,7 +726,7 @@
 			cell.textLabel.text = @"Yes";
 			break;
 		case 1:
-			cell.textLabel.text = @"Maybe";
+			cell.textLabel.text = @"I'm Interested";
 			break;
 		case 2:
 			cell.textLabel.text = @"No";
@@ -515,19 +754,46 @@
 
 @implementation EventArtistsViewController
 
-- (id)initWithArtists:(NSArray *)artists {
+- (id)initWithArtists:(NSArray *)artists recs:(NSArray *)recs {
 	
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
-		self.title = @"Supporting Artists";
-		_artists = [artists retain];
+		self.title = @"Lineup";
+		if([artists isKindOfClass:[NSArray class]])
+			_artists = [artists retain];
+		else
+			_artists = [[NSArray arrayWithObject:artists] retain];
+		_recs = [recs retain];
+		if([_recs count])
+			data = _recs;
+		else
+			data = _artists;
 	}
 	return self;
 }
 - (void)viewDidLoad {
-	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];	
+	self.tableView.backgroundColor = [UIColor lfmTableBackgroundColor];
+	if([_recs count]) {
+		UISegmentedControl *toggle = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Recommended", @"Full Lineup", nil]];
+		toggle.segmentedControlStyle = UISegmentedControlStyleBar;
+		toggle.selectedSegmentIndex = 0;
+		CGRect frame = toggle.frame;
+		frame.size.width = self.view.frame.size.width - 20;
+		toggle.frame = frame;
+		[toggle addTarget:self
+							 action:@selector(viewWillAppear:)
+		 forControlEvents:UIControlEventValueChanged];
+		self.navigationItem.titleView = toggle;
+	} else {
+		self.navigationItem.titleView = nil;
+	}
 }
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
+	UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
+	if([_recs count] && toggle.selectedSegmentIndex == 0)
+		data = _recs;
+	else
+		data = _artists;
 	[self.tableView reloadData];
 	[self loadContentForCells:[self.tableView visibleCells]];
 }
@@ -535,14 +801,23 @@
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [_artists count];
+	return [data count];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return 52;
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"view-artist"];
+#endif
 	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
-		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:[_artists objectAtIndex:[newIndexPath row]]];
+		NSString *a = nil;
+		if([[data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]])
+			a = [[data objectAtIndex:[indexPath row]] objectForKey:@"name"];
+		else
+			a = [data objectAtIndex:[indexPath row]];
+		
+		ArtistViewController *artist = [[ArtistViewController alloc] initWithArtist:a];
 		[self.navigationController pushViewController:artist animated:YES];
 		[artist release];
 	}
@@ -552,7 +827,10 @@
 	if (cell == nil) {
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"simplecell"] autorelease];
 	}
-	cell.textLabel.text = [_artists objectAtIndex:[indexPath row]];
+	if([[data objectAtIndex:[indexPath row]] isKindOfClass:[NSDictionary class]])
+		cell.textLabel.text = [[data objectAtIndex:[indexPath row]] objectForKey:@"name"];
+	else
+		cell.textLabel.text = [data objectAtIndex:[indexPath row]];
 	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -568,5 +846,6 @@
 - (void)dealloc {
 	[super dealloc];
 	[_artists release];
+	[_recs release];
 }
 @end

@@ -20,23 +20,23 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <CoreLocation/CoreLocation.h>
+#import <EventKit/EventKit.h>
+#import <EventKitUI/EventKitUI.h>
 #import "LastFMService.h"
+#import "ArtworkCell.h"
 
-@interface EventDetailCell : UITableViewCell {
-	UIImageView *_datebg;
-	UILabel *title;
-	UILabel *address;
+@interface EventDetailCell : ArtworkCell {
 	UILabel *location;
-	UILabel *month;
-	UILabel *day;
-	UIImage *eventDateBGDetailImage;
+	UILabel *date;
+	UILabel *score;
+	UILabel *scoreLabel;
+	UILabel *days;
+	UILabel *daysLabel;
 }
-@property (nonatomic, retain) UILabel *title;
-@property (nonatomic, retain) UILabel *address;
 @property (nonatomic, retain) UILabel *location;
-@property (nonatomic, retain) UILabel *month;
-@property (nonatomic, retain) UILabel *day;
+@property (nonatomic, retain) UILabel *date;
+@property (nonatomic, retain) UILabel *score;
+@property (nonatomic, retain) UILabel *days;
 @end
 
 @interface EventAttendViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
@@ -47,13 +47,18 @@
 
 @interface EventArtistsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
 	NSArray *_artists;
+	NSArray *_recs;
+	NSArray *data;
 }
-- (id)initWithArtists:(NSArray *)artists;
+- (id)initWithArtists:(NSArray *)artists recs:(NSArray *)recs;
 @end
 
-@interface EventDetailsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource> {
+@interface EventDetailsViewController : UITableViewController<UITableViewDelegate, UITableViewDataSource,EKEventEditViewDelegate> {
+	bool _loaded;
 	NSDictionary *_event;
 	NSArray *_attendingEvents;
+	NSArray *_recommendedLineup;
+	NSArray *_attendees;
 }
 - (id)initWithEvent:(NSDictionary *)event;
 @end

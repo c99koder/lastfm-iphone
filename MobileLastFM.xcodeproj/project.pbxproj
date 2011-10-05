@@ -75,6 +75,9 @@
 		220B820C143CA8F400AE02CA /* SHKShareMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 220B81CD143CA8F400AE02CA /* SHKShareMenu.m */; };
 		220B820D143CA8F400AE02CA /* SHKViewControllerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 220B81CF143CA8F400AE02CA /* SHKViewControllerWrapper.m */; };
 		220B8230143CAACC00AE02CA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B822F143CAACC00AE02CA /* Security.framework */; };
+		220B826D143CB1C800AE02CA /* PosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220B826C143CB1C800AE02CA /* PosterViewController.m */; };
+		220B8271143CB1FB00AE02CA /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B8270143CB1FB00AE02CA /* EventKit.framework */; };
+		220B8273143CB1FB00AE02CA /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B8272143CB1FB00AE02CA /* EventKitUI.framework */; };
 		220CEBD30DCCB420007F888D /* UITableViewCell+ProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */; };
 		221185DC0E1676620093BFED /* date.png in Resources */ = {isa = PBXBuildFile; fileRef = 221185DB0E1676620093BFED /* date.png */; };
 		2212D23C0E40B36B0099DB03 /* RadioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2212D23B0E40B36B0099DB03 /* RadioListViewController.m */; };
@@ -900,6 +903,10 @@
 		220B81CE143CA8F400AE02CA /* SHKViewControllerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHKViewControllerWrapper.h; sourceTree = "<group>"; };
 		220B81CF143CA8F400AE02CA /* SHKViewControllerWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHKViewControllerWrapper.m; sourceTree = "<group>"; };
 		220B822F143CAACC00AE02CA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		220B826B143CB1C800AE02CA /* PosterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PosterViewController.h; sourceTree = "<group>"; };
+		220B826C143CB1C800AE02CA /* PosterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PosterViewController.m; sourceTree = "<group>"; };
+		220B8270143CB1FB00AE02CA /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
+		220B8272143CB1FB00AE02CA /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 		220CEBD10DCCB420007F888D /* UITableViewCell+ProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableViewCell+ProgressIndicator.h"; sourceTree = "<group>"; };
 		220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableViewCell+ProgressIndicator.m"; sourceTree = "<group>"; };
 		22117E8A0E1545110093BFED /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FirstRunView.xib; sourceTree = "<group>"; };
@@ -1331,6 +1338,8 @@
 				FB348C2912F03932002EFA95 /* libThree20UINavigator-Xcode3.2.5.a in Frameworks */,
 				228380D312FFC85B0078177D /* libFlurry.a in Frameworks */,
 				220B8230143CAACC00AE02CA /* Security.framework in Frameworks */,
+				220B8271143CB1FB00AE02CA /* EventKit.framework in Frameworks */,
+				220B8273143CB1FB00AE02CA /* EventKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1378,6 +1387,8 @@
 				227A674D12F4877600A08DDA /* NowPlayingInfoViewController.m */,
 				222342880D8DE8FC0040486A /* PlaybackViewController.h */,
 				222342890D8DE8FC0040486A /* PlaybackViewController.m */,
+				220B826B143CB1C800AE02CA /* PosterViewController.h */,
+				220B826C143CB1C800AE02CA /* PosterViewController.m */,
 				22233F640D8D86410040486A /* ProfileViewController.h */,
 				22233F650D8D86410040486A /* ProfileViewController.m */,
 				2212D23A0E40B36B0099DB03 /* RadioListViewController.h */,
@@ -1417,6 +1428,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				220B8270143CB1FB00AE02CA /* EventKit.framework */,
+				220B8272143CB1FB00AE02CA /* EventKitUI.framework */,
 				220B822F143CAACC00AE02CA /* Security.framework */,
 				228380D112FFC85B0078177D /* libFlurry.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
@@ -3096,6 +3109,7 @@
 				220B820B143CA8F400AE02CA /* SHKOAuthView.m in Sources */,
 				220B820C143CA8F400AE02CA /* SHKShareMenu.m in Sources */,
 				220B820D143CA8F400AE02CA /* SHKViewControllerWrapper.m in Sources */,
+				220B826D143CB1C800AE02CA /* PosterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

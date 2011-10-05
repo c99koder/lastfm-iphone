@@ -26,5 +26,5 @@
 @interface UIColor (LastFMColors)
 
 + (UIColor*)lfmTableBackgroundColor;
-
++ (UIColor*)dateColor;
 @end
