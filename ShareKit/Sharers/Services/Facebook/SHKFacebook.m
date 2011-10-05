@@ -150,12 +150,14 @@
 		dialog.attachment = [NSString stringWithFormat:
 							 @"{\
 							 \"name\":\"%@\",\
+							 \"caption\":\"%@\",\
 							 \"href\":\"%@\"\
 							 }",
 							 item.title == nil ? SHKEncodeURL(item.URL) : SHKEncode(item.title),
+							 item.text == nil ? SHKEncodeURL(item.URL) : SHKEncode(item.text),
 							 SHKEncodeURL(item.URL)
 							 ];
-		dialog.defaultStatus = item.text;
+		//dialog.defaultStatus = item.text;
 		dialog.actionLinks = [NSString stringWithFormat:@"[{\"text\":\"Get %@\",\"href\":\"%@\"}]",
 							  SHKEncode(SHKMyAppName),
 							  SHKEncode(SHKMyAppURL)];
