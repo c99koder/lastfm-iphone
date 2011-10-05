@@ -76,8 +76,8 @@
 		220B820D143CA8F400AE02CA /* SHKViewControllerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 220B81CF143CA8F400AE02CA /* SHKViewControllerWrapper.m */; };
 		220B8230143CAACC00AE02CA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B822F143CAACC00AE02CA /* Security.framework */; };
 		220B826D143CB1C800AE02CA /* PosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220B826C143CB1C800AE02CA /* PosterViewController.m */; };
-		220B8271143CB1FB00AE02CA /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B8270143CB1FB00AE02CA /* EventKit.framework */; };
-		220B8273143CB1FB00AE02CA /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B8272143CB1FB00AE02CA /* EventKitUI.framework */; };
+		220B8271143CB1FB00AE02CA /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B8270143CB1FB00AE02CA /* EventKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		220B8273143CB1FB00AE02CA /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220B8272143CB1FB00AE02CA /* EventKitUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		220CEBD30DCCB420007F888D /* UITableViewCell+ProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 220CEBD20DCCB420007F888D /* UITableViewCell+ProgressIndicator.m */; };
 		221185DC0E1676620093BFED /* date.png in Resources */ = {isa = PBXBuildFile; fileRef = 221185DB0E1676620093BFED /* date.png */; };
 		2212D23C0E40B36B0099DB03 /* RadioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2212D23B0E40B36B0099DB03 /* RadioListViewController.m */; };

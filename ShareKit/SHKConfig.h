@@ -71,7 +71,7 @@
  */
 #define SHKTwitterConsumerKey		TWITTER_KEY
 #define SHKTwitterSecret			TWITTER_SECRET
-#define SHKTwitterCallbackUrl		@"http://www.last.fm/" // You need to set this if using OAuth, see note above (xAuth users can skip it)
+#define SHKTwitterCallbackUrl		@"http://last.fm/" // You need to set this if using OAuth, see note above (xAuth users can skip it)
 #define SHKTwitterUseXAuth			0 // To use xAuth, set to 1
 #define SHKTwitterUsername			@"" // Enter your app's twitter account if you'd like to ask the user to follow it when logging in. (Only for xAuth)
 

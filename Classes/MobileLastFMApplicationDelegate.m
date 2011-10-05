@@ -32,6 +32,7 @@
 #import "NSString+URLEscaped.h"
 #import "NSData+Compress.h"
 #import "HomeViewController.h"
+#import "SHK.h"
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "FlurryAPI.h"
 #endif
@@ -286,6 +287,7 @@ NSString *kUserAgent;
 
 	[rootViewController release];
 	rootViewController = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
+	[SHK setRootViewController:rootViewController];
 	//rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
 	//[home release];
 	//rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
