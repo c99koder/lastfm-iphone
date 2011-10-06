@@ -240,21 +240,29 @@
 }
 
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker shouldContinueAfterSelectingPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
+    NSString *type;
 	ABMultiValueRef value = ABRecordCopyValue(person, property);
 	NSString *email = (NSString *)ABMultiValueCopyValueAtIndex(value, ABMultiValueGetIndexForIdentifier(value, identifier));
 	[viewController dismissModalViewControllerAnimated:YES];
 	
-	if( _track ) {
+	if( _event ) {
+		[[LastFMService sharedInstance] recommendEvent:[[_event objectForKey:@"id"] intValue]
+                                        toEmailAddress:email];
+        type = @"event";
+	} else if( _track ) {
 		[[LastFMService sharedInstance] recommendTrack:_track
 											  byArtist:_artist
 										toEmailAddress:email];
+        type = @"track";
 	} else if ( _album ) {
 		[[LastFMService sharedInstance] recommendAlbum:_album
 											  byArtist:_artist
 										toEmailAddress:email];			
+        type = @"album";
 	} else {
 		[[LastFMService sharedInstance] recommendArtist:_artist
 										 toEmailAddress:email ];
+        type = @"artist";
 	}
 	[email release];
 	CFRelease(value);
@@ -262,7 +270,7 @@
 	if([LastFMService sharedInstance].error)
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
 	else
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:[NSString stringWithFormat:@"This %@ was successfully shared.", type] withTitle:[NSString stringWithFormat:@"%@ Shared", [type capitalizedString]]];
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 	return NO;
 }
@@ -291,25 +299,30 @@
 }
 
 - (void)friendsViewController:(FriendsViewController *)friends didSelectFriend:(NSString *)username {
+    NSString *type;
 	if( _event ) {
 		[[LastFMService sharedInstance] recommendEvent:[[_event objectForKey:@"id"] intValue]
 																		toEmailAddress:username];
+        type = @"event";
 	} else if( _track ) {
 		[[LastFMService sharedInstance] recommendTrack:_track
 											  byArtist:_artist
 										toEmailAddress:username];
+        type = @"track";
 	} else if ( _album ) {
 		[[LastFMService sharedInstance] recommendAlbum:_album
 											  byArtist:_artist
 										toEmailAddress:username];
+        type = @"album";
 	} else {
 		[[LastFMService sharedInstance] recommendArtist:_artist
 										 toEmailAddress:username];		
+        type = @"artist";
 	}
 	if([LastFMService sharedInstance].error)
 		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) reportError:[LastFMService sharedInstance].error];
 	else
-		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:NSLocalizedString(@"SHARE_SUCCESSFUL", @"Share successful") withTitle:NSLocalizedString(@"SHARE_SUCCESSFUL_TITLE", @"Share successful title")];
+		[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) displayError:[NSString stringWithFormat:@"This %@ was successfully shared.", type] withTitle:[NSString stringWithFormat:@"%@ Shared", [type capitalizedString]]];
 	
 	[[UIApplication sharedApplication] setStatusBarStyle:barStyle animated:YES];
 	[viewController dismissModalViewControllerAnimated:YES];
