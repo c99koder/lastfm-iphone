@@ -37,4 +37,5 @@
 	NSThread *_refreshThread;
 }
 - (id)initWithUsername:(NSString *)username;
+- (void)rebuildMenu;
 @end

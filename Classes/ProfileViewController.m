@@ -277,7 +277,7 @@
 	} else if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[indexPath section]] isEqualToString:@"events"]) {
 		if([_events count]) {
 			if([indexPath row]==3) {
-				UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_events];
+				EventListViewController *controller = [[EventListViewController alloc] initWithEvents:_events];
 				controller.title = [NSString stringWithFormat:@"%@'s Events", [_username capitalizedString]];
 				[self.navigationController pushViewController:controller animated:YES];
 				[controller release];

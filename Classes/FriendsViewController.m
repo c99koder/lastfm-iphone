@@ -77,12 +77,12 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 	if([LastFMService sharedInstance].error) {
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
 		[self release];
-		return nil;
+		return;
 	}
 	if(![_data count]) {
 		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) displayError:NSLocalizedString(@"FRIENDS_EMPTY", @"No friends") withTitle:NSLocalizedString(@"FRIENDS_EMPTY_TITLE", @"No friends title")];
 		[self release];
-		return nil;
+		return;
 	}
 	if(!delegate)
 		_friendsListeningNow = [[[LastFMService sharedInstance] nowListeningFriendsOfUser:_username] retain];
@@ -98,6 +98,7 @@ int usernameSort(id friend1, id friend2, void *reverse) {
 							 action:@selector(viewWillAppear:)
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
+        [toggle release];
 	}		
 }
 - (void)viewDidUnload {

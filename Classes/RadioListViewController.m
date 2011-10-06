@@ -135,27 +135,6 @@
 	[FlurryAPI logEvent:@"radio-search"];
 #endif
 }
-- (void)_search:(NSTimer *)timer {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *query = [timer userInfo];
-	NSString *station = [[LastFMService sharedInstance] searchForStation:query];
-	if(station) {
-		NSLog(@"Station: %@", station);
-		[self playRadioStation:station];
-	} else {
-		NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:query authenticated:NO];
-		if(profile) {
-			station = [NSString stringWithFormat:@"lastfm://user/%@/personal", query];
-			NSLog(@"Station: %@", station);
-			[self playRadioStation:station];
-		} else {
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Not Found" message:@"Unable to find a station matching this search.  Please enter a different artist or genre." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
-			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
-		}
-	}
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-	[pool release];
-}
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
 	if(_searchTimer) {
 		[_searchTimer invalidate];
@@ -320,6 +299,27 @@
 	} else {
 		[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate playRadioStation:url animated:YES];
 	}
+}
+- (void)_search:(NSTimer *)timer {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSString *query = [timer userInfo];
+	NSString *station = [[LastFMService sharedInstance] searchForStation:query];
+	if(station) {
+		NSLog(@"Station: %@", station);
+		[self playRadioStation:station];
+	} else {
+		NSDictionary *profile = [[LastFMService sharedInstance] profileForUser:query authenticated:NO];
+		if(profile) {
+			station = [NSString stringWithFormat:@"lastfm://user/%@/personal", query];
+			NSLog(@"Station: %@", station);
+			[self playRadioStation:station];
+		} else {
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Not Found" message:@"Unable to find a station matching this search.  Please enter a different artist or genre." delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
+			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
+		}
+	}
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[pool release];
 }
 -(void)_rowSelected:(NSIndexPath *)indexPath {
 	if([[_data objectAtIndex:[indexPath section]] isKindOfClass:[NSDictionary class]] && [[[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"] isKindOfClass:[NSArray class]]) {

@@ -33,6 +33,7 @@
 #import "NSData+Compress.h"
 #import "HomeViewController.h"
 #import "SHK.h"
+#import "UIApplication+openURLWithWarning.h"
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "FlurryAPI.h"
 #endif
@@ -100,7 +101,7 @@ NSString *kUserAgent;
 	NSLog(@"Checking for stale cache files in the background...\n");
 	while((file = [e nextObject])) {
 		NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:file];
-		NSDictionary *attr = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
+		NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
 		if([attr objectForKey:NSFileType] == NSFileTypeRegular && 
 			 ![file isEqualToString:@"recent.db"] &&
 			 ![file isEqualToString:@"queue.plist"] &&
@@ -208,7 +209,6 @@ NSString *kUserAgent;
 	[body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
 	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16--"] dataUsingEncoding:NSUTF8StringEncoding]];
 
-	NSData *theResponseData;
 	NSHTTPURLResponse *theResponse = NULL;
 	NSError *theError = NULL;
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];

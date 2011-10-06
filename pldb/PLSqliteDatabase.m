@@ -177,7 +177,7 @@ NSString *PLSqliteException = @"PLSqliteException";
     
     /* Unexpected! This should not happen */
     if (err != SQLITE_OK)
-        NSLog(@"Unexpected error closing SQLite database at '%@': %s", sqlite3_errmsg(_sqlite));
+        NSLog(@"Unexpected error closing SQLite database at '%@': %s", _path, sqlite3_errmsg(_sqlite));
     
     /* Reset the variable. If any of the above failed, it is programmer error. */
     _sqlite = nil;

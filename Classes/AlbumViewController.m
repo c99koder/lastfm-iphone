@@ -320,7 +320,7 @@
 			[addTags setTitle: @"Add Tags" forState:UIControlStateNormal];
 			[addTags addTarget:self action:@selector(addTags:) forControlEvents:UIControlEventTouchUpInside];
 			
-			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:addToLibrary, share, addTags, nil];
+			buttonscell = [[[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:addToLibrary, share, addTags, nil] autorelease];
 		}
 		return buttonscell;
 	}

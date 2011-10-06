@@ -46,6 +46,66 @@
 	}
 	return self;
 }
+- (void)buy:(id)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"buy" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+#endif
+	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
+						 _artist,
+						 _track];
+	NSString *URL;
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"country"] isEqualToString:@"United States"])
+		URL = [NSString stringWithFormat:@"http://click.linksynergy.com/fs-bin/stat?id=bKEBG4*hrDs&offerid=78941&type=3&subid=0&tmpid=1826&RD_PARM1=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+	else
+		URL = [NSString stringWithFormat:@"http://clk.tradedoubler.com/click?p=23761&a=1474288&url=%@&tduid=lastfm&partnerId=2003", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
+    
+	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString: URL]];
+}
+- (void)love:(id)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"love" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+#endif
+	[[LastFMService sharedInstance] loveTrack:_track byArtist:_artist];
+	if([LastFMService sharedInstance].error) {
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+	} else {
+		_loved = YES;
+		((UIButton*)sender).enabled = NO;
+	}	
+}
+- (void)addToLibrary:(id)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"addToLibrary" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+#endif
+	[[LastFMService sharedInstance] addTrackToLibrary:_track byArtist:_artist];
+	if([LastFMService sharedInstance].error) {
+		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
+	} else {
+		_addedToLibrary = YES;
+		((UIButton*)sender).enabled = NO;
+	}
+}
+- (void)addTag:(id)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+#endif
+	NSArray *topTags = [[[LastFMService sharedInstance] topTagsForTrack:_track byArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
+	NSArray *userTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
+	TagEditorViewController *t = [[TagEditorViewController alloc] initWithTopTags:topTags userTags:userTags];
+	t.delegate = self;
+	[self presentModalViewController:t animated:YES];
+	[t setTags: [[LastFMService sharedInstance] tagsForTrack:_track byArtist:_artist]];
+	[t release];
+}
+- (void)share:(id)sender {
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+#endif
+	ShareActionSheet* action = [[ShareActionSheet alloc] initWithTrack:_track byArtist:_artist];
+	action.viewController = self.tabBarController;
+	[action showFromTabBar: self.tabBarController.tabBar];
+	[action release];
+}
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self showNowPlayingButton:[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate isPlaying]];
@@ -203,7 +263,7 @@
 	
 	//don't show spinner in button cell or the info cell
 	if([newIndexPath section] == 0 ||
-	   [[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString:@"buttons"]) 
+	   ([[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString:@"buttons"])) 
 		return;
 	
 	if( [[_data objectAtIndex:[newIndexPath section]] isKindOfClass:[NSString class]] && [[_data objectAtIndex:[newIndexPath section]] isEqualToString: @"buy"] ) {
@@ -375,7 +435,7 @@
 			[share setTitle: @"Share" forState:UIControlStateNormal];
 			[share addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
 			
-			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:love, addToLibrary, addTags, share, nil];
+			buttonscell = [[[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:love, addToLibrary, addTags, share, nil] autorelease];
 		}
 		return buttonscell;	
 	}
@@ -397,66 +457,5 @@
 	[_metadata release];
 	[_bioView release];
 	[_data release];
-}
-
-- (void)buy:(id)sender {
-#if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"buy" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
-#endif
-	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
-						 _artist,
-						 _track];
-	NSString *URL;
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"country"] isEqualToString:@"United States"])
-		URL = [NSString stringWithFormat:@"http://click.linksynergy.com/fs-bin/stat?id=bKEBG4*hrDs&offerid=78941&type=3&subid=0&tmpid=1826&RD_PARM1=%@", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
-	else
-		URL = [NSString stringWithFormat:@"http://clk.tradedoubler.com/click?p=23761&a=1474288&url=%@&tduid=lastfm&partnerId=2003", [[ITMSURL URLEscaped] stringByReplacingOccurrencesOfString:@"=" withString:@"%3D"]];
-
-	[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString: URL]];
-}
-- (void)love:(id)sender {
-#if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"love" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
-#endif
-	[[LastFMService sharedInstance] loveTrack:_track byArtist:_artist];
-	if([LastFMService sharedInstance].error) {
-		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-	} else {
-		_loved = YES;
-		((UIButton*)sender).enabled = NO;
-	}	
-}
-- (void)addToLibrary:(id)sender {
-#if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"addToLibrary" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
-#endif
-	[[LastFMService sharedInstance] addTrackToLibrary:_track byArtist:_artist];
-	if([LastFMService sharedInstance].error) {
-		[((MobileLastFMApplicationDelegate *)([UIApplication sharedApplication].delegate)) reportError:[LastFMService sharedInstance].error];
-	} else {
-		_addedToLibrary = YES;
-		((UIButton*)sender).enabled = NO;
-	}
-}
-- (void)addTag:(id)sender {
-#if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
-#endif
-	NSArray *topTags = [[[LastFMService sharedInstance] topTagsForTrack:_track byArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
-	NSArray *userTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
-	TagEditorViewController *t = [[TagEditorViewController alloc] initWithTopTags:topTags userTags:userTags];
-	t.delegate = self;
-	[self presentModalViewController:t animated:YES];
-	[t setTags: [[LastFMService sharedInstance] tagsForTrack:_track byArtist:_artist]];
-	[t release];
-}
-- (void)share:(id)sender {
-#if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
-#endif
-	ShareActionSheet* action = [[ShareActionSheet alloc] initWithTrack:_track byArtist:_artist];
-	action.viewController = self.tabBarController;
-	[action showFromTabBar: self.tabBarController.tabBar];
-	[action release];
 }
 @end

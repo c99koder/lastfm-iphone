@@ -238,24 +238,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	[_filter release];
 	[_loadingView release];
 }
-- (void)becomeActive {
-	if(!(_timer && [_timer isValid])) {
-		NSLog(@"Resuming timer and subscribing to track changes");
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
-		_timer = [NSTimer scheduledTimerWithTimeInterval:0.5
-																							target:self
-																						selector:@selector(_updateProgress:)
-																						userInfo:nil
-																						 repeats:YES];
-		[self _displayTrackInfo:[[LastFMRadio sharedInstance] trackInfo]];
-	}
-}
-- (void)resignActive {
-	NSLog(@"Stopping timer and ignoring track changes");
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackDidChange object:nil];
-	[_timer invalidate];
-	_timer = nil;
-}
 - (NSString *)formatTime:(int)seconds {
 	if(seconds <= 0)
 		return @"00:00";
@@ -544,6 +526,24 @@ int tagSort(id tag1, id tag2, void *context) {
 	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
 	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:trackInfo];
+}
+- (void)becomeActive {
+	if(!(_timer && [_timer isValid])) {
+		NSLog(@"Resuming timer and subscribing to track changes");
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
+		_timer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                  target:self
+                                                selector:@selector(_updateProgress:)
+                                                userInfo:nil
+                                                 repeats:YES];
+		[self _displayTrackInfo:[[LastFMRadio sharedInstance] trackInfo]];
+	}
+}
+- (void)resignActive {
+	NSLog(@"Stopping timer and ignoring track changes");
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackDidChange object:nil];
+	[_timer invalidate];
+	_timer = nil;
 }
 -(void)artworkButtonPressed:(id)sender {
 	[UIView beginAnimations:nil context:nil];

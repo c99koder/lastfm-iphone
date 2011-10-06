@@ -94,8 +94,9 @@
 							 action:@selector(viewWillAppear:)
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
-		self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Recommended" style:UIBarButtonItemStylePlain target:nil action:nil];
+        [toggle release];
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)] autorelease];
+		self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Recommended" style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
 		self.title = @"Recommended";
 		self.tabBarItem.image = [UIImage imageNamed:@"tabbar_recs.png"];
 	}
@@ -115,7 +116,7 @@
 }
 - (void)doneButtonPressed:(id)sender {
 	[self.tableView setEditing:NO animated:YES];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)] autorelease];
 	_recsTitleLabel.text = @"New Music Recommendations";
 	_recsTitleLabel.font = [UIFont boldSystemFontOfSize:[UIFont labelFontSize]];
 	_recsTitleLabel.textAlignment = UITextAlignmentLeft;
@@ -129,7 +130,7 @@
 	_recsTitleLabel.text = @"Dismiss artists you’re not keen on to get fresh recommendations.";
 	_recsTitleLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
 	_recsTitleLabel.textAlignment = UITextAlignmentCenter;
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)] autorelease];
 	//((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.topViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 }
 - (void)viewDidUnload {
@@ -151,7 +152,7 @@
 	[self.tableView.tableHeaderView resignFirstResponder];
 	[self.tableView setContentOffset:CGPointMake(0,self.tableView.tableHeaderView.frame.size.height)];
 	if(self.navigationItem.rightBarButtonItem == nil)
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)];
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(editButtonPressed:)] autorelease];
 
 	if ( self.tableView.editing == YES ) {
 		[self doneButtonPressed:nil];
@@ -224,7 +225,7 @@
 		UISegmentedControl *toggle = (UISegmentedControl *)self.navigationItem.titleView;
 		
 		if(toggle.selectedSegmentIndex == 0) {
-			if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"] && [_artists count])
+			if(([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"]) && [_artists count])
 				[sections addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"", 
 																														 [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"My Recommended Radio", [NSString stringWithFormat:@"lastfm://user/%@/recommended", _username], @"New music from Last.fm", nil]
 																																																										forKeys:[NSArray arrayWithObjects:@"title", @"url", @"details", nil]], nil]
@@ -369,7 +370,7 @@
 	[cell showProgress: NO];
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	
-	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0 && ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"] && [_artists count])) {
+	if([indexPath section] == 0 && toggle.selectedSegmentIndex == 0 && ([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_subscriber"] intValue] || [[[NSUserDefaults standardUserDefaults] objectForKey:@"trial_expired"] isEqualToString:@"0"]) && [_artists count]) {
 		UITableViewCell *stationCell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"StationCell"] autorelease];
 		NSArray *stations = [[_data objectAtIndex:[indexPath section]] objectForKey:@"stations"];
 		stationCell.textLabel.text = [[stations objectAtIndex:[indexPath row]] objectForKey:@"title"];

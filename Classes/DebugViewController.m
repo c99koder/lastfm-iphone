@@ -27,7 +27,7 @@
 
 - (void)viewDidLoad {
 	_timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(update) userInfo:nil repeats:YES];
-	_log.text = [NSString stringWithContentsOfFile:CACHE_FILE(@"debug.log")];
+	_log.text = [NSString stringWithContentsOfFile:CACHE_FILE(@"debug.log") encoding:NSUTF8StringEncoding error:nil];
   [super viewDidLoad];
 }
 -(void)update {

@@ -34,7 +34,7 @@
 	NSArray *_friendsListeningNow;
 	NSArray *_eqFrames;
 	NSMutableArray *_searchResults;
-	NSMutableArray *_data;
+	NSArray *_data;
 	id<FriendsViewControllerDelegate> delegate;
 }
 - (id)initWithUsername:(NSString *)username;

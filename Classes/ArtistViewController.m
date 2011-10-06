@@ -362,7 +362,7 @@
 			}
 			if(_paintItBlack) {
 				[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-				details.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+				details.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)] autorelease];
 				UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:details];
 				[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController presentModalViewController:n animated:YES];
 				[n release];
@@ -565,7 +565,7 @@
 			[addTags setTitle: @"Add Tags" forState:UIControlStateNormal];
 			[addTags addTarget:self action:@selector(addTags:) forControlEvents:UIControlEventTouchUpInside];
 			
-			buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:addToLibrary, share, addTags, nil];
+			buttonscell = [[[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:addToLibrary, share, addTags, nil] autorelease];
 		}
 		return buttonscell;
 	}

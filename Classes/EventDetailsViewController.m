@@ -30,6 +30,7 @@
 #import "ShareActionSheet.h"
 #import "ArtistViewController.h"
 #import "PosterViewController.h"
+#import "UIApplication+openURLWithWarning.h"
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "FlurryAPI.h"
 #endif
@@ -192,6 +193,8 @@
 	addController.eventStore = eventStore;
 	addController.event = e;
 
+    [eventStore release];
+    
 	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController)
 		[self presentModalViewController:addController animated:YES];
 	else
@@ -212,7 +215,7 @@
 }
 - (void)_loadEvent {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_session"] length] > 0 && [[_event objectForKey:@"score"] intValue] == 0 || [[_event objectForKey:@"startDate"] length] == 0) {
+	if([[_event objectForKey:@"score"] intValue] == 0 || [[_event objectForKey:@"startDate"] length] == 0) {
 		NSDictionary *event = _event;
 		_event = [[[LastFMService sharedInstance] detailsForEvent:[[event objectForKey:@"id"] intValue]] retain];
 		[event release];
@@ -237,7 +240,7 @@
 		else
 			_attendees = nil;
 		self.title = [_event objectForKey:@"title"];
-		self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil];
+		self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:nil action:nil] autorelease];
 	}
 	return self;
 }
@@ -576,7 +579,7 @@
 			if([_attendees isKindOfClass:[NSArray class]])
 				cell.textLabel.text = [_attendees objectAtIndex:[indexPath row]];
 			else
-				cell.textLabel.text = _attendees;
+				cell.textLabel.text = (NSString *)_attendees;
 			return cell;
 		}
 			break;
@@ -617,9 +620,9 @@
 					cal.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont systemFontSize]];
 					[cal setTitle: @"Add To Calendar" forState:UIControlStateNormal];
 					[cal addTarget:self action:@selector(addToCalendar) forControlEvents:UIControlEventTouchUpInside];
-					buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:cal, share, nil];
+					buttonscell = [[[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:cal, share, nil] autorelease];
 				} else {
-					buttonscell = [[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:share, nil];
+					buttonscell = [[[ButtonsCell alloc] initWithReuseIdentifier:@"ButtonsCell" buttons:share, nil] autorelease];
 				}
 			}
 			return buttonscell;
@@ -690,7 +693,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)newIndexPath {
 #if !(TARGET_IPHONE_SIMULATOR)
-	NSString *status;
+	NSString *status = @"";
 	switch([newIndexPath row]) {
 		case 0:
 			status = @"Yes";
@@ -783,6 +786,7 @@
 							 action:@selector(viewWillAppear:)
 		 forControlEvents:UIControlEventValueChanged];
 		self.navigationItem.titleView = toggle;
+        [toggle release];
 	} else {
 		self.navigationItem.titleView = nil;
 	}

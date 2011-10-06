@@ -25,7 +25,7 @@
 @interface TagsModel: NSObject <TTModel> {
 	NSMutableArray *_delegates;
 	NSMutableArray *_tags;
-	NSMutableArray *_allTags;
+	NSArray *_allTags;
 }
 
 @property (nonatomic, retain) NSMutableArray *tags;
@@ -56,6 +56,7 @@
 	id<TagEditorViewControllerDelegate> delegate;
 }
 @property (retain, nonatomic) id<TagEditorViewControllerDelegate> delegate;
+- (id)initWithTopTags:(NSArray *)topTags userTags:(NSArray *)userTags;
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)doneButtonPressed:(id)sender;
 - (void)setTags:(NSArray *)tags;

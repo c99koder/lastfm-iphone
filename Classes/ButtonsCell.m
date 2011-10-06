@@ -34,7 +34,7 @@
 			
 			va_start(argumentList, firstButton);
 			UIButton* button;
-			while (button = va_arg(argumentList, UIButton*)) {
+			while ((button = va_arg(argumentList, UIButton*))) {
 				[_buttons addObject: button];
 				[self.contentView addSubview: button];
 			}

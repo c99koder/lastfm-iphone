@@ -35,6 +35,7 @@
 }
 
 - (id)initWithTrack:(NSString*)track byArtist:(NSString*)artist;
+- (id)initWithAlbum:(NSString*)track byArtist:(NSString*)artist;
 - (id)initWithArtist:(NSString*)artist;
 - (id)initWithEvent:(NSDictionary*)event;
 

@@ -68,7 +68,7 @@
 @end
 
 BOOL shouldUseCache(NSString *file, double seconds) {
-	NSDate *age = [[[NSFileManager defaultManager] fileAttributesAtPath:file traverseLink:YES] objectForKey:NSFileModificationDate];
+	NSDate *age = [[[NSFileManager defaultManager] attributesOfItemAtPath:file error:nil] objectForKey:NSFileModificationDate];
 	if(age==nil) return NO;
 	if(([age timeIntervalSinceNow] * -1) > seconds && [((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasNetworkConnection]) {
 		return NO;
@@ -206,7 +206,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	if(firstParam) {
 		[params addObject: firstParam];
 		va_start(argumentList, firstParam);
-		while (eachParam = va_arg(argumentList, id)) {
+		while ((eachParam = va_arg(argumentList, id))) {
 			[params addObject: eachParam];
 		}
 		va_end(argumentList);
@@ -227,7 +227,7 @@ BOOL shouldUseCache(NSString *file, double seconds) {
 	if(firstParam) {
 		[params addObject: firstParam];
 		va_start(argumentList, firstParam);
-		while (eachParam = va_arg(argumentList, id)) {
+		while ((eachParam = va_arg(argumentList, id))) {
 			[params addObject: eachParam];
 		}
 		va_end(argumentList);

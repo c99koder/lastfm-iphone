@@ -49,7 +49,7 @@
 	BOOL _launched;
 }
 
-@property (readonly) MobileLastFMAppWindow *window;
+@property (nonatomic, retain) MobileLastFMAppWindow *window;
 @property (readonly) FirstRunViewController *firstRunView;
 @property (readonly) PlaybackViewController *playbackViewController;
 @property (readonly) HomeViewController *rootViewController;

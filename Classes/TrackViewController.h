@@ -39,4 +39,5 @@
 	BOOL _addedToLibrary;
 }
 - (id)initWithTrack:(NSString *)track byArtist:(NSString *)artist;
+- (void)rebuildMenu;
 @end

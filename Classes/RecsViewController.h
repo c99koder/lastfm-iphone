@@ -33,4 +33,5 @@
 	UILabel *_recsTitleLabel;
 }
 - (id)initWithUsername:(NSString *)username;
+- (void)rebuildMenu;
 @end

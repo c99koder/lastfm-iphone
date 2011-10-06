@@ -39,4 +39,5 @@
 	BOOL _similarTagsDidLoad;
 }
 - (id)initWithTag:(NSString *)tag;
+- (void)rebuildMenu;
 @end

@@ -263,7 +263,7 @@ UIImage *eventDateBGImage = nil;
 		{
 			if([_events count]) {
 				if([newIndexPath row]==3) {
-					UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_events];
+					EventListViewController *controller = [[EventListViewController alloc] initWithEvents:_events];
 					controller.title = @"Events";
 					[self.navigationController pushViewController:controller animated:YES];
 					[controller release];
@@ -279,7 +279,7 @@ UIImage *eventDateBGImage = nil;
 		{
 			if([_recs count]) {
 				if([newIndexPath row]==3) {
-					UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_recs];
+					EventListViewController *controller = [[EventListViewController alloc] initWithEvents:_recs];
 					controller.title = @"Recommended Events";
 					[self.navigationController pushViewController:controller animated:YES];
 					[controller release];
@@ -306,7 +306,7 @@ UIImage *eventDateBGImage = nil;
 			break;
 		case 3:
 		{
-			UINavigationController *controller = [[EventListViewController alloc] initWithEvents:_friendsEvents];
+			EventListViewController *controller = [[EventListViewController alloc] initWithEvents:_friendsEvents];
 			if(controller) {
 				controller.title = @"Friends’ Events";
 				[self.navigationController pushViewController:controller animated:YES];
@@ -328,7 +328,7 @@ UIImage *eventDateBGImage = nil;
 						newLocation.coordinate.longitude);
 		[_locationManager stopUpdatingLocation];
 		NSArray *data = [[LastFMService sharedInstance] eventsForLatitude:newLocation.coordinate.latitude longitude:newLocation.coordinate.longitude radius:50];
-		UINavigationController *controller = [[EventListViewController alloc] initWithEvents:data];
+		EventListViewController *controller = [[EventListViewController alloc] initWithEvents:data];
 		if(controller) {
 			controller.title = @"Events Near Me";
 			((EventListViewController*)controller).footerText = @"Based on a 50km/31 mile radius from your current location.";

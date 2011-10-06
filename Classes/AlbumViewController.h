@@ -34,4 +34,5 @@
 	TTStyledTextLabel *_tagsView;
 }
 - (id)initWithAlbum:(NSString *)album byArtist:(NSString *)artist;
+- (void)rebuildMenu;
 @end

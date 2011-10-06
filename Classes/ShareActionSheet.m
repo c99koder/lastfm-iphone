@@ -96,51 +96,6 @@
 	barStyle = [UIApplication sharedApplication].statusBarStyle;
 }
 
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Twitter"]) {
-#if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"share-twitter"];
-#endif
-		SHKItem *item = [self shareKitItem];
-		if(_track) {
-			item.text = @"Check out this track on #lastfm:";
-		} else if(_album) {
-			item.text = @"Check out this album on #lastfm:";
-		} else if(_artist) {
-			item.text = @"Check out this artist on #lastfm:";
-		} else if(_event) {
-			item.text = @"Check out this event on #lastfm:";
-		}
-		[SHKTwitter shareItem:item];
-	}
-
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Facebook"]) {
-#if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"share-facebook"];
-#endif
-		SHKItem *item = [self shareKitItem];
-		if(_track) {
-			item.text = @"{*actor*} shared a track on Last.fm";
-		} else if(_album) {
-			item.text = @"{*actor*} shared an album on Last.fm";
-		} else if(_artist) {
-			item.text = @"{*actor*} shared an artist on Last.fm";
-		} else if(_event) {
-			item.text = @"{*actor*} shared an event on Last.fm";
-		}
-		[SHKFacebook shareItem:item];
-	}
-
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
-	   [[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"E-mail Address"]) {
-		[self shareToAddressBook];
-	}
-	
-	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend")]) {
-		[self shareToFriend];
-	}
-}
-
 - (SHKItem *)shareKitItem {
 	NSURL *url;
 	NSString *title;
@@ -169,7 +124,6 @@
 	
 	return [SHKItem URL:url title:title];
 }
-
 - (void)shareToAddressBook {
 #if !(TARGET_IPHONE_SIMULATOR)
 	[FlurryAPI logEvent:@"share-email"];
@@ -297,7 +251,50 @@
 		[[UIApplication sharedApplication] setStatusBarStyle:barStyle animated:YES];
 	}
 }
-
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Twitter"]) {
+#if !(TARGET_IPHONE_SIMULATOR)
+		[FlurryAPI logEvent:@"share-twitter"];
+#endif
+		SHKItem *item = [self shareKitItem];
+		if(_track) {
+			item.text = @"Check out this track on #lastfm:";
+		} else if(_album) {
+			item.text = @"Check out this album on #lastfm:";
+		} else if(_artist) {
+			item.text = @"Check out this artist on #lastfm:";
+		} else if(_event) {
+			item.text = @"Check out this event on #lastfm:";
+		}
+		[SHKTwitter shareItem:item];
+	}
+    
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Facebook"]) {
+#if !(TARGET_IPHONE_SIMULATOR)
+		[FlurryAPI logEvent:@"share-facebook"];
+#endif
+		SHKItem *item = [self shareKitItem];
+		if(_track) {
+			item.text = @"{*actor*} shared a track on Last.fm";
+		} else if(_album) {
+			item.text = @"{*actor*} shared an album on Last.fm";
+		} else if(_artist) {
+			item.text = @"{*actor*} shared an artist on Last.fm";
+		} else if(_event) {
+			item.text = @"{*actor*} shared an event on Last.fm";
+		}
+		[SHKFacebook shareItem:item];
+	}
+    
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Contacts", @"Share to Address Book")] ||
+	   [[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"E-mail Address"]) {
+		[self shareToAddressBook];
+	}
+	
+	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Last.fm Friends", @"Share to Last.fm friend")]) {
+		[self shareToFriend];
+	}
+}
 - (void)friendsViewController:(FriendsViewController *)friends didSelectFriend:(NSString *)username {
     NSString *type;
 	if( _event ) {

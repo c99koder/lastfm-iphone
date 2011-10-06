@@ -28,6 +28,7 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "NSString+URLEscaped.h"
 #import "WeeklyArtistsViewController.h"
+#import "UIColor+LastFMColors.h"
 
 @implementation WeeklyArtistsViewController
 
