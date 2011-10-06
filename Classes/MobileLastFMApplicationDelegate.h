@@ -73,5 +73,4 @@
 -(void)showFirstRunView:(BOOL)animated;
 -(void)reportError:(NSError *)error;
 -(IBAction)logoutButtonPressed:(id)sender;
--(void)sendCrashReport;
 @end

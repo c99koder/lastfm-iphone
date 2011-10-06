@@ -268,7 +268,7 @@
 			[stations release];
 		}
 		
-#ifndef DISTRIBUTION	
+#ifndef DISTRIBUTION
 		[sections addObject:@"debug"];
 #endif
 		

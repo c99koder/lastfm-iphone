@@ -26,8 +26,8 @@
 	IBOutlet UILabel *_audioBuffers;
 	IBOutlet UILabel  *_errorCode;
 	IBOutlet UILabel *_errorMsg;
-	IBOutlet UITextView *_log;
+    IBOutlet UIButton *_feedbackBtn;
 	NSTimer *_timer;
 }
--(IBAction)uploadLogs:(id)sender;
+-(IBAction)submitFeedback:(id)sender;
 @end

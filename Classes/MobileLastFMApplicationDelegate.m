@@ -37,6 +37,9 @@
 #if !(TARGET_IPHONE_SIMULATOR)
 #import "FlurryAPI.h"
 #endif
+#ifndef DISTRIBUTION
+#import "TestFlight.h"
+#endif
 
 NSString *kUserAgent;
 
@@ -193,50 +196,9 @@ NSString *kUserAgent;
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 	[[LastFMRadio sharedInstance] lowOnMemory];
 }
-- (void)sendCrashReport {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
-	NSString *url = [NSString stringWithFormat:@"http://oops.last.fm/logsubmission/add?username=%@&platform=%@&clientname=iPhoneFM&clientversion=%@",
-									 [[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"] URLEscaped],
-									 [[UIDevice currentDevice].model URLEscaped],
-									 VERSION];
-
-	NSMutableData *body = [NSMutableData data];
-	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16\r\nContent-Disposition: form-data; name=\"usernotes\"\r\n\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16\r\nContent-Disposition: form-data; name=\"logs\"\r\n\r\ncrash.log\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16\r\nContent-Disposition: form-data; name=\"crash.log\"\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-	[body appendData:[[NSData dataWithContentsOfFile:CACHE_FILE(@"crash.log")] compressWithLevel:9]];
-	[body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-	[body appendData:[[NSString stringWithFormat:@"--8e61d618ca16--"] dataUsingEncoding:NSUTF8StringEncoding]];
-
-	NSHTTPURLResponse *theResponse = NULL;
-	NSError *theError = NULL;
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
-	[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
-	[theRequest setValue:@"multipart/form-data;boundary=8e61d618ca16" forHTTPHeaderField:@"Content-Type"];
-	[theRequest setHTTPMethod:@"POST"];
-	[theRequest setHTTPBody:body];
-	
-	[NSURLConnection sendSynchronousRequest:theRequest returningResponse:&theResponse error:&theError];
-
-	if([theResponse statusCode] == 200 || [theResponse statusCode] == 404) {
-		[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"crash.log") error:nil];
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"crashed"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-		[self displayError:NSLocalizedString(@"CRASH_REPORT_SUCCESS", @"Crash report sucessfully sent") withTitle:NSLocalizedString(@"CRASH_REPORT_SUCCESS_TITLE", @"Crash report sucessfully sent title")];
-	} else {
-		[self displayError:NSLocalizedString(@"CRASH_REPORT_FAIL", @"Crash report failed to send") withTitle:NSLocalizedString(@"CRASH_REPORT_SUCCESS_TITLE", @"Crash report failed to send title")];
-	}
-	
-	[pool release];
-}
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Logout", @"Logout")])
 		[self performSelectorOnMainThread:@selector(_logout) withObject:nil waitUntilDone:YES];
-	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Cancel", @"Cancel")])
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"crashed"];
-	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Send", @"Send")])
-		[NSThread detachNewThreadSelector:@selector(sendCrashReport) toTarget:self withObject:nil];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Info"])
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.last.fm/stationchanges2010"]];
 	if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Start Trial"]) {
@@ -311,15 +273,6 @@ NSString *kUserAgent;
 	}
 
 	_launched = YES;
-
-	/*if([[NSUserDefaults standardUserDefaults] objectForKey:@"crashed"]) {
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CRASH_REPORT_TITLE", @"Crash reporter title")
-																										 message:NSLocalizedString(@"CRASH_REPORT_BODY",@"Crash reporter body")
-																										delegate:self
-																					 cancelButtonTitle:NSLocalizedString(@"Cancel", @"cancel")
-																					 otherButtonTitles:NSLocalizedString(@"Send", @"Send"), nil] autorelease];
-		[alert show];
-	}*/
 }
 -(void)showFirstRunView:(BOOL)animated {
 	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
@@ -350,6 +303,9 @@ NSString *kUserAgent;
 		NSLog(@"Flurry is enabled");
 		[FlurryAPI startSession:PINCHMEDIA_ID];
 	}
+#endif
+#ifndef DISTRIBUTION
+    [TestFlight takeOff:@"d094fd62c322b4d6f1c6a9690899c299_Mjk2NDUyMDExLTA5LTE2IDE2OjAzOjMwLjU2Mjk0Mw"];
 #endif
 	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];
 	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];
@@ -477,7 +433,6 @@ NSString *kUserAgent;
 	return ret;
 }
 -(BOOL)hasWiFiConnection {
-    return NO;
 	SCNetworkReachabilityRef reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
 	SCNetworkReachabilityFlags flags;
 	SCNetworkReachabilityGetFlags(reach, &flags);

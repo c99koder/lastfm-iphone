@@ -22,12 +22,14 @@
 #import "DebugViewController.h"
 #import "LastFMRadio.h"
 #import "LastFMService.h"
+#import "TestFlight.h"
 
 @implementation DebugViewController
 
 - (void)viewDidLoad {
 	_timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(update) userInfo:nil repeats:YES];
-	_log.text = [NSString stringWithContentsOfFile:CACHE_FILE(@"debug.log") encoding:NSUTF8StringEncoding error:nil];
+    if(![[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)])
+        _feedbackBtn.hidden = YES;
   [super viewDidLoad];
 }
 -(void)update {
@@ -36,9 +38,8 @@
 	_errorCode.text = [NSString stringWithFormat:@"%i", [LastFMService sharedInstance].error.code];
 	_errorMsg.text = [[LastFMService sharedInstance].error.userInfo objectForKey:NSLocalizedDescriptionKey];
 }
--(IBAction)uploadLogs:(id)sender {
-	[[NSData dataWithContentsOfFile:CACHE_FILE(@"debug.log")] writeToFile:CACHE_FILE(@"crash.log") atomically:YES];
-	[NSThread detachNewThreadSelector:@selector(sendCrashReport) toTarget:[UIApplication sharedApplication].delegate withObject:nil];
+-(IBAction)submitFeedback:(id)sender {
+    [TestFlight openFeedbackView];
 }
 - (void)dealloc {
 	[_timer invalidate];
