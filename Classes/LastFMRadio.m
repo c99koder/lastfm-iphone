@@ -31,6 +31,8 @@
 #import "FlurryAPI.h"
 #endif
 
+#define STARTING_BUFFER_SIZE 65392
+
 void audioRouteChangeListenerCallback(void *inUserData, AudioSessionPropertyID inPropertyID, UInt32 inPropertyValueSize, const void *inPropertyValue) {
 	if (inPropertyID != kAudioSessionProperty_AudioRouteChange)
 		return;
@@ -161,11 +163,13 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(void)_waitForPlaybackToFinish {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 #if !(TARGET_IPHONE_SIMULATOR)
-	UIBackgroundTaskIdentifier bgTask = UIBackgroundTaskInvalid;
+	UIBackgroundTaskIdentifier bgTask = 0;
 	UIDevice* device = [UIDevice currentDevice];
 	BOOL backgroundSupported = NO;
-	if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+	if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
 		backgroundSupported = device.multitaskingSupported;
+        bgTask = UIBackgroundTaskInvalid;
+    }
 	
 	if(backgroundSupported && bgTask == UIBackgroundTaskInvalid) {
 		bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
@@ -262,7 +266,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		[self _pushDataChunk];
 	}
 	if(_state == TRACK_PLAYING && _peakBufferCount > 4) {
-		if(_audioBufferCount < 1 && [_receivedData length] < 8192) {
+		if(_audioBufferCount < 1 && [_receivedData length] < 16384) {
 			if(_fileDidFinishLoading) {
 				[NSThread detachNewThreadSelector:@selector(_waitForPlaybackToFinish) toTarget:self withObject:nil];
 			} else {
@@ -304,8 +308,8 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		[_receivedData appendData:data];
 		[_bufferLock unlock];
 	}
-	if(_state != TRACK_PAUSED && (([_receivedData length] > 98304 && _state == TRACK_BUFFERING) || _state == TRACK_PLAYING)) {
-		while(_audioBufferCount < 6) {
+	if(_state != TRACK_PAUSED && (([_receivedData length] > STARTING_BUFFER_SIZE && _state == TRACK_BUFFERING) || _state == TRACK_PLAYING)) {
+		while(_audioBufferCount < 3) {
 			[self _pushDataChunk];
 		}
 	}
@@ -382,8 +386,8 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		return NO;
 }
 -(float)bufferProgress {
-	if(_state == TRACK_BUFFERING && [_receivedData length] < 98304)
-		return ((float)[_receivedData length]) / 98304.0f;
+	if(_state == TRACK_BUFFERING && [_receivedData length] < STARTING_BUFFER_SIZE)
+		return ((float)[_receivedData length]) / (float)STARTING_BUFFER_SIZE;
 	else
 		return 1;
 }

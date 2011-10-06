@@ -477,6 +477,7 @@ NSString *kUserAgent;
 	return ret;
 }
 -(BOOL)hasWiFiConnection {
+    return NO;
 	SCNetworkReachabilityRef reach = SCNetworkReachabilityCreateWithName(kCFAllocatorSystemDefault, "ws.audioscrobbler.com");
 	SCNetworkReachabilityFlags flags;
 	SCNetworkReachabilityGetFlags(reach, &flags);
