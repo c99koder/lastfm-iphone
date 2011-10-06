@@ -568,7 +568,7 @@ int tagSort(id tag1, id tag2, void *context) {
 #if !(TARGET_IPHONE_SIMULATOR)
 			[FlurryAPI logEvent:@"filter"];
 #endif
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Retuned" message:
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Updated" message:
 														 [NSString stringWithFormat:@"After this track, you'll only hear '%@' music on this station.",[filter objectForKey:@"name"]]
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
@@ -576,7 +576,7 @@ int tagSort(id tag1, id tag2, void *context) {
 #if !(TARGET_IPHONE_SIMULATOR)
 			[FlurryAPI logEvent:@"unfilter"];
 #endif
-			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Retuned" message:@"After this track, you'll hear all music on this station."
+			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Updated" message:@"After this track, you'll hear all music on this station."
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		}
