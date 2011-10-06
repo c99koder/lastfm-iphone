@@ -149,7 +149,10 @@
 
 - (void)tokenAuthorizeView:(SHKOAuthView *)authView didFinishWithSuccess:(BOOL)success queryParams:(NSMutableDictionary *)queryParams error:(NSError *)error;
 {
-	[[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
+    if ([authView.navigationController respondsToSelector:@selector(presentingViewController)])
+        [authView.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    else
+        [[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
 	
 	if (!success)
 	{

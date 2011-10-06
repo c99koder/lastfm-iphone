@@ -157,7 +157,10 @@
 - (void)cancel
 {
 	[delegate tokenAuthorizeCancelledView:self];
-	[[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
+    if ([self.navigationController respondsToSelector:@selector(presentingViewController)])
+        [self.navigationController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    else
+        [[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
 }
 
 @end
