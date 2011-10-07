@@ -19,6 +19,7 @@
  * along with MobileLastFM.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#import <Twitter/Twitter.h>
 #import "ShareActionSheet.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "NSString+URLEscaped.h"
@@ -256,17 +257,35 @@
 #if !(TARGET_IPHONE_SIMULATOR)
 		[FlurryAPI logEvent:@"share-twitter"];
 #endif
-		SHKItem *item = [self shareKitItem];
-		if(_track) {
-			item.text = @"Check out this track on #lastfm:";
-		} else if(_album) {
-			item.text = @"Check out this album on #lastfm:";
-		} else if(_artist) {
-			item.text = @"Check out this artist on #lastfm:";
-		} else if(_event) {
-			item.text = @"Check out this event on #lastfm:";
-		}
-		[SHKTwitter shareItem:item];
+        SHKItem *item = [self shareKitItem];
+        if(_track) {
+            item.text = @"Check out this track on #lastfm:";
+        } else if(_album) {
+            item.text = @"Check out this album on #lastfm:";
+        } else if(_artist) {
+            item.text = @"Check out this artist on #lastfm:";
+        } else if(_event) {
+            item.text = @"Check out this event on #lastfm:";
+        }
+        if(NSClassFromString(@"TWTweetComposeViewController")) {
+            // Set up the built-in twitter composition view controller.
+            TWTweetComposeViewController *tweetViewController = [[[TWTweetComposeViewController alloc] init] autorelease];
+            
+            // Set the initial tweet text. See the framework for additional properties that can be set.
+            [tweetViewController setInitialText:[NSString stringWithFormat:@"%@ %@", item.text, [item.URL absoluteString]]];
+            
+            // Create the completion handler block.
+            [tweetViewController setCompletionHandler:^(TWTweetComposeViewControllerResult result) {
+                // Dismiss the tweet composition view controller.
+                [viewController dismissModalViewControllerAnimated:YES];
+            }];
+            
+            // Present the tweet composition view controller modally.
+            [viewController presentModalViewController:tweetViewController animated:YES];
+
+        } else {
+            [SHKTwitter shareItem:item];
+        }
 	}
     
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Facebook"]) {

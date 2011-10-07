@@ -206,6 +206,7 @@
 		224DBBB0143E2D6D00CF4BF6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 224DBBAF143E2D6B00CF4BF6 /* Icon.png */; };
 		224DBBB2143E2D7D00CF4BF6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224DBBB1143E2D7C00CF4BF6 /* Icon@2x.png */; };
 		224DBBB5143E2E1D00CF4BF6 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224DBBB4143E2E1D00CF4BF6 /* libTestFlight.a */; };
+		224DBBBB143F6B6A00CF4BF6 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224DBBBA143F6B6800CF4BF6 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		224F661212E898FC00ABEECD /* date-detail_view.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F661112E898FC00ABEECD /* date-detail_view.png */; };
 		224F662F12E8AE2600ABEECD /* tabbar_events.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F662512E8AE2600ABEECD /* tabbar_events.png */; };
 		224F663012E8AE2600ABEECD /* tabbar_events@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F662612E8AE2600ABEECD /* tabbar_events@2x.png */; };
@@ -849,6 +850,7 @@
 		224DBBB1143E2D7C00CF4BF6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
 		224DBBB3143E2E0600CF4BF6 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		224DBBB4143E2E1D00CF4BF6 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		224DBBBA143F6B6800CF4BF6 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		224F661112E898FC00ABEECD /* date-detail_view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date-detail_view.png"; sourceTree = "<group>"; };
 		224F662512E8AE2600ABEECD /* tabbar_events.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabbar_events.png; sourceTree = "<group>"; };
 		224F662612E8AE2600ABEECD /* tabbar_events@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_events@2x.png"; sourceTree = "<group>"; };
@@ -1124,6 +1126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				224DBBBB143F6B6A00CF4BF6 /* Twitter.framework in Frameworks */,
 				224BE801143CFE35003B9428 /* libThree20.a in Frameworks */,
 				224BE802143CFE35003B9428 /* libThree20Core.a in Frameworks */,
 				224BE803143CFE35003B9428 /* libThree20Network.a in Frameworks */,
@@ -1235,6 +1238,7 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				224DBBBA143F6B6800CF4BF6 /* Twitter.framework */,
 				220B8270143CB1FB00AE02CA /* EventKit.framework */,
 				220B8272143CB1FB00AE02CA /* EventKitUI.framework */,
 				220B822F143CAACC00AE02CA /* Security.framework */,
