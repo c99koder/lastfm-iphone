@@ -121,13 +121,11 @@
 	float locationHeight = [location.text sizeWithFont:location.font constrainedToSize:CGSizeMake(frame.size.width - _artwork.frame.origin.x - _artwork.frame.size.width - 10, 16*2) lineBreakMode:location.lineBreakMode].height;
 	location.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, _artwork.frame.origin.y + 34, frame.size.width - _artwork.frame.origin.x - _artwork.frame.size.width - 10, locationHeight);
 	
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_session"] length] == 0) {
-		score.hidden = YES;
+	if(score.hidden == YES) {
 		scoreLabel.hidden = YES;
 		days.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14 - 28, 80, 28);
 		daysLabel.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14, 80, 14);
 	} else {
-		score.hidden = NO;
 		scoreLabel.hidden = NO;
 		score.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14 - 28, 80, 28);
 		scoreLabel.frame = CGRectMake(_artwork.frame.origin.x + _artwork.frame.size.width + 10, frame.size.height - 14, 80, 14);
@@ -518,7 +516,12 @@
 			eventCell.date.text = [formatter stringFromDate:date];
 			eventCell.title.text = [_event objectForKey:@"title"];
 			eventCell.location.text = [NSString stringWithFormat: @"%@, %@\n%@", [_event objectForKey: @"venue"], [_event objectForKey:@"city"], [_event objectForKey:@"country"]];
-			eventCell.score.text = [NSString stringWithFormat:@"%i%%", (int)([[_event objectForKey:@"score"] floatValue] * 100.0f)];
+            if([[_event objectForKey:@"score"] floatValue] > 0) {
+                eventCell.score.text = [NSString stringWithFormat:@"%i%%", (int)([[_event objectForKey:@"score"] floatValue] * 100.0f)];
+                eventCell.score.hidden = NO;
+            } else {
+                eventCell.score.hidden = YES;
+            }
 			int days = [date timeIntervalSinceDate:[NSDate date]]/60/60/24;
 			eventCell.days.text = [NSString stringWithFormat:@"%i", days];
 			[formatter release];
