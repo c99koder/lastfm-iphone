@@ -49,7 +49,7 @@
 	return self;
 }
 - (id)initWithTrack:(NSString*)track byArtist:(NSString*)artist {
-	self = [self initSuperWithTitle:NSLocalizedString(@"Who would you like to share this track with?", @"Share track sheet title")];
+	self = [self initSuperWithTitle:NSLocalizedString(@"How would you like to share this track?", @"Share track sheet title")];
 	if ( self ) {
 		_track = [track retain];
 		_artist = [artist retain];
@@ -60,7 +60,7 @@
 }
 
 - (id)initWithArtist:(NSString*)artist {
-	self = [self initSuperWithTitle:NSLocalizedString(@"Who would you like to share this artist with?", @"Share artist sheet title") ];
+	self = [self initSuperWithTitle:NSLocalizedString(@"How would you like to share this artist?", @"Share artist sheet title") ];
 	if ( self ) {
 		_track = nil;
 		_album = nil;
@@ -71,7 +71,7 @@
 }
 
 - (id)initWithAlbum:(NSString*)album byArtist:(NSString *)artist {
-	self = [self initSuperWithTitle:NSLocalizedString(@"Who would you like to share this album with?", @"Share album sheet title") ];
+	self = [self initSuperWithTitle:NSLocalizedString(@"How would you like to share this album?", @"Share album sheet title") ];
 	if ( self ) {
 		_track = nil;
 		_album = [album retain];
@@ -82,7 +82,7 @@
 }
 
 - (id)initWithEvent:(NSDictionary*)event {
-	self = [self initSuperWithTitle:@"Who would you like to share this event with?"];
+	self = [self initSuperWithTitle:NSLocalizedString(@"How would you like to share this event?", @"Share event sheet title")];
 	if ( self ) {
 		_track = nil;
 		_album = nil;

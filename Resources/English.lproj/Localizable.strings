@@ -286,6 +286,15 @@
 /* Top Tracks chart title */
 "Top Tracks" = "Top Tracks";
 
-/* Share sheet title */
-"Who would you like to share this track with?" = "Who would you like to share this track with?";
+/* Share track sheet title */
+"How would you like to share this track?" = "How would you like to share this track?";
+
+/* Share artist sheet title */
+"How would you like to share this artist?" = "How would you like to share this artist?";
+
+/* Share album sheet title */
+"How would you like to share this album?" = "How would you like to share this album?";
+
+/* Share event sheet title */
+"How would you like to share this event?" = "How would you like to share this event?";
 
