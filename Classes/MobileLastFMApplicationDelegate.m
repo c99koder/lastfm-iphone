@@ -267,7 +267,7 @@ NSString *kUserAgent;
 	[firstRunView release];
 	firstRunView = nil;
 	if(_launchURL) {
-		[self playRadioStation:_launchURL animated:YES];
+        [[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:_launchURL]];
 		[_launchURL release];
 		_launchURL = nil;
 	}
@@ -305,7 +305,7 @@ NSString *kUserAgent;
 	}
 #endif
 #ifndef DISTRIBUTION
-    [TestFlight takeOff:@"d094fd62c322b4d6f1c6a9690899c299_Mjk2NDUyMDExLTA5LTE2IDE2OjAzOjMwLjU2Mjk0Mw"];
+    [TestFlight takeOff:TESTFLIGHT_KEY];
 #endif
 	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];
 	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];
