@@ -102,7 +102,7 @@
 	NSString *title;
 	
 	if(_event != nil) {
-		url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/festival/%@", [_event objectForKey:@"id"]]];
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.last.fm/event/%@", [_event objectForKey:@"id"]]];
 		title = [_event objectForKey:@"title"];
 	} else {
 		NSString *link = @"http://www.last.fm/music";
@@ -143,7 +143,7 @@
 		[mail setSubject:[NSString stringWithFormat:@"Last.fm: %@ shared %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"], sharedItem]];
 		NSString* sharedLink;
 		if( _event ) {
-			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/festival/%@'>%@</a>", 
+			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/event/%@'>%@</a>", 
 										[_event objectForKey:@"id"], [_event objectForKey:@"title"]];
 		} else if( _track ) {
 			sharedLink = [NSString stringWithFormat:@"<a href='http://www.last.fm/music/%@/_/%@'>%@</a>", 
