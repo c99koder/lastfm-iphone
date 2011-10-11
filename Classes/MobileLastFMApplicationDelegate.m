@@ -250,9 +250,9 @@ NSString *kUserAgent;
 	[rootViewController release];
 	rootViewController = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	[SHK setRootViewController:rootViewController];
-	//rootViewController = [[UINavigationController alloc] initWithRootViewController:home];
-	//[home release];
-	//rootViewController.navigationBar.barStyle = UIBarStyleBlackOpaque;
+#if !(TARGET_IPHONE_SIMULATOR)
+	[FlurryAPI countPageViews:rootViewController];
+#endif
 	
 	if(animated) {
 		[UIView beginAnimations:nil context:nil];
