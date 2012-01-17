@@ -73,8 +73,10 @@
 - (void)rebuildMenu {
 	[self.tableView setContentOffset:CGPointMake(0,0)];
 	
-	if(_data)
+	if(_data) {
 		[_data release];
+        _data = nil;
+    }
 	
 	NSMutableArray *sections = [[NSMutableArray alloc] init];
 	NSMutableArray *stations;

@@ -29,8 +29,10 @@
 
 @implementation GlobalSearchDataSource
 - (void)search:(NSString *)query {
-	if(_data)
+	if(_data) {
 		[_data release];
+        _data = nil;
+    }
 	
 	NSArray *results = [[LastFMService sharedInstance] search:query];
 	NSMutableArray *stations = [[NSMutableArray alloc] init];
@@ -129,8 +131,10 @@
 
 @implementation RadioSearchDataSource
 - (void)search:(NSString *)query {
-	if(_data)
+	if(_data) {
 		[_data release];
+        _data = nil;
+    }
 	
 	NSArray *results = [[[LastFMService sharedInstance] search:query] retain];
 	

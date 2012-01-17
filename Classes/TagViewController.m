@@ -116,8 +116,10 @@
 	NSString *html = [NSString stringWithFormat:@"%@ <a href=\"http://www.last.fm/tag/%@/wiki\">Read More »</a>", bio, [_tag URLEscaped]];
 	_bioView.html = html;
 	
-	if(_data)
+	if(_data) {
 		[_data release];
+        _data = nil;
+    }
 	
 	NSMutableArray *sections = [[NSMutableArray alloc] init];
 	NSMutableArray *stations;

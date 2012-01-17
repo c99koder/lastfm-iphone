@@ -149,8 +149,10 @@
 }
 - (void)rebuildMenu {
 	@synchronized(self) {
-		if(_data)
-			[_data release];
+        if(_data) {
+            [_data release];
+            _data = nil;
+        }
 		
 		NSMutableArray *sections = [[NSMutableArray alloc] init];
 		
