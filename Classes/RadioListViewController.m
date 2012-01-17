@@ -38,7 +38,10 @@
 - (void)_refresh {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDictionary *stations = nil;
-	[[LastFMRadio sharedInstance] fetchRecentURLs];
+    @try {
+        [[LastFMRadio sharedInstance] fetchRecentURLs];
+    } @catch(NSException *e) {
+    }
 	if([_username isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]])
 		stations = [[[LastFMService sharedInstance] userStations] retain];
 	if(![[NSThread currentThread] isCancelled]) {
