@@ -31,7 +31,7 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "NSString+MD5.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 int tagSort(id tag1, id tag2, void *context) {
@@ -184,7 +184,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[self.navigationController pushViewController:artist animated:YES];
 	[artist release];
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"on-tour-strap"];
+	[FlurryAnalytics logEvent:@"on-tour-strap"];
 #endif
 }
 -(void)loveButtonPressed:(id)sender {
@@ -201,7 +201,7 @@ int tagSort(id tag1, id tag2, void *context) {
 }
 -(void)infoButtonPressed:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"details"];
+	[FlurryAnalytics logEvent:@"details"];
 #endif
 	NowPlayingInfoViewController *info = [[NowPlayingInfoViewController alloc] initWithTrackInfo:[[LastFMRadio sharedInstance] trackInfo]];
 	[self.navigationController pushViewController:info animated:YES];
@@ -276,7 +276,7 @@ int tagSort(id tag1, id tag2, void *context) {
 		if(self.navigationItem.rightBarButtonItem != nil)
 			self.navigationItem.rightBarButtonItem.enabled = NO;
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"buffering" timed:YES];
+		[FlurryAnalytics logEvent:@"buffering" timed:YES];
 #endif
 	}
 	if([[LastFMRadio sharedInstance] state] == TRACK_BUFFERING && _loadingView.alpha == 1 && _bufferPercentage.alpha < 1) {
@@ -299,7 +299,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			self.navigationItem.rightBarButtonItem.enabled = YES;
 		[UIView commitAnimations];
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI endTimedEvent:@"buffering" withParameters:nil];
+		[FlurryAnalytics endTimedEvent:@"buffering" withParameters:nil];
 #endif
 	}
 }
@@ -511,7 +511,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	} else {
 		if([filter objectForKey:@"name"]) {
 #if !(TARGET_IPHONE_SIMULATOR)
-			[FlurryAPI logEvent:@"filter"];
+			[FlurryAnalytics logEvent:@"filter"];
 #endif
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Updated" message:
 														 [NSString stringWithFormat:@"After this track, you'll only hear '%@' music on this station.",[filter objectForKey:@"name"]]
@@ -519,7 +519,7 @@ int tagSort(id tag1, id tag2, void *context) {
 			[alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
 		} else {
 #if !(TARGET_IPHONE_SIMULATOR)
-			[FlurryAPI logEvent:@"unfilter"];
+			[FlurryAnalytics logEvent:@"unfilter"];
 #endif
 			UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Station Updated" message:@"After this track, you'll hear all music on this station."
 																											delegate:[UIApplication sharedApplication].delegate cancelButtonTitle:NSLocalizedString(@"OK", @"OK") otherButtonTitles:nil] autorelease];

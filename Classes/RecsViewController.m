@@ -29,7 +29,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIColor+LastFMColors.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @implementation RecsViewController
@@ -124,7 +124,7 @@
  }
 - (void)editButtonPressed:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"recs-edit"];
+	[FlurryAnalytics logEvent:@"recs-edit"];
 #endif
 	[self.tableView setEditing:YES animated:YES];
 	_recsTitleLabel.text = @"Dismiss artists you’re not keen on to get fresh recommendations.";
@@ -184,7 +184,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if(editingStyle == UITableViewCellEditingStyleDelete) {
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"recs-dismiss"];
+		[FlurryAnalytics logEvent:@"recs-dismiss"];
 #endif
 		NSMutableArray *newArtists = [NSMutableArray arrayWithArray:_artists];
 		[self performSelectorInBackground:@selector(_dismiss:) withObject:[[_artists objectAtIndex:[indexPath row]] objectForKey:@"name"]];

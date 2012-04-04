@@ -28,7 +28,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #include "version.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 #define STARTING_BUFFER_SIZE 65392
@@ -325,7 +325,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		artworkImage = [[UIImage alloc] initWithData:imageData];
 		[imageData release];
 	} else {
-		artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
+		artworkImage = nil;
 	}
 		
 	[_artwork release];
@@ -418,7 +418,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	}
 	_state = TRACK_PAUSED;
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"pause"];
+	[FlurryAnalytics logEvent:@"pause"];
 #endif
 	[self performSelectorOnMainThread:@selector(_notifyTrackPaused) withObject:nil waitUntilDone:NO];
 }
@@ -431,7 +431,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		AudioQueueStart(queue, NULL);
 		_state = TRACK_PLAYING;
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"resume"];
+		[FlurryAnalytics logEvent:@"resume"];
 #endif
 	}
 	[self performSelectorOnMainThread:@selector(_notifyTrackResumed) withObject:nil waitUntilDone:NO];
@@ -854,7 +854,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		}
 		tuning = YES;
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:_radioType timed:YES];
+		[FlurryAnalytics logEvent:_radioType timed:YES];
 #endif
 		return TRUE;
 	}
@@ -913,7 +913,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 			else
 				[(MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate displayError:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT", @"Not enough content error") withTitle:NSLocalizedString(@"ERROR_INSUFFICIENT_CONTENT_TITLE", @"Not enough content title")];
 #if !(TARGET_IPHONE_SIMULATOR)
-			[FlurryAPI logEvent:@"NEC error"];
+			[FlurryAnalytics logEvent:@"NEC error"];
 #endif
 			[self stop];
 		}
@@ -962,7 +962,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(void)stop {
 	[_busyLock lock];
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI endTimedEvent:_radioType withParameters:nil];
+	[FlurryAnalytics endTimedEvent:_radioType withParameters:nil];
 #endif
 	NSLog(@"Stopping playback\n");
 	if([_tracks count]) {

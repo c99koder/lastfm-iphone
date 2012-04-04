@@ -23,7 +23,7 @@
 #import "UIViewController+NowPlayingButton.h"
 #import "MobileLastFMApplicationDelegate.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @implementation HomeViewController
@@ -58,7 +58,7 @@
 
 #if !(TARGET_IPHONE_SIMULATOR)
 		for(int i = 0; i < [self.viewControllers count]; i++) {
-			[FlurryAPI countPageViews:[self.viewControllers objectAtIndex:i]];
+			[FlurryAnalytics logAllPageViews:[self.viewControllers objectAtIndex:i]];
 		}			
 #endif
 		

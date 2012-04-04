@@ -32,7 +32,7 @@
 #import "UIColor+LastFMColors.h"
 #import "ShareActionSheet.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @implementation AlbumViewController
@@ -347,7 +347,7 @@
 }
 - (void)addToLibrary:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"addToLibrary" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"album", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"addToLibrary" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"album", @"type", nil, nil]];
 #endif
 	[[LastFMService sharedInstance] addAlbumToLibrary:_album byArtist:_artist];
 	if([LastFMService sharedInstance].error) {
@@ -357,7 +357,7 @@
 }
 - (void)share:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"album", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"album", @"type", nil, nil]];
 #endif
 	ShareActionSheet* action = [[ShareActionSheet alloc] initWithAlbum:_album byArtist:_artist];
 	action.viewController = self.tabBarController;
@@ -366,7 +366,7 @@
 }
 - (void)addTags:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"album", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"album", @"type", nil, nil]];
 #endif
 	TagEditorViewController* tagEditor = [[TagEditorViewController alloc] initWithTopTags:_tags userTags:[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]]];
 	tagEditor.delegate = self;

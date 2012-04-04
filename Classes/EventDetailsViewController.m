@@ -32,7 +32,7 @@
 #import "PosterViewController.h"
 #import "UIApplication+openURLWithWarning.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @implementation EventDetailCell
@@ -152,7 +152,7 @@
 @implementation EventDetailsViewController
 - (void)share {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"event", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"event", @"type", nil, nil]];
 #endif
 	ShareActionSheet* action = [[ShareActionSheet alloc] initWithEvent:_event];
 	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
@@ -166,7 +166,7 @@
 }
 - (void)addToCalendar {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"add-to-calendar"];
+	[FlurryAnalytics logEvent:@"add-to-calendar"];
 #endif
 	EKEventStore *eventStore = [[EKEventStore alloc] init];
 	EKEvent *e = [EKEvent eventWithEventStore:eventStore];
@@ -352,7 +352,7 @@
 		case 0: //Header cell
 		{
 #if !(TARGET_IPHONE_SIMULATOR)
-			[FlurryAPI logEvent:@"view-poster"];
+			[FlurryAnalytics logEvent:@"view-poster"];
 #endif
 			PosterViewController *p = [[PosterViewController alloc] initWithEvent:_event];
 			[self.navigationController pushViewController:p animated:YES];
@@ -363,7 +363,7 @@
 		case 1: //Attending
 		{
 #if !(TARGET_IPHONE_SIMULATOR)
-			[FlurryAPI logEvent:@"view-attendance"];
+			[FlurryAnalytics logEvent:@"view-attendance"];
 #endif
 			EventAttendViewController *attend = [[EventAttendViewController alloc] initWithEvent:_event];
 			[self.navigationController pushViewController:attend animated:YES];
@@ -375,7 +375,7 @@
 		{
 			if([newIndexPath row] == [_recommendedLineup count] || [newIndexPath row] == 4) {
 #if !(TARGET_IPHONE_SIMULATOR)
-				[FlurryAPI logEvent:@"view-lineup"];
+				[FlurryAnalytics logEvent:@"view-lineup"];
 #endif
 				NSArray* artists = [_event objectForKey:@"artists"];
 				EventArtistsViewController *artistsVC = [[EventArtistsViewController alloc] initWithArtists:artists recs:_recommendedLineup];
@@ -384,7 +384,7 @@
 			} else {
 				if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
 #if !(TARGET_IPHONE_SIMULATOR)
-					[FlurryAPI logEvent:@"view-artist"];
+					[FlurryAnalytics logEvent:@"view-artist"];
 #endif
 					ArtistViewController* artistVC = [[ArtistViewController alloc] initWithArtist:[[_recommendedLineup objectAtIndex:[newIndexPath row]] objectForKey:@"name"]];
 					[self.navigationController pushViewController: artistVC animated: YES];
@@ -423,7 +423,7 @@
 					[query appendFormat:@" %@", [_event objectForKey:@"country"]];
 				}
 #if !(TARGET_IPHONE_SIMULATOR)
-				[FlurryAPI logEvent:@"map"];
+				[FlurryAnalytics logEvent:@"map"];
 #endif
 				[[UIApplication sharedApplication] openURLWithWarning:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.google.com/?f=q&q=%@&ie=UTF8&om=1&iwloc=addr", [query URLEscaped]]]];
 				[query release];
@@ -434,7 +434,7 @@
 				NSString* trimmedStr = [str stringByReplacingOccurrencesOfString:@" " withString:@""];
 				NSURL* url = [NSURL URLWithString: trimmedStr];
 #if !(TARGET_IPHONE_SIMULATOR)
-				[FlurryAPI logEvent:@"phone"];
+				[FlurryAnalytics logEvent:@"phone"];
 #endif
 				[[UIApplication sharedApplication] openURLWithWarning:url];
 				break;
@@ -442,7 +442,7 @@
 			if( row == 2) {
 				NSURL* url = [NSURL URLWithString:[_event objectForKey:@"website"]];
 #if !(TARGET_IPHONE_SIMULATOR)
-				[FlurryAPI logEvent:@"website"];
+				[FlurryAnalytics logEvent:@"website"];
 #endif
 				if( ![[url scheme] length] )
 						url = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", [_event objectForKey: @"website"]]];
@@ -708,7 +708,7 @@
 			status = @"No";
 			break;
 	}
-	[FlurryAPI logEvent:@"attend" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:
+	[FlurryAnalytics logEvent:@"attend" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:
 																								[_event objectForKey:@"title"], 
 																								@"event",
 																								status, 
@@ -815,7 +815,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"view-artist"];
+	[FlurryAnalytics logEvent:@"view-artist"];
 #endif
 	if(self.navigationController == ((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate).rootViewController.selectedViewController) {
 		NSString *a = nil;

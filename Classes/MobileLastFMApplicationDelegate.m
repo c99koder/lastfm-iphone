@@ -35,7 +35,7 @@
 #import "SHK.h"
 #import "UIApplication+openURLWithWarning.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 #ifndef DISTRIBUTION
 #import "TestFlight.h"
@@ -251,7 +251,7 @@ NSString *kUserAgent;
 	rootViewController = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	[SHK setRootViewController:rootViewController];
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI countPageViews:rootViewController];
+	[FlurryAnalytics logAllPageViews:rootViewController];
 #endif
 	
 	if(animated) {
@@ -281,7 +281,7 @@ NSString *kUserAgent;
 		firstRunView.view.frame = [UIScreen mainScreen].applicationFrame;
 	}
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI countPageViews:firstRunView];
+	[FlurryAnalytics logAllPageViews:firstRunView];
 #endif
 	if(animated) {
 		[UIView beginAnimations:nil context:nil];
@@ -301,11 +301,12 @@ NSString *kUserAgent;
 #if !(TARGET_IPHONE_SIMULATOR)
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:@"kEnablePinchMediaStatsCollection"] isEqualToString:@"YES"]) {
 		NSLog(@"Flurry is enabled");
-		[FlurryAPI startSession:PINCHMEDIA_ID];
+		[FlurryAnalytics startSession:PINCHMEDIA_ID];
 	}
 #endif
-#ifndef DISTRIBUTION
     [TestFlight takeOff:TESTFLIGHT_KEY];
+#ifndef DISTRIBUTION
+    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
 	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];
 	[[TTNavigator navigator].URLMap from:@"*" toObject:[UIApplication sharedApplication] selector:@selector(openURLWithWarning:)];
@@ -337,7 +338,7 @@ NSString *kUserAgent;
 }
 - (IBAction)loveButtonPressed:(UIButton *)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"love"];
+	[FlurryAnalytics logEvent:@"love"];
 #endif
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
@@ -364,7 +365,7 @@ NSString *kUserAgent;
 }
 - (IBAction)banButtonPressed:(UIButton *)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"ban"];
+	[FlurryAnalytics logEvent:@"ban"];
 #endif
 	NSDictionary *track = [self trackInfo];
 	if(_scrobbler && track) {
@@ -381,7 +382,7 @@ NSString *kUserAgent;
 }
 - (IBAction)skipButtonPressed:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"skip"];
+	[FlurryAnalytics logEvent:@"skip"];
 #endif
 	[[LastFMRadio sharedInstance] skip];
 }
@@ -454,7 +455,7 @@ NSString *kUserAgent;
 #endif
 #if !(TARGET_IPHONE_SIMULATOR)
 	if([error.userInfo objectForKey:NSLocalizedDescriptionKey])
-		[FlurryAPI logError:error.domain message:[NSString stringWithFormat:@"Error code %i: %@",error.code,[error.userInfo objectForKey:NSLocalizedDescriptionKey]] error:error];
+		[FlurryAnalytics logError:error.domain message:[NSString stringWithFormat:@"Error code %i: %@",error.code,[error.userInfo objectForKey:NSLocalizedDescriptionKey]] error:error];
 #endif
 	if([error.domain isEqualToString:NSURLErrorDomain]) {
 		[self displayError:NSLocalizedString(@"ERROR_NONETWORK", @"Network error") withTitle:NSLocalizedString(@"ERROR_NONETWORK_TITLE", @"Network error title")];

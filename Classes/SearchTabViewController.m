@@ -31,7 +31,7 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "UIColor+LastFMColors.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @implementation SearchTabViewController
@@ -143,7 +143,7 @@
 	}
 	[searchBar resignFirstResponder];
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"music-search"];
+	[FlurryAnalytics logEvent:@"music-search"];
 #endif
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {

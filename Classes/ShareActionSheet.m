@@ -24,7 +24,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "NSString+URLEscaped.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 #import "SHKTwitter.h"
 #import "SHKFacebook.h"
@@ -127,7 +127,7 @@
 }
 - (void)shareToAddressBook {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share-email"];
+	[FlurryAnalytics logEvent:@"share-email"];
 #endif
 	if(NSClassFromString(@"MFMailComposeViewController") != nil && [MFMailComposeViewController canSendMail]) {
 		[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
@@ -239,7 +239,7 @@
 }
 - (void)shareToFriend {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share-friend"];
+	[FlurryAnalytics logEvent:@"share-friend"];
 #endif
 	FriendsViewController *friends = [[FriendsViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	if(friends) {
@@ -255,7 +255,7 @@
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Twitter"]) {
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"share-twitter"];
+		[FlurryAnalytics logEvent:@"share-twitter"];
 #endif
         SHKItem *item = [self shareKitItem];
         if(_track) {
@@ -290,7 +290,7 @@
     
 	if([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Facebook"]) {
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"share-facebook"];
+		[FlurryAnalytics logEvent:@"share-facebook"];
 #endif
 		SHKItem *item = [self shareKitItem];
 		if(_track) {

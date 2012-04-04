@@ -32,7 +32,7 @@
 #import "ShareActionSheet.h"
 #import "UIColor+LastFMColors.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @implementation TrackViewController
@@ -48,7 +48,7 @@
 }
 - (void)buy:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"buy" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"buy" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 						 _artist,
@@ -63,7 +63,7 @@
 }
 - (void)love:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"love" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"love" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	[[LastFMService sharedInstance] loveTrack:_track byArtist:_artist];
 	if([LastFMService sharedInstance].error) {
@@ -75,7 +75,7 @@
 }
 - (void)addToLibrary:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"addToLibrary" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"addToLibrary" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	[[LastFMService sharedInstance] addTrackToLibrary:_track byArtist:_artist];
 	if([LastFMService sharedInstance].error) {
@@ -87,7 +87,7 @@
 }
 - (void)addTag:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	NSArray *topTags = [[[LastFMService sharedInstance] topTagsForTrack:_track byArtist:_artist] sortedArrayUsingFunction:tagSort context:nil];
 	NSArray *userTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
@@ -99,7 +99,7 @@
 }
 - (void)share:(id)sender {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	ShareActionSheet* action = [[ShareActionSheet alloc] initWithTrack:_track byArtist:_artist];
 	action.viewController = self.tabBarController;

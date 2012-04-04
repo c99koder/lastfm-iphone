@@ -28,7 +28,7 @@
 #import "UIApplication+openURLWithWarning.h"
 #import "ShareActionSheet.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 int tagSort(id tag1, id tag2, void *context);
@@ -340,7 +340,7 @@ int tagSort(id tag1, id tag2, void *context);
 }
 - (void)tagButtonPressed {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"tag" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	NSArray *topTags = [[[LastFMService sharedInstance] topTagsForTrack:[_trackInfo objectForKey:@"title"] byArtist:[_trackInfo objectForKey:@"creator"]] sortedArrayUsingFunction:tagSort context:nil];
 	NSArray *userTags = [[[LastFMService sharedInstance] tagsForUser:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]] sortedArrayUsingFunction:tagSort context:nil];
@@ -353,7 +353,7 @@ int tagSort(id tag1, id tag2, void *context);
 }
 - (void)buyButtonPressed {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"buy" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"buy" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	NSString *ITMSURL = [NSString stringWithFormat:@"http://phobos.apple.com/WebObjects/MZSearch.woa/wa/search?term=%@ %@&s=143444&partnerId=2003&affToken=www.last.fm", 
 											 [_trackInfo objectForKey:@"creator"],
@@ -368,7 +368,7 @@ int tagSort(id tag1, id tag2, void *context);
 }
 - (void)shareButtonPressed {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
+	[FlurryAnalytics logEvent:@"share" withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"track", @"type", nil, nil]];
 #endif
 	ShareActionSheet *sheet = [[ShareActionSheet alloc]initWithTrack:[_trackInfo objectForKey:@"title"] byArtist:[_trackInfo objectForKey:@"creator"]];
 	sheet.viewController = self;
@@ -377,7 +377,7 @@ int tagSort(id tag1, id tag2, void *context);
 }
 -(void)refreshButtonPressed {
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"nowplayinginfo-refresh"];
+	[FlurryAnalytics logEvent:@"nowplayinginfo-refresh"];
 #endif
 	_loaded = NO;
 	((UIBarButtonItem *)[self.toolbarItems objectAtIndex:0]).enabled = NO;

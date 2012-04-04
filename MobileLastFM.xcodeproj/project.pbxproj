@@ -186,6 +186,8 @@
 		22233F660D8D86410040486A /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22233F650D8D86410040486A /* ProfileViewController.m */; };
 		222340DB0D8DAB140040486A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222340DA0D8DAB140040486A /* AudioToolbox.framework */; };
 		2223428A0D8DE8FC0040486A /* PlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 222342890D8DE8FC0040486A /* PlaybackViewController.m */; };
+		2223C754152C89B100D3B7DA /* libFlurryAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2223C753152C89B100D3B7DA /* libFlurryAnalytics.a */; };
+		2223C758152C8EC300D3B7DA /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2223C757152C8EC300D3B7DA /* libTestFlight.a */; };
 		222905270E4C92390024294D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222905260E4C92390024294D /* QuartzCore.framework */; };
 		223129330DFF21A500EC3BF0 /* FirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 223129320DFF21A500EC3BF0 /* FirstRunViewController.m */; };
 		22327C140E700B1F002016DD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22327C130E700B1F002016DD /* Settings.bundle */; };
@@ -205,7 +207,6 @@
 		224BE807143CFE35003B9428 /* libThree20UINavigator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB348BCC12F03919002EFA95 /* libThree20UINavigator.a */; };
 		224DBBB0143E2D6D00CF4BF6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 224DBBAF143E2D6B00CF4BF6 /* Icon.png */; };
 		224DBBB2143E2D7D00CF4BF6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 224DBBB1143E2D7C00CF4BF6 /* Icon@2x.png */; };
-		224DBBB5143E2E1D00CF4BF6 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 224DBBB4143E2E1D00CF4BF6 /* libTestFlight.a */; };
 		224DBBBB143F6B6A00CF4BF6 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224DBBBA143F6B6800CF4BF6 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		224F661212E898FC00ABEECD /* date-detail_view.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F661112E898FC00ABEECD /* date-detail_view.png */; };
 		224F662F12E8AE2600ABEECD /* tabbar_events.png in Resources */ = {isa = PBXBuildFile; fileRef = 224F662512E8AE2600ABEECD /* tabbar_events.png */; };
@@ -280,7 +281,6 @@
 		228031CA1320006A00939E7A /* nowpaused_fwd.png in Resources */ = {isa = PBXBuildFile; fileRef = 228031C61320006A00939E7A /* nowpaused_fwd.png */; };
 		228031CB1320006A00939E7A /* nowpaused_fwd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 228031C71320006A00939E7A /* nowpaused_fwd@2x.png */; };
 		228185EB0E19579F00545210 /* UIApplication+openURLWithWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */; };
-		228380D312FFC85B0078177D /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 228380D112FFC85B0078177D /* libFlurry.a */; };
 		2283831C130309670078177D /* PlaybackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2283831A130309670078177D /* PlaybackView.xib */; };
 		229130CE0E1C153F007F5E63 /* blueBackBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 229130CD0E1C153F007F5E63 /* blueBackBtn.png */; };
 		2292951712AD23C500C31269 /* CXMLDocument_CreationExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 229294FE12AD23C500C31269 /* CXMLDocument_CreationExtensions.m */; };
@@ -830,6 +830,10 @@
 		222340DA0D8DAB140040486A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		222342880D8DE8FC0040486A /* PlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaybackViewController.h; sourceTree = "<group>"; };
 		222342890D8DE8FC0040486A /* PlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaybackViewController.m; sourceTree = "<group>"; };
+		2223C753152C89B100D3B7DA /* libFlurryAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurryAnalytics.a; sourceTree = "<group>"; };
+		2223C755152C89C700D3B7DA /* FlurryAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAnalytics.h; sourceTree = "<group>"; };
+		2223C756152C8E9D00D3B7DA /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		2223C757152C8EC300D3B7DA /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		222905260E4C92390024294D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		222F3DF80E59E87600F2BBD5 /* apikey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = apikey.h; sourceTree = "<group>"; };
 		223128F60DFF1ECB00EC3BF0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainWindow.xib; sourceTree = "<group>"; };
@@ -848,8 +852,6 @@
 		2244DAFA0E3A55C700C4F40B /* reflectionmask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reflectionmask.png; sourceTree = "<group>"; };
 		224DBBAF143E2D6B00CF4BF6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		224DBBB1143E2D7C00CF4BF6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
-		224DBBB3143E2E0600CF4BF6 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
-		224DBBB4143E2E1D00CF4BF6 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		224DBBBA143F6B6800CF4BF6 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		224F661112E898FC00ABEECD /* date-detail_view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "date-detail_view.png"; sourceTree = "<group>"; };
 		224F662512E8AE2600ABEECD /* tabbar_events.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tabbar_events.png; sourceTree = "<group>"; };
@@ -936,8 +938,6 @@
 		228031C71320006A00939E7A /* nowpaused_fwd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nowpaused_fwd@2x.png"; sourceTree = "<group>"; };
 		228185E90E19579F00545210 /* UIApplication+openURLWithWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+openURLWithWarning.h"; sourceTree = "<group>"; };
 		228185EA0E19579F00545210 /* UIApplication+openURLWithWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+openURLWithWarning.m"; sourceTree = "<group>"; };
-		228380D112FFC85B0078177D /* libFlurry.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libFlurry.a; sourceTree = "<group>"; };
-		228380D212FFC85B0078177D /* FlurryAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAPI.h; sourceTree = "<group>"; };
 		2283831B130309670078177D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/PlaybackView.xib; sourceTree = "<group>"; };
 		229130CD0E1C153F007F5E63 /* blueBackBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueBackBtn.png; sourceTree = "<group>"; };
 		229293D312AD217400C31269 /* Three20.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20.xcodeproj; path = three20/src/Three20/Three20.xcodeproj; sourceTree = "<group>"; };
@@ -1145,11 +1145,11 @@
 				222905270E4C92390024294D /* QuartzCore.framework in Frameworks */,
 				22B444420E9FB1300079C52E /* CoreLocation.framework in Frameworks */,
 				225A901E0FFA8C4400DC5798 /* MessageUI.framework in Frameworks */,
-				228380D312FFC85B0078177D /* libFlurry.a in Frameworks */,
 				220B8230143CAACC00AE02CA /* Security.framework in Frameworks */,
 				220B8271143CB1FB00AE02CA /* EventKit.framework in Frameworks */,
 				220B8273143CB1FB00AE02CA /* EventKitUI.framework in Frameworks */,
-				224DBBB5143E2E1D00CF4BF6 /* libTestFlight.a in Frameworks */,
+				2223C754152C89B100D3B7DA /* libFlurryAnalytics.a in Frameworks */,
+				2223C758152C8EC300D3B7DA /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1242,8 +1242,8 @@
 				220B8270143CB1FB00AE02CA /* EventKit.framework */,
 				220B8272143CB1FB00AE02CA /* EventKitUI.framework */,
 				220B822F143CAACC00AE02CA /* Security.framework */,
-				228380D112FFC85B0078177D /* libFlurry.a */,
-				224DBBB4143E2E1D00CF4BF6 /* libTestFlight.a */,
+				2223C753152C89B100D3B7DA /* libFlurryAnalytics.a */,
+				2223C757152C8EC300D3B7DA /* libTestFlight.a */,
 				225A901D0FFA8C4400DC5798 /* MessageUI.framework */,
 				22B444410E9FB1300079C52E /* CoreLocation.framework */,
 				222905260E4C92390024294D /* QuartzCore.framework */,
@@ -1950,8 +1950,8 @@
 			isa = PBXGroup;
 			children = (
 				220B8136143CA8F400AE02CA /* ShareKit */,
-				228380D212FFC85B0078177D /* FlurryAPI.h */,
-				224DBBB3143E2E0600CF4BF6 /* TestFlight.h */,
+				2223C755152C89C700D3B7DA /* FlurryAnalytics.h */,
+				2223C756152C8E9D00D3B7DA /* TestFlight.h */,
 				222F3DF80E59E87600F2BBD5 /* apikey.h */,
 				229294FB12AD23C500C31269 /* TouchXML */,
 				22E42B680E4F4E05009167EA /* pldb */,

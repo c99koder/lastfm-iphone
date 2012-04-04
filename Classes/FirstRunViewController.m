@@ -25,7 +25,7 @@
 #import "NSString+URLEscaped.h"
 #import "version.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @interface FirstRunViewStyleSheet : TTDefaultStyleSheet {
@@ -102,7 +102,7 @@
 		[self cancelButtonPressed:nil];
 		[self loginButtonPressed:nil];
 #if !(TARGET_IPHONE_SIMULATOR)
-		[FlurryAPI logEvent:@"signup"];
+		[FlurryAnalytics logEvent:@"signup"];
 #endif
 	}	
 }

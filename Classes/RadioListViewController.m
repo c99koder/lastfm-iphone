@@ -31,7 +31,7 @@
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIColor+LastFMColors.h"
 #if !(TARGET_IPHONE_SIMULATOR)
-#import "FlurryAPI.h"
+#import "FlurryAnalytics.h"
 #endif
 
 @implementation RadioListViewController
@@ -135,7 +135,7 @@
 																										repeats:NO] retain];
 	}
 #if !(TARGET_IPHONE_SIMULATOR)
-	[FlurryAPI logEvent:@"radio-search"];
+	[FlurryAnalytics logEvent:@"radio-search"];
 #endif
 }
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)query {
