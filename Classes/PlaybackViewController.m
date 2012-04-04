@@ -108,12 +108,8 @@ int tagSort(id tag1, id tag2, void *context) {
 	_titleLabel = nil;
 	[_lock release];
 	_lock = nil;
-	[_artworkURL release];
-	_artworkURL = nil;
 	[_noArtworkView release];
 	_noArtworkView = nil;
-	[artwork release];
-	artwork = nil;
 	[volumeView release];
 	volumeView = nil;
 	[loveBtn release];
@@ -215,9 +211,7 @@ int tagSort(id tag1, id tag2, void *context) {
 	[super dealloc];
 	[_lock release];
 	[_titleLabel release];
-	//[_artworkURL release];
 	[_noArtworkView release];
-	[artwork release];
 	[volumeView release];
 	[loveBtn release];
 	[banBtn release];
@@ -308,65 +302,6 @@ int tagSort(id tag1, id tag2, void *context) {
 		[FlurryAPI endTimedEvent:@"buffering" withParameters:nil];
 #endif
 	}
-}
-- (void)_fetchArtwork:(NSDictionary *)trackInfo {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[trackInfo retain];
-	[_lock lock];
-	NSDictionary *albumData = [[LastFMService sharedInstance] metadataForAlbum:[trackInfo objectForKey:@"album"] byArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-	NSString *artworkURL = nil;
-	UIImage *artworkImage;
-	
-	if([[albumData objectForKey:@"image"] length]) {
-		artworkURL = [NSString stringWithString:[albumData objectForKey:@"image"]];
-	} else if([[trackInfo objectForKey:@"image"] length]) {
-		artworkURL = [NSString stringWithString:[trackInfo objectForKey:@"image"]];
-	}
-	
-	if(!artworkURL || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
-		NSDictionary *artistData = [[LastFMService sharedInstance] metadataForArtist:[trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
-		if([artistData objectForKey:@"image"])
-			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
-	}
-	
-	if(artworkURL && [artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
-		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@"MZZZ" withString:@"LZZZ"];
-	}
-	
-	if(![artworkURL isEqualToString:_artworkURL]) {
-		NSLog(@"Loading artwork: %@\n", artworkURL);
-		[UIView beginAnimations:nil context:nil];
-		[artwork release];
-		artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
-		_noArtworkView.alpha = 1;
-		_reflectedArtworkView.image = artwork;
-		[UIView commitAnimations];
-		if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
-			NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString: artworkURL]];
-			artworkImage = [[UIImage alloc] initWithData:imageData];
-			[imageData release];
-		} else {
-			artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
-		}
-		
-		if([[trackInfo objectForKey:@"title"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"title"]] &&
-			 [[trackInfo objectForKey:@"creator"] isEqualToString:[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"creator"]]) {
-			_artworkView.image = artworkImage;
-			_reflectedArtworkView.image = artworkImage;
-			[artwork release];
-			artwork = artworkImage;
-			[_artworkURL release];
-			_artworkURL = [artworkURL retain];
-			[UIView beginAnimations:nil context:nil];
-			_noArtworkView.alpha = 0;
-			[UIView commitAnimations];
-		} else {
-			[artworkImage release];
-		}
-	}
-	[_lock unlock];
-	[trackInfo release];
-	[pool release];
 }
 - (void)_updateBadge:(NSDictionary *)trackInfo {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -522,15 +457,24 @@ int tagSort(id tag1, id tag2, void *context) {
 	
 	_titleLabel.text = [_titleLabel.text capitalizedString];
 	
+    if([[LastFMRadio sharedInstance] artwork] == nil) {
+        _noArtworkView.alpha = 1;
+        _reflectedArtworkView.image = _noArtworkView.image;
+    } else {
+        _noArtworkView.alpha = 0;
+        _artworkView.image = [[LastFMRadio sharedInstance] artwork];
+        _reflectedArtworkView.image = [[LastFMRadio sharedInstance] artwork];
+    }
+    
 	[UIView commitAnimations];
 	
 	[NSThread detachNewThreadSelector:@selector(_updateBadge:) toTarget:self withObject:trackInfo];
-	[NSThread detachNewThreadSelector:@selector(_fetchArtwork:) toTarget:self withObject:trackInfo];
 }
 - (void)becomeActive {
 	if(!(_timer && [_timer isValid])) {
 		NSLog(@"Resuming timer and subscribing to track changes");
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_trackDidChange:) name:kTrackDidChange object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_artworkDidBecomeAvailable:) name:kArtworkDidBecomeAvailable object:nil];
 		_timer = [NSTimer scheduledTimerWithTimeInterval:0.5
                                                   target:self
                                                 selector:@selector(_updateProgress:)
@@ -542,6 +486,7 @@ int tagSort(id tag1, id tag2, void *context) {
 - (void)resignActive {
 	NSLog(@"Stopping timer and ignoring track changes");
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackDidChange object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:kArtworkDidBecomeAvailable object:nil];
 	[_timer invalidate];
 	_timer = nil;
 }
@@ -610,6 +555,14 @@ int tagSort(id tag1, id tag2, void *context) {
 	else
 		return [[[[LastFMRadio sharedInstance] suggestions] objectAtIndex:(row-1)] objectForKey:@"name"];
 }
+- (void)_artworkDidBecomeAvailable:(NSNotification *)notification {
+    NSLog(@"Artwork did become available");
+    _artworkView.image = [[LastFMRadio sharedInstance] artwork];
+    _reflectedArtworkView.image = [[LastFMRadio sharedInstance] artwork];
+    [UIView beginAnimations:nil context:nil];
+    _noArtworkView.alpha = 0;
+    [UIView commitAnimations];
+}
 - (void)_trackDidChange:(NSNotification *)notification {
 	_titleLabel.text = [[[LastFMRadio sharedInstance] station] capitalizedString];
 	if([[[[LastFMRadio sharedInstance] trackInfo] objectForKey:@"loved"] isEqualToString:@"1"])
@@ -617,10 +570,6 @@ int tagSort(id tag1, id tag2, void *context) {
 	else
 		loveBtn.selected = NO;
 	[UIView beginAnimations:nil context:nil];
-	[artwork release];
-	artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
-	_noArtworkView.alpha = 1;
-	_reflectedArtworkView.image = artwork;
 	_badge.alpha = 0;
 	[UIView commitAnimations];
 	NSDictionary *trackInfo = [notification userInfo];

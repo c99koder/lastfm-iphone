@@ -38,6 +38,7 @@ NSString *kTrackDidChange;
 NSString *kTrackDidFailToStream;
 NSString *kTrackDidPause;
 NSString *kTrackDidResume;
+NSString *kArtworkDidBecomeAvailable;
 
 @interface LastFMTrack : NSObject {
 	NSDictionary *_trackInfo;
@@ -54,6 +55,7 @@ NSString *kTrackDidResume;
 	AudioStreamBasicDescription dataFormat;
 	int _state;
 	NSTimeInterval _startTime;
+    UIImage *_artwork;
 }
 
 @property AudioFileStreamID parser;
@@ -77,6 +79,7 @@ NSString *kTrackDidResume;
 -(int)httpBufferSize;
 -(BOOL)lowOnMemory;
 -(BOOL)didFinishLoading;
+-(UIImage *)artwork;
 @end
 
 @interface LastFMRadio : NSObject {
@@ -122,4 +125,5 @@ NSString *kTrackDidResume;
 -(BOOL)cancelPrebuffering;
 -(NSArray *)suggestions;
 -(void)lowOnMemory;
+-(UIImage *)artwork;
 @end

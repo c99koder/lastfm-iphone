@@ -112,6 +112,7 @@ void propCallback(void *in,	AudioFileStreamID inAudioFileStream, AudioFileStream
 }
 
 NSString *kTrackDidBecomeAvailable = @"LastFMRadio_TrackDidBecomeAvailable";
+NSString *kArtworkDidBecomeAvailable = @"LastFMRadio_ArtworkDidBecomeAvailable";
 NSString *kTrackDidFinishLoading = @"LastFMRadio_TrackDidFinishLoading";
 NSString *kTrackDidFinishPlaying = @"LastFMRadio_TrackDidFinishPlaying";
 NSString *kTrackDidChange = @"LastFMRadio_TrackDidChange";
@@ -128,6 +129,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		_trackInfo = [trackInfo retain];
 		_audioBufferCountLock = [[NSLock alloc] init];
 		_bufferLock = [[NSLock alloc] init];
+        _artwork = nil;
 		NSURL *trackURL = [NSURL URLWithString:[_trackInfo objectForKey:@"location"]];
 		NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:trackURL cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:[((MobileLastFMApplicationDelegate *)[UIApplication sharedApplication].delegate) hasWiFiConnection]?40:60];
 		[theRequest setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
@@ -140,6 +142,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 			_state = TRACK_BUFFERING;
 			queue = nil;
 			AudioFileStreamOpen(self, propCallback, packetCallback, kAudioFileMP3Type, &parser);
+            [NSThread detachNewThreadSelector:@selector(_fetchArtwork) toTarget:self withObject:nil];
 		} else {
 			[self release];
 			return nil;
@@ -213,6 +216,18 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(void)_notifyTrackFinishedLoading {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishLoading object:self userInfo:nil];
 }
+-(void)_notifyArtworkDidBecomeAvailable {
+	[[NSNotificationCenter defaultCenter] postNotificationName:kArtworkDidBecomeAvailable object:self userInfo:nil];
+    if([[LastFMRadio sharedInstance] currentTrack] == self) {
+        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                 [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
+                                                                 [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
+                                                                 [NSNumber numberWithFloat:[[_trackInfo objectForKey:@"duration"] floatValue] / 1000.0f],MPMediaItemPropertyPlaybackDuration,
+                                                                 [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,
+                                                                 [[[MPMediaItemArtwork alloc] initWithImage:_artwork] autorelease], MPMediaItemPropertyArtwork, 
+                                                                 nil];
+    }
+}
 -(void)_notifyTrackFinishedPlaying {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidFinishPlaying object:self userInfo:nil];
 }
@@ -278,6 +293,46 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		}
 	}
 }
+- (void)_fetchArtwork {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSDictionary *albumData = [[LastFMService sharedInstance] metadataForAlbum:[_trackInfo objectForKey:@"album"] byArtist:[_trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
+	NSString *artworkURL = nil;
+	UIImage *artworkImage;
+	
+	if([[albumData objectForKey:@"image"] length]) {
+		artworkURL = [NSString stringWithString:[albumData objectForKey:@"image"]];
+	} else if([[_trackInfo objectForKey:@"image"] length]) {
+		artworkURL = [NSString stringWithString:[_trackInfo objectForKey:@"image"]];
+	}
+	
+	if(!artworkURL || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] || [artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
+		NSDictionary *artistData = [[LastFMService sharedInstance] metadataForArtist:[_trackInfo objectForKey:@"creator"] inLanguage:[[[NSUserDefaults standardUserDefaults] objectForKey: @"AppleLanguages"] objectAtIndex:0]];
+		if([artistData objectForKey:@"image"])
+			artworkURL = [NSString stringWithString:[artistData objectForKey:@"image"]];
+	}
+	
+	if(artworkURL && [artworkURL rangeOfString:@"amazon.com"].location != NSNotFound) {
+		artworkURL = [artworkURL stringByReplacingOccurrencesOfString:@"MZZZ" withString:@"LZZZ"];
+	}
+	
+	NSLog(@"Loading artwork: %@\n", artworkURL);
+	[UIView beginAnimations:nil context:nil];
+	[_artwork release];
+	_artwork = [[UIImage imageNamed:@"noartplaceholder.png"] retain];
+	[UIView commitAnimations];
+	if(artworkURL && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_med.gif"] && ![artworkURL isEqualToString:@"http://cdn.last.fm/depth/catalogue/noimage/cover_large.gif"]) {
+        NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString: artworkURL]];
+		artworkImage = [[UIImage alloc] initWithData:imageData];
+		[imageData release];
+	} else {
+		artworkImage = [[UIImage alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noartplaceholder" ofType:@"png"]];
+	}
+		
+	[_artwork release];
+	_artwork = artworkImage;
+	[self performSelectorOnMainThread:@selector(_notifyArtworkDidBecomeAvailable) withObject:self waitUntilDone:NO];
+	[pool release];
+}
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[_connection release];
 	_connection = nil;
@@ -316,11 +371,21 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 }
 -(BOOL)play {
     if(NSClassFromString(@"MPNowPlayingInfoCenter")) {
-        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+        if(_artwork != nil)
+            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
                                                                  [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
                                                                  [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
                                                                  [NSNumber numberWithFloat:[[_trackInfo objectForKey:@"duration"] floatValue] / 1000.0f],MPMediaItemPropertyPlaybackDuration,
-                                                                 [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,nil];
+                                                                 [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,
+                                                                     [[[MPMediaItemArtwork alloc] initWithImage:_artwork] autorelease], MPMediaItemPropertyArtwork, 
+                                                                     nil];
+        else
+            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
+                                                                     [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
+                                                                     [NSNumber numberWithFloat:[[_trackInfo objectForKey:@"duration"] floatValue] / 1000.0f],MPMediaItemPropertyPlaybackDuration,
+                                                                     [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,
+                                                                     nil];
     }
 	if(queue) {
 		_startTime = [[NSDate date] timeIntervalSince1970];
@@ -428,6 +493,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		return NO;
 	}
 }
+-(UIImage *)artwork {
+    return _artwork;
+}
 @end
 
 
@@ -463,6 +531,12 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		return [[_tracks objectAtIndex:0] startTime];
 	else
 		return 0;
+}
+-(UIImage *)artwork {
+	if([_tracks count])
+		return [[_tracks objectAtIndex:0] artwork];
+	else
+		return nil;
 }
 -(NSDictionary *)trackInfo {
 	if([_tracks count])
@@ -704,9 +778,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 		[formatter release];
 		return [URLs autorelease];
 	} @catch(NSException *e) {
-		NSLog(@"Problem with the station db, re-creating...");
-		[_db close];
-		[_db release];
+		NSLog(@"Problem with the station db (%@), re-creating...", [e description]);
 		_db = nil;
 		
 		[[NSFileManager defaultManager] removeItemAtPath:CACHE_FILE(@"recent.db") error:nil];
