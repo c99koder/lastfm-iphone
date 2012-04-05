@@ -236,8 +236,9 @@
 			}
 			if([[track objectForKey:@"rating"] isEqualToString:@"B"]) {
 				[[LastFMService sharedInstance] banTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"]];
-			}
-			[[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue] streamId:[track objectForKey:@"source"]];
+			} else {
+                [[LastFMService sharedInstance] scrobbleTrack:[track objectForKey:@"title"] byArtist:[track objectForKey:@"artist"] onAlbum:[track objectForKey:@"album"] withDuration:[[track objectForKey:@"duration"] intValue]/1000 timestamp:[[track objectForKey:@"startTime"] intValue] streamId:[track objectForKey:@"source"]];
+            }
 			if([LastFMService sharedInstance].error == nil || [[LastFMService sharedInstance].error.domain isEqualToString:LastFMServiceErrorDomain]) {
 #if !(TARGET_IPHONE_SIMULATOR)
 				[FlurryAnalytics logEvent:@"scrobble"];
