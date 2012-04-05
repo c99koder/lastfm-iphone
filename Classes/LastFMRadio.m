@@ -218,7 +218,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 }
 -(void)_notifyArtworkDidBecomeAvailable {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kArtworkDidBecomeAvailable object:self userInfo:nil];
-    if([[LastFMRadio sharedInstance] currentTrack] == self) {
+    if([[LastFMRadio sharedInstance] currentTrack] == self && NSClassFromString(@"MPNowPlayingInfoCenter")) {
         [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
                                                                  [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
                                                                  [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
