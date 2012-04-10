@@ -32,6 +32,8 @@
 #endif
 
 #define STARTING_BUFFER_SIZE 65392
+#define MAX_AUDIO_BUFFERS 12
+#define MAX_HTTP_BUFFER 2097152
 
 void audioRouteChangeListenerCallback(void *inUserData, AudioSessionPropertyID inPropertyID, UInt32 inPropertyValueSize, const void *inPropertyValue) {
 	if (inPropertyID != kAudioSessionProperty_AudioRouteChange)
@@ -243,9 +245,9 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 - (void)_pushDataChunk {
 	NSData *extraData = nil;
 	[_bufferLock lock];
-	if([_receivedData length] > 16384) {
-		extraData = [[NSData alloc] initWithBytes:[_receivedData bytes]+16384 length:[_receivedData length]-16384];
-		[_receivedData setLength: 16384];
+	if([_receivedData length] > (8192*4)) {
+		extraData = [[NSData alloc] initWithBytes:[_receivedData bytes]+(8192*4) length:[_receivedData length]-(8192*4)];
+		[_receivedData setLength: (8192*4)];
 	}
 	OSStatus error = AudioFileStreamParseBytes(parser, [_receivedData length], [_receivedData bytes], 0);
 	if(error) {
@@ -277,7 +279,7 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 	[_audioBufferCountLock lock];
 	_audioBufferCount--;
 	[_audioBufferCountLock unlock];	
-	if(_state == TRACK_PLAYING && [_receivedData length] && _audioBufferCount < 8) {
+	if(_state == TRACK_PLAYING && [_receivedData length] && (_audioBufferCount < MAX_AUDIO_BUFFERS || [_receivedData length] > MAX_HTTP_BUFFER)) {
 		[self _pushDataChunk];
 	}
 	if(_state == TRACK_PLAYING && _peakBufferCount > 4) {
