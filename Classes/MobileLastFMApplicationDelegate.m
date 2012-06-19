@@ -251,6 +251,7 @@ NSString *kUserAgent;
 	[rootViewController release];
 	rootViewController = [[HomeViewController alloc] initWithUsername:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastfm_user"]];
 	[SHK setRootViewController:rootViewController];
+    window.rootViewController=rootViewController;
 #if !(TARGET_IPHONE_SIMULATOR)
 	[FlurryAnalytics logAllPageViews:rootViewController];
 #endif
