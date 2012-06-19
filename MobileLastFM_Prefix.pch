@@ -22,8 +22,10 @@
 #ifdef __OBJC__
 	#import <Foundation/Foundation.h>
 	#import <UIKit/UIKit.h>
+    #import "TestFlight.h"
 
 	BOOL shouldUseCache(NSString *file, double seconds);
+    #define NSLog TFLog
 #endif
 
 #define CACHE_FILE(file) [NSTemporaryDirectory() stringByAppendingPathComponent:file]
@@ -32,4 +34,3 @@
 #define HOURS 3600
 #define DAYS 86400
 
-#define NSLog TFLog
