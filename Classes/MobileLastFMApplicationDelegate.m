@@ -125,6 +125,7 @@ NSString *kUserAgent;
 		}
 		[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:
 																														 [NSNumber numberWithFloat: 0.8], @"volume",
+                                                                                                                         [NSNumber numberWithFloat:1.0], @"volumeBoost",
 																														 @"YES", @"scrobbling",
 																														 @"YES", @"disableautolock",
 																														 @"YES", @"showontour",

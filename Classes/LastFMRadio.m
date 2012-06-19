@@ -108,6 +108,9 @@ void propCallback(void *in,	AudioFileStreamID inAudioFileStream, AudioFileStream
 			} else {
 				track.queue = queue;
 			}
+            //Pump up the jam
+            NSLog(@"Volume boost: %@", [[NSUserDefaults standardUserDefaults] objectForKey:@"volumeBoost"]);
+            AudioQueueSetParameter(queue, kAudioQueueParam_Volume, [[[NSUserDefaults standardUserDefaults] objectForKey:@"volumeBoost"] floatValue]);
 			[[NSNotificationCenter defaultCenter] postNotificationName:kTrackDidBecomeAvailable object:track];
 			break;
 	}
