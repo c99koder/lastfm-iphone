@@ -224,13 +224,21 @@ NSString *kTrackDidResume = @"LastFMRadio_TrackDidResume";
 -(void)_notifyArtworkDidBecomeAvailable {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kArtworkDidBecomeAvailable object:self userInfo:nil];
     if([[LastFMRadio sharedInstance] currentTrack] == self && NSClassFromString(@"MPNowPlayingInfoCenter")) {
-        [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                                 [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
-                                                                 [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
-                                                                 [NSNumber numberWithFloat:[[_trackInfo objectForKey:@"duration"] floatValue] / 1000.0f],MPMediaItemPropertyPlaybackDuration,
-                                                                 [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,
-                                                                 [[[MPMediaItemArtwork alloc] initWithImage:_artwork] autorelease], MPMediaItemPropertyArtwork, 
-                                                                 nil];
+        if(_artwork != nil)
+            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
+                                                                     [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
+                                                                     [NSNumber numberWithFloat:[[_trackInfo objectForKey:@"duration"] floatValue] / 1000.0f],MPMediaItemPropertyPlaybackDuration,
+                                                                     [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,
+                                                                     [[[MPMediaItemArtwork alloc] initWithImage:_artwork] autorelease], MPMediaItemPropertyArtwork, 
+                                                                     nil];
+        else
+            [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                     [_trackInfo objectForKey:@"creator"],MPMediaItemPropertyArtist, 
+                                                                     [_trackInfo objectForKey:@"title"],MPMediaItemPropertyTitle,
+                                                                     [NSNumber numberWithFloat:[[_trackInfo objectForKey:@"duration"] floatValue] / 1000.0f],MPMediaItemPropertyPlaybackDuration,
+                                                                     [_trackInfo objectForKey:@"album"],MPMediaItemPropertyAlbumTitle,
+                                                                     nil];
     }
 }
 -(void)_notifyTrackFinishedPlaying {
