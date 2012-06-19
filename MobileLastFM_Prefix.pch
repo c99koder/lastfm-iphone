@@ -31,3 +31,5 @@
 #define MINUTES 60
 #define HOURS 3600
 #define DAYS 86400
+
+#define NSLog TFLog
