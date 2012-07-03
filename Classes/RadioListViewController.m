@@ -26,7 +26,6 @@
 #include "version.h"
 #import "NSString+URLEscaped.h"
 #import "ArtworkCell.h"
-#import </usr/include/objc/objc-class.h>
 #import "DebugViewController.h"
 #import "MobileLastFMApplicationDelegate.h"
 #import "UIColor+LastFMColors.h"

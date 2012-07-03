@@ -306,8 +306,8 @@ NSString *kUserAgent;
 		[FlurryAnalytics startSession:PINCHMEDIA_ID];
 	}
 #endif
-    [TestFlight takeOff:TESTFLIGHT_KEY];
 #ifndef DISTRIBUTION
+    [TestFlight takeOff:TESTFLIGHT_KEY];
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #endif
 	[LastFMService sharedInstance].session = [[NSUserDefaults standardUserDefaults] objectForKey: @"lastfm_session"];

@@ -22,10 +22,12 @@
 #ifdef __OBJC__
 	#import <Foundation/Foundation.h>
 	#import <UIKit/UIKit.h>
+#ifndef DISTRIBUTION
     #import "TestFlight.h"
+    #define NSLog TFLog
+#endif
 
 	BOOL shouldUseCache(NSString *file, double seconds);
-    #define NSLog TFLog
 #endif
 
 #define CACHE_FILE(file) [NSTemporaryDirectory() stringByAppendingPathComponent:file]

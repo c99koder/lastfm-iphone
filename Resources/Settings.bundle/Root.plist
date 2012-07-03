@@ -58,7 +58,7 @@
 			<key>MinimumValue</key>
 			<real>1</real>
 			<key>MaximumValue</key>
-			<integer>4</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>Title</key>
@@ -154,7 +154,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
-			<string>Last.fm version 3.2.1</string>
+			<string>Last.fm version 3.2.2</string>
 		</dict>
 		<dict>
 			<key>Title</key>
